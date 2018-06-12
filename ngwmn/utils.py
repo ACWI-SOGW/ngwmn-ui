@@ -9,7 +9,11 @@ import requests as r
 
 
 def parse_xml(xml_string):
-    return etree.fromstring(xml_string)
+    try:
+        parsed = etree.fromstring(xml_string)
+    except etree.XMLSyntaxError:
+        parsed = None
+    return parsed
 
 
 def get_well_lithography(service_root, agency_cd, location_id):
