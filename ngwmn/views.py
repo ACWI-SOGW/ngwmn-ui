@@ -15,6 +15,13 @@ SERVICE_ROOT = app.config.get('SERVICE_ROOT')
 
 @app.route('/well-location/<agency_cd>/<location_id>', methods=['GET'])
 def well_page(agency_cd, location_id):
+    """
+    Well location view.
+
+    :param str agency_cd: agency code for the agency that manages the location
+    :param location_id: the location's identifier
+
+    """
     root = get_well_lithography(SERVICE_ROOT, agency_cd, location_id)
     if root is not None and 'gml' in root.nsmap.keys():
         geolocation_element = root.find('.//gml:Point/gml:pos', namespaces=root.nsmap)
