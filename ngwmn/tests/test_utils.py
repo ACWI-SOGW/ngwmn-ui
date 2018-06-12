@@ -4,9 +4,25 @@ Unit tests for utility functions
 
 from unittest import TestCase, mock
 
+from lxml import etree
 import requests as r
 
-from ..utils import get_well_lithography
+from ..utils import get_well_lithography, parse_xml
+
+
+class TestParseXml(TestCase):
+
+    def setUp(self):
+        self.good_xml = '<a><b>SOME TEXT</b></a>'
+        self.bad_xml = 'Ich habe eine Katze.'
+
+    def test_good_xml(self):
+        result = parse_xml(self.good_xml)
+        self.assertIsInstance(result, etree._Element)
+
+    def test_bad_xml(self):
+        result = parse_xml(self.bad_xml)
+        self.assertIsNone(result)
 
 
 class TestGetWellLithography(TestCase):
