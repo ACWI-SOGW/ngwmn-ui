@@ -15,5 +15,6 @@ script:
 after_success:
   - mkdir -p ./coverage
   - find coverage/ -mindepth 2 -iname '*.info' -exec cp -t coverage/ '{}' +
+  # there's not currently a lcov file
   # - coveralls-lcov -v -n coverage/lcov.info > coverage/coverage.json
   - coveralls # --merge=coverage/coverage.json
