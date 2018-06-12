@@ -14,3 +14,5 @@ try:
     app.config.from_pyfile('config.py')
 except FileNotFoundError:
     pass
+
+from . import views
