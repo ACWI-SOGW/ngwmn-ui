@@ -13,6 +13,7 @@ script:
   - coverage run --omit=tests/*.py,*/tests/*.py,/home/travis/virtualenv/* -m unittest
 
 after_success:
+  - mkdir -p ./coverage
   - find coverage/ -mindepth 2 -iname '*.info' -exec cp -t coverage/ '{}' +
   - coveralls-lcov -v -n coverage/lcov.info > coverage/coverage.json
   - coveralls --merge=coverage/coverage.json
