@@ -2,6 +2,6 @@
 Application configuration settings
 
 """
-DEBUG = True
+DEBUG = False
 
 SERVICE_ROOT = 'https://cida.usgs.gov'
