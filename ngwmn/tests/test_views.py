@@ -3,7 +3,7 @@ Unit tests for NGWMN views
 """
 from unittest import TestCase, mock
 
-from lxml import etree
+from defusedxml.lxml import fromstring
 import requests as r
 
 from .. import app
@@ -27,7 +27,7 @@ class TestWellPageView(TestCase):
     @mock.patch('ngwmn.views.r.post')
     @mock.patch('ngwmn.views.get_well_lithography')
     def test_best_case(self, well_lith_mock, post_mock):
-        well_lith_mock.return_value = etree.fromstring(self.test_well_xml)
+        well_lith_mock.return_value = fromstring(self.test_well_xml)
         post_resp = mock.Mock(r.Response)
         post_resp.content = self.test_summary_xml
         post_resp.status_code = 200
@@ -40,7 +40,7 @@ class TestWellPageView(TestCase):
     @mock.patch('ngwmn.views.r.post')
     @mock.patch('ngwmn.views.get_well_lithography')
     def test_failed_service_with_non_server_error(self, well_lith_mock, post_mock):
-        well_lith_mock.return_value = etree.fromstring(self.test_well_xml)
+        well_lith_mock.return_value = fromstring(self.test_well_xml)
         post_resp = mock.Mock(r.Response)
         post_resp.content = self.test_summary_xml
         post_resp.status_code = 403
@@ -54,7 +54,7 @@ class TestWellPageView(TestCase):
     @mock.patch('ngwmn.views.r.post')
     @mock.patch('ngwmn.views.get_well_lithography')
     def test_failed_service_with_server_error(self, well_lith_mock, post_mock):
-        well_lith_mock.return_value = etree.fromstring(self.test_well_xml)
+        well_lith_mock.return_value = fromstring(self.test_well_xml)
         post_resp = mock.Mock(r.Response)
         post_resp.content = self.test_summary_xml
         post_resp.status_code = 500
