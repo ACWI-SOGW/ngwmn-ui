@@ -39,6 +39,7 @@ def generate_bounding_box_values(latitude, longitude, delta=0.01):
 
     :param latitude: decimal latitude
     :param longitude: decimal longitude
+    :param float delta: difference to use when calculating the bounding box
     :return: bounding box values in the following order: lower longitude, lower latitude,
         upper longitude, upper latitude
     :rtype: tuple

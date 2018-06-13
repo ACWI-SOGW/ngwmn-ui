@@ -61,5 +61,4 @@ def well_page(agency_cd, location_id):
             context = {}
             http_code = 500
         return render_template(template, **context), http_code
-    else:
-        return abort(404)
+    return abort(404)
