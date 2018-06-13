@@ -8,7 +8,7 @@ from flask import abort, render_template
 import requests as r
 
 from . import app
-from .fetch_utils import get_well_lithography
+from .fetch_utils import generate_bounding_box_values, get_well_lithography
 from .xml_utils import parse_xml
 
 
@@ -29,22 +29,14 @@ def well_page(agency_cd, location_id):
         geolocation_element = root.find('.//gml:Point/gml:pos', namespaces=root.nsmap)
         geolocation = geolocation_element.text
         latitude, longitude = geolocation.split(' ')
-        lat_lower = float(latitude) - 0.01
-        lon_lower = float(longitude) - 0.01
-        lat_upper = float(latitude) + 0.01
-        lon_upper = float(longitude) + 0.01
+        bbox = generate_bounding_box_values(latitude, longitude)
         data = {
             'SERVICE': 'WFS',
             'VERSION': '1.0.0',
             'srsName': 'EPSG:4326',
             'outputFormat': 'GML2',
             'typeName': 'ngwmn:VW_GWDP_GEOSERVER',
-            'CQL_FILTER': "((QW_SN_FLAG='1') OR (WL_SN_FLAG='1')) AND (BBOX(GEOM,{},{},{},{}))".format(
-                lon_lower,
-                lat_lower,
-                lon_upper,
-                lat_upper
-            )
+            'CQL_FILTER': "((QW_SN_FLAG='1') OR (WL_SN_FLAG='1')) AND (BBOX(GEOM,{},{},{},{}))".format(*bbox)
         }
         params = {'request': 'GetFeature'}
         target = urljoin(SERVICE_ROOT, 'ngwmn/geoserver/wfs')
