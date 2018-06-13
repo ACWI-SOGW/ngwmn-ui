@@ -15,7 +15,7 @@ from .xml_utils import parse_xml
 SERVICE_ROOT = app.config.get('SERVICE_ROOT')
 
 
-@app.route('/well-location/<agency_cd>/<location_id>', methods=['GET'])
+@app.route('/well-location/<agency_cd>/<location_id>/', methods=['GET'])
 def well_page(agency_cd, location_id):
     """
     Well location view.

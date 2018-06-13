@@ -33,7 +33,7 @@ class TestWellPageView(TestCase):
         post_resp.status_code = 200
         post_mock.return_value = post_resp
 
-        response = self.app_client.get('/well-location/{}/{}'.format(self.test_agency_cd, self.test_location_id))
+        response = self.app_client.get('/well-location/{}/{}/'.format(self.test_agency_cd, self.test_location_id))
         post_mock.assert_called_once()
         self.assertEqual(response.status_code, 200)
 
@@ -47,7 +47,7 @@ class TestWellPageView(TestCase):
         post_resp.reason = 'Forbidden'
         post_mock.return_value = post_resp
 
-        response = self.app_client.get('/well-location/{}/{}'.format(self.test_agency_cd, self.test_location_id))
+        response = self.app_client.get('/well-location/{}/{}/'.format(self.test_agency_cd, self.test_location_id))
         post_mock.assert_called_once()
         self.assertEqual(response.status_code, 200)
 
@@ -60,12 +60,12 @@ class TestWellPageView(TestCase):
         post_resp.status_code = 500
         post_mock.return_value = post_resp
 
-        response = self.app_client.get('/well-location/{}/{}'.format(self.test_agency_cd, self.test_location_id))
+        response = self.app_client.get('/well-location/{}/{}/'.format(self.test_agency_cd, self.test_location_id))
         post_mock.assert_called_once()
         self.assertEqual(response.status_code, 503)
 
     @mock.patch('ngwmn.views.get_well_lithography')
     def test_no_xml(self, well_lith_mock):
         well_lith_mock.return_value = None
-        response = self.app_client.get('/well-location/{}/{}'.format(self.test_agency_cd, self.test_location_id))
+        response = self.app_client.get('/well-location/{}/{}/'.format(self.test_agency_cd, self.test_location_id))
         self.assertEqual(response.status_code, 404)
