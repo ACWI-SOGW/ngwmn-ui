@@ -1,5 +1,6 @@
 """
 NGWMN UI application views
+
 """
 from urllib.parse import urljoin
 
@@ -7,7 +8,8 @@ from flask import abort, render_template
 import requests as r
 
 from . import app
-from .utils import parse_xml, get_well_lithography
+from .fetch_utils import get_well_lithography
+from .xml_utils import parse_xml
 
 
 SERVICE_ROOT = app.config.get('SERVICE_ROOT')
