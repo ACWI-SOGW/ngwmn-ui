@@ -2,7 +2,8 @@
 Utility functions manipulating XML
 
 """
-from lxml import etree
+from defusedxml.lxml import fromstring
+from lxml.etree import XMLSyntaxError
 
 
 def parse_xml(xml_string):
@@ -16,7 +17,7 @@ def parse_xml(xml_string):
 
     """
     try:
-        parsed = etree.fromstring(xml_string)
-    except etree.XMLSyntaxError:
+        parsed = fromstring(xml_string)
+    except XMLSyntaxError:
         parsed = None
     return parsed
