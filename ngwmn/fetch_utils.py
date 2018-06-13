@@ -28,3 +28,23 @@ def get_well_lithography(service_root, agency_cd, location_id):
     }
     resp = r.get(lithography_target, params=query_params)
     return parse_xml(resp.content)
+
+
+def generate_bounding_box_values(latitude, longitude, delta=0.01):
+    """
+    Calculate a small bounding box around a point
+
+    :param latitude: decimal latitude
+    :param longitude: decimal longitude
+    :return: bounding box values in the following order: lower longitude, lower latitude,
+        upper longitude, upper latitude
+    :rtype: tuple
+
+    """
+    flt_lat = float(latitude)
+    flt_lon = float(longitude)
+    lat_lower = flt_lat - delta
+    lon_lower = flt_lon - delta
+    lat_upper = flt_lat + delta
+    lon_upper = flt_lon + delta
+    return lon_lower, lat_lower, lon_upper, lat_upper
