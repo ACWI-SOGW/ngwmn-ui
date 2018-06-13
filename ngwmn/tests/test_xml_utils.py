@@ -3,7 +3,7 @@ Unit tests for XML manipulation functions
 """
 from unittest import TestCase
 
-from lxml import etree
+from defusedxml.lxml import RestrictedElement
 
 from ..xml_utils import parse_xml
 
@@ -16,7 +16,7 @@ class TestParseXml(TestCase):
 
     def test_good_xml(self):
         result = parse_xml(self.good_xml)
-        self.assertIsInstance(result, etree._Element)
+        self.assertIsInstance(result, RestrictedElement)
 
     def test_bad_xml(self):
         result = parse_xml(self.bad_xml)
