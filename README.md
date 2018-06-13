@@ -6,4 +6,4 @@
 
 Repository for the National Ground Water Monitoring Network user interface.
 
-This application is written using Python 3.6.5.
+This application is written using Python 3.6.5 within the Flask framework.
