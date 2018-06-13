@@ -1,0 +1,20 @@
+language: python
+
+python:
+  - "3.6.5"
+
+install:
+  - pip install -r requirements.txt
+  - pip install coverage
+  - pip install coveralls
+  - gem install coveralls-lcov
+
+script:
+  - coverage run --omit=tests/*.py,*/tests/*.py,/home/travis/virtualenv/* -m unittest
+
+after_success:
+  - mkdir -p ./coverage
+  - find coverage/ -mindepth 2 -iname '*.info' -exec cp -t coverage/ '{}' +
+  # there's not currently a lcov file
+  # - coveralls-lcov -v -n coverage/lcov.info > coverage/coverage.json
+  - coveralls # --merge=coverage/coverage.json

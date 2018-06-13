@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% set page_title = location_name %}
+
+{% block content %}
+    {% if location_name %}
+        <h1>{{ location_name }}</h1>
+    {% else %}
+        <p>Service call failed with {{ status_code }}: {{ reason }}</p>
+    {% endif %}
+{% endblock %}
