@@ -15,8 +15,14 @@ class TestWellPageView(TestCase):
         self.app_client = app.test_client()
         self.test_agency_cd = 'DOOP'
         self.test_location_id = 'BP-1729'
-        self.test_well_xml = '<wfs xmlns:gml="http://www.opengis.net/gml"><gml:Point srsName="EPSG:4269"><gml:pos srsDimension="2">39.443328281 -75.634096999</gml:pos></gml:Point></wfs>'
-        self.test_summary_xml = '<wfs xmlns:ngwmn="gov.usgs.cida.ngwmn"><ngwmn:VW_GWDP_GEOSERVER><ngwmn:SITE_NAME>Water Farm 1</ngwmn:SITE_NAME></ngwmn:VW_GWDP_GEOSERVER></wfs>'
+        self.test_well_xml = (
+            '<wfs xmlns:gml="http://www.opengis.net/gml"><gml:Point srsName="EPSG:4269">'
+            '<gml:pos srsDimension="2">39.443328281 -75.634096999</gml:pos></gml:Point></wfs>'
+        )
+        self.test_summary_xml = (
+            '<wfs xmlns:ngwmn="gov.usgs.cida.ngwmn"><ngwmn:VW_GWDP_GEOSERVER>'
+            '<ngwmn:SITE_NAME>Water Farm 1</ngwmn:SITE_NAME></ngwmn:VW_GWDP_GEOSERVER></wfs>'
+        )
 
     @mock.patch('ngwmn.views.r.post')
     @mock.patch('ngwmn.views.get_well_lithography')
