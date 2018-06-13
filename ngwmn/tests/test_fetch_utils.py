@@ -21,7 +21,7 @@ class TestGetWellLithography(TestCase):
     def test_success(self, r_mock):
         m_resp = mock.Mock(r.Response)
         m_resp.content = self.test_xml
-        m_resp.status_code = 200,
+        m_resp.status_code = 200
         r_mock.return_value = m_resp
         result = get_well_lithography(self.test_service_root, self.test_agency_cd, self.test_location_id)
         self.assertEqual(result.tag, 'site')
@@ -29,6 +29,14 @@ class TestGetWellLithography(TestCase):
             'http://fake.gov/ngwmn/iddata',
             params={'request': 'well_log', 'agency_cd': 'DOOP', 'siteNo': 'BP-1729'}
         )
+
+    @mock.patch('ngwmn.fetch_utils.r.get')
+    def test_service_failure(self, r_mock):
+        m_resp = mock.Mock(r.Response)
+        m_resp.status_code = 500
+        r_mock.return_value = m_resp
+        result = get_well_lithography(self.test_service_root, self.test_agency_cd, self.test_location_id)
+        self.assertIsNone(result)
 
     @mock.patch('ngwmn.fetch_utils.r.get')
     def test_syntax_error(self, r_mock):

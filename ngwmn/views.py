@@ -41,8 +41,25 @@ def well_page(agency_cd, location_id):
         params = {'request': 'GetFeature'}
         target = urljoin(SERVICE_ROOT, 'ngwmn/geoserver/wfs')
         resp = r.post(target, params=params, data=data)
-        summary = parse_xml(resp.content)
-        location_name = summary.find('.//ngwmn:SITE_NAME', namespaces=summary.nsmap).text
-        return render_template('well_location.html', location_name=location_name)
+        if resp.status_code == 200:
+            summary = parse_xml(resp.content)
+            location_name = summary.find('.//ngwmn:SITE_NAME', namespaces=summary.nsmap).text
+            template = 'well_location.html'
+            context = {'location_name': location_name}
+            http_code = 200
+            # return render_template('well_location.html', location_name=location_name)
+        elif 400 <= resp.status_code < 500:
+            template = 'well_location.html'
+            http_code = 200
+            context = {'status_code': resp.status_code, 'reason': resp.reason}
+        elif 500 <= resp.status_code <= 511:
+            template = 'errors/500.html'
+            context = {}
+            http_code = 503
+        else:
+            template = 'errors/500.html'
+            context = {}
+            http_code = 500
+        return render_template(template, **context), http_code
     else:
         return abort(404)
