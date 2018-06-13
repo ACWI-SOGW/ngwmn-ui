@@ -42,7 +42,7 @@ class TestGetWellLithography(TestCase):
     def test_syntax_error(self, r_mock):
         m_resp = mock.Mock(r.Response)
         m_resp.content = 'Stuff'
-        m_resp.status_code = 200,
+        m_resp.status_code = 200
         r_mock.return_value = m_resp
         result = get_well_lithography(self.test_service_root, self.test_agency_cd, self.test_location_id)
         self.assertIsNone(result)
