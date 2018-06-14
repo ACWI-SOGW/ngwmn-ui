@@ -1,0 +1,7 @@
+DEBUG = True
+
+# The root location of static assets (Javascript, CSS, Images)
+STATIC_ROOT = 'http://localhost:9000'
+
+# If this is not set, live reload will be disabled.
+LIVE_RELOAD_PATH = 'ws://localhost:9000/ws'
