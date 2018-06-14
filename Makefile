@@ -31,4 +31,4 @@ watch:
 	 wait) || kill -TERM $(MAKEPID)
 coverage:
 	mkdir -p ./server/coverage
-	env/bin/coveralls
+	cd server && env/bin/coveralls
