@@ -3,6 +3,9 @@ language: python
 python:
   - "3.6.5"
 
+before_install:
+  - nvm install $(python -c "import json; print(json.loads(open('./assets/package.json').read())['engines']['node'])")
+
 install:
   - make env
   - gem install coveralls-lcov
