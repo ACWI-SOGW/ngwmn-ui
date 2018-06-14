@@ -4,9 +4,7 @@ python:
   - "3.6.5"
 
 install:
-  - pip install -r requirements.txt
-  - pip install coverage
-  - pip install coveralls
+  - make env
   - gem install coveralls-lcov
 
 script:
