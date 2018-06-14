@@ -21,7 +21,7 @@ include server/Makefile
 MAKEPID:= $(shell echo $$PPID)
 
 env: env-assets env-server
-test: test-assets test-server
+test: test-server
 clean: clean-assets clean-server
 cleanenv: cleanenv-assets cleanenv-server
 build: env build-assets build-server
@@ -31,6 +31,4 @@ watch:
 	 wait) || kill -TERM $(MAKEPID)
 coverage:
 	mkdir -p ./server/coverage
-	find ./assets/coverage/ -mindepth 2 -iname '*.info' -exec cp {} ./server/coverage \;
-	coveralls-lcov -v -n ./server/coverage/lcov.info > ./server/coverage/coverage.json
-	cd server && env/bin/coveralls --merge=./coverage/coverage.json
+	env/bin/coveralls
