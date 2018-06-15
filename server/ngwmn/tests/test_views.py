@@ -1,5 +1,6 @@
 """
 Unit tests for NGWMN views
+
 """
 from unittest import TestCase, mock
 
