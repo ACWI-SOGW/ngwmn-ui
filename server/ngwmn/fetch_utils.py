@@ -29,8 +29,7 @@ def get_well_lithography(service_root, agency_cd, location_id):
     resp = r.get(lithography_target, params=query_params)
     if resp.status_code == 200:
         return parse_xml(resp.content)
-    else:
-        return None
+    return None
 
 
 def generate_bounding_box_values(latitude, longitude, delta=0.01):
