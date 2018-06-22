@@ -1,0 +1,37 @@
+{
+  "env": {
+    "commonjs": true,
+    "es6": true,
+    "jasmine": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "ecmaFeatures": {
+      "experimentalObjectRestSpread": true
+    },
+    "sourceType": "module"
+  },
+  "plugins": [
+    "jasmine"
+  ],
+  "extends": "eslint:recommended",
+  "rules": {
+    "comma-dangle": [2,"never"],
+    "linebreak-style": ["error", "unix"],
+    "no-console": "off",
+    "no-extra-parens": [2,"all"],
+    "no-use-before-define": 2,
+    "brace-style": [1,"1tbs",{}],
+    "no-mixed-spaces-and-tabs": 2,
+    "quotes": ["error", "single"],
+    "semi": ["error", "always"]
+  },
+  "globals": {
+    "__dirname": true,
+    "console": true,
+    "document": true,
+    "process": true,
+    "XMLHttpRequest": true,
+    "window": true
+  }
+}
