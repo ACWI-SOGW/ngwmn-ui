@@ -1,3 +1,11 @@
-assets/node_modules/*
-server/instance/*
+__pycache__/
+.pytest_cache/
+assets/dist/
+assets/node_modules/
+server/instance/
 server/.coverage
+server/.cache
+server/env
+.sublimelinterrc
+*.sublime-project
+*.sublime-workspace
