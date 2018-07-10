@@ -8,7 +8,7 @@ from flask import abort, render_template
 import requests as r
 
 from . import app
-from .fetch_utils import generate_bounding_box_values, get_well_lithography
+from .services.ngwmn import generate_bounding_box_values, get_well_lithography
 from .services.sifta import get_cooperators
 from .xml_utils import parse_xml
 

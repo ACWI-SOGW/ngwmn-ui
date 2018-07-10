@@ -6,7 +6,7 @@ from urllib.parse import urljoin
 
 import requests as r
 
-from .xml_utils import parse_xml
+from ..xml_utils import parse_xml
 
 
 def get_well_lithography(service_root, agency_cd, location_id):
