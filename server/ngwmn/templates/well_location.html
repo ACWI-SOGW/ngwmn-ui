@@ -1,11 +1,25 @@
 {% extends 'base.html' %}
 
 {% set page_title = location_name %}
+{% set body_id = 'well-location' %}
 
 {% block content %}
     {% if location_name %}
         <h1>{{ location_name }}</h1>
     {% else %}
         <p>Service call failed with {{ status_code }}: {{ reason }}</p>
+    {% endif %}
+    {% if cooperators %}
+        <div>
+            <p>Operated in cooperation with:</p>
+            {% for cooperator in cooperators | sort(attribute='Name') %}
+                <figure class="cooperator_logo">
+                    <a href="{{ cooperators.URL }}">
+                        <img src="{{ cooperator.IconURL }}" alt="logo for {{ cooperator.Name }}  }}" height = "50" >
+                    </a>
+                    <figcaption><a href="{{ cooperator.URL }}">{{ cooperator.Name }}</a></figcaption>
+                </figure>
+            {% endfor %}
+        </div>
     {% endif %}
 {% endblock %}

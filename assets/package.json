@@ -10,11 +10,13 @@
     "clean": "rm -rf dist && mkdir dist",
     "build": "npm run clean && run-p build:* && npm run hash-assets",
     "build:autotrack": "uglifyjs --output dist/autotrack.js node_modules/autotrack/autotrack.js",
+    "build:css": "node-sass src/styles/main.scss dist/main.css && uglifycss --output dist/main.css dist/main.css && postcss dist/main.css --no-map --use autoprefixer -o dist/main.css",
     "hash-assets": "gulp --gulpfile ./gulpfile.js revall",
-    "serve:static": "live-server --port=9000 --cors --no-browser assets/dist",
+    "serve:static": "live-server --port=9000 --cors --no-browser dist",
     "serve:python": "env/bin/python run.py",
     "start": "run-p watch serve:python",
     "watch": "run-p watch:* serve:static",
+    "watch:css": "nodemon -w src/styles -e scss -x \"npm run build:css\"",
     "watch:js": "rollup -c --watch"
   },
   "engines": {
@@ -56,7 +58,8 @@
     "rollup-plugin-node-resolve": "^3.3.0",
     "rollup-plugin-replace": "^2.0.0",
     "rollup-plugin-uglify": "^4.0.0",
-    "uglify-js": "^3.3.23"
+    "uglify-js": "^3.3.23",
+    "uglifycss": "0.0.29"
   },
   "dependencies": {
     "autotrack": "^2.4.1"

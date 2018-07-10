@@ -15,4 +15,5 @@ try:
 except FileNotFoundError:
     pass
 
-from . import views
+from . import views  # pylint: disable=C0413
+from . import filters  # pylint: disable=C0413

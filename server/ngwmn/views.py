@@ -9,6 +9,7 @@ import requests as r
 
 from . import app
 from .fetch_utils import generate_bounding_box_values, get_well_lithography
+from .services.sifta import get_cooperators
 from .xml_utils import parse_xml
 
 
@@ -25,6 +26,7 @@ def well_page(agency_cd, location_id):
 
     """
     root = get_well_lithography(SERVICE_ROOT, agency_cd, location_id)
+    cooperators = get_cooperators(location_id)
     if root is not None and 'gml' in root.nsmap.keys():
         geolocation_element = root.find('.//gml:Point/gml:pos', namespaces=root.nsmap)
         geolocation = geolocation_element.text
@@ -45,7 +47,10 @@ def well_page(agency_cd, location_id):
             summary = parse_xml(resp.content)
             location_name = summary.find('.//ngwmn:SITE_NAME', namespaces=summary.nsmap).text
             template = 'well_location.html'
-            context = {'location_name': location_name}
+            context = {
+                'location_name': location_name,
+                'cooperators': cooperators
+            }
             http_code = 200
             # return render_template('well_location.html', location_name=location_name)
         elif 400 <= resp.status_code < 500:
