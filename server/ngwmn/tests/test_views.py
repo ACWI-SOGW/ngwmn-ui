@@ -48,7 +48,7 @@ class TestWellPageView(TestCase):
         post_mock.return_value = post_resp
 
         response = self.app_client.get('/well-location/{}/{}/'.format(self.test_agency_cd, self.test_location_id))
-        well_lith_mock.assert_called_once()
+        post_mock.assert_called_once()
         self.assertEqual(response.status_code, 200)
 
     @mock.patch('ngwmn.services.ngwmn.r.post')
