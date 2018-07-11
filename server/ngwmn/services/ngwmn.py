@@ -6,17 +6,22 @@ from urllib.parse import urljoin
 
 import requests as r
 
-from ..xml_utils import parse_xml
+from ngwmn import app
+from ngwmn.services import ServiceException
+from ngwmn.xml_utils import parse_xml
 
 
-def get_well_lithography(service_root, agency_cd, location_id):
+SERVICE_ROOT = app.config.get('SERVICE_ROOT')
+
+
+def get_well_lithography(agency_cd, location_id, service_root=SERVICE_ROOT):
     """
     Make a NGWMN service request to get well lithography data.
 
-    :param str service_root: hostname of the service
     :param str agency_cd: agency code for the agency that manages the location
     :param str location_id: the location's identifier
     :return: lxml object represent the location's lithography XML
+    :param str service_root: hostname of the service
     :rtype: etree._Element or None
 
     """
@@ -26,10 +31,13 @@ def get_well_lithography(service_root, agency_cd, location_id):
         'agency_cd': agency_cd,
         'siteNo': location_id
     }
+
     resp = r.get(lithography_target, params=query_params)
+
     if resp.status_code == 200:
         return parse_xml(resp.content)
-    return None
+
+    raise ServiceException()
 
 
 def generate_bounding_box_values(latitude, longitude, delta=0.01):
@@ -51,3 +59,34 @@ def generate_bounding_box_values(latitude, longitude, delta=0.01):
     lat_upper = flt_lat + delta
     lon_upper = flt_lon + delta
     return lon_lower, lat_lower, lon_upper, lat_upper
+
+
+def get_features(latitude, longitude, service_root=SERVICE_ROOT):
+    """
+    Call geoserver GetFeature for a bounding box around the given latitude/longitude.
+
+    :param latitude: decimal latitude
+    :param longitude: decimal longitude
+    :param str service_root: hostname of the service
+    """
+    bbox = generate_bounding_box_values(latitude, longitude)
+    data = {
+        'SERVICE': 'WFS',
+        'VERSION': '1.0.0',
+        'srsName': 'EPSG:4326',
+        'outputFormat': 'json',
+        'typeName': 'ngwmn:VW_GWDP_GEOSERVER',
+        'CQL_FILTER': "((QW_SN_FLAG='1') OR (WL_SN_FLAG='1')) AND (BBOX(GEOM,{},{},{},{}))".format(*bbox)
+    }
+    params = {'request': 'GetFeature'}
+    target = urljoin(service_root, 'ngwmn/geoserver/wfs')
+    response = r.post(target, params=params, data=data)
+
+    if response.status_code == 200:
+        return response.json()
+    elif 400 <= response.status_code < 500:
+        raise ServiceException(status_code=200)
+    elif 500 <= response.status_code <= 511:
+        raise ServiceException(message=response.reason)
+    else:
+        raise ServiceException(status_code=500)

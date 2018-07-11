@@ -6,6 +6,7 @@ from unittest import TestCase, mock
 
 import requests as r
 
+from ngwmn.services import ServiceException
 from ngwmn.services.ngwmn import generate_bounding_box_values, get_well_lithography
 
 
@@ -23,7 +24,7 @@ class TestGetWellLithography(TestCase):
         m_resp.content = self.test_xml
         m_resp.status_code = 200
         r_mock.return_value = m_resp
-        result = get_well_lithography(self.test_service_root, self.test_agency_cd, self.test_location_id)
+        result = get_well_lithography(self.test_agency_cd, self.test_location_id, self.test_service_root)
         self.assertEqual(result.tag, 'site')
         r_mock.assert_called_with(
             'http://fake.gov/ngwmn/iddata',
@@ -35,8 +36,9 @@ class TestGetWellLithography(TestCase):
         m_resp = mock.Mock(r.Response)
         m_resp.status_code = 500
         r_mock.return_value = m_resp
-        result = get_well_lithography(self.test_service_root, self.test_agency_cd, self.test_location_id)
-        self.assertIsNone(result)
+        with self.assertRaises(ServiceException):
+            result = get_well_lithography(self.test_agency_cd, self.test_location_id, self.test_service_root)
+            self.assertIsNone(result)
 
     @mock.patch('ngwmn.services.ngwmn.r.get')
     def test_syntax_error(self, r_mock):
@@ -44,7 +46,7 @@ class TestGetWellLithography(TestCase):
         m_resp.content = 'Stuff'
         m_resp.status_code = 200
         r_mock.return_value = m_resp
-        result = get_well_lithography(self.test_service_root, self.test_agency_cd, self.test_location_id)
+        result = get_well_lithography(self.test_agency_cd, self.test_location_id, self.test_service_root)
         self.assertIsNone(result)
 
 

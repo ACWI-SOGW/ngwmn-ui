@@ -4,11 +4,7 @@
 {% set body_id = 'well-location' %}
 
 {% block content %}
-    {% if location_name %}
-        <h1>{{ location_name }}</h1>
-    {% else %}
-        <p>Service call failed with {{ status_code }}: {{ reason }}</p>
-    {% endif %}
+    <h1>{{ location_name }}</h1>
     {% if cooperators %}
         <div>
             <p>Operated in cooperation with:</p>
