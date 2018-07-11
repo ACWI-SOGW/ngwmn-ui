@@ -31,5 +31,5 @@ def well_page(agency_cd, location_id):
     return render_template(
         'well_location.html',
         cooperators=get_cooperators(location_id),
-        location_name=summary['features'][0]['properties']['SITE_NAME']
+        feature=summary['features'][0]['properties']
     ), 200
