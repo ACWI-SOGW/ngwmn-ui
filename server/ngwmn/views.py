@@ -5,9 +5,9 @@ NGWMN UI application views
 
 from flask import abort, render_template
 
-from ngwmn import app
-from ngwmn.services.ngwmn import get_well_lithography, get_features
-from ngwmn.services.sifta import get_cooperators
+from . import app
+from .services.ngwmn import get_well_lithography, get_features
+from .services.sifta import get_cooperators
 
 
 @app.route('/well-location/<agency_cd>/<location_id>/', methods=['GET'])
