@@ -1,8 +1,8 @@
 footer {
-    background-color: $acwi-lightblue;
+    background-color: color(primary, lighter);
     padding: 1em;
     .footer-nav {
-        background-color: $acwi-lightblue;
+        background-color: color(primary, lighter);
         padding: .25em 0;
         span, .footer-link {
             display: inline;
