@@ -1,1 +1,1 @@
-// Javascript entrypoint
+import 'uswds';

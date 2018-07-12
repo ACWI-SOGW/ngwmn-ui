@@ -10,13 +10,18 @@
     "clean": "rm -rf dist && mkdir dist",
     "build": "npm run clean && run-p build:* && npm run hash-assets",
     "build:autotrack": "uglifyjs --output dist/autotrack.js node_modules/autotrack/autotrack.js",
-    "build:css": "node-sass src/styles/main.scss dist/main.css && uglifycss --output dist/main.css dist/main.css && postcss dist/main.css --no-map --use autoprefixer -o dist/main.css",
+    "build:css": "node-sass --include-path node_modules/uswds/dist/scss src/styles/main.scss dist/main.css && uglifycss --output dist/main.css dist/main.css && postcss dist/main.css --no-map --use autoprefixer -o dist/main.css",
+    "build:fonts": "mkdir -p dist/fonts && cp -r node_modules/uswds/dist/fonts/* dist/fonts",
+    "build:images": "mkdir -p dist/img && mkdir -p dist/images && cp -r node_modules/uswds/dist/img/* dist/img",
+    "build:js": "mkdir -p dist/scripts && rollup -c --environment NODE_ENV:production",
     "hash-assets": "gulp --gulpfile ./gulpfile.js revall",
     "serve:static": "live-server --port=9000 --cors --no-browser dist",
     "serve:python": "env/bin/python run.py",
     "start": "run-p watch serve:python",
     "watch": "run-p watch:* serve:static",
     "watch:css": "nodemon -w src/styles -e scss -x \"npm run build:css\"",
+    "watch:fonts": "npm run build:fonts",
+    "watch:images": "npm run build:images",
     "watch:js": "rollup -c --watch"
   },
   "engines": {
@@ -62,6 +67,7 @@
     "uglifycss": "0.0.29"
   },
   "dependencies": {
-    "autotrack": "^2.4.1"
+    "autotrack": "^2.4.1",
+    "uswds": "github:uswds/uswds#release-2.0"
   }
 }

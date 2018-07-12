@@ -2,6 +2,10 @@
 
 
 {% block body %}
+    <header role="banner">
+        {% include 'partials/banner.html' %}
+        {% include 'partials/header.html' %}
+    </header>
     <main id="main-content">
         {% block content %}{% endblock %}
     </main>
