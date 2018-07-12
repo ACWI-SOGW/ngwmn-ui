@@ -38,6 +38,8 @@ def get_well_lithography(agency_cd, location_id, service_root=SERVICE_ROOT):
         return None
 
     if resp.status_code != 200:
+        msg = '%s error from %s (reason: %s)'
+        app.logger.error(msg, resp.status_code, resp.url, resp.reason)
         raise ServiceException()
 
     return parse_xml(resp.content)
@@ -86,6 +88,6 @@ def get_features(latitude, longitude, service_root=SERVICE_ROOT):
     response = r.post(target, params=params, data=data)
 
     if response.status_code != 200:
-        raise ServiceException(message=response.reason)
+        raise ServiceException()
 
     return response.json()

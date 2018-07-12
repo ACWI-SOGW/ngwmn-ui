@@ -18,7 +18,7 @@ def get_cooperators(site_no):
     try:
         response = requests.get(url)
     except requests.exceptions.RequestException as err:
-        app.logger.debug(str(err))
+        app.logger.error(str(err))
         return []
 
     # Gracefully degrade to an empty list of cooperators
