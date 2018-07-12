@@ -1,14 +1,67 @@
 {% extends 'base.html' %}
 
-{% set page_title = location_name %}
+{% set page_title = feature.SITE_NAME %}
 {% set body_id = 'well-location' %}
 
+{% macro _(value) -%}
+    {{ value if value is not none else '-' }}
+{%- endmacro %}
+
 {% block content %}
-    {% if location_name %}
-        <h1>{{ location_name }}</h1>
-    {% else %}
-        <p>Service call failed with {{ status_code }}: {{ reason }}</p>
-    {% endif %}
+    <h1>{{ feature.SITE_NAME }}</h1>
+    <table class="usa-table-borderless">
+        <caption>Summary</caption>
+        <tbody>
+            <tr>
+                <td scope="row">Agency</td>
+                <td>{{ _(feature.AGENCY_NM) }}</td>
+            </tr>
+            <tr>
+                <td scope="row">Site Name</td>
+                <td>{{ _(feature.SITE_NAME) }}</td>
+            </tr>
+            <tr>
+                <td scope="row">Site Number</td>
+                <td>{{ _(feature.SITE_NO) }}</td>
+            </tr>
+            <tr>
+                <td scope="row">Site Type</td>
+                <td>{{ _(feature.SITE_TYPE) }}</td>
+            </tr>
+            <tr>
+                <td scope="row">Lat/Long ({{ feature.HORZ_DATUM }})</td>
+                <td>{{ _(feature.DEC_LAT_VA) }}, {{ feature.DEC_LONG_VA }}</td>
+            </tr>
+            <tr>
+                <td scope="row">Well Depth</td>
+                <td>{{ _(feature.WELL_DEPTH) }} {{ feature.WELL_DEPTH_UNITS_NM }}</td>
+            </tr>
+            <tr>
+                <td scope="row">Local Aquifer Name</td>
+                <td>{{ _(feature.LOCAL_AQUIFER_NAME) }} ({{ feature.LOCAL_AQUIFER_CD }})</td>
+            </tr>
+            <tr>
+                <td scope="row">National Aquifer Name</td>
+                <td>{{ _(feature.NAT_AQFR_DESC) }} ({{ feature.NAT_AQUIFER_CD }})</td>
+            </tr>
+            <tr>
+                <td scope="row">Aquifer Type</td>
+                <td>{{ _(feature.AQFR_CHAR) }}</td>
+            </tr>
+            <tr>
+                <td scope="row">Water Level Network</td>
+                <td>{{ _(feature.WL_SYS_NAME) }}</td>
+            </tr>
+            <tr>
+                <td scope="row">Water Quality Network</td>
+                <td>{{ _(feature.QW_SYS_NAME) }}</td>
+            </tr>
+            <tr>
+                <td scope="row">Additional info</td>
+                <td><a href="{{ feature.LINK }}">Link</a></td>
+            </tr>
+        </tbody>
+    </table>
     {% if cooperators %}
         <div>
             <p>Operated in cooperation with:</p>
