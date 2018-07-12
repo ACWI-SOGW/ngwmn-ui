@@ -1,6 +1,25 @@
+// Override default of 4rem
+$h1-font-size: 3.25rem !default;
+
 @import 'uswds';
 
+$acwi-blue: #25418D;
+$acqi-lightblue: #c2d6f0;
+
+@import './partials/footer';
+@import './partials/header';
+
 body {
+    #main-content {
+        margin-top: 1em;
+        margin-bottom: 1em;
+        padding: 0 1em;
+    }
+    .content-container {
+        margin-left: auto;
+        margin-right: auto;
+        max-width: $site-max-width;
+    }
     &#well-location {
         @import './pages/well_location';
     }
