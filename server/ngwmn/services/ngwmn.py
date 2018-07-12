@@ -34,10 +34,13 @@ def get_well_lithography(agency_cd, location_id, service_root=SERVICE_ROOT):
 
     resp = r.get(lithography_target, params=query_params)
 
-    if resp.status_code == 200:
-        return parse_xml(resp.content)
+    if resp.status_code == 404:
+        return None
 
-    raise ServiceException()
+    if resp.status_code != 200:
+        raise ServiceException()
+
+    return parse_xml(resp.content)
 
 
 def generate_bounding_box_values(latitude, longitude, delta=0.01):
@@ -82,11 +85,7 @@ def get_features(latitude, longitude, service_root=SERVICE_ROOT):
     target = urljoin(service_root, 'ngwmn/geoserver/wfs')
     response = r.post(target, params=params, data=data)
 
-    if response.status_code == 200:
-        return response.json()
-    elif 400 <= response.status_code < 500:
-        raise ServiceException(status_code=200)
-    elif 500 <= response.status_code <= 511:
+    if response.status_code != 200:
         raise ServiceException(message=response.reason)
-    else:
-        raise ServiceException(status_code=500)
+
+    return response.json()
