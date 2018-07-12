@@ -1,0 +1,14 @@
+footer {
+    background-color: $acwi-lightblue;
+    padding: 1em;
+    .footer-nav {
+        background-color: $acwi-lightblue;
+        padding: .25em 0;
+        span, .footer-link {
+            display: inline;
+            padding-left: .5em;
+            padding-right: .5em;
+            text-decoration: none;
+        }
+    }
+}
