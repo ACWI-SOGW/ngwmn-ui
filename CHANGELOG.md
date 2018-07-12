@@ -9,3 +9,4 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added view for a well location
 - Added cooperator logos to well location view
 - Added summary table to location view
+- Added US Web Design System 2.0 pre-release and basic page layout
