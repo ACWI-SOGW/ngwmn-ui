@@ -12,7 +12,7 @@
     "build:autotrack": "uglifyjs --output dist/autotrack.js node_modules/autotrack/autotrack.js",
     "build:css": "node-sass --include-path node_modules/uswds/dist/scss src/styles/main.scss dist/main.css && uglifycss --output dist/main.css dist/main.css && postcss dist/main.css --no-map --use autoprefixer -o dist/main.css",
     "build:fonts": "mkdir -p dist/fonts && cp -r node_modules/uswds/dist/fonts/* dist/fonts",
-    "build:images": "mkdir -p dist/img && mkdir -p dist/img && cp -r src/images/* dist/images && cp -r node_modules/uswds/dist/img/* dist/img",
+    "build:images": "mkdir -p dist/img && mkdir -p dist/img && cp -r src/images/* dist/img && cp -r node_modules/uswds/dist/img/* dist/img",
     "build:js": "mkdir -p dist/scripts && rollup -c --environment NODE_ENV:production",
     "hash-assets": "gulp --gulpfile ./gulpfile.js revall",
     "serve:static": "live-server --port=9000 --cors --no-browser dist",
