@@ -92,5 +92,7 @@ setup(
     py_modules=['config'],
     # include static files in the distributable
     # they will appear in the root of the virtualenv upon dist installation
-    data_files=None
+    data_files=identify_data_files([
+        (None, '../assets/dist')
+    ])
 )

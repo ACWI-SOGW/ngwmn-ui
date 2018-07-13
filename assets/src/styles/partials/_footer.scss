@@ -1,0 +1,14 @@
+footer {
+    background-color: color(primary, lighter);
+    padding: 1em;
+    .footer-nav {
+        background-color: color(primary, lighter);
+        padding: .25em 0;
+        span, .footer-link {
+            display: inline;
+            padding-left: .5em;
+            padding-right: .5em;
+            text-decoration: none;
+        }
+    }
+}
