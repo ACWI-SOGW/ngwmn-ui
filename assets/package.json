@@ -68,6 +68,6 @@
   },
   "dependencies": {
     "autotrack": "^2.4.1",
-    "uswds": "github:uswds/uswds#release-2.0"
+    "uswds": "^2.0.0-alpha"
   }
 }
