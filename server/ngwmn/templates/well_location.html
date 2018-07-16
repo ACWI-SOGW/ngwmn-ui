@@ -68,7 +68,7 @@
     </table>
     {% if cooperators %}
         <div>
-            <p>Operated in cooperation with:</p>
+            <p>Data provided by:</p>
             {% for cooperator in cooperators | sort(attribute='Name') %}
                 <figure class="cooperator_logo">
                     <a href="{{ cooperators.URL }}">
