@@ -1,6 +1,9 @@
 // Override default of 4rem
 $h1-font-size: 3.25rem !default;
 
+$font-path: './fonts';
+$image-path: './img';
+@import './theme-palette-onondaga';
 @import 'uswds';
 
 $acwi-blue: #25418D;
@@ -20,7 +23,7 @@ body {
         margin-right: auto;
         max-width: $site-max-width;
     }
-    &#well-location {
-        @import './pages/well_location';
+    &#site-location {
+        @import './pages/site_location';
     }
 }

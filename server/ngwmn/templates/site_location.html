@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% set page_title = feature.SITE_NAME %}
-{% set body_id = 'well-location' %}
+{% set body_id = 'site-location' %}
 
 {% macro _(value) -%}
     {{ value if value is not none else '-' }}
@@ -30,7 +30,7 @@
             </tr>
             <tr>
                 <td scope="row">Lat/Long ({{ feature.HORZ_DATUM }})</td>
-                <td>{{ _(feature.DEC_LAT_VA) }}, {{ feature.DEC_LONG_VA }}</td>
+                <td>{{ _(feature.DEC_LAT_VA | round(4)) }}, {{ _(feature.DEC_LONG_VA | round(4)) }}</td>
             </tr>
             <tr>
                 <td scope="row">Well Depth</td>
@@ -49,8 +49,12 @@
                 <td>{{ _(feature.AQFR_CHAR) }}</td>
             </tr>
             <tr>
-                <td scope="row">Water Level Network</td>
-                <td>{{ _(feature.WL_SYS_NAME) }}</td>
+                <td scope="row">Water-Level Well Type</td>
+                <td>{{ _(feature.WL_WELL_TYPE_DESC) }}</td>
+            </tr>
+            <tr>
+                <td scope="row">Water-Level Well Characteristics</td>
+                <td>{{ _(feature.WL_WELL_CHARS_DESC) }}</td>
             </tr>
             <tr>
                 <td scope="row">Water Quality Network</td>
@@ -64,7 +68,7 @@
     </table>
     {% if cooperators %}
         <div>
-            <p>Operated in cooperation with:</p>
+            <p>Data provided by:</p>
             {% for cooperator in cooperators | sort(attribute='Name') %}
                 <figure class="cooperator_logo">
                     <a href="{{ cooperators.URL }}">
