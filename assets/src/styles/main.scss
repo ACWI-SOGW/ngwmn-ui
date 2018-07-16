@@ -22,7 +22,7 @@ body {
         margin-right: auto;
         max-width: $site-max-width;
     }
-    &#well-location {
-        @import './pages/well_location';
+    &#site-location {
+        @import './pages/site_location';
     }
 }

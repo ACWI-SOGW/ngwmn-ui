@@ -10,10 +10,10 @@ from .services.ngwmn import get_well_lithography, get_features
 from .services.sifta import get_cooperators
 
 
-@app.route('/well-location/<agency_cd>/<location_id>/', methods=['GET'])
-def well_page(agency_cd, location_id):
+@app.route('/site-location/<agency_cd>/<location_id>/', methods=['GET'])
+def site_page(agency_cd, location_id):
     """
-    Well location view.
+    Site location view.
 
     :param str agency_cd: agency code for the agency that manages the location
     :param location_id: the location's identifier
@@ -29,7 +29,7 @@ def well_page(agency_cd, location_id):
     summary = get_features(latitude, longitude)
 
     return render_template(
-        'well_location.html',
+        'site_location.html',
         cooperators=get_cooperators(location_id),
         feature=summary['features'][0]['properties']
     ), 200

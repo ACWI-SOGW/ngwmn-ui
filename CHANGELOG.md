@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 ### Added
-- Added view for a well location
-- Added cooperator logos to well location view
+- Added view for a site location
+- Added cooperator logos to site location view
 - Added summary table to location view
 - Added US Web Design System and basic page layout
