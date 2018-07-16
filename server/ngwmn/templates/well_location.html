@@ -30,7 +30,7 @@
             </tr>
             <tr>
                 <td scope="row">Lat/Long ({{ feature.HORZ_DATUM }})</td>
-                <td>{{ _(feature.DEC_LAT_VA) }}, {{ feature.DEC_LONG_VA }}</td>
+                <td>{{ _(feature.DEC_LAT_VA | round(4)) }}, {{ _(feature.DEC_LONG_VA | round(4)) }}</td>
             </tr>
             <tr>
                 <td scope="row">Well Depth</td>
