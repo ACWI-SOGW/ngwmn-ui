@@ -1,11 +1,10 @@
 header {
-    border-bottom: solid 10px $acwi-blue;
+    border-bottom: solid 10px color(primary, vivid);
     .banner-container {
         a {
-            color: white;
+            color: $primary-lighter;
             text-decoration: none;
         }
-
         .logo {
             display: inline-block;
             img {
