@@ -6,7 +6,7 @@ NGWMN UI application views
 from flask import abort, render_template
 
 from . import app
-from .services.ngwmn import get_well_lithography, get_features
+from .services.ngwmn import get_features, get_iddata
 from .services.sifta import get_cooperators
 
 
@@ -19,7 +19,7 @@ def site_page(agency_cd, location_id):
     :param location_id: the location's identifier
 
     """
-    root = get_well_lithography(agency_cd, location_id)
+    root = get_iddata('well_log', agency_cd, location_id)
     if root is None or 'gml' not in root.nsmap.keys():
         return abort(404)
 
