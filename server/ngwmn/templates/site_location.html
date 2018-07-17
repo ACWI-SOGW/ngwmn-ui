@@ -9,63 +9,120 @@
 
 {% block content %}
     <h1>{{ feature.SITE_NAME }}</h1>
-    <table class="usa-table-borderless">
-        <caption>Summary</caption>
-        <tbody>
-            <tr>
-                <td scope="row">Agency</td>
-                <td>{{ _(feature.AGENCY_NM) }}</td>
-            </tr>
-            <tr>
-                <td scope="row">Site Name</td>
-                <td>{{ _(feature.SITE_NAME) }}</td>
-            </tr>
-            <tr>
-                <td scope="row">Site Number</td>
-                <td>{{ _(feature.SITE_NO) }}</td>
-            </tr>
-            <tr>
-                <td scope="row">Site Type</td>
-                <td>{{ _(feature.SITE_TYPE) }}</td>
-            </tr>
-            <tr>
-                <td scope="row">Lat/Long ({{ feature.HORZ_DATUM }})</td>
-                <td>{{ _(feature.DEC_LAT_VA | round(4)) }}, {{ _(feature.DEC_LONG_VA | round(4)) }}</td>
-            </tr>
-            <tr>
-                <td scope="row">Well Depth</td>
-                <td>{{ _(feature.WELL_DEPTH) }} {{ feature.WELL_DEPTH_UNITS_NM }}</td>
-            </tr>
-            <tr>
-                <td scope="row">Local Aquifer Name</td>
-                <td>{{ _(feature.LOCAL_AQUIFER_NAME) }} ({{ feature.LOCAL_AQUIFER_CD }})</td>
-            </tr>
-            <tr>
-                <td scope="row">National Aquifer Name</td>
-                <td>{{ _(feature.NAT_AQFR_DESC) }} ({{ feature.NAT_AQUIFER_CD }})</td>
-            </tr>
-            <tr>
-                <td scope="row">Aquifer Type</td>
-                <td>{{ _(feature.AQFR_CHAR) }}</td>
-            </tr>
-            <tr>
-                <td scope="row">Water-Level Well Type</td>
-                <td>{{ _(feature.WL_WELL_TYPE_DESC) }}</td>
-            </tr>
-            <tr>
-                <td scope="row">Water-Level Well Characteristics</td>
-                <td>{{ _(feature.WL_WELL_CHARS_DESC) }}</td>
-            </tr>
-            <tr>
-                <td scope="row">Water Quality Network</td>
-                <td>{{ _(feature.QW_SYS_NAME) }}</td>
-            </tr>
-            <tr>
-                <td scope="row">Additional info</td>
-                <td><a href="{{ feature.LINK }}">Link</a></td>
-            </tr>
-        </tbody>
-    </table>
+    <ul class="usa-accordion">
+        <li>
+            <button class="usa-accordion-button" aria-expanded="true" aria-controls="ts-a1">
+                Summary
+            </button>
+            <div id="ts-a1" class="usa-accordion-content">
+                <table class="usa-table-borderless">
+                    <tbody>
+                        <tr>
+                            <td scope="row">Agency</td>
+                            <td>{{ _(feature.AGENCY_NM) }}</td>
+                        </tr>
+                        <tr>
+                            <td scope="row">Site Name</td>
+                            <td>{{ _(feature.SITE_NAME) }}</td>
+                        </tr>
+                        <tr>
+                            <td scope="row">Site Number</td>
+                            <td>{{ _(feature.SITE_NO) }}</td>
+                        </tr>
+                        <tr>
+                            <td scope="row">Site Type</td>
+                            <td>{{ _(feature.SITE_TYPE) }}</td>
+                        </tr>
+                        <tr>
+                            <td scope="row">Lat/Long ({{ feature.HORZ_DATUM }})</td>
+                            <td>{{ _(feature.DEC_LAT_VA | round(4)) }}, {{ _(feature.DEC_LONG_VA | round(4)) }}</td>
+                        </tr>
+                        <tr>
+                            <td scope="row">Well Depth</td>
+                            <td>{{ _(feature.WELL_DEPTH) }} {{ feature.WELL_DEPTH_UNITS_NM }}</td>
+                        </tr>
+                        <tr>
+                            <td scope="row">Local Aquifer Name</td>
+                            <td>{{ _(feature.LOCAL_AQUIFER_NAME) }} ({{ feature.LOCAL_AQUIFER_CD }})</td>
+                        </tr>
+                        <tr>
+                            <td scope="row">National Aquifer Name</td>
+                            <td>{{ _(feature.NAT_AQFR_DESC) }} ({{ feature.NAT_AQUIFER_CD }})</td>
+                        </tr>
+                        <tr>
+                            <td scope="row">Aquifer Type</td>
+                            <td>{{ _(feature.AQFR_CHAR) }}</td>
+                        </tr>
+                        <tr>
+                            <td scope="row">Water-Level Well Type</td>
+                            <td>{{ _(feature.WL_WELL_TYPE_DESC) }}</td>
+                        </tr>
+                        <tr>
+                            <td scope="row">Water-Level Well Characteristics</td>
+                            <td>{{ _(feature.WL_WELL_CHARS_DESC) }}</td>
+                        </tr>
+                        <tr>
+                            <td scope="row">Water Quality Network</td>
+                            <td>{{ _(feature.QW_SYS_NAME) }}</td>
+                        </tr>
+                        <tr>
+                            <td scope="row">Additional info</td>
+                            <td><a href="{{ feature.LINK }}">Link</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </li>
+        <li>
+            <button class="usa-accordion-button" aria-expanded="true" aria-controls="ts-a2">
+                Water Quality
+            </button>
+            <div id="ts-a2" class="usa-accordion-content">
+                <table class="usa-table-borderless">
+                    <thead>
+                        <th scope="col">Activity Start Date</th>
+                        <th scope="col">Activity Start Time</th>
+                        <th scope="col">Characteristic Name</th>
+                        <th scope="col">Measure Value</th>
+                        <th scope="col">Units</th>
+                        <th scope="col">Detection Limit</th>
+                        <th scope="col">Value Type</th>
+                        <th scope="col">Sample Fraction</th>
+                        <th scope="col">USGS P-Code</th>
+                        <th scope="col">Method Name</th>
+                        <th scope="col">Sample Method ID</th>
+                        <th scope="col">Sample Method ID Context</th>
+                        <th scope="col">Sample Method Name</th>
+                        <th scope="col">Activity Type Code</th>
+                        <th scope="col">Data Provided By</th>
+                    </thead>
+                    <tbody>
+                        {% for activity in water_quality_activities %}
+                            {% for result in activity['results'] %}
+                                <tr>
+                                    <td>{{ activity.description.start_date }}</td>
+                                    <td>{{ activity.description.start_time.time or '' }} {{ activity.description.start_time.time_zone_code or '' }}</td>
+                                    <td>{{ result.description.characteristic_name }}</td>
+                                    <td>{{ result.description.measure.value or result.description.detection_condition_text }}</td>
+                                    <td>{{ result.description.measure.unit_code or '' }}</td>
+                                    <td>{{ result.lab_information.detection_quantitation_limit.measure.value or '' }}</td>
+                                    <td>{{ result.description.value_type_name }}</td>
+                                    <td>{{ result.description.sample_fraction_text }}</td>
+                                    <td>{{ result.pcode }}</td>
+                                    <td>{{ result.analytical_method.name }}</td>
+                                    <td>{{ activity.sample_description.collection_method.identifier }}</td>
+                                    <td>{{ activity.sample_description.collection_method.identifier_context }}</td>
+                                    <td>{{ activity.sample_description.collection_method.name }}</td>
+                                    <td>{{ activity.description.type_code }}</td>
+                                    <td>{{ result.provider_name }}</td>
+                                </tr>
+                            {% endfor %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </li>
+    </ul>
     {% if cooperators %}
         <div>
             <p>Data provided by:</p>

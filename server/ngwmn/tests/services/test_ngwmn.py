@@ -9,7 +9,7 @@ import requests_mock
 
 from ngwmn.services import ServiceException
 from ngwmn.services.ngwmn import (
-    generate_bounding_box_values, get_iddata, get_water_quality_results)
+    generate_bounding_box_values, get_iddata, get_water_quality_activities)
 
 
 class TestGetWellLithography(TestCase):
@@ -80,107 +80,134 @@ class TestWaterQualityResults(TestCase):
     def test_wq_parsing(self):
         with requests_mock.mock() as req:
             req.get(requests_mock.ANY, content=MOCK_WQ_RESPONSE)
-            results = get_water_quality_results('USGS', 1)
+            results = get_water_quality_activities('USGS', 1)
             self.assertEqual(results, [{
-                'pcode': '00405',
-                'provider_name': 'USGS-MI',
-                'result_analytical_method': {
-                    'identifier': 'Unknown',
-                    'identifier_context': 'Unknown',
-                    'name': 'Unknown'
-                },
-                'result_description': {
-                    'characteristic_name': 'Carbon dioxide',
-                    'comment_text': None,
-                    'detection_condition_text': None,
-                    'measure': {
-                        'measure_unit_code': 'mg/l',
-                        'measure_value': '0.1'
-                    },
-                    'sample_fraction_text': 'Total',
-                    'temperature_basis_text': None,
-                    'value_type_name': 'Actual'
-                },
-                'result_lab_information': {
-                    'analysis_start_date': 'Unknown',
-                    'analysis_start_time': {
-                        'time': '00:00:00',
+                'description': {
+                    'comment_text': 'Test comment',
+                    'identifier': 'nwismi.01.98000888',
+                    'media_name': 'Water',
+                    'monitoring_location_identifier': 'USGS-462421087242701',
+                    'project_identifier': 'Unknown',
+                    'start_date': '1980-07-24',
+                    'start_time': {
+                        'time': '14:15:00',
                         'time_zone_code': 'EDT'
                     },
-                    'result_detection_quantitation_limit': {
-                        'measure': {
-                            'unit_code': None,
-                            'value': None
+                    'type_code': 'Sample-Routine'
+                },
+                'results': [
+                    {
+                        'analytical_method': {
+                            'identifier': 'Unknown',
+                            'identifier_context': 'Unknown',
+                            'name': 'Unknown'
                         },
-                        'type_name': None
+                        'description': {
+                            'characteristic_name': 'Carbon dioxide',
+                            'comment_text': None,
+                            'detection_condition_text': None,
+                            'measure': {
+                                'unit_code': 'mg/l',
+                                'value': '0.1'
+                            },
+                            'sample_fraction_text': 'Total',
+                            'temperature_basis_text': None,
+                            'value_type_name': 'Actual'
+                        },
+                        'lab_information': {
+                            'analysis_start_date': 'Unknown',
+                            'analysis_start_time': {
+                                'time': '00:00:00',
+                                'time_zone_code': 'EDT'
+                            },
+                            'detection_quantitation_limit': {
+                                'measure': {
+                                    'unit_code': None,
+                                    'value': None
+                                },
+                                'type_name': None
+                            }
+                        },
+                        'pcode': '00405',
+                        'provider_name': 'USGS-MI'
+                    },
+                    {
+                        'analytical_method': {
+                            'identifier': 'Unknown',
+                            'identifier_context': 'Unknown',
+                            'name': 'Unknown'
+                        },
+                        'description': {
+                            'characteristic_name': 'pH',
+                            'comment_text': None,
+                            'detection_condition_text': None,
+                            'measure': {
+                                'unit_code': 'std units',
+                                'value': '9.0'
+                            },
+                            'sample_fraction_text': 'Total',
+                            'temperature_basis_text': None,
+                            'value_type_name': 'Actual'
+                        },
+                        'lab_information': {
+                            'analysis_start_date': 'Unknown',
+                            'analysis_start_time': {
+                                'time': '00:00:00',
+                                'time_zone_code': 'EDT'
+                            },
+                            'detection_quantitation_limit': {
+                                'measure': {
+                                    'unit_code': None,
+                                    'value': None
+                                },
+                                'type_name': None
+                            }
+                        },
+                        'pcode': '00400',
+                        'provider_name': 'USGS-MI'
+                    },
+                    {
+                        'analytical_method': {
+                            'identifier': 'Unknown',
+                            'identifier_context': 'Unknown',
+                            'name': 'Unknown'
+                        },
+                        'description': {
+                            'characteristic_name': 'Specific conductance',
+                            'comment_text': None,
+                            'detection_condition_text': None,
+                            'measure': {
+                                'unit_code': 'uS/cm @25C',
+                                'value': '73'
+                            },
+                            'sample_fraction_text': 'Total',
+                            'temperature_basis_text': None,
+                            'value_type_name': 'Actual'
+                        },
+                        'lab_information': {
+                            'analysis_start_date': 'Unknown',
+                            'analysis_start_time': {
+                                'time': '00:00:00',
+                                'time_zone_code': 'EDT'
+                            },
+                            'detection_quantitation_limit': {
+                                'measure': {
+                                    'unit_code': None,
+                                    'value': None
+                                },
+                                'type_name': None
+                            }
+                        },
+                        'pcode': '00095',
+                        'provider_name': 'USGS-MI'
                     }
-                }
-            }, {
-                'pcode': '00400',
-                'provider_name': 'USGS-MI',
-                'result_analytical_method': {
-                    'identifier': 'Unknown',
-                    'identifier_context': 'Unknown',
-                    'name': 'Unknown'
-                },
-                'result_description': {
-                    'characteristic_name': 'pH',
-                    'comment_text': None,
-                    'detection_condition_text': None,
-                    'measure': {
-                        'measure_unit_code': 'std units',
-                        'measure_value': '9.0'
-                    },
-                    'sample_fraction_text': 'Total',
-                    'temperature_basis_text': None,
-                    'value_type_name': 'Actual'
-                },
-                'result_lab_information': {
-                    'analysis_start_date': 'Unknown',
-                    'analysis_start_time': {
-                        'time': '00:00:00',
-                        'time_zone_code': 'EDT'
-                    },
-                    'result_detection_quantitation_limit': {
-                        'measure': {
-                            'unit_code': None,
-                            'value': None
-                        },
-                        'type_name': None
-                    }
-                }
-            }, {
-                'pcode': '00095',
-                'provider_name': 'USGS-MI',
-                'result_analytical_method': {
-                    'identifier': 'Unknown',
-                    'identifier_context': 'Unknown',
-                    'name': 'Unknown'
-                },
-                'result_description': {
-                    'characteristic_name': 'Specific conductance',
-                    'comment_text': None,
-                    'detection_condition_text': None,
-                    'measure': {
-                        'measure_unit_code': 'uS/cm @25C',
-                        'measure_value': '73'
-                    },
-                    'sample_fraction_text': 'Total',
-                    'temperature_basis_text': None,
-                    'value_type_name': 'Actual'
-                },
-                'result_lab_information': {
-                    'analysis_start_date': 'Unknown',
-                    'analysis_start_time': {
-                        'time': '00:00:00',
-                        'time_zone_code': 'EDT'
-                    },
-                    'result_detection_quantitation_limit': {
-                        'measure': {
-                            'unit_code': None,
-                            'value': None
-                        },
-                        'type_name': None
+                ],
+                'sample_description': {
+                    'collection_equipment_name': 'Unknown',
+                    'collection_method': {
+                        'identifier': 'USGS',
+                        'identifier_context': 'USGS',
+                        'name': 'USGS'
                     }
                 }
             }])
@@ -205,7 +232,7 @@ MOCK_WQ_RESPONSE = b"""<?xml version="1.0" encoding="UTF-8"?>
         </ActivityStartTime>
         <ProjectIdentifier>Unknown</ProjectIdentifier>
         <MonitoringLocationIdentifier>USGS-462421087242701</MonitoringLocationIdentifier>
-        <ActivityCommentText/>
+        <ActivityCommentText>Test comment</ActivityCommentText>
       </ActivityDescription>
       <SampleDescription>
         <SampleCollectionMethod>
