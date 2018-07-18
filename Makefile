@@ -21,7 +21,7 @@ include server/Makefile
 MAKEPID:= $(shell echo $$PPID)
 
 env: env-assets env-server
-test: test-server
+test: test-server test-assets
 clean: clean-assets clean-server
 cleanenv: cleanenv-assets cleanenv-server
 build: env build-assets build-server

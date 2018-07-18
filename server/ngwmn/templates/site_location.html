@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 
+{% import 'macros/components.html' as components %}
+
 {% set page_title = feature.SITE_NAME %}
 {% set body_id = 'site-location' %}
 
@@ -9,6 +11,7 @@
 
 {% block content %}
     <h1>{{ feature.SITE_NAME }}</h1>
+    {{ components.Graph(feature.SITE_NO) }}
     <ul class="usa-accordion">
         <li>
             <button class="usa-accordion-button" aria-expanded="true" aria-controls="ts-a1">
