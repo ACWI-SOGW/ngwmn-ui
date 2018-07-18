@@ -6,7 +6,7 @@ NGWMN UI application views
 from flask import abort, render_template
 
 from . import app
-from .services.ngwmn import get_well_lithography, get_features
+from .services.ngwmn import get_features, get_iddata, get_water_quality_activities
 from .services.sifta import get_cooperators
 
 
@@ -19,7 +19,7 @@ def site_page(agency_cd, location_id):
     :param location_id: the location's identifier
 
     """
-    root = get_well_lithography(agency_cd, location_id)
+    root = get_iddata('well_log', agency_cd, location_id)
     if root is None or 'gml' not in root.nsmap.keys():
         return abort(404)
 
@@ -28,8 +28,11 @@ def site_page(agency_cd, location_id):
     latitude, longitude = geolocation.split(' ')
     summary = get_features(latitude, longitude)
 
+    water_quality_activities = get_water_quality_activities(agency_cd, location_id)
+
     return render_template(
         'site_location.html',
         cooperators=get_cooperators(location_id),
-        feature=summary['features'][0]['properties']
+        feature=summary['features'][0]['properties'],
+        water_quality_activities=water_quality_activities
     ), 200

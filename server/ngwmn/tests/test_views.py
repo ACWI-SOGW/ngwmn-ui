@@ -24,7 +24,7 @@ class TestWellPageView(TestCase):
         self.test_summary_json = TEST_SUMMARY_JSON
 
     @mock.patch('ngwmn.services.ngwmn.r.post')
-    @mock.patch('ngwmn.views.get_well_lithography')
+    @mock.patch('ngwmn.views.get_iddata')
     def test_best_case(self, well_lith_mock, post_mock):
         well_lith_mock.return_value = fromstring(self.test_well_xml)
         post_resp = mock.Mock(r.Response)
@@ -38,7 +38,7 @@ class TestWellPageView(TestCase):
         self.assertEqual(response.status_code, 200)
 
     @mock.patch('ngwmn.services.ngwmn.r.post')
-    @mock.patch('ngwmn.views.get_well_lithography')
+    @mock.patch('ngwmn.views.get_iddata')
     def test_failed_service_with_non_server_error(self, well_lith_mock, post_mock):
         well_lith_mock.return_value = fromstring(self.test_well_xml)
         post_resp = mock.Mock(r.Response)
@@ -52,7 +52,7 @@ class TestWellPageView(TestCase):
         self.assertEqual(response.status_code, 503)
 
     @mock.patch('ngwmn.services.ngwmn.r.post')
-    @mock.patch('ngwmn.views.get_well_lithography')
+    @mock.patch('ngwmn.views.get_iddata')
     def test_failed_service_with_server_error(self, well_lith_mock, post_mock):
         well_lith_mock.return_value = fromstring(self.test_well_xml)
         post_resp = mock.Mock(r.Response)
@@ -65,7 +65,7 @@ class TestWellPageView(TestCase):
         post_mock.assert_called_once()
         self.assertEqual(response.status_code, 503)
 
-    @mock.patch('ngwmn.views.get_well_lithography')
+    @mock.patch('ngwmn.views.get_iddata')
     def test_no_xml(self, well_lith_mock):
         well_lith_mock.return_value = None
         response = self.app_client.get('/site-location/{}/{}/'.format(self.test_agency_cd, self.test_location_id))

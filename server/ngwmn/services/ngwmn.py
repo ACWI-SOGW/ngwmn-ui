@@ -14,25 +14,23 @@ from ngwmn.xml_utils import parse_xml
 SERVICE_ROOT = app.config.get('SERVICE_ROOT')
 
 
-def get_well_lithography(agency_cd, location_id, service_root=SERVICE_ROOT):
+def get_iddata(request, agency_cd, location_id, service_root=SERVICE_ROOT):
     """
-    Make a NGWMN service request to get well lithography data.
+    Make a NGWMN iddata service request.
 
+    :param str request: request parameter for service call
     :param str agency_cd: agency code for the agency that manages the location
     :param str location_id: the location's identifier
-    :return: lxml object represent the location's lithography XML
+    :return: lxml object represent the location's response XML
     :param str service_root: hostname of the service
     :rtype: etree._Element or None
 
     """
-    lithography_target = urljoin(service_root, 'ngwmn/iddata')
-    query_params = {
-        'request': 'well_log',
+    resp = r.get(urljoin(service_root, 'ngwmn/iddata'), params={
+        'request': request,
         'agency_cd': agency_cd,
         'siteNo': location_id
-    }
-
-    resp = r.get(lithography_target, params=query_params)
+    })
 
     if resp.status_code == 404:
         return None
@@ -43,6 +41,81 @@ def get_well_lithography(agency_cd, location_id, service_root=SERVICE_ROOT):
         raise ServiceException()
 
     return parse_xml(resp.content)
+
+
+def get_water_quality_activities(agency_cd, location_id):
+    """
+    Retrieves water-quality data from the NGWMN iddata service.
+
+    :param str agency_cd: agency code for the agency that manages the location
+    :param str location_id: the location's identifier
+    :return: array of activity dictionaries
+    :rtype: array
+    """
+    xml = get_iddata('water_quality', agency_cd, location_id)
+    if xml is None:
+        return []
+
+    organization = xml.find('.//Organization', xml.nsmap)
+
+    return [{
+        'description': (lambda desc: {
+            'identifier': desc.find('ActivityIdentifier', xml.nsmap).text,
+            'type_code': desc.find('ActivityTypeCode', xml.nsmap).text,
+            'media_name': desc.find('ActivityMediaName', xml.nsmap).text,
+            'start_date': desc.find('ActivityStartDate', xml.nsmap).text,
+            'start_time': (lambda time: {
+                'time': time.find('Time', xml.nsmap).text,
+                'time_zone_code': time.find('TimeZoneCode', xml.nsmap).text
+            })(desc.find('ActivityStartTime', xml.nsmap)),
+            'project_identifier': desc.find('ProjectIdentifier', xml.nsmap).text,
+            'monitoring_location_identifier': desc.find('MonitoringLocationIdentifier', xml.nsmap).text,
+            'comment_text': desc.find('ActivityCommentText', xml.nsmap).text
+        })(activity.find('ActivityDescription', xml.nsmap)),
+        'sample_description': (lambda desc: {
+            'collection_method': (lambda method: {
+                'identifier': method.find('MethodIdentifier', xml.nsmap).text,
+                'identifier_context': method.find('MethodIdentifierContext', xml.nsmap).text,
+                'name': method.find('MethodName', xml.nsmap).text
+            })(desc.find('SampleCollectionMethod', xml.nsmap)),
+            'collection_equipment_name': desc.find('SampleCollectionEquipmentName', xml.nsmap).text
+        })(activity.find('SampleDescription', xml.nsmap)),
+        'results': [{
+            'pcode': result.find('USGSPcode', xml.nsmap).text,
+            'provider_name': result.find('ProviderName', xml.nsmap).text,
+            'description': (lambda desc: {
+                'detection_condition_text': desc.find('ResultDetectionConditionText', xml.nsmap).text,
+                'characteristic_name': desc.find('CharacteristicName', xml.nsmap).text,
+                'sample_fraction_text': desc.find('ResultSampleFractionText', xml.nsmap).text,
+                'measure': (lambda measure: {
+                    'value': measure.find('ResultMeasureValue', xml.nsmap).text,
+                    'unit_code': measure.find('MeasureUnitCode', xml.nsmap).text,
+                })(desc.find('ResultMeasure', xml.nsmap)),
+                'value_type_name': desc.find('ResultValueTypeName', xml.nsmap).text,
+                'temperature_basis_text': desc.find('ResultTemperatureBasisText', xml.nsmap).text,
+                'comment_text': desc.find('ResultCommentText', xml.nsmap).text
+            })(result.find('ResultDescription', xml.nsmap)),
+            'analytical_method': (lambda method: {
+                'identifier': method.find('MethodIdentifier', xml.nsmap).text,
+                'identifier_context': method.find('MethodIdentifierContext', xml.nsmap).text,
+                'name': method.find('MethodName', xml.nsmap).text
+            })(result.find('ResultAnalyticalMethod', xml.nsmap)),
+            'lab_information': (lambda info: {
+                'analysis_start_date': info.find('AnalysisStartDate', xml.nsmap).text,
+                'analysis_start_time': (lambda start_time: {
+                    'time': start_time.find('Time', xml.nsmap).text,
+                    'time_zone_code': start_time.find('TimeZoneCode', xml.nsmap).text
+                })(info.find('AnalysisStartTime', xml.nsmap)),
+                'detection_quantitation_limit': (lambda limit: {
+                    'type_name': limit.find('DetectionQuantitationLimitTypeName', xml.nsmap).text,
+                    'measure': (lambda measure: {
+                        'value': measure.find('MeasureValue', xml.nsmap).text,
+                        'unit_code': measure.find('MeasureUnitCode', xml.nsmap).text
+                    })(limit.find('DetectionQuantitationLimitMeasure', xml.nsmap))
+                })(info.find('ResultDetectionQuantitationLimit', xml.nsmap))
+            })(result.find('ResultLabInformation', xml.nsmap))
+        } for result in activity.findall('Result', xml.nsmap)]
+    } for activity in organization.findall('Activity', xml.nsmap)]
 
 
 def generate_bounding_box_values(latitude, longitude, delta=0.01):
