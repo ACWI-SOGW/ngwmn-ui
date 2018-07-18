@@ -1,6 +1,6 @@
 // http://www.html5rocks.com/en/tutorials/es6/promises/
 
-export function get(url) {
+export function get(url, resolveWith='response') {
     // Return a new promise.
     return new Promise(function(resolve, reject) {
         // Do the usual XHR stuff
@@ -12,7 +12,7 @@ export function get(url) {
             // so check the status
             if (req.status == 200) {
                 // Resolve the promise with the response text
-                resolve(req.response);
+                resolve(req[resolveWith]);
             } else {
                 // Otherwise reject with the status text
                 // which will hopefully be a meaningful error
@@ -32,5 +32,3 @@ export function get(url) {
         req.send();
     });
 }
-
-window.testGet = get;

@@ -8,4 +8,4 @@
  */
 
 import 'ngwmn/lib/ajax.spec';
-import 'ngwmn/services/ngwmn.spec';
+import 'ngwmn/services/cache.spec';

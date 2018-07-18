@@ -1,5 +1,6 @@
 import { select } from 'd3-selection';
 
+import { getWaterLevels } from 'ngwmn/services/cache';
 
 const drawMessage = function(elem, message) {
     // Set up parent element and SVG
