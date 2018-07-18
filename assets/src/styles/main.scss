@@ -1,15 +1,29 @@
 // Override default of 4rem
 $h1-font-size: 3.25rem !default;
 
+$fa-font-path: './fonts' !default;
+@import '../../node_modules/@fortawesome/fontawesome-free/scss/fontawesome.scss';
+//@import '../../node_modules/@fortawesome/fontawesome-free/scss/brands.scss';
+@import '../../node_modules/@fortawesome/fontawesome-free/scss/solid.scss';
+
 // Look in node_modules/uswds/src/stylesheets/project for theme values that
 // may be overridden here.
 $theme-font-path: './fonts';
 $theme-image-path: './img';
+//$theme-grid-container-max-width: 100%;
+$site-max-width: 100%;
 @import './theme-palette-onondaga';
 @import 'uswds';
 
 @import './partials/footer';
 @import './partials/header';
+@import './partials/script';
+
+.ngwmn-component {
+    &[data-component='graph'] {
+        @import './components/graph';
+    }
+}
 
 body {
     #main-content {

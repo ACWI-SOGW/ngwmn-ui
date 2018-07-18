@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="format-detection" content="telephone=no">
         <link rel="stylesheet" href="{{ 'main.css' | asset_url }}">
-        <script type="text/javascript">
+        <script>
             window.CONFIG = {
                 'SERVICE_ROOT': '{{ config.SERVICE_ROOT }}',
                 'STATIC_ROOT': '{{ config.STATIC_ROOT }}'
@@ -20,6 +20,7 @@
         </title>
     </head>
     <body {% if body_id %}id="{{ body_id }}"{% endif %}>
+        <script>document.body.className += ' js';</script>
         {% block body %}{% endblock %}
     </body>
 </html>

@@ -19,6 +19,16 @@ def site_page(agency_cd, location_id):
     :param location_id: the location's identifier
 
     """
+
+    # FIXME: hack to get around network problems
+    return render_template(
+        'site_location.html',
+        feature={'SITE_NO': location_id, 'DEC_LAT_VA': 0, 'DEC_LONG_VA': 0},
+        cooperator=[],
+        water_quality_activities=[]
+    ), 200
+
+
     root = get_iddata('well_log', agency_cd, location_id)
     if root is None or 'gml' not in root.nsmap.keys():
         return abort(404)

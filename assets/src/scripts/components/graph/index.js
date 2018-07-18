@@ -1,6 +1,18 @@
 import { select } from 'd3-selection';
 
-import { getWaterLevels } from 'ngwmn/services/cache';
+//import { dispatch, link, provide } from 'ngwmn/lib/d3-redux';
+//import { getWaterLevels } from 'ngwmn/services/cache';
+
+
+const drawGraph = function (elem) {
+    elem.append('svg')
+        .attr('xmlns', 'http://www.w3.org/2000/svg')
+        .append('text')
+            .attr('x', 50)
+            .attr('y', 50)
+            .text('Graph goes here');
+};
+
 
 const drawMessage = function(elem, message) {
     // Set up parent element and SVG
@@ -20,9 +32,16 @@ const drawMessage = function(elem, message) {
 };
 
 
-export default function (store, node, {siteID} = {}) {
-    if (!siteID) {
+export default function (store, node, {siteno} = {}) {
+    if (!siteno) {
         select(node).call(drawMessage, 'No data is available.');
         return;
     }
+
+    // TODO: clear loading after service call returns instead of here
+    window.setTimeout(() => {
+        select(node)
+            .classed('loading', false)
+            .call(drawGraph);
+    }, 2000);
 }

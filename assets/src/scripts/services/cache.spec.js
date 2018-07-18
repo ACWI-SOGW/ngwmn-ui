@@ -1,9 +1,46 @@
-import ajax from 'ngwmn/lib/ajax';
-
 import { getWaterLevels } from './cache';
-jasmine.pp = function(obj) {
-  return JSON.stringify(obj, undefined, 2);
-};
+
+
+const MOCK_WATER_LEVEL_RESPONSE = `<?xml version="1.0" encoding="UTF-8"?>
+<water-level-data>
+    <elevation-reference>
+        <site-elevation>859.0</site-elevation>
+        <site-elevation-datum>NAVD88</site-elevation-datum>
+    </elevation-reference>
+    <samples>
+        <sample>
+            <agency>USGS</agency>
+            <source-code>USGS</source-code>
+            <site>430406089232901</site>
+            <time>2011-09-30T00:00:00</time>
+            <pcode>72019</pcode>
+            <direction>down</direction>
+            <unit>ft</unit>
+            <original-value>16.52</original-value>
+            <from-landsurface-value>16.52</from-landsurface-value>
+            <from-datum-value>842.5</from-datum-value>
+            <comment>A</comment>
+            <accuracy-value>Unknown</accuracy-value>
+            <accuracy-unit>Unknown</accuracy-unit>
+        </sample>
+        <sample>
+            <agency>USGS</agency>
+            <source-code>USGS</source-code>
+            <site>430406089232901</site>
+            <time>2011-10-01T00:00:00</time>
+            <pcode>72019</pcode>
+            <direction>down</direction>
+            <unit>ft</unit>
+            <original-value>16.60</original-value>
+            <from-landsurface-value>16.60</from-landsurface-value>
+            <from-datum-value>842.4</from-datum-value>
+            <comment>A</comment>
+            <accuracy-value>Unknown</accuracy-value>
+            <accuracy-unit>Unknown</accuracy-unit>
+        </sample>
+    </samples>
+</water-level-data>`;
+
 
 describe('cache service module', () => {
     beforeEach(() => {
@@ -84,46 +121,5 @@ describe('cache service module', () => {
                 });
             });
         });
-    })
+    });
 });
-
-
-const MOCK_WATER_LEVEL_RESPONSE = `<?xml version="1.0" encoding="UTF-8"?>
-<water-level-data>
-    <elevation-reference>
-        <site-elevation>859.0</site-elevation>
-        <site-elevation-datum>NAVD88</site-elevation-datum>
-    </elevation-reference>
-    <samples>
-        <sample>
-            <agency>USGS</agency>
-            <source-code>USGS</source-code>
-            <site>430406089232901</site>
-            <time>2011-09-30T00:00:00</time>
-            <pcode>72019</pcode>
-            <direction>down</direction>
-            <unit>ft</unit>
-            <original-value>16.52</original-value>
-            <from-landsurface-value>16.52</from-landsurface-value>
-            <from-datum-value>842.5</from-datum-value>
-            <comment>A</comment>
-            <accuracy-value>Unknown</accuracy-value>
-            <accuracy-unit>Unknown</accuracy-unit>
-        </sample>
-        <sample>
-            <agency>USGS</agency>
-            <source-code>USGS</source-code>
-            <site>430406089232901</site>
-            <time>2011-10-01T00:00:00</time>
-            <pcode>72019</pcode>
-            <direction>down</direction>
-            <unit>ft</unit>
-            <original-value>16.60</original-value>
-            <from-landsurface-value>16.60</from-landsurface-value>
-            <from-datum-value>842.4</from-datum-value>
-            <comment>A</comment>
-            <accuracy-value>Unknown</accuracy-value>
-            <accuracy-unit>Unknown</accuracy-unit>
-        </sample>
-    </samples>
-</water-level-data>`

@@ -1,0 +1,14 @@
+& {
+    width: 100%;
+    min-height: 33vw;
+    &.loading {
+        .loading-indicator {
+            display: block;
+            width: 100%;
+            text-align: center;
+        }
+    }
+    .loading-indicator {
+        display: none;
+    }
+}

@@ -33,10 +33,10 @@ export const getWaterLevels = function (agencyCode, siteID) {
                     fromDatumValue: sample.getElementsByTagName('from-datum-value')[0].textContent,
                     comment: sample.getElementsByTagName('comment')[0].textContent,
                     accuracyValue: sample.getElementsByTagName('accuracy-value')[0].textContent,
-                    accuracyUnit: sample.getElementsByTagName('accuracy-unit')[0].textContent,
+                    accuracyUnit: sample.getElementsByTagName('accuracy-unit')[0].textContent
                 };
             })
-        }
+        };
     }).catch(reason => {
         console.error(reason);
         return {
@@ -45,4 +45,4 @@ export const getWaterLevels = function (agencyCode, siteID) {
             samples: []
         };
     });
-}
+};
