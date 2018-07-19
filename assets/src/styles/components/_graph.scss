@@ -1,6 +1,8 @@
 & {
     width: 100%;
-    min-height: 33vw;
+    min-height: 10vw;
+    display: flex;
+    flex-wrap: wrap;
     &.loading {
         .loading-indicator {
             display: block;
@@ -17,5 +19,16 @@
     }
     .loading-indicator, .error-indicator {
         display: none;
+    }
+    .y-label {
+        flex-grow: 0;
+        writing-mode: vertical-lr;
+        transform: rotate(180deg);
+        text-align: center;
+        padding: 0 0 0 .5em;
+    }
+    svg.chart {
+        flex-grow: 1;
+        background-color: lightgreen;
     }
 }

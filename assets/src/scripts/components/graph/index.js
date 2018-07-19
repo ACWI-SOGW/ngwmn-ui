@@ -6,8 +6,12 @@ import { getWaterLevels } from 'ngwmn/services/duck/selectors';
 
 
 const drawGraph = function (elem) {
+    elem.append('span')
+        .classed('y-label', true)
+        .text('y-axis label');
     elem.append('svg')
         .attr('xmlns', 'http://www.w3.org/2000/svg')
+        .classed('chart', true)
         .append('text')
             .attr('x', 50)
             .attr('y', 50)
