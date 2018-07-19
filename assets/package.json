@@ -72,8 +72,10 @@
     "@fortawesome/fontawesome-free": "^5.1.1",
     "autotrack": "^2.4.1",
     "d3": "^5.5.0",
+    "fast-memoize": "^2.5.1",
     "redux": "^4.0.0",
     "redux-thunk": "^2.3.0",
+    "reselect": "^3.0.1",
     "uswds": "^2.0.0-alpha"
   }
 }

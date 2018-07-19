@@ -1,4 +1,4 @@
-import { getWaterLevels } from './cache';
+import { retrieveWaterLevels } from './cache';
 
 
 const MOCK_WATER_LEVEL_RESPONSE = `<?xml version="1.0" encoding="UTF-8"?>
@@ -51,12 +51,12 @@ describe('cache service module', () => {
         jasmine.Ajax.uninstall();
     });
 
-    describe('getWaterLevels', () => {
+    describe('retrieveWaterLevels', () => {
         let request;
         let promise;
 
         beforeEach(() => {
-            promise = getWaterLevels('USGS', 1);
+            promise = retrieveWaterLevels('USGS', 1);
             request = jasmine.Ajax.requests.mostRecent();
         });
 

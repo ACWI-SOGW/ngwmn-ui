@@ -8,7 +8,14 @@
             text-align: center;
         }
     }
-    .loading-indicator {
+    &.has-error {
+        .error-indicator {
+            display: block;
+            width: 100%;
+            text-align: center;
+        }
+    }
+    .loading-indicator, .error-indicator {
         display: none;
     }
 }

@@ -26,6 +26,7 @@ def get_iddata(request, agency_cd, location_id, service_root=SERVICE_ROOT):
     :rtype: etree._Element or None
 
     """
+
     resp = r.get(urljoin(service_root, 'ngwmn/iddata'), params={
         'request': request,
         'agency_cd': agency_cd,
@@ -40,6 +41,7 @@ def get_iddata(request, agency_cd, location_id, service_root=SERVICE_ROOT):
         app.logger.error(msg, resp.status_code, resp.url, resp.reason)
         raise ServiceException()
 
+    app.logger.debug('Got %s response from %s', resp.status_code, resp.url)
     return parse_xml(resp.content)
 
 

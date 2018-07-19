@@ -1,6 +1,7 @@
-{% macro Graph(site_no) -%}
-    <div class="ngwmn-component has-script loading" data-component="graph" data-siteno="{{ site_no }}">
+{% macro Graph(agency_code, site_no) -%}
+    <div class="ngwmn-component has-script loading" data-component="graph" data-siteID="{{ site_no }}" data-agencyCode={{ agency_code }}>
         <i class="loading-indicator fas fa-10x fa-spin fa-spinner"></i>
+        <i class="error-indicator fas fa-10x fa-exclamation-circle"></i>
     </div>
     <noscript>
         <div class="usa-alert usa-alert-warning" >

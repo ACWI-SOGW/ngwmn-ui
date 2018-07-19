@@ -1,10 +1,16 @@
-import { applyMiddleware, createStore, compose } from 'redux';
+import { applyMiddleware, combineReducers, compose, createStore } from 'redux';
 import { default as thunk } from 'redux-thunk';
+
+import services from './services/duck';
 
 
 const MIDDLEWARES = [thunk];
 
-export default function (initialState = {}) {
+const rootReducer = combineReducers({
+    services
+});
+
+const configureStore = function (initialState = {}) {
     initialState = {
         ...initialState
     };
@@ -20,8 +26,10 @@ export default function (initialState = {}) {
     }
 
     return createStore(
-        state => state,
+        rootReducer,
         initialState,
         enhancers
     );
-}
+};
+
+export default configureStore;

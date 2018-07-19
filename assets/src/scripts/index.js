@@ -5,7 +5,7 @@
 import 'uswds';
 
 import GraphComponent from 'ngwmn/components/graph/index';
-import createStore from 'ngwmn/store/index';
+import configureStore from 'ngwmn/store';
 
 
 const COMPONENTS = {
@@ -20,7 +20,7 @@ function main() {
     // This method retains access to the exception object.
     try {
         let nodes = document.getElementsByClassName('ngwmn-component');
-        let store = createStore();
+        let store = configureStore();
         for (let node of nodes) {
             // If options is specified on the node, expect it to be a JSON string.
             // Otherwise, use the dataset attributes as the component options.

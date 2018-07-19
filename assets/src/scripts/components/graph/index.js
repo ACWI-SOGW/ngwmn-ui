@@ -1,7 +1,8 @@
 import { select } from 'd3-selection';
 
-//import { dispatch, link, provide } from 'ngwmn/lib/d3-redux';
-//import { getWaterLevels } from 'ngwmn/services/cache';
+import { link, provide } from 'ngwmn/lib/d3-redux';
+import { retrieveWaterLevels } from 'ngwmn/services/duck/operations';
+import { getWaterLevels } from 'ngwmn/services/duck/selectors';
 
 
 const drawGraph = function (elem) {
@@ -32,16 +33,19 @@ const drawMessage = function(elem, message) {
 };
 
 
-export default function (store, node, {siteno} = {}) {
-    if (!siteno) {
+export default function (store, node, {agencycode, siteid} = {}) {
+    if (!siteid) {
         select(node).call(drawMessage, 'No data is available.');
         return;
     }
 
-    // TODO: clear loading after service call returns instead of here
-    window.setTimeout(() => {
-        select(node)
-            .classed('loading', false)
-            .call(drawGraph);
-    }, 2000);
+    store.dispatch(retrieveWaterLevels(agencycode, siteid));
+
+    select(node)
+        .call(provide(store))
+        .call(link((elem, waterLevels) => {
+            elem.classed('loading', !waterLevels)
+                .classed('has-error', waterLevels && waterLevels.error);
+        }, getWaterLevels))
+        .call(drawGraph);
 }
