@@ -88,8 +88,8 @@
                         <th scope="col">Detection Limit</th>
                         <th scope="col">Value Type</th>
                         <th scope="col">Sample Fraction</th>
-                        <th scope="col">USGS P-Code</th>
                         <th scope="col">Method Name</th>
+                        <th scope="col">Analytical Method System</th>
                         <th scope="col">Sample Method ID</th>
                         <th scope="col">Sample Method ID Context</th>
                         <th scope="col">Sample Method Name</th>
@@ -107,9 +107,9 @@
                                     <td>{{ result.description.measure.unit_code or '' }}</td>
                                     <td>{{ result.lab_information.detection_quantitation_limit.measure.value or '' }}</td>
                                     <td>{{ result.description.value_type_name }}</td>
-                                    <td>{{ result.description.sample_fraction_text }}</td>
-                                    <td>{{ result.pcode }}</td>
+                                    <td>{{ result.description.sample_fraction_text or '' }}</td>
                                     <td>{{ result.analytical_method.name }}</td>
+                                    <td>{{ result.analytical_method.identifier_context }}</td>
                                     <td>{{ activity.sample_description.collection_method.identifier }}</td>
                                     <td>{{ activity.sample_description.collection_method.identifier_context }}</td>
                                     <td>{{ activity.sample_description.collection_method.name }}</td>
