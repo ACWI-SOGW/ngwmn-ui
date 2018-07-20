@@ -1,19 +1,24 @@
 import { applyMiddleware, combineReducers, compose, createStore } from 'redux';
 import { default as thunk } from 'redux-thunk';
 
-import services from './services/duck';
+import graphReducers from './components/graph/state';
+import serviceReducers from './services/state';
 
 
 const MIDDLEWARES = [thunk];
 
-const rootReducer = combineReducers({
-    services
-});
+const REDUCERS = {
+    ...graphReducers,
+    ...serviceReducers
+};
 
-const configureStore = function (initialState = {}) {
-    initialState = {
-        ...initialState
-    };
+const configureStore = function () {
+    // Create an initial state with all the reducer mount points initialized
+    // with an empty object.
+    const initialState = Object.keys(REDUCERS).reduce((state, key) => {
+        state[key] = {};
+        return state;
+    }, {});
 
     let enhancers;
     if (window.__REDUX_DEVTOOLS_EXTENSION__) {
@@ -26,7 +31,7 @@ const configureStore = function (initialState = {}) {
     }
 
     return createStore(
-        rootReducer,
+        combineReducers(REDUCERS),
         initialState,
         enhancers
     );
