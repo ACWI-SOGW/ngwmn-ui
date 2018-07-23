@@ -1,29 +1,82 @@
+import { axisBottom, axisLeft } from 'd3-axis';
 import { select } from 'd3-selection';
+import { line as d3Line } from 'd3-shape';
+import { timeFormat } from 'd3-time-format';
 import { createStructuredSelector } from 'reselect';
 
 import { link, provide } from 'ngwmn/lib/d3-redux';
+import { initCropper } from 'ngwmn/lib/utils';
 import { getWaterLevels, retrieveWaterLevels } from 'ngwmn/services/state/index';
 
 import {
-    getAxisX, getAxisY, getCurrentWaterLevelUnit, getLayout, setLayout,
-    setOptions
+    getCurrentWaterLevelUnit, getLayout, getLineSegments, getScaleX, getScaleY,
+    setLayout, setOptions
 } from './state';
 
 
-const drawAxisX = function (elem, {axisX, layout}) {
-    elem.selectAll('.x-axis').remove();
-    elem.append('g')
-        .attr('class', 'x-axis')
-        .attr('transform', `translate(0, ${layout.height})`)
-        .call(axisX);
+const CIRCLE_RADIUS_SINGLE_PT = 1;
+
+
+const drawDataLine = function(elem, {line, xScale, yScale}) {
+    // If this is a single point line, then represent it as a circle.
+    // Otherwise, render as a line.
+    if (line.points.length === 1) {
+        elem.append('circle')
+            .data(line.points)
+            .classed('line-segment', true)
+            .classed('approved', line.classes.approved)
+            .classed('provisional', line.classes.provisional)
+            .attr('r', CIRCLE_RADIUS_SINGLE_PT)
+            .attr('cx', d => xScale(d.dateTime))
+            .attr('cy', d => yScale(d.value));
+    } else {
+        const tsLine = d3Line()
+            .x(d => xScale(d.dateTime))
+            .y(d => yScale(d.value));
+        elem.append('path')
+            .datum(line.points)
+            .classed('line-segment', true)
+            .classed('approved', line.classes.approved)
+            .classed('provisional', line.classes.provisional)
+            .attr('d', tsLine);
+    }
 };
 
-const drawAxisY = function (elem, {axisY}) {
-    elem.selectAll('.y-axis').remove();
-    elem.append('g')
-        .attr('class', 'y-axis')
+const drawDataLines = function(svg, {lineSegments, xScale, yScale}, container) {
+    container = container || svg.append('g');
+
+    container.selectAll('g').remove();
+    const tsLineGroup = container
+        .append('g')
+            .attr('id', 'ts-group');
+
+    for (const line of lineSegments) {
+        drawDataLine(tsLineGroup, {line, xScale, yScale});
+    }
+
+    return container;
+};
+
+const drawAxisX = function (svg, {xScale, layout}) {
+    svg.selectAll('.x-axis').remove();
+    svg.append('g')
+        .classed('x-axis', true)
+        .attr('transform', `translate(0, ${layout.height})`)
+        .call(axisBottom()
+            .scale(xScale)
+            .tickSizeOuter(0)
+            .tickFormat(timeFormat('%B %d, %Y')));
+};
+
+const drawAxisY = function (svg, {yScale}) {
+    svg.selectAll('.y-axis').remove();
+    svg.append('g')
         .attr('transform', 'translate(0, 0)')
-        .call(axisY);
+        .classed('y-axis', true)
+        .call(axisLeft()
+            .scale(yScale)
+            .tickPadding(3)
+            .tickSizeOuter(0));
 };
 
 const drawAxisYLabel = function (elem, {unit}, label) {
@@ -41,21 +94,26 @@ const drawAxisYLabel = function (elem, {unit}, label) {
     return label;
 };
 
-const drawGraph = function (elem) {
-    elem.append('svg')
-        .attr('xmlns', 'http://www.w3.org/2000/svg')
-        .classed('chart', true)
-        .call(link(drawAxisX, createStructuredSelector({
-            axisX: getAxisX,
-            layout: getLayout
+const drawGraph = function (elem, options, svg) {
+    svg = svg || elem.append('svg')
+        .attr('xmlns', 'http://www.w3.org/2000/svg');
+
+    svg.classed('chart', true)
+        .call(initCropper)
+        .call(link(drawDataLines, createStructuredSelector({
+            lineSegments: getLineSegments,
+            xScale: getScaleX,
+            yScale: getScaleY
         })))
         .call(link(drawAxisY, createStructuredSelector({
-            axisY: getAxisY
+            yScale: getScaleY
         })))
-        .append('text')
-            .attr('x', 50)
-            .attr('y', 50)
-            .text('Graph goes here');
+        .call(link(drawAxisX, createStructuredSelector({
+            xScale: getScaleX,
+            layout: getLayout
+        })));
+
+    return svg;
 };
 
 const drawMessage = function(elem, message) {
@@ -90,10 +148,13 @@ export default function (store, node, options = {}) {
             elem.classed('loading', !waterLevels)
                 .classed('has-error', waterLevels && waterLevels.error);
         }, getWaterLevels))
-        .call(link(drawAxisYLabel, createStructuredSelector({
-            unit: getCurrentWaterLevelUnit
-        })))
-        .call(drawGraph);
+        .append('div')
+            .classed('graph-container', true)
+            .call(link(drawAxisYLabel, createStructuredSelector({
+                unit: getCurrentWaterLevelUnit
+            })))
+            .call(link(drawGraph, createStructuredSelector({
+            })));
 
     window.onresize = function () {
         store.dispatch(setLayout({width: node.offsetWidth, height: node.offsetHeight}));

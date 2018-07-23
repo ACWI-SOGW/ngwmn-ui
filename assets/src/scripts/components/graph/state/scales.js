@@ -2,7 +2,7 @@ import { scaleLinear } from 'd3-scale';
 import { createSelector } from 'reselect';
 
 import { getLayout } from './layout';
-import { getDomainY } from './points';
+import { getDomainX, getDomainY } from './points';
 
 
 /**
@@ -11,9 +11,11 @@ import { getDomainY } from './points';
  * @return {Function}           D3 scale function
  */
 export const getScaleX = createSelector(
+    getDomainX,
     getLayout,
-    (layout) => {
+    (domainX, layout) => {
         return scaleLinear()
+            .domain(domainX)
             .range([0, layout.width]);
     }
 );
