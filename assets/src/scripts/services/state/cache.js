@@ -3,7 +3,7 @@ import { createSelector } from 'reselect';
 import * as cache from '../cache';
 
 
-const MOUNT_POINT = 'store/cache';
+const MOUNT_POINT = 'services/cache/waterLevels';
 const WATER_LEVELS_SET = `${MOUNT_POINT}/WATER_LEVELS_SET`;
 
 /**
@@ -47,7 +47,7 @@ export const getWaterLevelID = function (agencyCode, siteID) {
  * Selectors
  */
 
-export const getWaterLevels = state => state[MOUNT_POINT].waterLevels || {};
+export const getWaterLevels = state => state[MOUNT_POINT];
 
 export const getTimeRange = createSelector(
     getWaterLevels,
@@ -68,9 +68,7 @@ const reducer = function (state = {}, action) {
         case WATER_LEVELS_SET:
             return {
                 ...state,
-                waterLevels: {
-                    [getWaterLevelID(action.payload.agencyCode, action.payload.siteID)]: action.payload.waterLevels
-                }
+                [getWaterLevelID(action.payload.agencyCode, action.payload.siteID)]: action.payload.waterLevels
             };
         default:
             return state;
