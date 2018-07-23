@@ -4,47 +4,53 @@ import { createStructuredSelector } from 'reselect';
 import { link, provide } from 'ngwmn/lib/d3-redux';
 import { getWaterLevels, retrieveWaterLevels } from 'ngwmn/services/state/index';
 
-import { getAxisX, getAxisY, getLayout, setLayout, setOptions } from './state';
+import {
+    getAxisX, getAxisY, getCurrentWaterLevelUnit, getLayout, setLayout,
+    setOptions
+} from './state';
 
 
-/**
- * Appends the x and y axes to the given svg node.
- */
-const drawAxes = function (elem, {axisX, axisY, layout}) {
-    const xLoc = {
-        x: 0,
-        y: layout.height
-    };
-    const yLoc = {x: 0, y: 0};
-
-    // Remove existing axes before adding the new ones.
-    elem.selectAll('.x-axis, .y-axis').remove();
-
-    // Add x-axis
+const drawAxisX = function (elem, {axisX, layout}) {
+    elem.selectAll('.x-axis').remove();
     elem.append('g')
         .attr('class', 'x-axis')
-        .attr('transform', `translate(${xLoc.x}, ${xLoc.y})`)
+        .attr('transform', `translate(0, ${layout.height})`)
         .call(axisX);
+};
 
-    // Add y-axis and a text label
+const drawAxisY = function (elem, {axisY}) {
+    elem.selectAll('.y-axis').remove();
     elem.append('g')
         .attr('class', 'y-axis')
-        .attr('transform', `translate(${yLoc.x}, ${yLoc.y})`)
+        .attr('transform', 'translate(0, 0)')
         .call(axisY);
 };
 
-const drawGraph = function (elem) {
-    elem.append('span')
-        .classed('y-label', true)
-        .text('y-axis label');
+const drawAxisYLabel = function (elem, {unit}, label) {
+    // Create a span for the label, if it doesn't already exist
+    label = label || elem.append('span')
+        .classed('y-label', true);
 
+    // Set the label text
+    if (unit) {
+        label.text(`Water levels, ${unit}`);
+    } else {
+        label.text('Water levels');
+    }
+
+    return label;
+};
+
+const drawGraph = function (elem) {
     elem.append('svg')
         .attr('xmlns', 'http://www.w3.org/2000/svg')
         .classed('chart', true)
-        .call(link(drawAxes, createStructuredSelector({
+        .call(link(drawAxisX, createStructuredSelector({
             axisX: getAxisX,
-            axisY: getAxisY,
             layout: getLayout
+        })))
+        .call(link(drawAxisY, createStructuredSelector({
+            axisY: getAxisY
         })))
         .append('text')
             .attr('x', 50)
@@ -84,6 +90,9 @@ export default function (store, node, options = {}) {
             elem.classed('loading', !waterLevels)
                 .classed('has-error', waterLevels && waterLevels.error);
         }, getWaterLevels))
+        .call(link(drawAxisYLabel, createStructuredSelector({
+            unit: getCurrentWaterLevelUnit
+        })))
         .call(drawGraph);
 
     window.onresize = function () {

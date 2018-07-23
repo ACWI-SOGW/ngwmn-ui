@@ -11,10 +11,6 @@ describe('graph component layout state', () => {
         store = createStore(combineReducers(reducer), {});
     });
 
-    afterEach(() => {
-
-    });
-
     it('setLayout works', () => {
         const layout = {width: 10, height: 20};
         store.dispatch(setLayout(layout));

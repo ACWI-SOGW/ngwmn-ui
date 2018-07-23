@@ -14,6 +14,17 @@ export const getCurrentWaterLevels = createSelector(
     }
 );
 
+export const getCurrentWaterLevelUnit = createSelector(
+    getCurrentWaterLevels,
+    (waterLevels) => {
+        if (waterLevels.samples && waterLevels.samples.length) {
+            return waterLevels.samples[0].unit;
+        } else {
+            return null;
+        }
+    }
+);
+
 /**
  * Selector to return points visible on the current chart view.
  * @type {Array} List of visible points

@@ -11,10 +11,6 @@ describe('graph component options state', () => {
         store = createStore(combineReducers(reducer), {});
     });
 
-    afterEach(() => {
-
-    });
-
     it('setOptions works', () => {
         const options = {option1: 'option1', option2: 'option2'};
         store.dispatch(setOptions(options));
