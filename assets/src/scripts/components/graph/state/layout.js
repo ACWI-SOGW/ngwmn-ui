@@ -16,7 +16,7 @@ export const setLayout = function (layout) {
 
 export const getLayout = state => state[MOUNT_POINT].layout || DEFAULT_LAYOUT;
 
-const reducer = function (state = {}, action) {
+export const reducer = function (state = {}, action) {
     switch (action.type) {
         case GRAPH_LAYOUT_SET:
             return {
