@@ -65,7 +65,7 @@ const drawAxisX = function (svg, {xScale, layout}) {
         .call(axisBottom()
             .scale(xScale)
             .tickSizeOuter(0)
-            .tickFormat(timeFormat('%B %d, %Y')));
+            .tickFormat(timeFormat('%b %d, %Y')));
 };
 
 const drawAxisY = function (svg, {yScale}) {
