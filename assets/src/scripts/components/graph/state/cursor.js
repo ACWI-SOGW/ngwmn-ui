@@ -1,5 +1,13 @@
+import { createSelector } from 'reselect';
+
+import { getNearestTime } from 'ngwmn/lib/utils';
+import { getChartPoints } from './points';
+import { getScaleX } from './scales';
+
+
 const MOUNT_POINT = 'components/graph/cursor';
 const CURSOR_SET = `${MOUNT_POINT}/CURSOR_SET`;
+
 
 export const setCursor = function (date) {
     return {
@@ -10,7 +18,34 @@ export const setCursor = function (date) {
     };
 };
 
-export const getCursor = state => state[MOUNT_POINT].date;
+/**
+ * Returns the current cursor location, or the last point in the time series if
+ * none is selected.
+ * @type {Object}
+ */
+export const getCursor = createSelector(
+    state => state[MOUNT_POINT].date,
+    getScaleX,
+    (cursor, xScale) => {
+        return cursor || xScale.domain()[1];
+    }
+);
+
+/*
+ * Returns the closest point to the current cursor location.
+ * @param {Object} state - Redux store
+ * @return {Object}
+ */
+export const getCursorPoint = createSelector(
+    getCursor,
+    getChartPoints,
+    (cursor, points) => {
+        if (!cursor) {
+            return null;
+        }
+        return getNearestTime(points, cursor).datum;
+    }
+);
 
 export const reducer = function (state = {}, action) {
     switch (action.type) {

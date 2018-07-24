@@ -2,6 +2,7 @@ import { axisBottom, axisLeft } from 'd3-axis';
 import { mouse, select } from 'd3-selection';
 import { line as d3Line } from 'd3-shape';
 import { timeFormat } from 'd3-time-format';
+import { transition } from 'd3-transition';
 import { createStructuredSelector } from 'reselect';
 
 import { dispatch, link, provide } from 'ngwmn/lib/d3-redux';
@@ -9,8 +10,8 @@ import { initCropper } from 'ngwmn/lib/utils';
 import { getWaterLevels, retrieveWaterLevels } from 'ngwmn/services/state/index';
 
 import {
-    getCurrentWaterLevelUnit, getCursor, getLayout, getLineSegments, getScaleX,
-    getScaleY, setCursor, setLayout, setOptions
+    getCurrentWaterLevelUnit, getCursor, getCursorPoint, getLayout,
+    getLineSegments, getScaleX, getScaleY, setCursor, setLayout, setOptions
 } from './state';
 
 
@@ -106,7 +107,6 @@ const drawFocusLine = function (elem, {cursor, xScale, yScale}, focus) {
             });
 
     // Update focus line with current cursor - default to end of graph
-    cursor = cursor || xScale.domain()[1];
     if (cursor) {
         const x = xScale(cursor);
         const range = yScale.range();
@@ -159,6 +159,84 @@ const drawMessage = function(elem, message) {
             });
 };
 
+const drawTooltip = function (elem, {cursorPoint, unit}, tooltip) {
+    tooltip = tooltip || elem.append('div')
+        .attr('class', 'tooltip');
+
+    const texts = tooltip
+        .selectAll('div')
+        .data(cursorPoint ? [cursorPoint] : []);
+
+    // Remove old text labels after fading them out
+    texts.exit()
+        .transition(transition().duration(500))
+            .style('opacity', '0')
+            .remove();
+
+    // Add new text labels
+    const newTexts = texts.enter()
+        .append('div');
+
+    // Update the text and backgrounds of all tooltip labels
+    const merge = texts.merge(newTexts)
+        .interrupt()
+        .style('opacity', '1');
+
+    merge
+        .text(datum => {
+            const parts = [];
+            if (datum.value) {
+                parts.push(`${datum.value} ${unit}`);
+            }
+            if (datum.dateTime) {
+                parts.push(datum.dateTime.toLocaleString());
+            }
+            return parts.join(' - ');
+        })
+        .each(function (datum) {
+            select(this)
+                .classed('tooltip-text', true)
+                .classed('approved', datum.approved)
+                .classed('provisional', !datum.approved);
+        });
+
+    return tooltip;
+};
+
+const drawFocusCircle = function (elem, {cursorPoint, xScale, yScale}, circleContainer) {
+    // Put the circles in a container so we can keep the their position in the
+    // DOM before rect.overlay, to prevent the circles from receiving mouse
+    // events.
+    circleContainer = circleContainer || elem.append('g');
+
+    const circles = circleContainer
+        .selectAll('circle.focus')
+        .data(cursorPoint ? [cursorPoint] : []);
+
+    // Remove old circles after fading them out
+    circles.exit()
+        .transition(transition().duration(500))
+            .style('opacity', '0')
+            .remove();
+
+    // Add new focus circles
+    const newCircles = circles.enter()
+        .append('circle')
+            .attr('class', 'focus')
+            .attr('r', 5.5)
+            .attr('cx', datum => xScale(datum.dateTime))
+            .attr('cy', datum => yScale(datum.value));
+
+    // Update the location of pre-existing circles
+    circles.merge(newCircles)
+        .transition(transition().duration(20))
+            .style('opacity', '.6')
+            .attr('cx', datum => xScale(datum.dateTime))
+            .attr('cy', datum => yScale(datum.value));
+
+    return circleContainer;
+};
+
 export default function (store, node, options = {}) {
     const { agencycode, siteid } = options;
 
@@ -182,6 +260,11 @@ export default function (store, node, options = {}) {
             .call(link(drawAxisYLabel, createStructuredSelector({
                 unit: getCurrentWaterLevelUnit
             })))
+            .call(link(drawTooltip, createStructuredSelector({
+                cursorPoint: getCursorPoint,
+                unit: getCurrentWaterLevelUnit
+
+            })))
             .append('svg')
                 .attr('xmlns', 'http://www.w3.org/2000/svg')
                 .classed('chart', true)
@@ -198,12 +281,17 @@ export default function (store, node, options = {}) {
                     xScale: getScaleX,
                     layout: getLayout
                 })))
-                .call(drawOverlay)
                 .call(link(drawFocusLine, createStructuredSelector({
                     cursor: getCursor,
                     xScale: getScaleX,
                     yScale: getScaleY
-                })));
+                })))
+                .call(link(drawFocusCircle, createStructuredSelector({
+                    cursorPoint: getCursorPoint,
+                    xScale: getScaleX,
+                    yScale: getScaleY
+                })))
+                .call(drawOverlay);
 
     window.onresize = function () {
         store.dispatch(setLayout({width: node.offsetWidth, height: node.offsetHeight}));
