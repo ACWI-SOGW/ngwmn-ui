@@ -95,7 +95,6 @@ const drawAxisYLabel = function (elem, {unit}, label) {
 };
 
 const drawFocusLine = function (elem, {cursor, xScale, yScale}, focus) {
-    console.log(new Date(cursor));
     // Create focus line, if it doesn't exist yet.
     focus = focus || elem
         .append('g')

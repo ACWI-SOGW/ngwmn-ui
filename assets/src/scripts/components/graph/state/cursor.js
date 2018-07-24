@@ -2,7 +2,6 @@ const MOUNT_POINT = 'components/graph/cursor';
 const CURSOR_SET = `${MOUNT_POINT}/CURSOR_SET`;
 
 export const setCursor = function (date) {
-    console.log(date, new Date(date));
     return {
         type: CURSOR_SET,
         payload: {
