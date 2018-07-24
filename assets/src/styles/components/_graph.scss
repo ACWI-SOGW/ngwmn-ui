@@ -51,6 +51,22 @@
                 stroke-width: 2px;
                 stroke: color(accent-warm, dark);
             }
+            .overlay {
+                fill: none;
+                pointer-events: all;
+            }
+            circle.focus {
+                fill: #436BAF;
+                opacity: .6;
+            }
+            .focus {
+                line {
+                    opacity: .5;
+                    stroke: #436BAF;
+                    stroke-width: 1px;
+                    stroke-dasharray: 5, 5
+                }
+            }
         }
     }
 }
