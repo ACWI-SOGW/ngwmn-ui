@@ -5,7 +5,7 @@ import { timeFormat } from 'd3-time-format';
 import { transition } from 'd3-transition';
 import { createStructuredSelector } from 'reselect';
 
-import { dispatch, link, provide } from 'ngwmn/lib/d3-redux';
+import { link } from 'ngwmn/lib/d3-redux';
 import { initCropper } from 'ngwmn/lib/utils';
 import { getWaterLevels, retrieveWaterLevels } from 'ngwmn/services/state/index';
 
@@ -123,25 +123,27 @@ const drawFocusLine = function (elem, {cursor, xScale, yScale}, focus) {
     return focus;
 };
 
-const drawOverlay = function (elem) {
+const drawOverlay = function (elem, store) {
     elem.append('rect')
         .attr('class', 'overlay')
         .attr('x', 0)
         .attr('y', 0)
-        .call(link((rect, layout) => {
+        .call(link(store, (rect, layout) => {
             rect.attr('width', layout.width)
                 .attr('height', layout.height);
         }, getLayout))
-        .on('mouseout', dispatch(() => setCursor(null)))
-        .call(link((rect, xScale) => {
-            rect.on('mouseover', dispatch(function () {
+        .on('mouseout', () => {
+            store.dispatch(setCursor(null));
+        })
+        .call(link(store, (rect, xScale) => {
+            rect.on('mouseover', () => {
                 const selectedTime = xScale.invert(mouse(rect.node())[0]);
-                return setCursor(selectedTime);
-            }));
-            rect.on('mousemove', dispatch(function () {
+                store.dispatch(setCursor(selectedTime));
+            });
+            rect.on('mousemove', () => {
                 const selectedTime = xScale.invert(mouse(rect.node())[0]);
-                return setCursor(selectedTime);
-            }));
+                store.dispatch(setCursor(selectedTime));
+            });
         }, getScaleX));
 };
 
@@ -250,17 +252,16 @@ export default function (store, node, options = {}) {
     store.dispatch(retrieveWaterLevels(agencycode, siteid));
 
     select(node)
-        .call(provide(store))
-        .call(link((elem, waterLevels) => {
+        .call(link(store, (elem, waterLevels) => {
             elem.classed('loading', !waterLevels)
                 .classed('has-error', waterLevels && waterLevels.error);
         }, getWaterLevels))
         .append('div')
             .classed('graph-container', true)
-            .call(link(drawAxisYLabel, createStructuredSelector({
+            .call(link(store, drawAxisYLabel, createStructuredSelector({
                 unit: getCurrentWaterLevelUnit
             })))
-            .call(link(drawTooltip, createStructuredSelector({
+            .call(link(store, drawTooltip, createStructuredSelector({
                 cursorPoint: getCursorPoint,
                 unit: getCurrentWaterLevelUnit
 
@@ -269,29 +270,29 @@ export default function (store, node, options = {}) {
                 .attr('xmlns', 'http://www.w3.org/2000/svg')
                 .classed('chart', true)
                 .call(initCropper)
-                .call(link(drawDataLines, createStructuredSelector({
+                .call(link(store, drawDataLines, createStructuredSelector({
                     lineSegments: getLineSegments,
                     xScale: getScaleX,
                     yScale: getScaleY
                 })))
-                .call(link(drawAxisY, createStructuredSelector({
+                .call(link(store, drawAxisY, createStructuredSelector({
                     yScale: getScaleY
                 })))
-                .call(link(drawAxisX, createStructuredSelector({
+                .call(link(store, drawAxisX, createStructuredSelector({
                     xScale: getScaleX,
                     layout: getLayout
                 })))
-                .call(link(drawFocusLine, createStructuredSelector({
+                .call(link(store, drawFocusLine, createStructuredSelector({
                     cursor: getCursor,
                     xScale: getScaleX,
                     yScale: getScaleY
                 })))
-                .call(link(drawFocusCircle, createStructuredSelector({
+                .call(link(store, drawFocusCircle, createStructuredSelector({
                     cursorPoint: getCursorPoint,
                     xScale: getScaleX,
                     yScale: getScaleY
                 })))
-                .call(drawOverlay);
+                .call(drawOverlay, store);
 
     window.onresize = function () {
         store.dispatch(setLayout({width: node.offsetWidth, height: node.offsetHeight}));

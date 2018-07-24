@@ -1,11 +1,6 @@
 // This code is derived from d3-redux: https://github.com/couchand/d3-redux
 // Copyright (c) 2017 Andrew Couch, MIT licensed.
 
-import { local } from 'd3-selection';
-
-const storeLocal = local();
-
-
 export const subscribe = function (store, callback, args) {
     let currentState = store.getState();
 
@@ -21,56 +16,25 @@ export const subscribe = function (store, callback, args) {
     store.subscribe(handleUpdate);
 };
 
-export const connect = function (callback) {
-    return function(selection) {
-        let args = [selection].concat([].slice.call(arguments, 1));
-
-        let stores = [];
-        selection.each(function () {
-            let store = storeLocal.get(this);
-            if (stores.indexOf(store) < 0) stores.push(store);
-        });
-
-        for (let i = 0; i < stores.length; i++) {
-            subscribe(stores[i], callback, args);
-            callback.apply(null, args.concat([stores[i].getState()]));
-        }
-    };
-};
-
-export const dispatch = function (handler) {
-    return function (d, i, g) {
-        let action = handler.call(this, d, i, g);
-        if (action) {
-            let store = storeLocal.get(this);
-            store.dispatch(action);
-        }
-    };
-};
-
-export const fromState = function (selector) {
-    return function () {
-        let store = storeLocal.get(this);
-        return selector.call(this, store.getState(), ...arguments);
-    };
-};
-
-export const provide = function (store) {
+export const connect = function (store, callback) {
     return function (selection) {
-        selection.property(storeLocal, store);
+        let args = [selection].concat([].slice.call(arguments, 1));
+        subscribe(store, callback, args);
+        callback.apply(null, args.concat([store.getState()]));
     };
 };
 
 /**
  * Calls the provided D3 callback with provided state when updated.
+ * @param  {Object} store    Redux store
  * @param  {Function} func   D3 callback accepting (elem, options)
  * @param  {Object} selector Source selector for options
  * @return {Function}        D3 callback
  */
-export const link = function (func, selector) {
+export const link = function (store, func, selector) {
     let currentOptions = null;
     let context = null;
-    return connect(function (selection, state) {
+    return connect(store, function (selection, state) {
         let nextOptions = selector(state);
         if (currentOptions !== nextOptions) {
             currentOptions = nextOptions;
