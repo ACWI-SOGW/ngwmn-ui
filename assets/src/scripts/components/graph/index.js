@@ -15,7 +15,7 @@ import {
 } from './state';
 
 
-const CIRCLE_RADIUS_SINGLE_PT = 1;
+const CIRCLE_RADIUS_SINGLE_PT = 3;
 
 
 const drawDataLine = function(elem, {line, xScale, yScale}) {

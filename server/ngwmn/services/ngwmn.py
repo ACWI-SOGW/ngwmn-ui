@@ -45,6 +45,17 @@ def get_iddata(request, agency_cd, location_id, service_root=SERVICE_ROOT):
     return parse_xml(resp.content)
 
 
+def _(parent, tag):
+    if parent is None:
+        return None
+
+    node = parent.find(tag, parent.nsmap)
+    if node is None:
+        return None
+
+    return node.text
+
+
 def get_water_quality_activities(agency_cd, location_id):
     """
     Retrieves water-quality data from the NGWMN iddata service.
@@ -59,62 +70,64 @@ def get_water_quality_activities(agency_cd, location_id):
         return []
 
     organization = xml.find('.//Organization', xml.nsmap)
+    if organization is None:
+        return []
 
     return [{
         'description': (lambda desc: {
-            'identifier': desc.find('ActivityIdentifier', xml.nsmap).text,
-            'type_code': desc.find('ActivityTypeCode', xml.nsmap).text,
-            'media_name': desc.find('ActivityMediaName', xml.nsmap).text,
-            'start_date': desc.find('ActivityStartDate', xml.nsmap).text,
+            'identifier': _(desc, 'ActivityIdentifier'),
+            'type_code': _(desc, 'ActivityTypeCode'),
+            'media_name': _(desc, 'ActivityMediaName'),
+            'start_date': _(desc, 'ActivityStartDate'),
             'start_time': (lambda time: {
-                'time': time.find('Time', xml.nsmap).text,
-                'time_zone_code': time.find('TimeZoneCode', xml.nsmap).text
+                'time': _(time, 'Time'),
+                'time_zone_code': _(time, 'TimeZoneCode')
             })(desc.find('ActivityStartTime', xml.nsmap)),
-            'project_identifier': desc.find('ProjectIdentifier', xml.nsmap).text,
-            'monitoring_location_identifier': desc.find('MonitoringLocationIdentifier', xml.nsmap).text,
-            'comment_text': desc.find('ActivityCommentText', xml.nsmap).text
+            'project_identifier': _(desc, 'ProjectIdentifier'),
+            'monitoring_location_identifier': _(desc, 'MonitoringLocationIdentifier'),
+            'comment_text': _(desc, 'ActivityCommentText')
         })(activity.find('ActivityDescription', xml.nsmap)),
         'sample_description': (lambda desc: {
             'collection_method': (lambda method: {
-                'identifier': method.find('MethodIdentifier', xml.nsmap).text,
-                'identifier_context': method.find('MethodIdentifierContext', xml.nsmap).text,
-                'name': method.find('MethodName', xml.nsmap).text
+                'identifier': _(method, 'MethodIdentifier'),
+                'identifier_context': _(method, 'MethodIdentifierContext'),
+                'name': _(method, 'MethodName')
             })(desc.find('SampleCollectionMethod', xml.nsmap)),
-            'collection_equipment_name': desc.find('SampleCollectionEquipmentName', xml.nsmap).text
+            'collection_equipment_name': _(desc, 'SampleCollectionEquipmentName')
         })(activity.find('SampleDescription', xml.nsmap)),
         'results': [{
-            'pcode': result.find('USGSPcode', xml.nsmap).text,
-            'provider_name': result.find('ProviderName', xml.nsmap).text,
+            'pcode': _(result, 'USGSPcode'),
+            'provider_name': _(result, 'ProviderName'),
             'description': (lambda desc: {
-                'detection_condition_text': desc.find('ResultDetectionConditionText', xml.nsmap).text,
-                'characteristic_name': desc.find('CharacteristicName', xml.nsmap).text,
-                'sample_fraction_text': desc.find('ResultSampleFractionText', xml.nsmap).text,
+                'detection_condition_text': _(desc, 'ResultDetectionConditionText'),
+                'characteristic_name': _(desc, 'CharacteristicName'),
+                'sample_fraction_text': _(desc, 'ResultSampleFractionText'),
                 'measure': (lambda measure: {
-                    'value': measure.find('ResultMeasureValue', xml.nsmap).text,
-                    'unit_code': measure.find('MeasureUnitCode', xml.nsmap).text,
+                    'value': _(measure, 'ResultMeasureValue'),
+                    'unit_code': _(measure, 'MeasureUnitCode'),
                 })(desc.find('ResultMeasure', xml.nsmap)),
-                'value_type_name': desc.find('ResultValueTypeName', xml.nsmap).text,
-                'temperature_basis_text': desc.find('ResultTemperatureBasisText', xml.nsmap).text,
-                'comment_text': desc.find('ResultCommentText', xml.nsmap).text
+                'value_type_name': _(desc, 'ResultValueTypeName'),
+                'temperature_basis_text': _(desc, 'ResultTemperatureBasisText'),
+                'comment_text': _(desc, 'ResultCommentText')
             })(result.find('ResultDescription', xml.nsmap)),
             'analytical_method': (lambda method: {
-                'identifier': method.find('MethodIdentifier', xml.nsmap).text,
-                'identifier_context': method.find('MethodIdentifierContext', xml.nsmap).text,
-                'name': method.find('MethodName', xml.nsmap).text
+                'identifier': _(method, 'MethodIdentifier'),
+                'identifier_context': _(method, 'MethodIdentifierContext'),
+                'name': _(method, 'MethodName')
             })(result.find('ResultAnalyticalMethod', xml.nsmap)),
             'lab_information': (lambda info: {
-                'analysis_start_date': info.find('AnalysisStartDate', xml.nsmap).text,
+                'analysis_start_date': _(info, 'AnalysisStartDate'),
                 'analysis_start_time': (lambda start_time: {
-                    'time': start_time.find('Time', xml.nsmap).text,
-                    'time_zone_code': start_time.find('TimeZoneCode', xml.nsmap).text
-                })(info.find('AnalysisStartTime', xml.nsmap)),
+                    'time': _(start_time, 'Time'),
+                    'time_zone_code': _(start_time, 'TimeZoneCode')
+                })(info.find('AnalysisStartTime', xml.nsmap) if info else None),
                 'detection_quantitation_limit': (lambda limit: {
-                    'type_name': limit.find('DetectionQuantitationLimitTypeName', xml.nsmap).text,
+                    'type_name': _(limit, 'DetectionQuantitationLimitTypeName'),
                     'measure': (lambda measure: {
-                        'value': measure.find('MeasureValue', xml.nsmap).text,
-                        'unit_code': measure.find('MeasureUnitCode', xml.nsmap).text
-                    })(limit.find('DetectionQuantitationLimitMeasure', xml.nsmap))
-                })(info.find('ResultDetectionQuantitationLimit', xml.nsmap))
+                        'value': _(measure, 'MeasureValue'),
+                        'unit_code': _(measure, 'MeasureUnitCode')
+                    })(limit.find('DetectionQuantitationLimitMeasure', xml.nsmap) if limit else None)
+                })(info.find('ResultDetectionQuantitationLimit', xml.nsmap) if info else None)
             })(result.find('ResultLabInformation', xml.nsmap))
         } for result in activity.findall('Result', xml.nsmap)]
     } for activity in organization.findall('Activity', xml.nsmap)]

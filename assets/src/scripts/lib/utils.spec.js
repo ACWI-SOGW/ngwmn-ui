@@ -31,48 +31,19 @@ describe('Utils module', () => {
 
     describe('initCropper', () => {
         let svg;
-        let observer;
 
         beforeEach(() => {
             svg = select('body')
                 .append('svg')
                 .attr('viewBox', '0 0 0 0');
-            observer = initCropper(svg);
         });
 
         afterEach(() => {
             svg.remove();
-            observer.disconnect();
         });
 
-        it('observes append and set attribute', () => {
-            svg.append('text')
-                .attr('x', 0)
-                .attr('y', 0)
-                .text('Hello');
-            expect(observer.takeRecords().length).toBe(2);
-        });
-
-        it('consumes mutations', (done) => {
-            svg.append('text')
-                .attr('x', 0)
-                .attr('y', 0)
-                .text('Hello');
-            window.setTimeout(() => {
-                expect(observer.takeRecords().length).toBe(0);
-                done();
-            });
-        });
-
-        it('sets viewBox', (done) => {
-            svg.append('text')
-                .attr('x', 0)
-                .attr('y', 0)
-                .text('Hello');
-            window.setTimeout(() => {
-                expect(svg.attr('viewBox')).not.toEqual('0 0 0 0');
-                done();
-            });
+        it('cropper initializes without unexpected errors', () => {
+            initCropper(svg);
         });
     });
 

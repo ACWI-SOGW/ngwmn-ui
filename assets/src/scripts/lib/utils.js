@@ -1,4 +1,5 @@
 import { bisector } from 'd3-array';
+import ResizeObserver from 'resize-observer-polyfill';
 
 
 /**
@@ -22,17 +23,12 @@ export const callIf = function (condition, func) {
  */
 export const initCropper = function (svg) {
     // Create an observer instance linked to the callback function
-    var observer = new window.MutationObserver(function () {
+    var observer = new ResizeObserver(entries => {
         // Set the viewBox to the bounding box of the SVG.
-        const bBox = svg.node().getBBox();
+        const bBox = entries[0].target.getBBox();
         svg.attr('viewBox', `${bBox.x} ${bBox.y} ${bBox.width} ${bBox.height}`);
     });
-    observer.observe(svg.node(), {
-        attributes: false,
-        childList: true,
-        subtree: true
-    });
-    return observer;
+    observer.observe(svg.node());
 };
 
 /*

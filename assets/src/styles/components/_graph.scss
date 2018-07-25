@@ -27,6 +27,9 @@ $provisional-color: color(accent-warm, dark);
             width: 100%;
             text-align: center;
         }
+        .graph-container {
+            display: none;
+        }
     }
     &.has-error {
         .error-indicator {
@@ -50,7 +53,7 @@ $provisional-color: color(accent-warm, dark);
         }
         svg.chart {
             flex-grow: 1;
-            path.line-segment {
+            .line-segment {
                 fill: none;
                 stroke-width: 2px;
                 &.approved {

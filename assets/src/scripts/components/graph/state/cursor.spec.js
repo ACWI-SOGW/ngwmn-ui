@@ -1,14 +1,22 @@
 import { combineReducers, createStore } from 'redux';
 
-import reducer from './cursor';
+import services from 'ngwmn/services/state/index';
+import cursor from './cursor';
 import { getCursor, setCursor } from './cursor';
+import layout from './layout';
+import options from './options';
 
 
 describe('graph component cursor state', () => {
     let store;
 
     beforeEach(() => {
-        store = createStore(combineReducers(reducer), {});
+        store = createStore(combineReducers({
+            ...cursor,
+            ...layout,
+            ...options,
+            ...services
+        }), {});
     });
 
     it('setLayout works', () => {
