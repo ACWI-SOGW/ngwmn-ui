@@ -253,7 +253,7 @@ export default function (store, node, options = {}) {
 
     select(node)
         .call(link(store, (elem, waterLevels) => {
-            elem.classed('loading', !waterLevels)
+            elem.classed('loading', Object.keys(waterLevels).length === 0)
                 .classed('has-error', waterLevels && waterLevels.error);
         }, getWaterLevels))
         .append('div')
