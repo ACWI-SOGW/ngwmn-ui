@@ -9,6 +9,9 @@ import { getOptions } from './options';
 // Lines will be split if the difference exceeds two years.
 export const MAX_LINE_POINT_GAP = 1000 * 60 * 60 * 24 * 365 * 2;
 
+// 20% padding around the y-domain
+const PADDING_RATIO = 0.2;
+
 
 export const getCurrentWaterLevels = createSelector(
     getWaterLevels,
@@ -60,9 +63,23 @@ export const getDomainX = createSelector(
 export const getDomainY = createSelector(
     getChartPoints,
     (chartPoints) => {
-        return [
+        let domain = [
             Math.min(...chartPoints.map(pt => pt.value)),
             Math.max(...chartPoints.map(pt => pt.value))
+        ];
+
+        // Pad domains on both ends by PADDING_RATIO.
+        const padding = PADDING_RATIO * (domain[1] - domain[0]);
+        domain = [
+            domain[0] - padding,
+            domain[1] + padding
+        ];
+
+        // For positive domains, a zero-lower bound on the y-axis is enforced.
+        const isPositive = domain[0] >= 0 && domain[1] >= 0;
+        return [
+            isPositive ? Math.max(0, domain[0]) : domain[0],
+            domain[1]
         ];
     }
 );
