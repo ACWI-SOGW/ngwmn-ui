@@ -25,6 +25,7 @@ class TestGetWellLithography(TestCase):
         m_resp = mock.Mock(r.Response)
         m_resp.content = self.test_xml
         m_resp.status_code = 200
+        m_resp.url = self.test_service_root
         r_mock.return_value = m_resp
         result = get_iddata('well_log', self.test_agency_cd, self.test_location_id, self.test_service_root)
         self.assertEqual(result.tag, 'site')
@@ -49,6 +50,7 @@ class TestGetWellLithography(TestCase):
         m_resp = mock.Mock(r.Response)
         m_resp.content = 'Stuff'
         m_resp.status_code = 200
+        m_resp.url = self.test_service_root
         r_mock.return_value = m_resp
         result = get_iddata('well_log', self.test_agency_cd, self.test_location_id, self.test_service_root)
         self.assertIsNone(result)

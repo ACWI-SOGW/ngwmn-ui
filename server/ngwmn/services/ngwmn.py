@@ -120,14 +120,14 @@ def get_water_quality_activities(agency_cd, location_id):
                 'analysis_start_time': (lambda start_time: {
                     'time': _(start_time, 'Time'),
                     'time_zone_code': _(start_time, 'TimeZoneCode')
-                })(info.find('AnalysisStartTime', xml.nsmap) if info else None),
+                })(info.find('AnalysisStartTime', xml.nsmap) if info is not None else None),
                 'detection_quantitation_limit': (lambda limit: {
                     'type_name': _(limit, 'DetectionQuantitationLimitTypeName'),
                     'measure': (lambda measure: {
                         'value': _(measure, 'MeasureValue'),
                         'unit_code': _(measure, 'MeasureUnitCode')
-                    })(limit.find('DetectionQuantitationLimitMeasure', xml.nsmap) if limit else None)
-                })(info.find('ResultDetectionQuantitationLimit', xml.nsmap) if info else None)
+                    })(limit.find('DetectionQuantitationLimitMeasure', xml.nsmap) if limit is not None else None)
+                })(info.find('ResultDetectionQuantitationLimit', xml.nsmap) if info is not None else None)
             })(result.find('ResultLabInformation', xml.nsmap))
         } for result in activity.findall('Result', xml.nsmap)]
     } for activity in organization.findall('Activity', xml.nsmap)]
