@@ -31,6 +31,6 @@ export const getScaleY = createSelector(
     (domainY, layout) => {
         return scaleLinear()
             .domain(domainY)
-            .range([layout.height, 0]);
+            .range([0, layout.height]);
     }
 );
