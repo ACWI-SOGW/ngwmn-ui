@@ -30,7 +30,6 @@ $provisional-color: color(accent-warm, dark);
         align-items: center;
         justify-content: center;
         i {
-            color: color(primary, light);
             opacity: .8;
         }
     }
@@ -42,6 +41,7 @@ $provisional-color: color(accent-warm, dark);
             display: block;
             width: auto;
             text-align: center;
+            color: color(primary, light);
         }
     }
     &.has-error {
@@ -49,6 +49,7 @@ $provisional-color: color(accent-warm, dark);
             display: block;
             width: auto;
             text-align: center;
+            color: $error;
         }
     }
     .graph-container {
