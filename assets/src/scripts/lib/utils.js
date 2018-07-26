@@ -38,7 +38,7 @@ export const initCropper = function (svg) {
  * @param {Date} attr   attribute of data objects containing date object
  * @return {Object}     {datum, index}
  */
-export const getNearestTime = function(data, time, attr='dateTime') {
+export const getNearestTime = function (data, time, attr='dateTime') {
     // Function that returns the left bounding point for a given chart point.
     if (data.length === 0) {
         return null;

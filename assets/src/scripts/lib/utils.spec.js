@@ -55,7 +55,7 @@ describe('Utils module', () => {
             };
         });
 
-        it('Return null if the DATA array is empty', function() {
+        it('Return null if the DATA array is empty', function () {
             expect(getNearestTime([], DATA[0].dateTime)).toBeNull();
         });
 

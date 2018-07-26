@@ -18,7 +18,7 @@ import {
 const CIRCLE_RADIUS_SINGLE_PT = 3;
 
 
-const drawDataLine = function(elem, {line, xScale, yScale}) {
+const drawDataLine = function (elem, {line, xScale, yScale}) {
     // If this is a single point line, then represent it as a circle.
     // Otherwise, render as a line.
     if (line.points.length === 1) {
@@ -43,7 +43,7 @@ const drawDataLine = function(elem, {line, xScale, yScale}) {
     }
 };
 
-const drawDataLines = function(svg, {lineSegments, xScale, yScale}, container) {
+const drawDataLines = function (svg, {lineSegments, xScale, yScale}, container) {
     container = container || svg.append('g');
 
     container.selectAll('g').remove();
@@ -147,7 +147,7 @@ const drawOverlay = function (elem, store) {
         }, getScaleX));
 };
 
-const drawMessage = function(elem, message) {
+const drawMessage = function (elem, message) {
     elem.append('div')
         .attr('class', 'usa-alert usa-alert-warning')
         .append('div')
@@ -213,7 +213,7 @@ const drawFocusCircle = function (elem, {cursorPoint, xScale, yScale}, circleCon
 
     const circles = circleContainer
         .selectAll('circle.focus')
-        .data(cursorPoint ? [cursorPoint] : []);
+            .data(cursorPoint ? [cursorPoint] : []);
 
     // Remove old circles after fading them out
     circles.exit()

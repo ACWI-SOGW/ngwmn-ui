@@ -42,7 +42,7 @@
                         }
                     }
                     var socket = new window.WebSocket('{{ config.LIVE_RELOAD_PATH }}');
-                    socket.onmessage = function(msg) {
+                    socket.onmessage = function (msg) {
                         if (msg.data == 'reload') window.location.reload();
                         else if (msg.data == 'refreshcss') refreshCSS();
                     };
