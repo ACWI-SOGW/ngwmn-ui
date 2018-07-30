@@ -16,6 +16,7 @@ import {
 
 
 const CIRCLE_RADIUS_SINGLE_PT = 3;
+const FOCUS_CIRCLE_RADIUS = 5.5;
 
 
 const drawDataLine = function (elem, {line, xScale, yScale}) {
@@ -129,7 +130,9 @@ const drawOverlay = function (elem, store) {
         .attr('x', 0)
         .attr('y', 0)
         .call(link(store, (rect, layout) => {
-            rect.attr('width', layout.width)
+            // Set the overlay size, including a little extra space to deal
+            // with the focus circle when it's drawn on the right-most extent.
+            rect.attr('width', layout.width + FOCUS_CIRCLE_RADIUS)
                 .attr('height', layout.height);
         }, getLayout))
         .on('mouseout', () => {
@@ -225,7 +228,7 @@ const drawFocusCircle = function (elem, {cursorPoint, xScale, yScale}, circleCon
     const newCircles = circles.enter()
         .append('circle')
             .attr('class', 'focus')
-            .attr('r', 5.5)
+            .attr('r', FOCUS_CIRCLE_RADIUS)
             .attr('cx', datum => xScale(datum.dateTime))
             .attr('cy', datum => yScale(datum.value));
 
