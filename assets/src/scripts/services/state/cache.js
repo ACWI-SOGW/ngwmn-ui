@@ -1,10 +1,8 @@
-import { createSelector } from 'reselect';
-
 import * as cache from '../cache';
 
 
-const MOUNT_POINT = 'services/cache/waterLevels';
-const WATER_LEVELS_SET = `${MOUNT_POINT}/WATER_LEVELS_SET`;
+export const MOUNT_POINT = 'services/cache/waterLevels';
+export const WATER_LEVELS_SET = `${MOUNT_POINT}/WATER_LEVELS_SET`;
 
 /**
  * Action creator:
@@ -12,7 +10,7 @@ const WATER_LEVELS_SET = `${MOUNT_POINT}/WATER_LEVELS_SET`;
  * @param  {String} agencyCode  Agency code
  * @param  {String} siteID      Site ID
  * @params {Object} waterLevels Water level details to set
- * @return {Object}             WATER_LEVELS_GET action
+ * @return {Object}             WATER_LEVELS_SET action
  */
 export const setWaterLevels = function (agencyCode, siteID, waterLevels) {
     return {
@@ -34,7 +32,7 @@ export const setWaterLevels = function (agencyCode, siteID, waterLevels) {
  * @return {Function}          Thunk
  */
 export const retrieveWaterLevels = (agencyCode, siteID) => (dispatch) => {
-    cache.retrieveWaterLevels(agencyCode, siteID).then(waterLevels => {
+    return cache.retrieveWaterLevels(agencyCode, siteID).then(waterLevels => {
         dispatch(setWaterLevels(agencyCode, siteID, waterLevels));
     });
 };
@@ -48,20 +46,6 @@ export const getWaterLevelID = function (agencyCode, siteID) {
  */
 
 export const getWaterLevels = state => state[MOUNT_POINT];
-
-export const getTimeRange = createSelector(
-    getWaterLevels,
-    (waterLevels) => {
-        const samples = waterLevels.samples || [];
-        return Object.keys(samples).reduce((timeRanges, id) => {
-            timeRanges[id] = {
-                start: waterLevels[0].time,
-                end: waterLevels[waterLevels.length - 1].time
-            };
-            return timeRanges;
-        }, {});
-    }
-);
 
 const reducer = function (state = {}, action) {
     switch (action.type) {

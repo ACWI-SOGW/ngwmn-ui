@@ -1,8 +1,7 @@
 import { createSelector } from 'reselect';
 
 import { getNearestTime } from 'ngwmn/lib/utils';
-import { getChartPoints } from './points';
-import { getScaleX } from './scales';
+import { getChartPoints, getDomainX } from './points';
 
 
 const MOUNT_POINT = 'components/graph/cursor';
@@ -25,9 +24,9 @@ export const setCursor = function (date) {
  */
 export const getCursor = createSelector(
     state => state[MOUNT_POINT].date,
-    getScaleX,
-    (cursor, xScale) => {
-        return cursor || xScale.domain()[1];
+    getDomainX,
+    (cursor, xDomain) => {
+        return cursor || xDomain[1];
     }
 );
 

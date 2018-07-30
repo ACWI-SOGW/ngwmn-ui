@@ -1,9 +1,9 @@
 import { extent } from 'd3-array';
 import { createSelector } from 'reselect';
 
-import { getWaterLevels, getWaterLevelID } from 'ngwmn/services/state/index';
+import { getWaterLevels } from 'ngwmn/services/state/index';
 
-import { getOptions } from './options';
+import { getCurrentWaterLevelID } from './options';
 
 
 // Lines will be split if the difference exceeds two years.
@@ -15,9 +15,8 @@ const PADDING_RATIO = 0.2;
 
 export const getCurrentWaterLevels = createSelector(
     getWaterLevels,
-    getOptions,
-    (waterLevels, options) => {
-        const waterLevelID = getWaterLevelID(options.agencycode, options.siteid);
+    getCurrentWaterLevelID,
+    (waterLevels, waterLevelID) => {
         return waterLevels[waterLevelID] || {};
     }
 );
@@ -67,6 +66,7 @@ export const getDomainY = createSelector(
             Math.min(...chartPoints.map(pt => pt.value)),
             Math.max(...chartPoints.map(pt => pt.value))
         ];
+        const isPositive = domain[0] >= 0 && domain[1] >= 0;
 
         // Pad domains on both ends by PADDING_RATIO.
         const padding = PADDING_RATIO * (domain[1] - domain[0]);
@@ -76,7 +76,6 @@ export const getDomainY = createSelector(
         ];
 
         // For positive domains, a zero-lower bound on the y-axis is enforced.
-        const isPositive = domain[0] >= 0 && domain[1] >= 0;
         return [
             isPositive ? Math.max(0, domain[0]) : domain[0],
             domain[1]

@@ -1,7 +1,7 @@
 import { retrieveWaterLevels } from './cache';
 
 
-const MOCK_WATER_LEVEL_RESPONSE = `<?xml version="1.0" encoding="UTF-8"?>
+export const MOCK_WATER_LEVEL_RESPONSE = `<?xml version="1.0" encoding="UTF-8"?>
 <water-level-data>
     <elevation-reference>
         <site-elevation>859.0</site-elevation>
@@ -41,6 +41,44 @@ const MOCK_WATER_LEVEL_RESPONSE = `<?xml version="1.0" encoding="UTF-8"?>
     </samples>
 </water-level-data>`;
 
+export const MOCK_WATER_LEVEL_DATA = {
+    'elevationReference': {
+        'siteElevation': '859.0',
+        'siteElevationDatum': 'NAVD88'
+    },
+    'samples': [
+        {
+            'agency': 'USGS',
+            'sourceCode': 'USGS',
+            'site': '430406089232901',
+            'time': new Date('2011-09-30T00:00:00'),
+            'pcode': '72019',
+            'direction': 'down',
+            'unit': 'ft',
+            'originalValue': '16.52',
+            'fromLandsurfaceValue': '16.52',
+            'fromDatumValue': '842.5',
+            'comment': 'A',
+            'accuracyValue': 'Unknown',
+            'accuracyUnit': 'Unknown'
+        },
+        {
+            'agency': 'USGS',
+            'sourceCode': 'USGS',
+            'site': '430406089232901',
+            'time': new Date('2011-10-01T00:00:00'),
+            'pcode': '72019',
+            'direction': 'down',
+            'unit': 'ft',
+            'originalValue': '16.60',
+            'fromLandsurfaceValue': '16.60',
+            'fromDatumValue': '842.4',
+            'comment': 'A',
+            'accuracyValue': 'Unknown',
+            'accuracyUnit': 'Unknown'
+        }
+    ]
+};
 
 describe('cache service module', () => {
     beforeEach(() => {
@@ -81,44 +119,7 @@ describe('cache service module', () => {
                 contentType: 'text/xml'
             });
             promise.then(waterLevels => {
-                expect(waterLevels).toEqual({
-                    'elevationReference': {
-                        'siteElevation': '859.0',
-                        'siteElevationDatum': 'NAVD88'
-                    },
-                    'samples': [
-                        {
-                            'agency': 'USGS',
-                            'sourceCode': 'USGS',
-                            'site': '430406089232901',
-                            'time': new Date('2011-09-30T00:00:00'),
-                            'pcode': '72019',
-                            'direction': 'down',
-                            'unit': 'ft',
-                            'originalValue': '16.52',
-                            'fromLandsurfaceValue': '16.52',
-                            'fromDatumValue': '842.5',
-                            'comment': 'A',
-                            'accuracyValue': 'Unknown',
-                            'accuracyUnit': 'Unknown'
-                        },
-                        {
-                            'agency': 'USGS',
-                            'sourceCode': 'USGS',
-                            'site': '430406089232901',
-                            'time': new Date('2011-10-01T00:00:00'),
-                            'pcode': '72019',
-                            'direction': 'down',
-                            'unit': 'ft',
-                            'originalValue': '16.60',
-                            'fromLandsurfaceValue': '16.60',
-                            'fromDatumValue': '842.4',
-                            'comment': 'A',
-                            'accuracyValue': 'Unknown',
-                            'accuracyUnit': 'Unknown'
-                        }
-                    ]
-                });
+                expect(waterLevels).toEqual(MOCK_WATER_LEVEL_DATA);
             });
         });
     });

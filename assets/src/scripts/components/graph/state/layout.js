@@ -1,11 +1,14 @@
 const MOUNT_POINT = 'components/graph/layout';
 const GRAPH_LAYOUT_SET = `${MOUNT_POINT}/GRAPH_LAYOUT_SET`;
 
-export const setLayout = function (layout) {
+export const setLayout = function ({width, height}) {
     return {
         type: GRAPH_LAYOUT_SET,
         payload: {
-            layout
+            layout: {
+                width,
+                height
+            }
         }
     };
 };
