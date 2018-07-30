@@ -7,11 +7,12 @@ import { createStructuredSelector } from 'reselect';
 
 import { link } from 'ngwmn/lib/d3-redux';
 import { initCropper } from 'ngwmn/lib/utils';
-import { getWaterLevels, retrieveWaterLevels } from 'ngwmn/services/state/index';
+import { retrieveWaterLevels } from 'ngwmn/services/state/index';
 
 import {
-    getCurrentWaterLevelUnit, getCursor, getCursorPoint, getLayout,
-    getLineSegments, getScaleX, getScaleY, setCursor, setLayout, setOptions
+    getCurrentWaterLevels, getCurrentWaterLevelUnit, getCursor, getCursorPoint,
+    getLayout, getLineSegments, getScaleX, getScaleY, setCursor, setLayout,
+    setOptions
 } from './state';
 
 
@@ -19,7 +20,7 @@ const CIRCLE_RADIUS_SINGLE_PT = 3;
 const FOCUS_CIRCLE_RADIUS = 5.5;
 
 
-const drawDataLine = function (elem, {line, xScale, yScale}) {
+export const drawDataLine = function (elem, {line, xScale, yScale}) {
     // If this is a single point line, then represent it as a circle.
     // Otherwise, render as a line.
     if (line.points.length === 1) {
@@ -44,7 +45,7 @@ const drawDataLine = function (elem, {line, xScale, yScale}) {
     }
 };
 
-const drawDataLines = function (svg, {lineSegments, xScale, yScale}, container) {
+export const drawDataLines = function (svg, {lineSegments, xScale, yScale}, container) {
     container = container || svg.append('g');
 
     container.selectAll('g').remove();
@@ -59,7 +60,7 @@ const drawDataLines = function (svg, {lineSegments, xScale, yScale}, container) 
     return container;
 };
 
-const drawAxisX = function (svg, {xScale, layout}) {
+export const drawAxisX = function (svg, {xScale, layout}) {
     svg.selectAll('.x-axis').remove();
     svg.append('g')
         .classed('x-axis', true)
@@ -70,7 +71,7 @@ const drawAxisX = function (svg, {xScale, layout}) {
             .tickFormat(timeFormat('%b %d, %Y')));
 };
 
-const drawAxisY = function (svg, {yScale}) {
+export const drawAxisY = function (svg, {yScale}) {
     svg.selectAll('.y-axis').remove();
     svg.append('g')
         .attr('transform', 'translate(0, 0)')
@@ -81,7 +82,7 @@ const drawAxisY = function (svg, {yScale}) {
             .tickSizeOuter(0));
 };
 
-const drawAxisYLabel = function (elem, {unit}, label) {
+export const drawAxisYLabel = function (elem, {unit}, label) {
     // Create a span for the label, if it doesn't already exist
     label = label || elem.append('span')
         .classed('y-label', true);
@@ -96,7 +97,7 @@ const drawAxisYLabel = function (elem, {unit}, label) {
     return label;
 };
 
-const drawFocusLine = function (elem, {cursor, xScale, yScale}, focus) {
+export const drawFocusLine = function (elem, {cursor, xScale, yScale}, focus) {
     // Create focus line, if it doesn't exist yet.
     focus = focus || elem
         .append('g')
@@ -124,33 +125,7 @@ const drawFocusLine = function (elem, {cursor, xScale, yScale}, focus) {
     return focus;
 };
 
-const drawOverlay = function (elem, store) {
-    elem.append('rect')
-        .attr('class', 'overlay')
-        .attr('x', 0)
-        .attr('y', 0)
-        .call(link(store, (rect, layout) => {
-            // Set the overlay size, including a little extra space to deal
-            // with the focus circle when it's drawn on the right-most extent.
-            rect.attr('width', layout.width + FOCUS_CIRCLE_RADIUS)
-                .attr('height', layout.height);
-        }, getLayout))
-        .on('mouseout', () => {
-            store.dispatch(setCursor(null));
-        })
-        .call(link(store, (rect, xScale) => {
-            rect.on('mouseover', () => {
-                const selectedTime = xScale.invert(mouse(rect.node())[0]);
-                store.dispatch(setCursor(selectedTime));
-            });
-            rect.on('mousemove', () => {
-                const selectedTime = xScale.invert(mouse(rect.node())[0]);
-                store.dispatch(setCursor(selectedTime));
-            });
-        }, getScaleX));
-};
-
-const drawMessage = function (elem, message) {
+export const drawMessage = function (elem, message) {
     elem.append('div')
         .attr('class', 'usa-alert usa-alert-warning')
         .append('div')
@@ -160,11 +135,12 @@ const drawMessage = function (elem, message) {
                     .attr('class', 'usa-alert-heading')
                     .html('Alert');
                 div.append('p')
+                    .classed('message', true)
                     .html(message);
             });
 };
 
-const drawTooltip = function (elem, {cursorPoint, unit}, tooltip) {
+export const drawTooltip = function (elem, {cursorPoint, unit}, tooltip) {
     tooltip = tooltip || elem.append('div')
         .attr('class', 'tooltip');
 
@@ -208,7 +184,7 @@ const drawTooltip = function (elem, {cursorPoint, unit}, tooltip) {
     return tooltip;
 };
 
-const drawFocusCircle = function (elem, {cursorPoint, xScale, yScale}, circleContainer) {
+export const drawFocusCircle = function (elem, {cursorPoint, xScale, yScale}, circleContainer) {
     // Put the circles in a container so we can keep the their position in the
     // DOM before rect.overlay, to prevent the circles from receiving mouse
     // events.
@@ -256,9 +232,9 @@ export default function (store, node, options = {}) {
 
     select(node)
         .call(link(store, (elem, waterLevels) => {
-            elem.classed('loading', Object.keys(waterLevels).length === 0)
+            elem.classed('loading', !waterLevels || !waterLevels.samples)
                 .classed('has-error', waterLevels && waterLevels.error);
-        }, getWaterLevels))
+        }, getCurrentWaterLevels))
         .append('div')
             .classed('graph-container', true)
             .call(link(store, drawAxisYLabel, createStructuredSelector({
@@ -295,7 +271,29 @@ export default function (store, node, options = {}) {
                     xScale: getScaleX,
                     yScale: getScaleY
                 })))
-                .call(drawOverlay, store);
+                .append('rect')
+                    .attr('class', 'overlay')
+                    .attr('x', 0)
+                    .attr('y', 0)
+                    .call(link(store, (rect, layout) => {
+                        // Set the overlay size, including a little extra space to deal
+                        // with the focus circle when it's drawn on the right-most extent.
+                        rect.attr('width', layout.width + FOCUS_CIRCLE_RADIUS)
+                            .attr('height', layout.height);
+                    }, getLayout))
+                    .on('mouseout', () => {
+                        store.dispatch(setCursor(null));
+                    })
+                    .call(link(store, (rect, xScale) => {
+                        rect.on('mouseover', () => {
+                            const selectedTime = xScale.invert(mouse(rect.node())[0]);
+                            store.dispatch(setCursor(selectedTime));
+                        });
+                        rect.on('mousemove', () => {
+                            const selectedTime = xScale.invert(mouse(rect.node())[0]);
+                            store.dispatch(setCursor(selectedTime));
+                        });
+                    }, getScaleX));
 
     window.onresize = function () {
         store.dispatch(setLayout({width: node.offsetWidth, height: node.offsetHeight}));
