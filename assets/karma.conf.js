@@ -92,7 +92,12 @@ module.exports = function (config) {
                 ...karmaConfig.rollupPreprocessor,
                 plugins: [
                     ...karmaConfig.rollupPreprocessor.plugins,
-                    istanbul()
+                    istanbul({
+                        exclude: [
+                            'tests/**/*.js',
+                            'node_modules/**/*.js'
+                        ]
+                    })
                 ]
             },
             reporters: [
