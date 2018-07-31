@@ -11,3 +11,4 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added summary table to location view
 - Added US Web Design System and basic page layout
 - Added water quality table to site location view
+- Added water levels graph to site location page
