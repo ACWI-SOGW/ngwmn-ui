@@ -1,7 +1,6 @@
 import { bisector } from 'd3-array';
 import ResizeObserver from 'resize-observer-polyfill';
 
-
 /**
  * Returns a function that will be a no-op if a condition is false.
  * Use to insert conditionals into declarative-style D3-chained method calls.
@@ -22,13 +21,22 @@ export const callIf = function (condition, func) {
  * @param  {Object} svg D3 selection containing an SVG node
  */
 export const initCropper = function (svg) {
-    // Create an observer instance linked to the callback function
-    var observer = new ResizeObserver(entries => {
-        // Set the viewBox to the bounding box of the SVG.
-        const bBox = entries[0].target.getBBox();
-        svg.attr('viewBox', `${bBox.x} ${bBox.y} ${bBox.width} ${bBox.height}`);
+    // Try a few methods to delay registering this until after the browser has
+    // rendered the SVG node.
+    // Attempt to address this bug:
+    // https://bugzilla.mozilla.org/show_bug.cgi?id=612118
+    const register = window.requestIdleCallback ||
+                     window.requestAnimationFrame ||
+                     window.setTimeout;
+    register(() => {
+        // Create an observer instance linked to the callback function
+        const observer = new ResizeObserver(entries => {
+            // Set the viewBox to the bounding box of the SVG.
+            const bBox = entries[0].target.getBBox();
+            svg.attr('viewBox', `${bBox.x} ${bBox.y} ${bBox.width} ${bBox.height}`);
+        });
+        observer.observe(svg.node());
     });
-    observer.observe(svg.node());
 };
 
 /*
