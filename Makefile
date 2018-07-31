@@ -31,4 +31,6 @@ watch:
 	 wait) || kill -TERM $(MAKEPID)
 coverage:
 	mkdir -p ./server/coverage
-	cd server && env/bin/coveralls
+	find ./assets/coverage/ -mindepth 2 -iname '*.info' -exec cp {} ./server/coverage \;
+	coveralls-lcov -v -n ./server/coverage/lcov.info > ./server/coverage/coverage.json
+	cd server && env/bin/coveralls --merge=./coverage/coverage.json
