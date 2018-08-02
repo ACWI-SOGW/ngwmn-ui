@@ -62,9 +62,10 @@ export const getDomainX = createSelector(
 export const getDomainY = createSelector(
     getChartPoints,
     (chartPoints) => {
+        const values = chartPoints.map(pt => pt.value);
         let domain = [
-            Math.min(...chartPoints.map(pt => pt.value)),
-            Math.max(...chartPoints.map(pt => pt.value))
+            Math.min(...values),
+            Math.max(...values)
         ];
         const isPositive = domain[0] >= 0 && domain[1] >= 0;
 
