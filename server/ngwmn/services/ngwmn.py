@@ -45,7 +45,7 @@ def get_iddata(request, agency_cd, location_id, service_root=SERVICE_ROOT):
     return parse_xml(resp.content)
 
 
-def _(parent, tag):
+def _find(parent, tag):
     if parent is None:
         return None
 
@@ -75,57 +75,57 @@ def get_water_quality_activities(agency_cd, location_id):
 
     return [{
         'description': (lambda desc: {
-            'identifier': _(desc, 'ActivityIdentifier'),
-            'type_code': _(desc, 'ActivityTypeCode'),
-            'media_name': _(desc, 'ActivityMediaName'),
-            'start_date': _(desc, 'ActivityStartDate'),
+            'identifier': _find(desc, 'ActivityIdentifier'),
+            'type_code': _find(desc, 'ActivityTypeCode'),
+            'media_name': _find(desc, 'ActivityMediaName'),
+            'start_date': _find(desc, 'ActivityStartDate'),
             'start_time': (lambda time: {
-                'time': _(time, 'Time'),
-                'time_zone_code': _(time, 'TimeZoneCode')
+                'time': _find(time, 'Time'),
+                'time_zone_code': _find(time, 'TimeZoneCode')
             })(desc.find('ActivityStartTime', xml.nsmap)),
-            'project_identifier': _(desc, 'ProjectIdentifier'),
-            'monitoring_location_identifier': _(desc, 'MonitoringLocationIdentifier'),
-            'comment_text': _(desc, 'ActivityCommentText')
+            'project_identifier': _find(desc, 'ProjectIdentifier'),
+            'monitoring_location_identifier': _find(desc, 'MonitoringLocationIdentifier'),
+            'comment_text': _find(desc, 'ActivityCommentText')
         })(activity.find('ActivityDescription', xml.nsmap)),
         'sample_description': (lambda desc: {
             'collection_method': (lambda method: {
-                'identifier': _(method, 'MethodIdentifier'),
-                'identifier_context': _(method, 'MethodIdentifierContext'),
-                'name': _(method, 'MethodName')
+                'identifier': _find(method, 'MethodIdentifier'),
+                'identifier_context': _find(method, 'MethodIdentifierContext'),
+                'name': _find(method, 'MethodName')
             })(desc.find('SampleCollectionMethod', xml.nsmap)),
-            'collection_equipment_name': _(desc, 'SampleCollectionEquipmentName')
+            'collection_equipment_name': _find(desc, 'SampleCollectionEquipmentName')
         })(activity.find('SampleDescription', xml.nsmap)),
         'results': [{
-            'pcode': _(result, 'USGSPcode'),
-            'provider_name': _(result, 'ProviderName'),
+            'pcode': _find(result, 'USGSPcode'),
+            'provider_name': _find(result, 'ProviderName'),
             'description': (lambda desc: {
-                'detection_condition_text': _(desc, 'ResultDetectionConditionText'),
-                'characteristic_name': _(desc, 'CharacteristicName'),
-                'sample_fraction_text': _(desc, 'ResultSampleFractionText'),
+                'detection_condition_text': _find(desc, 'ResultDetectionConditionText'),
+                'characteristic_name': _find(desc, 'CharacteristicName'),
+                'sample_fraction_text': _find(desc, 'ResultSampleFractionText'),
                 'measure': (lambda measure: {
-                    'value': _(measure, 'ResultMeasureValue'),
-                    'unit_code': _(measure, 'MeasureUnitCode'),
+                    'value': _find(measure, 'ResultMeasureValue'),
+                    'unit_code': _find(measure, 'MeasureUnitCode'),
                 })(desc.find('ResultMeasure', xml.nsmap)),
-                'value_type_name': _(desc, 'ResultValueTypeName'),
-                'temperature_basis_text': _(desc, 'ResultTemperatureBasisText'),
-                'comment_text': _(desc, 'ResultCommentText')
+                'value_type_name': _find(desc, 'ResultValueTypeName'),
+                'temperature_basis_text': _find(desc, 'ResultTemperatureBasisText'),
+                'comment_text': _find(desc, 'ResultCommentText')
             })(result.find('ResultDescription', xml.nsmap)),
             'analytical_method': (lambda method: {
-                'identifier': _(method, 'MethodIdentifier'),
-                'identifier_context': _(method, 'MethodIdentifierContext'),
-                'name': _(method, 'MethodName')
+                'identifier': _find(method, 'MethodIdentifier'),
+                'identifier_context': _find(method, 'MethodIdentifierContext'),
+                'name': _find(method, 'MethodName')
             })(result.find('ResultAnalyticalMethod', xml.nsmap)),
             'lab_information': (lambda info: {
-                'analysis_start_date': _(info, 'AnalysisStartDate'),
+                'analysis_start_date': _find(info, 'AnalysisStartDate'),
                 'analysis_start_time': (lambda start_time: {
-                    'time': _(start_time, 'Time'),
-                    'time_zone_code': _(start_time, 'TimeZoneCode')
+                    'time': _find(start_time, 'Time'),
+                    'time_zone_code': _find(start_time, 'TimeZoneCode')
                 })(info.find('AnalysisStartTime', xml.nsmap) if info is not None else None),
                 'detection_quantitation_limit': (lambda limit: {
-                    'type_name': _(limit, 'DetectionQuantitationLimitTypeName'),
+                    'type_name': _find(limit, 'DetectionQuantitationLimitTypeName'),
                     'measure': (lambda measure: {
-                        'value': _(measure, 'MeasureValue'),
-                        'unit_code': _(measure, 'MeasureUnitCode')
+                        'value': _find(measure, 'MeasureValue'),
+                        'unit_code': _find(measure, 'MeasureUnitCode')
                     })(limit.find('DetectionQuantitationLimitMeasure', xml.nsmap) if limit is not None else None)
                 })(info.find('ResultDetectionQuantitationLimit', xml.nsmap) if info is not None else None)
             })(result.find('ResultLabInformation', xml.nsmap))
