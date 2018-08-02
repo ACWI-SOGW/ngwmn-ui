@@ -12,8 +12,8 @@ describe('graph component options state', () => {
     });
 
     it('setGraphOptions works', () => {
-        const options = {option1: 'option1', option2: 'option2'};
+        const options = {agencycode: 'agency', siteid: 'siteid', ignored: 'ignore'};
         store.dispatch(setGraphOptions(options));
-        expect(getGraphOptions(store.getState())).toEqual(options);
+        expect(getGraphOptions(store.getState())).toEqual({agencycode: 'agency', siteid: 'siteid'});
     });
 });

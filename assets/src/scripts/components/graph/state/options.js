@@ -10,11 +10,11 @@ const GRAPH_OPTIONS_SET = `${MOUNT_POINT}/GRAPH_OPTIONS_SET`;
  * Action creator to set current options for the graph.
  * @param {Object} options Graph options object
  */
-export const setGraphOptions = function (options) {
+export const setGraphOptions = function ({agencycode, siteid}) {
     return {
         type: GRAPH_OPTIONS_SET,
         payload: {
-            options
+            options: {agencycode, siteid}
         }
     };
 };
