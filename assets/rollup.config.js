@@ -2,7 +2,9 @@
  * Rollup configuration.
  * NOTE: This is a CommonJS module so it can be imported by Karma.
  */
+const path = require('path');
 
+const alias = require('rollup-plugin-alias');
 const buble = require('rollup-plugin-buble');
 const commonjs = require('rollup-plugin-commonjs');
 const json = require('rollup-plugin-json');
@@ -16,6 +18,9 @@ const ENV = process.env.NODE_ENV || 'development';
 module.exports = {
     input: 'src/scripts/index.js',
     plugins: [
+        alias({
+            ngwmn: path.resolve(__dirname, 'src/scripts')
+        }),
         resolve({
             // use "module" field for ES6 module if possible
             module: true, // Default: true

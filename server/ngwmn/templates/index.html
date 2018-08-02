@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="usa-width-one-whole">
+        <h3>Version: {{ version }}</h3>
+        <h5>Example site pages</h5>
+        <ul>
+            {% for test_site in test_sites %}
+                <li><a href="{{ url_for('site_page', agency_cd=test_site.agency_cd, location_id=test_site.location_id) }}">{{ test_site.agency_cd }} - {{ test_site.location_id }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock content %}

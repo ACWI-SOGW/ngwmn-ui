@@ -1,0 +1,16 @@
+{% macro Graph(agency_code, site_no) -%}
+    <div class="ngwmn-component has-script loading" data-component="graph" data-siteID="{{ site_no }}" data-agencyCode={{ agency_code }}>
+        <div class="indicators">
+            <i class="loading-indicator fas fa-5x fa-spin fa-spinner"></i>
+            <i class="error-indicator fas fa-5x fa-exclamation-circle"></i>
+        </div>
+    </div>
+    <noscript>
+        <div class="usa-alert usa-alert-warning" >
+            <div class="usa-alert-body">
+                <h3 class="usa-alert-heading">Warning</h3>
+                <p class="usa-alert-text">Javascript is required to view the interactive water-level graph.</p>
+            </div>
+        </div>
+    </noscript>
+{%- endmacro %}

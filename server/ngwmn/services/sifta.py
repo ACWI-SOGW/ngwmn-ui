@@ -23,6 +23,12 @@ def get_cooperators(site_no):
 
     # Gracefully degrade to an empty list of cooperators
     if not response.ok:
+        app.logger.debug(
+            '%s from %s (reason: %s). Treating as zero cooperators...',
+            response.status_code,
+            response.url,
+            response.reason
+        )
         return []
 
     return response.json().get('Customers', [])
