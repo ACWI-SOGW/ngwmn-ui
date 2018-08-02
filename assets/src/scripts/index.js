@@ -39,7 +39,7 @@ const main = function () {
         }
         throw err;
     }
-}
+};
 
 
 if (document.readyState !== 'loading') {
