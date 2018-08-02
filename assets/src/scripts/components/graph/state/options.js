@@ -26,6 +26,11 @@ export const setGraphOptions = function ({agencycode, siteid}) {
  */
 export const getGraphOptions = state => state[MOUNT_POINT];
 
+/**
+ * Returns the store's site ID for this graph.
+ * @param  {Object} state Redux state
+ * @return {String} Site ID
+ */
 export const getCurrentWaterLevelID = createSelector(
     getGraphOptions,
     (options) => {
