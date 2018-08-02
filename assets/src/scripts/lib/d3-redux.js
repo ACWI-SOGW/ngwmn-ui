@@ -1,7 +1,7 @@
 // This code is derived from d3-redux: https://github.com/couchand/d3-redux
 // Copyright (c) 2017 Andrew Couch, MIT licensed.
 
-export const subscribe = function (store, callback, args) {
+const subscribe = function (store, callback, args) {
     let currentState = store.getState();
 
     function handleUpdate() {
@@ -16,7 +16,16 @@ export const subscribe = function (store, callback, args) {
     store.subscribe(handleUpdate);
 };
 
-export const connect = function (store, callback) {
+/**
+ * Calls the function, passing in the current selection. A call is made
+ * immediately, and the selection subscribes to the store, calling the function
+ * again any time the state changes. This is analogous to a vanilla use of
+ * selection.call, but adding a subscription to the provided store.
+ * @param  {Object}   store    Redux store
+ * @param  {Function} callback Callback function
+ * @return {Function}
+ */
+const connect = function (store, callback) {
     return function (selection) {
         let args = [selection].concat([].slice.call(arguments, 1));
         subscribe(store, callback, args);

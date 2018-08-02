@@ -37,16 +37,29 @@ export const retrieveWaterLevels = (agencyCode, siteID) => (dispatch) => {
     });
 };
 
+/**
+ * Gets the unique id for a given site.
+ * @param  {String} agencyCode Agency code of site
+ * @param  {String} siteID     Agency's site ID for site
+ * @return {String}            Unique site ID
+ */
 export const getWaterLevelID = function (agencyCode, siteID) {
     return `${agencyCode}:${siteID}`;
 };
 
 /**
- * Selectors
+ * Return all water level data
+ * @param  {Object} state Redux state
+ * @return {Object}       Water levels keyed on ID
  */
-
 export const getWaterLevels = state => state[MOUNT_POINT];
 
+/**
+ * Cache service reducer
+ * @param  {Object} state  Redux state
+ * @param  {Object} action Action object
+ * @return {Object}        New state
+ */
 const reducer = function (state = {}, action) {
     switch (action.type) {
         case WATER_LEVELS_SET:
@@ -59,6 +72,10 @@ const reducer = function (state = {}, action) {
     }
 };
 
+/**
+ * Export the reducer keyed on the mount point, for easy usage with
+ * combineReducers.
+ */
 export default {
     [MOUNT_POINT]: reducer
 };

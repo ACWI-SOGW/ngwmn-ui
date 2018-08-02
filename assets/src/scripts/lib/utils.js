@@ -1,6 +1,7 @@
 import { bisector } from 'd3-array';
 import ResizeObserver from 'resize-observer-polyfill';
 
+
 /**
  * Returns a function that will be a no-op if a condition is false.
  * Use to insert conditionals into declarative-style D3-chained method calls.
@@ -21,7 +22,7 @@ export const callIf = function (condition, func) {
  * @param  {Object} svg D3 selection containing an SVG node
  */
 export const initCropper = function (svg) {
-    // Try a few methods to delay registering this until after the browser has
+    // Try a few methods to delay calling this until after the browser has
     // rendered the SVG node.
     // Attempt to address this bug:
     // https://bugzilla.mozilla.org/show_bug.cgi?id=612118

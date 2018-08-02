@@ -12,7 +12,7 @@ import { retrieveWaterLevels } from 'ngwmn/services/state/index';
 import {
     getCurrentWaterLevels, getCurrentWaterLevelUnit, getCursor, getCursorPoint,
     getLayout, getLineSegments, getScaleX, getScaleY, setCursor, setLayout,
-    setOptions
+    setGraphOptions
 } from './state';
 
 
@@ -20,6 +20,13 @@ const CIRCLE_RADIUS_SINGLE_PT = 3;
 const FOCUS_CIRCLE_RADIUS = 5.5;
 
 
+/**
+ * Draws a segment of a time series
+ * @param  {Object} elem                D3 selector
+ * @param  {Object} options.line        {classes, points}
+ * @param  {Function} options.xScale    D3 scale function
+ * @param  {Function} options.yScale    D3 scale function
+ */
 export const drawDataLine = function (elem, {line, xScale, yScale}) {
     // If this is a single point line, then represent it as a circle.
     // Otherwise, render as a line.
@@ -45,6 +52,16 @@ export const drawDataLine = function (elem, {line, xScale, yScale}) {
     }
 };
 
+/**
+ *
+ * Draws a time series
+ * @param  {Object} svg                  D3 selector
+ * @param  {Array} options.lineSegments  List of series segments to draw
+ * @param  {Function} options.xScale     D3 scale function
+ * @param  {Function} options.yScale     D3 scale function
+ * @param  {Object} container            Element created by this function
+ * @return {Object}                      Container of lines
+ */
 export const drawDataLines = function (svg, {lineSegments, xScale, yScale}, container) {
     container = container || svg.append('g');
 
@@ -60,6 +77,12 @@ export const drawDataLines = function (svg, {lineSegments, xScale, yScale}, cont
     return container;
 };
 
+/**
+ * Draws the x-axis
+ * @param  {Object} svg              D3 selector
+ * @param  {Function} options.xScale D3 scale function
+ * @param  {Object} options.layout   {width, height}
+ */
 export const drawAxisX = function (svg, {xScale, layout}) {
     svg.selectAll('.x-axis').remove();
     svg.append('g')
@@ -71,6 +94,11 @@ export const drawAxisX = function (svg, {xScale, layout}) {
             .tickFormat(timeFormat('%b %d, %Y')));
 };
 
+/**
+ * Draws the y-axis
+ * @param  {Object} svg              D3 selector
+ * @param  {Function} options.yScale D3 scale function
+ */
 export const drawAxisY = function (svg, {yScale}) {
     svg.selectAll('.y-axis').remove();
     svg.append('g')
@@ -82,6 +110,13 @@ export const drawAxisY = function (svg, {yScale}) {
             .tickSizeOuter(0));
 };
 
+/**
+ * Draws a y-axis label
+ * @param  {Object} elem         D3 selector
+ * @param  {String} options.unit Unit of measure of the y-axis
+ * @param  {Object} label        Container previously-created by this function
+ * @return {Object}              Container of label
+ */
 export const drawAxisYLabel = function (elem, {unit}, label) {
     // Create a span for the label, if it doesn't already exist
     label = label || elem.append('span')
@@ -97,6 +132,15 @@ export const drawAxisYLabel = function (elem, {unit}, label) {
     return label;
 };
 
+/**
+ * Draws a tooltip focus line
+ * @param  {Object} elem             D3 selector
+ * @param  {Date} options.cursor     Date on the x-axis to draw the line
+ * @param  {Function} options.xScale D3 scale function
+ * @param  {Function} options.yScale D3 scale function
+ * @param  {Object} focus            Previously-created container
+ * @return {Object}                  Container of focus line
+ */
 export const drawFocusLine = function (elem, {cursor, xScale, yScale}, focus) {
     // Create focus line, if it doesn't exist yet.
     focus = focus || elem
@@ -125,6 +169,11 @@ export const drawFocusLine = function (elem, {cursor, xScale, yScale}, focus) {
     return focus;
 };
 
+/**
+ * Draws a message into an alert div
+ * @param  {Object} elem    D3 selector
+ * @param  {String} message Message to display
+ */
 export const drawMessage = function (elem, message) {
     elem.append('div')
         .attr('class', 'usa-alert usa-alert-warning')
@@ -140,6 +189,14 @@ export const drawMessage = function (elem, message) {
             });
 };
 
+/**
+ * Draws a tooltip for a given cursor location
+ * @param  {Object} elem                D3 selector
+ * @param  {Object} options.cursorPoint Point: {value, unit}
+ * @param  {String} options.unit        Unit of measure of the point
+ * @param  {Object} tooltip             Previously-created tooltip container
+ * @return {Object}                     Container created for the toolip
+ */
 export const drawTooltip = function (elem, {cursorPoint, unit}, tooltip) {
     tooltip = tooltip || elem.append('div')
         .attr('class', 'tooltip');
@@ -184,6 +241,15 @@ export const drawTooltip = function (elem, {cursorPoint, unit}, tooltip) {
     return tooltip;
 };
 
+/**
+ * Draws a focus circle on a given point.
+ * @param  {Object} elem                D3 selector
+ * @param  {Object} options.cursorPoint Point of form: {value, dateTime}
+ * @param  {Function} options.xScale    D3 scale function
+ * @param  {Function} options.yScale    D3 scale function
+ * @param  {Object} circleContainer     Previously-created container
+ * @return {Object}                     Container created for focus circle
+ */
 export const drawFocusCircle = function (elem, {cursorPoint, xScale, yScale}, circleContainer) {
     // Put the circles in a container so we can keep the their position in the
     // DOM before rect.overlay, to prevent the circles from receiving mouse
@@ -218,6 +284,12 @@ export const drawFocusCircle = function (elem, {cursorPoint, xScale, yScale}, ci
     return circleContainer;
 };
 
+/**
+ * Draws a water-levels graph.
+ * @param  {Object} store   Redux store
+ * @param  {Object} node    DOM node to draw graph into
+ * @param  {Object} options {agencycode, siteid} of site to draw
+ */
 export default function (store, node, options = {}) {
     const { agencycode, siteid } = options;
 
@@ -227,7 +299,7 @@ export default function (store, node, options = {}) {
     }
 
     store.dispatch(setLayout({width: node.offsetWidth, height: node.offsetHeight}));
-    store.dispatch(setOptions(options));
+    store.dispatch(setGraphOptions(options));
     store.dispatch(retrieveWaterLevels(agencycode, siteid));
 
     select(node)

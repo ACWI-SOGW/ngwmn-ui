@@ -10,7 +10,7 @@ const GRAPH_OPTIONS_SET = `${MOUNT_POINT}/GRAPH_OPTIONS_SET`;
  * Action creator to set current options for the graph.
  * @param {Object} options Graph options object
  */
-export const setOptions = function (options) {
+export const setGraphOptions = function (options) {
     return {
         type: GRAPH_OPTIONS_SET,
         payload: {
@@ -24,15 +24,21 @@ export const setOptions = function (options) {
  * @param  {Object} state Redux state
  * @return {Object}       Graph options object
  */
-export const getOptions = state => state[MOUNT_POINT];
+export const getGraphOptions = state => state[MOUNT_POINT];
 
 export const getCurrentWaterLevelID = createSelector(
-    getOptions,
+    getGraphOptions,
     (options) => {
         return getWaterLevelID(options.agencycode, options.siteid);
     }
 );
 
+/**
+ * Graph options reducer
+ * @param  {Object} state  Redux state
+ * @param  {Object} action Action object
+ * @return {Object}        New state
+ */
 const reducer = function (state = {}, action) {
     switch (action.type) {
         case GRAPH_OPTIONS_SET:
@@ -45,6 +51,10 @@ const reducer = function (state = {}, action) {
     }
 };
 
+/**
+ * Export the reducer keyed on the mount point, for easy usage with
+ * combineReducers.
+ */
 export default {
     [MOUNT_POINT]: reducer
 };

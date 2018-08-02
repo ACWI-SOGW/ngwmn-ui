@@ -13,7 +13,7 @@ const COMPONENTS = {
 };
 
 
-function main() {
+const main = function () {
     // NOTE: Here we use a try/catch block rather than a global "onerror"
     // handler, to avoid the exception data from getting stripped out by
     // anything in the build tooling.

@@ -8,6 +8,10 @@ const MOUNT_POINT = 'components/graph/cursor';
 const CURSOR_SET = `${MOUNT_POINT}/CURSOR_SET`;
 
 
+/**
+ * Action creator to set the current cursor date (x-axis)
+ * @param {Date} date   Date of cursor
+ */
 export const setCursor = function (date) {
     return {
         type: CURSOR_SET,
@@ -46,6 +50,12 @@ export const getCursorPoint = createSelector(
     }
 );
 
+/**
+ * Cursor reducer
+ * @param  {Object} state  Redux state
+ * @param  {Object} action Action object
+ * @return {Object}        New state
+ */
 export const reducer = function (state = {}, action) {
     switch (action.type) {
         case CURSOR_SET:
@@ -58,6 +68,10 @@ export const reducer = function (state = {}, action) {
     }
 };
 
+/**
+ * Export the reducer keyed on the mount point, for easy usage with
+ * combineReducers.
+ */
 export default {
     [MOUNT_POINT]: reducer
 };

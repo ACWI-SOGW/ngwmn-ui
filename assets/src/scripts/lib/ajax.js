@@ -1,5 +1,12 @@
 // http://www.html5rocks.com/en/tutorials/es6/promises/
 
+/**
+ * Executes an HTTP GET request.
+ * @param  {String} url         URL to request
+ * @param  {String} resolveWith XMLHttpRequest attribute to resolve promise
+ *                              with. e.g., "response" or "responseXML"
+ * @return {Promise}
+ */
 export function get(url, resolveWith='response') {
     // Return a new promise.
     return new Promise(function (resolve, reject) {
