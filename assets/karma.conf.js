@@ -1,6 +1,6 @@
 /* global process, module */
 const istanbul = require('rollup-plugin-istanbul');
-
+process.env.CHROME_BIN = require('puppeteer').executablePath();
 
 function isDebug(argument) {
     return argument === '--debug';
@@ -70,7 +70,7 @@ module.exports = function (config) {
 
         // start these browsers
         // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-        browsers: ['Firefox'],
+        browsers: ['ChromeHeadless'],
 
 
         // Continuous Integration mode
