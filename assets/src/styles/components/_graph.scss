@@ -54,7 +54,6 @@ $provisional-color: color(accent-warm, dark);
     }
     .graph-container {
         display: flex;
-        width: 100%;
         .y-label {
             flex-grow: 0;
             writing-mode: vertical-lr;
@@ -62,52 +61,68 @@ $provisional-color: color(accent-warm, dark);
             text-align: center;
             padding: 0 0 0 .5em;
         }
-        svg.chart {
+        .charts {
             flex-grow: 1;
-            .line-segment {
-                fill: none;
-                stroke-width: 2px;
-                &.approved {
-                    stroke: $approved-color;
+            display: flex;
+            flex-direction: column;
+            svg.chart {
+                // Main, centered chart
+                &.main {
+                    flex-grow: 1;
+                    width: 100%;
                 }
-                &.provisional {
-                    stroke: $provisional-color;
+                // Bottom, full-range chart
+                &.brush {
+                    flex-grow: 0;
+                    height: 10%;
+                    width: 100%;
+                }
+                .line-segment {
+                    fill: none;
+                    stroke-width: 2px;
+                    &.approved {
+                        stroke: $approved-color;
+                    }
+                    &.provisional {
+                        stroke: $provisional-color;
+                    }
+                }
+                .overlay {
+                    fill: none;
+                    pointer-events: all;
+                    cursor: crosshair;
+                }
+                circle.focus {
+                    fill: #436BAF;
+                    opacity: .6;
+                }
+                .focus {
+                    line {
+                        opacity: .5;
+                        stroke: #436BAF;
+                        stroke-width: 1px;
+                        stroke-dasharray: 5, 5
+                    }
                 }
             }
-            .overlay {
-                fill: none;
-                pointer-events: all;
-            }
-            circle.focus {
-                fill: #436BAF;
-                opacity: .6;
-            }
-            .focus {
-                line {
-                    opacity: .5;
-                    stroke: #436BAF;
-                    stroke-width: 1px;
-                    stroke-dasharray: 5, 5
+            .tooltip {
+                pointer-events: none;
+                position: absolute;
+                right: 0;
+                background: rgba(255, 255, 255, 0.8);
+                color: $default-color;
+                .current-tooltip-text {
+                    font-weight: bold;
                 }
-            }
-        }
-        .tooltip {
-            pointer-events: none;
-            position: absolute;
-            right: 0;
-            background: rgba(255, 255, 255, 0.8);
-            color: $default-color;
-            .current-tooltip-text {
-                font-weight: bold;
-            }
-            .approved {
-                color: $approved-color;
-            }
-            .provisional {
-                color: $provisional-color;
-            }
-            .compare-tooltip-text {
-                font-weight: normal
+                .approved {
+                    color: $approved-color;
+                }
+                .provisional {
+                    color: $provisional-color;
+                }
+                .compare-tooltip-text {
+                    font-weight: normal
+                }
             }
         }
     }
