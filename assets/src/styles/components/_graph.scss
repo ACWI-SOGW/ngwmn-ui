@@ -61,22 +61,11 @@ $provisional-color: color(accent-warm, dark);
             text-align: center;
             padding: 0 0 0 .5em;
         }
-        .charts {
+        svg {
             flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            svg.chart {
-                // Main, centered chart
-                &.main {
-                    flex-grow: 1;
-                    width: 100%;
-                }
-                // Bottom, full-range chart
-                &.brush {
-                    flex-grow: 0;
-                    height: 10%;
-                    width: 100%;
-                }
+            width: 100%;
+            background-color: $color-white;
+            g.chart {
                 .line-segment {
                     fill: none;
                     stroke-width: 2px;
@@ -105,24 +94,24 @@ $provisional-color: color(accent-warm, dark);
                     }
                 }
             }
-            .tooltip {
-                pointer-events: none;
-                position: absolute;
-                right: 0;
-                background: rgba(255, 255, 255, 0.8);
-                color: $default-color;
-                .current-tooltip-text {
-                    font-weight: bold;
-                }
-                .approved {
-                    color: $approved-color;
-                }
-                .provisional {
-                    color: $provisional-color;
-                }
-                .compare-tooltip-text {
-                    font-weight: normal
-                }
+        }
+        .tooltip {
+            pointer-events: none;
+            position: absolute;
+            right: 0;
+            background: rgba(255, 255, 255, 0.8);
+            color: $default-color;
+            .current-tooltip-text {
+                font-weight: bold;
+            }
+            .approved {
+                color: $approved-color;
+            }
+            .provisional {
+                color: $provisional-color;
+            }
+            .compare-tooltip-text {
+                font-weight: normal
             }
         }
     }

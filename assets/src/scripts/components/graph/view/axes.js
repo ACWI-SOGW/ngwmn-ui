@@ -9,15 +9,17 @@ import { timeFormat } from 'd3-time-format';
  * @param  {Function} options.xScale D3 scale function
  * @param  {Object} options.layout   {width, height}
  */
-export const drawAxisX = function (svg, {xScale, layout}) {
-    svg.selectAll('.x-axis').remove();
-    svg.append('g')
-        .classed('x-axis', true)
+export const drawAxisX = function (svg, {xScale, layout}, axis) {
+    axis = axis || svg
+        .append('g')
+        .classed('x-axis', true);
+    axis.transition().duration(300)
         .attr('transform', `translate(0, ${layout.height})`)
         .call(axisBottom()
             .scale(xScale)
             .tickSizeOuter(0)
             .tickFormat(timeFormat('%b %d, %Y')));
+    return axis;
 };
 
 /**
@@ -25,15 +27,17 @@ export const drawAxisX = function (svg, {xScale, layout}) {
  * @param  {Object} svg              D3 selector
  * @param  {Function} options.yScale D3 scale function
  */
-export const drawAxisY = function (svg, {yScale}) {
-    svg.selectAll('.y-axis').remove();
-    svg.append('g')
+export const drawAxisY = function (svg, {yScale}, axis) {
+    axis = axis || svg
+        .append('g')
+        .classed('y-axis', true);
+    axis.transition().duration(300)
         .attr('transform', 'translate(0, 0)')
-        .classed('y-axis', true)
         .call(axisLeft()
             .scale(yScale)
             .tickPadding(3)
             .tickSizeOuter(0));
+    return axis;
 };
 
 /**

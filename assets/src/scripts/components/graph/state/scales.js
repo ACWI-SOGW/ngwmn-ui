@@ -2,7 +2,7 @@ import { scaleLinear } from 'd3-scale';
 import memoize from 'fast-memoize';
 import { createSelector } from 'reselect';
 
-import { getGraphSize } from './layout';
+import { getChartPosition } from './layout';
 import { getDomainX, getDomainY } from './points';
 
 
@@ -11,9 +11,9 @@ import { getDomainX, getDomainY } from './points';
  * @param  {Object} state       Redux store
  * @return {Function}           D3 scale function
  */
-export const getScaleX = memoize(graph => createSelector(
-    getDomainX,
-    getGraphSize(graph),
+export const getScaleX = memoize(chartType => createSelector(
+    getDomainX(chartType),
+    getChartPosition(chartType),
     (domainX, size) => {
         return scaleLinear()
             .domain(domainX)
@@ -26,9 +26,9 @@ export const getScaleX = memoize(graph => createSelector(
  * @param  {Object} state   Redux store
  * @return {Function}       D3 scale function
  */
-export const getScaleY = memoize(graph => createSelector(
-    getDomainY,
-    getGraphSize(graph),
+export const getScaleY = memoize(chartType => createSelector(
+    getDomainY(chartType),
+    getChartPosition(chartType),
     (domainY, size) => {
         return scaleLinear()
             .domain(domainY)

@@ -22,12 +22,12 @@ describe('graph component cursor state', () => {
     it('setCursor and getCursor works', () => {
         const cursorDate = new Date('2015-10-10');
         store.dispatch(setCursor(cursorDate));
-        expect(getCursor(store.getState())).toBe(cursorDate);
+        expect(getCursor('main')(store.getState())).toBe(cursorDate);
     });
 
     it('getCursor returns right extent on null cursor', () => {
         const domainX = [new Date('2010-10-10'), new Date('2010-12-10')];
-        const cursorDate = getCursor.resultFunc(null, domainX);
+        const cursorDate = getCursor('main').resultFunc(null, domainX);
         expect(cursorDate).toEqual(domainX[1]);
     });
 
@@ -36,12 +36,12 @@ describe('graph component cursor state', () => {
         // so just confirm we get an expected date back.
         const cursorDate = new Date('2010-12-01');
         const twoPoints = [new Date('2010-10-10'), new Date('2010-12-10')];
-        const result = getCursorPoint.resultFunc(cursorDate, twoPoints);
+        const result = getCursorPoint('main').resultFunc(cursorDate, twoPoints);
         expect(result instanceof Date).toBe(true);
     });
 
     it('getCursorPoint returns null on null cursor', () => {
-        const date = getCursorPoint.resultFunc(null, []);
+        const date = getCursorPoint('main').resultFunc(null, []);
         expect(date).toBe(null);
     });
 });

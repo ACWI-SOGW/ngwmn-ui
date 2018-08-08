@@ -65,7 +65,7 @@ describe('graph component points', () => {
 
     describe('getDomainX', () => {
         it('returns correct date range', () => {
-            expect(getDomainX.resultFunc([{
+            expect(getDomainX('main').resultFunc([{
                 dateTime: new Date('2010-10-10')
             }, {
                 dateTime: new Date('2010-10-11')
@@ -78,13 +78,13 @@ describe('graph component points', () => {
         });
 
         it('returns [undefined, undefined] on empty range', () => {
-            expect(getDomainX.resultFunc([])).toEqual([undefined, undefined]);
+            expect(getDomainX('main').resultFunc([])).toEqual([undefined, undefined]);
         });
     });
 
     describe('getDomainY', () => {
         it('returns proper range with 20% padding', () => {
-            expect(getDomainY.resultFunc([{
+            expect(getDomainY('main').resultFunc([{
                 value: 10
             }, {
                 value: 15
@@ -94,7 +94,7 @@ describe('graph component points', () => {
         });
 
         it('has zero-lower bound on positive domains', () => {
-            expect(getDomainY.resultFunc([{
+            expect(getDomainY('main').resultFunc([{
                 value: 1
             }, {
                 value: 101

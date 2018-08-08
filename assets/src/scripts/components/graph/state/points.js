@@ -1,8 +1,10 @@
 import { extent } from 'd3-array';
+import memoize from 'fast-memoize';
 import { createSelector } from 'reselect';
 
 import { getWaterLevels } from 'ngwmn/services/state/index';
 
+import { getViewport } from './layout';
 import { getCurrentWaterLevelID } from './options';
 
 
@@ -52,14 +54,18 @@ export const getChartPoints = createSelector(
     }
 );
 
-export const getDomainX = createSelector(
+export const getDomainX = memoize(chartType => createSelector(
     getChartPoints,
-    (chartPoints) => {
+    getViewport,
+    (chartPoints, viewport) => {
+        if (chartType === 'main' && viewport && viewport.startDate) {
+            return [viewport.startDate, viewport.endDate];
+        }
         return extent(chartPoints, pt => pt.dateTime);
     }
-);
+));
 
-export const getDomainY = createSelector(
+export const getDomainY = memoize(chartType => createSelector(
     getChartPoints,
     (chartPoints) => {
         const values = chartPoints.map(pt => pt.value);
@@ -68,6 +74,14 @@ export const getDomainY = createSelector(
             Math.max(...values)
         ];
         const isPositive = domain[0] >= 0 && domain[1] >= 0;
+
+        // For lithography graphs, have a zero-upper bound.
+        if (chartType === 'lithography') {
+            domain = [
+                Math.min(0, domain[0]),
+                domain[1]
+            ];
+        }
 
         // Pad domains on both ends by PADDING_RATIO.
         const padding = PADDING_RATIO * (domain[1] - domain[0]);
@@ -82,7 +96,7 @@ export const getDomainY = createSelector(
             domain[1]
         ];
     }
-);
+));
 
 /**
  * Returns all points in the current time series split into line segments.
