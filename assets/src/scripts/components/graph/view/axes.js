@@ -2,15 +2,14 @@ import { axisBottom, axisLeft } from 'd3-axis';
 import { timeFormat } from 'd3-time-format';
 
 
-
 /**
  * Draws the x-axis
- * @param  {Object} svg              D3 selector
+ * @param  {Object} elem             D3 selector
  * @param  {Function} options.xScale D3 scale function
  * @param  {Object} options.layout   {width, height}
  */
-export const drawAxisX = function (svg, {xScale, layout}, axis) {
-    axis = axis || svg
+export const drawAxisX = function (elem, {xScale, layout}, axis) {
+    axis = axis || elem
         .append('g')
         .classed('x-axis', true);
     axis.transition().duration(100)
@@ -24,11 +23,14 @@ export const drawAxisX = function (svg, {xScale, layout}, axis) {
 
 /**
  * Draws the y-axis
- * @param  {Object} svg              D3 selector
- * @param  {Function} options.yScale D3 scale function
+ * @param  {Object} svg                     D3 selector
+ * @param  {Function} options.yScale        D3 scale function
+ * @param  {Function} options.cropSvgNode   If non-null, crop this svg node to
+ *                                          include the drawn y-axis.
+ * @param  {Function} options.containerSize Size of containing SVG node
  */
-export const drawAxisY = function (svg, {yScale}, axis) {
-    axis = axis || svg
+export const drawAxisY = function (elem, {yScale, cropSvgNode, containerSize}, axis) {
+    axis = axis || elem
         .append('g')
         .classed('y-axis', true);
     axis.transition().duration(100)
@@ -36,7 +38,13 @@ export const drawAxisY = function (svg, {yScale}, axis) {
         .call(axisLeft()
             .scale(yScale)
             .tickPadding(3)
-            .tickSizeOuter(0));
+            .tickSizeOuter(0))
+        .on('end', function () {
+            if (cropSvgNode) {
+                const axisBox = axis.node().getBBox();
+                cropSvgNode.attr('viewBox', `${axisBox.x} ${0} ${containerSize.width - axisBox.x} ${containerSize.height}`);
+            }
+        });
     return axis;
 };
 

@@ -50,11 +50,13 @@ export const drawDataLine = function (elem, {line, xScale, yScale}, segment) {
  * @param  {Object} container            Element created by this function
  * @return {Object}                      Container of lines
  */
-export default function (svg, {lineSegments, xScale, yScale}, context) {
+export default function (svg, {lineSegments, xScale, yScale, clipPath}, context) {
     context = context || {
         segments: [],
-        container: svg.append('g')
-                      .attr('id', 'ts-group')
+        container: svg
+            .append('g')
+                .attr('id', 'ts-group')
+                .attr('clip-path', `url(#${clipPath})`)
     };
 
     lineSegments.forEach((line, index) => {

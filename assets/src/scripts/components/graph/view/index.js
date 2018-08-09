@@ -6,9 +6,9 @@ import { link } from 'ngwmn/lib/d3-redux';
 import { callIf } from 'ngwmn/lib/utils';
 
 import {
-    getChartPosition, getCurrentWaterLevelUnit, getCursor, getCursorPoint,
-    getLineSegments, getScaleX, getScaleY, resetViewport, setCursor,
-    setContainerSize, setViewport
+    getChartPosition, getContainerSize, getCurrentWaterLevelUnit, getCursor,
+    getCursorPoint, getLineSegments, getScaleX, getScaleY, resetViewport,
+    setCursor, setContainerSize, setViewport
 } from '../state';
 import { drawAxisX, drawAxisY, drawAxisYLabel } from './axes';
 import { drawFocusCircle, drawFocusLine, drawTooltip, FOCUS_CIRCLE_RADIUS } from './cursor';
@@ -16,25 +16,49 @@ import drawWaterLevels from './water-levels';
 
 
 /**
+ * Draws a clipPath def that may be used to crop a chart to its defined content
+ * area.
+ * @param  {Object} elem      D3 selector to append to
+ * @param  {Object} store     Redux store
+ * @param  {String} chartType Kind of chart
+ */
+const drawClipPath = function (elem, store, chartType) {
+    elem.append('defs')
+        .append('clipPath')
+            .attr('id', `${chartType}-clip-path`)
+            .append('rect')
+                .call(link(store, (rect, chartPosition) => {
+                    rect.attr('x', 0)
+                        .attr('y', 0)
+                        .attr('width', chartPosition.width + FOCUS_CIRCLE_RADIUS)
+                        .attr('height', chartPosition.height);
+                }, getChartPosition(chartType)));
+};
+
+/**
  * Draws a water-levels graph.
  * @param  {Object} store   Redux store
  * @param  {Object} node    DOM node to draw graph into
  * @param  {Object} options {agencycode, siteid} of site to draw
  */
-export const drawChart = function (elem, store, chartType = 'chart') {
+export const drawChart = function (elem, store, chartType) {
     elem.append('g')
         .classed('chart', true)
         .classed(chartType, true)
+        .call(drawClipPath, store, chartType)
         .call(link(store, (elem, pos) => {
             elem.attr('transform', `translate(${pos.x}, ${pos.y})`);
         }, getChartPosition(chartType)))
         .call(link(store, drawWaterLevels, createStructuredSelector({
             lineSegments: getLineSegments,
             xScale: getScaleX(chartType),
-            yScale: getScaleY(chartType)
+            yScale: getScaleY(chartType),
+            clipPath: () => `${chartType}-clip-path`
         })))
         .call(callIf(chartType === 'main', link(store, drawAxisY, createStructuredSelector({
-            yScale: getScaleY(chartType)
+            yScale: getScaleY(chartType),
+            cropSvgNode: () => chartType === 'main' ? elem : null,
+            containerSize: getContainerSize
         }))))
         .call(callIf(chartType === 'main', link(store, drawAxisX, createStructuredSelector({
             xScale: getScaleX(chartType),
@@ -76,31 +100,6 @@ export const drawChart = function (elem, store, chartType = 'chart') {
                     });
                 }, getScaleX(chartType)));
         })
-        // .call(link(store, (elem, scaleX) => {
-        //     const zoomBehavior = zoom().on(`zoom.${chartType}`, function () {
-        //         // Ignore zoom-by-brush
-        //         if (event.sourceEvent && event.sourceEvent.type === 'brush') {
-        //             return;
-        //         }
-        //         var t = event.transform;
-        //         scaleX.domain(t.rescaleX(scaleX).domain());
-        //         //focus.select('.area').attr('d', area);
-        //         //focus.select(".axis--x").call(xAxis);
-        //         //context.select(".brush").call(brush.move, x.range().map(t.invertX, t));
-
-        //         //console.log(event);
-        //         //elem.attr('transform', event.transform);
-        //         //console.log(event.transform);
-        //         /*elem.call(
-        //             event.transform,
-        //             zoomIdentity
-        //                 .scale(5)
-        //                 .translate([-10, 0])
-        //         );*/
-        //         //console.log(event.target.extent().call(this));
-        //     });
-        //     zoomBehavior(elem);
-        // }, getScaleX(chartType)))
         .call(callIf(chartType === 'panner', link(store, (elem, {chartPos, scaleX}, context) => {
             const gBrush = context ? context.gBrush : elem
                 .append('g')
@@ -140,7 +139,6 @@ export default function (elem, store) {
         .call(elem => {
             elem.append('svg')
                 .attr('xmlns', 'http://www.w3.org/2000/svg')
-                //.call(initCropper)
                 .call(drawChart, store, 'main')
                 .call(drawChart, store, 'panner');
                 //.call(drawChart, store, 'lithography');
