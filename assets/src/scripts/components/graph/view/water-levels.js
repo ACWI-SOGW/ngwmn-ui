@@ -22,7 +22,7 @@ export const drawDataLine = function (elem, {line, xScale, yScale}, segment) {
             .attr('r', CIRCLE_RADIUS_SINGLE_PT);
         segment
             .data(line.points)
-            .transition(transition().duration(300))
+            .transition(transition().duration(100))
             .attr('cx', d => xScale(d.dateTime))
             .attr('cy', d => yScale(d.value));
     } else {
@@ -33,7 +33,7 @@ export const drawDataLine = function (elem, {line, xScale, yScale}, segment) {
             .attr('vector-effect', 'non-scaling-stroke');
         segment
             .datum(line.points)
-            .transition(transition().duration(300))
+            .transition(transition().duration(100))
             .attr('d', d3Line().x(d => xScale(d.dateTime))
                                .y(d => yScale(d.value)));
     }

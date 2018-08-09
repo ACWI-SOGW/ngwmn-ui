@@ -13,7 +13,7 @@ export const drawAxisX = function (svg, {xScale, layout}, axis) {
     axis = axis || svg
         .append('g')
         .classed('x-axis', true);
-    axis.transition().duration(300)
+    axis.transition().duration(100)
         .attr('transform', `translate(0, ${layout.height})`)
         .call(axisBottom()
             .scale(xScale)
@@ -31,7 +31,7 @@ export const drawAxisY = function (svg, {yScale}, axis) {
     axis = axis || svg
         .append('g')
         .classed('y-axis', true);
-    axis.transition().duration(300)
+    axis.transition().duration(100)
         .attr('transform', 'translate(0, 0)')
         .call(axisLeft()
             .scale(yScale)
