@@ -1,6 +1,7 @@
 import { axisBottom, axisLeft } from 'd3-axis';
 import { timeFormat } from 'd3-time-format';
 
+import { FOCUS_CIRCLE_RADIUS } from './cursor';
 
 /**
  * Draws the x-axis
@@ -42,7 +43,7 @@ export const drawAxisY = function (elem, {yScale, cropSvgNode, containerSize}, a
         .on('end', function () {
             if (cropSvgNode) {
                 const axisBox = axis.node().getBBox();
-                cropSvgNode.attr('viewBox', `${axisBox.x} ${0} ${containerSize.width - axisBox.x} ${containerSize.height}`);
+                cropSvgNode.attr('viewBox', `${axisBox.x} ${0} ${containerSize.width - axisBox.x + FOCUS_CIRCLE_RADIUS} ${containerSize.height}`);
             }
         });
     return axis;

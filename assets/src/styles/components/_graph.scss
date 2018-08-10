@@ -64,7 +64,6 @@ $provisional-color: color(accent-warm, dark);
         svg {
             flex-grow: 1;
             width: 100%;
-            background-color: $color-white;
             g.chart {
                 .line-segment {
                     fill: none;
