@@ -1,7 +1,7 @@
 import { line as d3Line } from 'd3-shape';
 import { transition } from 'd3-transition';
 
-const CIRCLE_RADIUS_SINGLE_PT = 3;
+const CIRCLE_RADIUS_SINGLE_PT = 2;
 
 
 /**
@@ -50,13 +50,12 @@ export const drawDataLine = function (elem, {line, xScale, yScale}, segment) {
  * @param  {Object} container            Element created by this function
  * @return {Object}                      Container of lines
  */
-export default function (svg, {lineSegments, xScale, yScale, clipPath}, context) {
+export default function (svg, {lineSegments, xScale, yScale}, context) {
     context = context || {
         segments: [],
         container: svg
             .append('g')
                 .attr('id', 'ts-group')
-                .attr('clip-path', `url(#${clipPath})`)
     };
 
     lineSegments.forEach((line, index) => {

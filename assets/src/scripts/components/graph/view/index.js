@@ -1,6 +1,7 @@
 import { brushSelection, brushX } from 'd3-brush';
 import { mouse } from 'd3-selection';
 import { createStructuredSelector } from 'reselect';
+import ResizeObserver from 'resize-observer-polyfill';
 
 import { link } from 'ngwmn/lib/d3-redux';
 import { callIf } from 'ngwmn/lib/utils';
@@ -52,8 +53,7 @@ export const drawChart = function (elem, store, chartType) {
         .call(link(store, drawWaterLevels, createStructuredSelector({
             lineSegments: getLineSegments,
             xScale: getScaleX(chartType),
-            yScale: getScaleY(chartType),
-            clipPath: () => `${chartType}-clip-path`
+            yScale: getScaleY(chartType)
         })))
         .call(callIf(chartType === 'main', link(store, drawAxisY, createStructuredSelector({
             yScale: getScaleY(chartType),
@@ -86,7 +86,6 @@ export const drawChart = function (elem, store, chartType) {
                         .attr('height', layout.height);
                 }, getChartPosition(chartType)))
                 .on('mouseout', () => {
-                    //store.dispatch(setViewport(getCursor(store.getState())));
                     store.dispatch(setCursor(null));
                 })
                 .call(link(store, (rect, xScale) => {
@@ -94,7 +93,7 @@ export const drawChart = function (elem, store, chartType) {
                         const selectedTime = xScale.invert(mouse(rect.node())[0]);
                         store.dispatch(setCursor(selectedTime));
                     });
-                    rect.on('mousemove.2', () => {
+                    rect.on('mousemove', () => {
                         const selectedTime = xScale.invert(mouse(rect.node())[0]);
                         store.dispatch(setCursor(selectedTime));
                     });
@@ -148,16 +147,15 @@ export default function (elem, store) {
             unit: getCurrentWaterLevelUnit
         })));
 
+    // Create an observer on the SVG node size
     const node = svg.node();
-    const refreshGraphSize = function () {
-        const styles = window.getComputedStyle(node, null);
+    const observer = new ResizeObserver(function (entries) {
         store.dispatch(setContainerSize({
-            width: parseFloat(styles.getPropertyValue('width')),
-            height: parseFloat(styles.getPropertyValue('height'))
+            width: parseFloat(entries[0].contentRect.width),
+            height: parseFloat(entries[0].contentRect.height)
         }));
-    };
-    refreshGraphSize();
-    window.onresize = refreshGraphSize;
+    });
+    observer.observe(node);
 
     return svg;
 }

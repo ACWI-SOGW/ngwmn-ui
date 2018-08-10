@@ -65,8 +65,10 @@ $provisional-color: color(accent-warm, dark);
             flex-grow: 1;
             width: 100%;
             g.chart {
-                .line-segment {
+                path.line-segment {
                     fill: none;
+                }
+                .line-segment {
                     stroke-width: 2px;
                     &.approved {
                         stroke: $approved-color;
