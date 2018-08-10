@@ -1,9 +1,8 @@
 import { combineReducers, createStore } from 'redux';
 
 import reducer from './layout';
-import { clearSelectionRect, getChartPosition, getContainerSize,
-         getSelectionRect, getViewport, resetViewport, setContainerSize,
-         setSelectionRect, setViewport } from './layout';
+import { getChartPosition, getContainerSize, getViewport, resetViewport,
+         setContainerSize, setViewport } from './layout';
 
 
 describe('graph component layout state', () => {
@@ -27,19 +26,6 @@ describe('graph component layout state', () => {
         expect(getViewport(store.getState())).toEqual(viewport);
         store.dispatch(resetViewport());
         expect(getViewport(store.getState())).toEqual(null);
-    });
-
-    it('setSelectionRect works', () => {
-        const selectionRect = {top: 50, left: 60, bottom: 10, right: 20};
-        store.dispatch(setSelectionRect(selectionRect));
-        expect(getSelectionRect(store.getState())).toEqual(selectionRect);
-    });
-
-    it('clearSelectionRect works', () => {
-        const selectionRect = {top: 50, left: 60, bottom: 10, right: 20};
-        store.dispatch(setSelectionRect(selectionRect));
-        store.dispatch(clearSelectionRect());
-        expect(getSelectionRect(store.getState())).toEqual(null);
     });
 
     it ('getChartPosition works', () => {
