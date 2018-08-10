@@ -8,7 +8,7 @@ import { callIf } from 'ngwmn/lib/utils';
 
 import {
     getChartPosition, getContainerSize, getCurrentWaterLevelUnit, getCursor,
-    getCursorPoint, getLineSegments, getScaleX, getScaleY, resetViewport,
+    getCursorDatum, getLineSegments, getScaleX, getScaleY, resetViewport,
     setCursor, setContainerSize, setViewport
 } from '../state';
 import { drawAxisX, drawAxisY, drawAxisYLabel } from './axes';
@@ -65,12 +65,12 @@ export const drawChart = function (elem, store, chartType) {
             layout: getChartPosition(chartType)
         }))))
         .call(link(store, drawFocusLine, createStructuredSelector({
-            cursor: getCursor(chartType),
+            cursor: getCursor,
             xScale: getScaleX(chartType),
             yScale: getScaleY(chartType)
         })))
         .call(link(store, drawFocusCircle, createStructuredSelector({
-            cursorPoint: getCursorPoint(chartType),
+            cursorPoint: getCursorDatum,
             xScale: getScaleX(chartType),
             yScale: getScaleY(chartType)
         })))
@@ -143,7 +143,7 @@ export default function (elem, store) {
                 //.call(drawChart, store, 'lithography');
         })
         .call(link(store, drawTooltip, createStructuredSelector({
-            cursorPoint: getCursorPoint('main'),
+            cursorPoint: getCursorDatum,
             unit: getCurrentWaterLevelUnit
         })));
 

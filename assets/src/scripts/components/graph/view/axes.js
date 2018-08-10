@@ -41,9 +41,17 @@ export const drawAxisY = function (elem, {yScale, cropSvgNode, containerSize}, a
             .tickPadding(3)
             .tickSizeOuter(0))
         .on('end', function () {
-            if (cropSvgNode) {
+            if (!cropSvgNode) {
+                return;
+            }
+            try {
                 const axisBox = axis.node().getBBox();
                 cropSvgNode.attr('viewBox', `${axisBox.x} ${0} ${containerSize.width - axisBox.x + FOCUS_CIRCLE_RADIUS} ${containerSize.height}`);
+            } catch (error) {
+                // See here for details on why we ignore getBBox() exceptions
+                // to fix issues with Firefox:
+                // https://bugzilla.mozilla.org/show_bug.cgi?id=612118
+                // https://stackoverflow.com/questions/28282295/getbbox-of-svg-when-hidden.
             }
         });
     return axis;
