@@ -85,13 +85,8 @@ export const getChartPosition = memoize(chartType => createSelector(
                     width: size.width,
                     height: size.height * 0.2
                 };
-            case 'lithography':
-                return {
-                    x: size.width * 0.9,
-                    y: 0,
-                    width: size.width * 0.1,
-                    height: size.height * 0.8
-                };
+            default:
+                return null;
         }
     }
 ));

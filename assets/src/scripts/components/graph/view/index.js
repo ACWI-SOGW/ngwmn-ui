@@ -140,7 +140,6 @@ export default function (elem, store) {
                 .attr('xmlns', 'http://www.w3.org/2000/svg')
                 .call(drawChart, store, 'main')
                 .call(drawChart, store, 'panner');
-                //.call(drawChart, store, 'lithography');
         })
         .call(link(store, drawTooltip, createStructuredSelector({
             cursorPoint: getCursorDatum,

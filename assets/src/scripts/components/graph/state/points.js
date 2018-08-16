@@ -75,14 +75,6 @@ export const getDomainY = memoize(chartType => createSelector(
         ];
         const isPositive = domain[0] >= 0 && domain[1] >= 0;
 
-        // For lithography graphs, have a zero-upper bound.
-        if (chartType === 'lithography') {
-            domain = [
-                Math.min(0, domain[0]),
-                domain[1]
-            ];
-        }
-
         // Pad domains on both ends by PADDING_RATIO.
         const padding = PADDING_RATIO * (domain[1] - domain[0]);
         domain = [

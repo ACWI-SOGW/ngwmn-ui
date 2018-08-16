@@ -32,6 +32,5 @@ describe('graph component layout state', () => {
         const size = {width: 10, height: 10};
         expect(getChartPosition('main').resultFunc(size)).not.toBe(null);
         expect(getChartPosition('panner').resultFunc(size)).not.toBe(null);
-        expect(getChartPosition('lithography').resultFunc(size)).not.toBe(null);
     });
 });
