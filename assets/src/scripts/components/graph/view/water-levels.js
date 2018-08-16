@@ -10,6 +10,8 @@ const CIRCLE_RADIUS_SINGLE_PT = 2;
  * @param  {Object} options.line        {classes, points}
  * @param  {Function} options.xScale    D3 scale function
  * @param  {Function} options.yScale    D3 scale function
+ * @param  {Object} segment             D3 selector returned by previous invocation
+ * @return {Object}                     Element for this line segment
  */
 export const drawDataLine = function (elem, {line, xScale, yScale}, segment) {
     // If this is a single point line, then represent it as a circle.
@@ -47,8 +49,8 @@ export const drawDataLine = function (elem, {line, xScale, yScale}, segment) {
  * @param  {Array} options.lineSegments  List of series segments to draw
  * @param  {Function} options.xScale     D3 scale function
  * @param  {Function} options.yScale     D3 scale function
- * @param  {Object} container            Element created by this function
- * @return {Object}                      Container of lines
+ * @param  {Object} context              Context of form {segments, container}
+ * @return {Object}                      {segments, container} context for next invocation
  */
 export default function (svg, {lineSegments, xScale, yScale}, context) {
     context = context || {
