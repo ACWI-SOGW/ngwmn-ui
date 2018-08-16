@@ -12,10 +12,10 @@ const REDUCERS = {
     ...serviceReducers
 };
 
-const configureStore = function () {
+const configureStore = function (initialState = null) {
     // Create an initial state with all the reducer mount points initialized
     // with an empty object.
-    const initialState = Object.keys(REDUCERS).reduce((state, key) => {
+    initialState = initialState || Object.keys(REDUCERS).reduce((state, key) => {
         state[key] = {};
         return state;
     }, {});

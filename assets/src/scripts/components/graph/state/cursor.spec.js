@@ -6,6 +6,8 @@ import { getCursor, getCursorDatum, setCursor } from './cursor';
 import layout from './layout';
 import options from './options';
 
+import getMockStore from 'ngwmn/store.mock';
+
 
 describe('graph component cursor state', () => {
     let store;
@@ -49,5 +51,13 @@ describe('graph component cursor state', () => {
     it('getCursorDatum returns null on null cursor', () => {
         const date = getCursorDatum.resultFunc(null, []);
         expect(date).toBe(null);
+    });
+
+    it('works with mock state', () => {
+        const store = getMockStore();
+        expect(getCursor(store.getState())).not.toBe(null);
+        const cursorDate = new Date('2015-10-10');
+        store.dispatch(setCursor(cursorDate));
+        expect(getCursor(store.getState())).toBe(cursorDate);
     });
 });

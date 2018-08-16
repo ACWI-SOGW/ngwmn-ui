@@ -44,7 +44,7 @@ export const getChartPoints = createSelector(
         const samples = waterLevels.samples || [];
         return samples.map(datum => {
             return {
-                dateTime: datum.time,
+                dateTime: new Date(datum.time),
                 value: parseFloat(datum.fromDatumValue),
                 approved: datum.comment === 'A'  // provisional = 'P'
             };
