@@ -1,3 +1,5 @@
+import getMockStore from 'ngwmn/store.mock';
+
 import { getScaleX, getScaleY } from './scales';
 
 
@@ -16,6 +18,11 @@ describe('graph component scales state', () => {
         it('returns range equal to width', () => {
             expect(scale.range()).toEqual([0, 50]);
         });
+
+        it('works with mock state', () => {
+            const store = getMockStore();
+            expect(getScaleX(store.getState())).not.toBe(null);
+        });
     });
 
     describe('getScaleY', () => {
@@ -31,6 +38,11 @@ describe('graph component scales state', () => {
 
         it('returns range equal to height', () => {
             expect(scale.range()).toEqual([0, 50]);
+        });
+
+        it('works with mock state', () => {
+            const store = getMockStore();
+            expect(getScaleY(store.getState())).not.toBe(null);
         });
     });
 });

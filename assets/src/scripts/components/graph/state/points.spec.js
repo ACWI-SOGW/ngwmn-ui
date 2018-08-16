@@ -1,3 +1,5 @@
+import getMockStore from 'ngwmn/store.mock';
+
 import { getChartPoints, getCurrentWaterLevels, getCurrentWaterLevelUnit,
          getDomainX, getDomainY, getLineSegments, MAX_LINE_POINT_GAP } from './points';
 
@@ -14,6 +16,11 @@ describe('graph component points', () => {
         it('returns empty object when key does not exist', () => {
             const retVal = getCurrentWaterLevels.resultFunc(mockLevels, 'level2');
             expect(retVal).toEqual({});
+        });
+
+        it('works with mock state', () => {
+            const store = getMockStore();
+            expect(getCurrentWaterLevels(store.getState())).not.toBe(null);
         });
     });
 
@@ -36,6 +43,11 @@ describe('graph component points', () => {
 
         it('returns null on non-existent dataset', () => {
             expect(getCurrentWaterLevelUnit.resultFunc({})).toBe(null);
+        });
+
+        it('works with mock state', () => {
+            const store = getMockStore();
+            expect(getCurrentWaterLevels(store.getState())).not.toBe(null);
         });
     });
 
@@ -61,6 +73,11 @@ describe('graph component points', () => {
                 approved: false
             }]);
         });
+
+        it('works with mock state', () => {
+            const store = getMockStore();
+            expect(getChartPoints(store.getState())).not.toBe(null);
+        });
     });
 
     describe('getDomainX', () => {
@@ -79,6 +96,12 @@ describe('graph component points', () => {
 
         it('returns [undefined, undefined] on empty range', () => {
             expect(getDomainX('main').resultFunc([])).toEqual([undefined, undefined]);
+        });
+
+        it('works with mock state', () => {
+            const store = getMockStore();
+            expect(getDomainX('main')(store.getState())).not.toBe(null);
+            expect(getDomainX('panner')(store.getState())).not.toBe(null);
         });
     });
 
@@ -99,6 +122,12 @@ describe('graph component points', () => {
             }, {
                 value: 101
             }])[0]).toBe(0);
+        });
+
+        it('works with mock state', () => {
+            const store = getMockStore();
+            expect(getDomainY('main')(store.getState())).not.toBe(null);
+            expect(getDomainY('panner')(store.getState())).not.toBe(null);
         });
     });
 
@@ -146,6 +175,11 @@ describe('graph component points', () => {
                     {value, dateTime: dates[2], approved: true}
                 ]
             }]);
+        });
+
+        it('works with mock state', () => {
+            const store = getMockStore();
+            expect(getLineSegments(store.getState())).not.toBe(null);
         });
     });
 });
