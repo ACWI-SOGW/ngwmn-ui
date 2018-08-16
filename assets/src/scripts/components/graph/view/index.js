@@ -138,8 +138,8 @@ export default function (elem, store) {
         .call(elem => {
             elem.append('svg')
                 .attr('xmlns', 'http://www.w3.org/2000/svg')
-                .call(drawChart, store, 'main')
-                .call(drawChart, store, 'panner');
+                .call(drawChart, store, 'panner')
+                .call(drawChart, store, 'main');
         })
         .call(link(store, drawTooltip, createStructuredSelector({
             cursorPoint: getCursorDatum,
