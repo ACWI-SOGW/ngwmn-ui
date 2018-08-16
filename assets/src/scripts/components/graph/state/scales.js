@@ -27,7 +27,7 @@ export const getScaleX = memoize(chartType => createSelector(
  * @return {Function}       D3 scale function
  */
 export const getScaleY = memoize(chartType => createSelector(
-    getDomainY(chartType),
+    getDomainY,
     getChartPosition(chartType),
     (domainY, size) => {
         return scaleLinear()

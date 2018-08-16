@@ -107,7 +107,7 @@ describe('graph component points', () => {
 
     describe('getDomainY', () => {
         it('returns proper range with 20% padding', () => {
-            expect(getDomainY('main').resultFunc([{
+            expect(getDomainY.resultFunc([{
                 value: 10
             }, {
                 value: 15
@@ -117,7 +117,7 @@ describe('graph component points', () => {
         });
 
         it('has zero-lower bound on positive domains', () => {
-            expect(getDomainY('main').resultFunc([{
+            expect(getDomainY.resultFunc([{
                 value: 1
             }, {
                 value: 101
@@ -126,8 +126,7 @@ describe('graph component points', () => {
 
         it('works with mock state', () => {
             const store = getMockStore();
-            expect(getDomainY('main')(store.getState())).not.toBe(null);
-            expect(getDomainY('panner')(store.getState())).not.toBe(null);
+            expect(getDomainY(store.getState())).not.toBe(null);
         });
     });
 

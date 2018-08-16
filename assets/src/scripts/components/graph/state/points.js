@@ -65,7 +65,7 @@ export const getDomainX = memoize(chartType => createSelector(
     }
 ));
 
-export const getDomainY = memoize(chartType => createSelector(
+export const getDomainY = createSelector(
     getChartPoints,
     (chartPoints) => {
         const values = chartPoints.map(pt => pt.value);
@@ -88,7 +88,7 @@ export const getDomainY = memoize(chartType => createSelector(
             domain[1]
         ];
     }
-));
+);
 
 /**
  * Returns all points in the current time series split into line segments.
