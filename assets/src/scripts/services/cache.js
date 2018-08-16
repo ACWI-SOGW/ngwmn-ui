@@ -24,7 +24,7 @@ export const retrieveWaterLevels = function (agencyCode, siteID) {
                     agency: sample.getElementsByTagName('agency')[0].textContent,
                     sourceCode: sample.getElementsByTagName('source-code')[0].textContent,
                     site: sample.getElementsByTagName('site')[0].textContent,
-                    time: new Date(sample.getElementsByTagName('time')[0].textContent),
+                    time: sample.getElementsByTagName('time')[0].textContent,
                     pcode: sample.getElementsByTagName('pcode')[0].textContent,
                     direction: sample.getElementsByTagName('direction')[0].textContent,
                     unit: sample.getElementsByTagName('unit')[0].textContent,

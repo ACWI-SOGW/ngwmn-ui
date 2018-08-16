@@ -1,8 +1,10 @@
 import { extent } from 'd3-array';
+import memoize from 'fast-memoize';
 import { createSelector } from 'reselect';
 
 import { getWaterLevels } from 'ngwmn/services/state/index';
 
+import { getViewport } from './layout';
 import { getCurrentWaterLevelID } from './options';
 
 
@@ -42,7 +44,7 @@ export const getChartPoints = createSelector(
         const samples = waterLevels.samples || [];
         return samples.map(datum => {
             return {
-                dateTime: datum.time,
+                dateTime: new Date(datum.time),
                 value: parseFloat(datum.fromDatumValue),
                 approved: datum.comment === 'A'  // provisional = 'P'
             };
@@ -52,12 +54,16 @@ export const getChartPoints = createSelector(
     }
 );
 
-export const getDomainX = createSelector(
+export const getDomainX = memoize(chartType => createSelector(
     getChartPoints,
-    (chartPoints) => {
+    getViewport,
+    (chartPoints, viewport) => {
+        if (chartType === 'main' && viewport && viewport.startDate) {
+            return [viewport.startDate, viewport.endDate];
+        }
         return extent(chartPoints, pt => pt.dateTime);
     }
-);
+));
 
 export const getDomainY = createSelector(
     getChartPoints,

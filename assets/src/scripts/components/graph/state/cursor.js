@@ -1,6 +1,7 @@
 import { createSelector } from 'reselect';
 
 import { getNearestTime } from 'ngwmn/lib/utils';
+import { getViewport } from './layout';
 import { getChartPoints, getDomainX } from './points';
 
 
@@ -28,9 +29,10 @@ export const setCursor = function (date) {
  */
 export const getCursor = createSelector(
     state => state[MOUNT_POINT].date,
-    getDomainX,
-    (cursor, xDomain) => {
-        return cursor || xDomain[1];
+    getViewport,
+    getDomainX('main'),
+    (cursor, viewport, domain) => {
+        return cursor || (viewport ? viewport.endDate : domain[1]);
     }
 );
 
@@ -39,7 +41,7 @@ export const getCursor = createSelector(
  * @param {Object} state - Redux store
  * @return {Object}
  */
-export const getCursorPoint = createSelector(
+export const getCursorDatum = createSelector(
     getCursor,
     getChartPoints,
     (cursor, points) => {

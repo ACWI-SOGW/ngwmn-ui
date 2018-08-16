@@ -1,6 +1,7 @@
 import { line as d3Line } from 'd3-shape';
+import { transition } from 'd3-transition';
 
-const CIRCLE_RADIUS_SINGLE_PT = 3;
+const CIRCLE_RADIUS_SINGLE_PT = 2;
 
 
 /**
@@ -9,30 +10,36 @@ const CIRCLE_RADIUS_SINGLE_PT = 3;
  * @param  {Object} options.line        {classes, points}
  * @param  {Function} options.xScale    D3 scale function
  * @param  {Function} options.yScale    D3 scale function
+ * @param  {Object} segment             D3 selector returned by previous invocation
+ * @return {Object}                     Element for this line segment
  */
-export const drawDataLine = function (elem, {line, xScale, yScale}) {
+export const drawDataLine = function (elem, {line, xScale, yScale}, segment) {
     // If this is a single point line, then represent it as a circle.
     // Otherwise, render as a line.
     if (line.points.length === 1) {
-        elem.append('circle')
-            .data(line.points)
+        segment = segment || elem.append('circle')
             .classed('line-segment', true)
             .classed('approved', line.classes.approved)
             .classed('provisional', line.classes.provisional)
-            .attr('r', CIRCLE_RADIUS_SINGLE_PT)
+            .attr('r', CIRCLE_RADIUS_SINGLE_PT);
+        segment
+            .data(line.points)
+            .transition(transition().duration(100))
             .attr('cx', d => xScale(d.dateTime))
             .attr('cy', d => yScale(d.value));
     } else {
-        const tsLine = d3Line()
-            .x(d => xScale(d.dateTime))
-            .y(d => yScale(d.value));
-        elem.append('path')
-            .datum(line.points)
+        segment = segment || elem.append('path')
             .classed('line-segment', true)
             .classed('approved', line.classes.approved)
             .classed('provisional', line.classes.provisional)
-            .attr('d', tsLine);
+            .attr('vector-effect', 'non-scaling-stroke');
+        segment
+            .datum(line.points)
+            .transition(transition().duration(100))
+            .attr('d', d3Line().x(d => xScale(d.dateTime))
+                               .y(d => yScale(d.value)));
     }
+    return segment;
 };
 
 /**
@@ -42,20 +49,24 @@ export const drawDataLine = function (elem, {line, xScale, yScale}) {
  * @param  {Array} options.lineSegments  List of series segments to draw
  * @param  {Function} options.xScale     D3 scale function
  * @param  {Function} options.yScale     D3 scale function
- * @param  {Object} container            Element created by this function
- * @return {Object}                      Container of lines
+ * @param  {Object} context              Context of form {segments, container}
+ * @return {Object}                      {segments, container} context for next invocation
  */
-export default function (svg, {lineSegments, xScale, yScale}, container) {
-    container = container || svg.append('g');
+export default function (svg, {lineSegments, xScale, yScale}, context) {
+    context = context || {
+        segments: [],
+        container: svg
+            .append('g')
+                .attr('id', 'ts-group')
+    };
 
-    container.selectAll('g').remove();
-    const tsLineGroup = container
-        .append('g')
-            .attr('id', 'ts-group');
+    lineSegments.forEach((line, index) => {
+        context.segments[index] = drawDataLine(
+            context.container,
+            {line, xScale, yScale},
+            context.segments[index]
+        );
+    });
 
-    for (const line of lineSegments) {
-        drawDataLine(tsLineGroup, {line, xScale, yScale});
-    }
-
-    return container;
+    return context;
 }

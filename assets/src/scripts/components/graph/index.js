@@ -1,8 +1,9 @@
 import { select } from 'd3-selection';
 
+import { link } from 'ngwmn/lib/d3-redux';
 import { retrieveWaterLevels } from 'ngwmn/services/state/index';
 
-import { setLayout, setGraphOptions } from './state';
+import { getCurrentWaterLevels, setGraphOptions } from './state';
 import drawGraph from './view';
 
 
@@ -40,14 +41,13 @@ export default function (store, node, options = {}) {
         return;
     }
 
-    store.dispatch(setLayout({width: node.offsetWidth, height: node.offsetHeight}));
     store.dispatch(setGraphOptions(options));
     store.dispatch(retrieveWaterLevels(agencycode, siteid));
 
     select(node)
+        .call(link(store, (elem, waterLevels) => {
+            elem.classed('loading', !waterLevels || !waterLevels.samples)
+                .classed('has-error', waterLevels && waterLevels.error);
+        }, getCurrentWaterLevels))
         .call(drawGraph, store);
-
-    window.onresize = function () {
-        store.dispatch(setLayout({width: node.offsetWidth, height: node.offsetHeight}));
-    };
 }

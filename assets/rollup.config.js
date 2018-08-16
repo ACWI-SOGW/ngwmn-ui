@@ -19,7 +19,8 @@ module.exports = {
     input: 'src/scripts/index.js',
     plugins: [
         alias({
-            ngwmn: path.resolve(__dirname, 'src/scripts')
+            ngwmn: path.resolve(__dirname, 'src/scripts'),
+            resolve: ['.js', '.json']
         }),
         resolve({
             // use "module" field for ES6 module if possible
