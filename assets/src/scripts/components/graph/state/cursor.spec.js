@@ -1,12 +1,13 @@
 import { combineReducers, createStore } from 'redux';
 
 import services from 'ngwmn/services/state/index';
+import getMockStore from 'ngwmn/store.mock';
+
 import cursor from './cursor';
 import { getCursor, getCursorDatum, setCursor } from './cursor';
 import layout from './layout';
 import options from './options';
 
-import getMockStore from 'ngwmn/store.mock';
 
 
 describe('graph component cursor state', () => {

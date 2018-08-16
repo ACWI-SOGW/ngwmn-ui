@@ -29,8 +29,14 @@ describe('graph component layout state', () => {
     });
 
     it ('getChartPosition works', () => {
-        const size = {width: 10, height: 10};
-        expect(getChartPosition('main').resultFunc(size)).not.toBe(null);
-        expect(getChartPosition('panner').resultFunc(size)).not.toBe(null);
+        // Works on container size
+        expect(getChartPosition('main')(store.getState())).not.toBe(null);
+        expect(getChartPosition('panner')(store.getState())).not.toBe(null);
+
+        // Works with specific container size
+        store.dispatch(setContainerSize({width: 10, height: 20}));
+        expect(getContainerSize(store.getState())).toEqual({width: 10, height: 20});
+        expect(getChartPosition('main')(store.getState())).not.toBe(null);
+        expect(getChartPosition('panner')(store.getState())).not.toBe(null);
     });
 });
