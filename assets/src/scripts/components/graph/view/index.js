@@ -43,51 +43,65 @@ const drawClipPath = function (elem, store, chartType) {
  * @param  {Object} options {agencycode, siteid} of site to draw
  */
 export const drawChart = function (elem, store, chartType) {
+    // Each chart gets its own group container, classed .chart
     elem.append('g')
         .classed('chart', true)
         .classed(chartType, true)
+        // Draw a clipPath on the chart to enable cropping of content to the
+        // current domain.
         .call(drawClipPath, store, chartType)
+        // Each chartType is drawn to a specific area of the SVG viewport.
+        // Use a transform to set the location here.
         .call(link(store, (elem, pos) => {
             elem.attr('transform', `translate(${pos.x}, ${pos.y})`);
         }, getChartPosition(chartType)))
+        // Draw the actual lines/circles for the current water level data set.
         .call(link(store, drawWaterLevels, createStructuredSelector({
             lineSegments: getLineSegments,
             xScale: getScaleX(chartType),
             yScale: getScaleY(chartType)
         })))
+        // Draw the y-axis, only for the main chart.
         .call(callIf(chartType === 'main', link(store, drawAxisY, createStructuredSelector({
             yScale: getScaleY(chartType),
             cropSvgNode: () => chartType === 'main' ? elem : null,
             containerSize: getContainerSize
         }))))
+        // Draw the x-axis, only for the main chart.
         .call(callIf(chartType === 'main', link(store, drawAxisX, createStructuredSelector({
             xScale: getScaleX(chartType),
             layout: getChartPosition(chartType)
         }))))
+        // Draw a vertical focus line representing the current cursor location.
         .call(link(store, drawFocusLine, createStructuredSelector({
             cursor: getCursor,
             xScale: getScaleX(chartType),
             yScale: getScaleY(chartType)
         })))
+        // Draw a circle around the point nearest the current cursor location.
         .call(link(store, drawFocusCircle, createStructuredSelector({
             cursorPoint: getCursorDatum,
             xScale: getScaleX(chartType),
             yScale: getScaleY(chartType)
         })))
+        // To capture mouse events, draw an overlay rect and attach event
+        // handlers to it.
         .call(g => {
             g.append('rect')
                 .attr('class', 'overlay')
                 .attr('x', 0)
                 .attr('y', 0)
+                // Set the overlay size, including a little extra space to deal
+                // with the focus circle when it's drawn on the right-most extent.
                 .call(link(store, (rect, layout) => {
-                    // Set the overlay size, including a little extra space to deal
-                    // with the focus circle when it's drawn on the right-most extent.
                     rect.attr('width', layout.width + FOCUS_CIRCLE_RADIUS)
                         .attr('height', layout.height);
                 }, getChartPosition(chartType)))
+                // Clear the cursor on mouseout
                 .on('mouseout', () => {
                     store.dispatch(setCursor(null));
                 })
+                // Set the cursor on mousemove and mouseover
                 .call(link(store, (rect, xScale) => {
                     rect.on('mouseover', () => {
                         const selectedTime = xScale.invert(mouse(rect.node())[0]);
@@ -99,13 +113,20 @@ export const drawChart = function (elem, store, chartType) {
                     });
                 }, getScaleX(chartType)));
         })
+        // If drawing the panner chart, append a brush container and set the
+        // viewport when the brush selection changes.
         .call(callIf(chartType === 'panner', link(store, (elem, {chartPos, scaleX}, context) => {
+            // Create, or reuse existing, brush container group element
             const gBrush = context ? context.gBrush : elem
                 .append('g')
                     .classed('brush', true);
+
+            // Create, or reuse existing, d3-brush object
             const brush = context ? context.brush : brushX()
                 .handleSize(1);
 
+            // Create or update viewport change handler for the current
+            // chartPos and scaleX.
             brush
                 .on('brush.panner end.panner', function () {
                     const selection = brushSelection(this);
@@ -121,7 +142,10 @@ export const drawChart = function (elem, store, chartType) {
                 .extent([[0, 0],
                          [chartPos.width, chartPos.height]]);
 
+            // Apply the brush to the DOM
             gBrush.call(brush);
+
+            // Return context, to be passed on next invocation of this function
             return {gBrush, brush};
         }, createStructuredSelector({
             chartPos: getChartPosition(chartType),
@@ -129,24 +153,41 @@ export const drawChart = function (elem, store, chartType) {
         }))));
 };
 
+/**
+ * Attaches a water level graph to a given DOM node.
+ * @param  {Object} elem  D3 selector to render graph to
+ * @param  {Object} store Redux store
+ * @return {Object}       SVG node of rendered graph
+ */
 export default function (elem, store) {
+    // Append a container for the graph.
+    // .graph-container is used to scope all the CSS styles.
     const svg = elem.append('div')
         .classed('graph-container', true)
+        // Draw the y-axis label on the left of the chart.
+        // See the SASS for the flexbox rules driving the layout.
         .call(link(store, drawAxisYLabel, createStructuredSelector({
             unit: getCurrentWaterLevelUnit
         })))
         .call(elem => {
+            // Append an SVG container that we will draw to
             elem.append('svg')
                 .attr('xmlns', 'http://www.w3.org/2000/svg')
+                // Draw the bottom chart, enabling pan and zoom functionality
                 .call(drawChart, store, 'panner')
+                // Draw the main chart, taking up most of the visible area
                 .call(drawChart, store, 'main');
         })
+        // Draw a tooltip container. This is rendered to the upper-right and
+        // shows details of the point closest to the current cursor location.
         .call(link(store, drawTooltip, createStructuredSelector({
             cursorPoint: getCursorDatum,
             unit: getCurrentWaterLevelUnit
         })));
 
-    // Create an observer on the SVG node size
+    // Create an observer on the SVG node size.
+    // Here, we use a ResizeObserver polyfill to trigger redraws when the
+    // CSS-driven size of our container changes.
     const node = svg.node();
     const observer = new ResizeObserver(function (entries) {
         store.dispatch(setContainerSize({
