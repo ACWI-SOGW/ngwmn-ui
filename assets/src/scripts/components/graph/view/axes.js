@@ -3,6 +3,7 @@ import { timeFormat } from 'd3-time-format';
 
 import { FOCUS_CIRCLE_RADIUS } from './cursor';
 
+
 /**
  * Draws the x-axis
  * @param  {Object} elem             D3 selector
@@ -18,6 +19,7 @@ export const drawAxisX = function (elem, {xScale, layout}, axis) {
     axis.transition().duration(100)
         .attr('transform', `translate(0, ${layout.height})`)
         .call(axisBottom()
+            .ticks(layout.width / 100)
             .scale(xScale)
             .tickSizeOuter(0)
             .tickFormat(timeFormat('%b %d, %Y')));
