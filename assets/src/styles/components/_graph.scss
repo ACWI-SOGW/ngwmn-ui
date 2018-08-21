@@ -9,11 +9,11 @@ $provisional-color: color(accent-warm, dark);
     align-items: center;
     justify-content: center;
 
-    // Hack to maintain a 16:9 aspect ratio
+    // Maintain a 5:3 aspect ratio on this element
     & {
         box-sizing: border-box;
         position: relative;
-        padding-top: 56.25%;  // (9 / 16)
+        padding-top: 60%;  // (3 / 5)
         & > * {
             position: absolute;
             top: 0;
@@ -24,95 +24,128 @@ $provisional-color: color(accent-warm, dark);
             height: 100%;
         }
     }
-    .indicators {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        justify-content: center;
-        i {
-            opacity: .8;
+
+    // Style loading and error indicators
+    & {
+        // Center the indicators container
+        .indicators {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            i {
+                opacity: .8;
+            }
+            .loading-indicator, .error-indicator {
+                display: none;
+            }
+        }
+        // Show loading-indicator when loading class is set on the component
+        &.loading {
+            .indicators {
+                .loading-indicator {
+                    display: block;
+                    width: auto;
+                    text-align: center;
+                    color: color(primary, light);
+                }
+            }
+        }
+        // Show error-indicator when has-error class is set on the component
+        &.has-error {
+            .indicators {
+                .error-indicator {
+                    display: block;
+                    width: auto;
+                    text-align: center;
+                    color: $error;
+                }
+            }
         }
     }
-    .loading-indicator, .error-indicator {
-        display: none;
-    }
-    &.loading {
-        .loading-indicator {
-            display: block;
-            width: auto;
-            text-align: center;
-            color: color(primary, light);
-        }
-    }
-    &.has-error {
-        .error-indicator {
-            display: block;
-            width: auto;
-            text-align: center;
-            color: $error;
-        }
-    }
+
+    // container for everything drawn by the graph component
     .graph-container {
         display: flex;
-        .y-label {
-            flex-grow: 0;
-            writing-mode: vertical-lr;
-            transform: rotate(180deg);
-            text-align: center;
-            padding: 0 0 0 .5em;
-        }
-        svg {
+        flex-direction: column;
+        flex-grow: 1;
+        .chart-container {
             flex-grow: 1;
-            width: 100%;
-            g.chart {
-                path.line-segment {
-                    fill: none;
-                }
-                .line-segment {
-                    stroke-width: 2px;
-                    &.approved {
-                        stroke: $approved-color;
+            display: flex;
+            flex-direction: row;
+            .y-label {
+                flex-grow: 0;
+                writing-mode: vertical-lr;
+                transform: rotate(180deg);
+                text-align: center;
+                padding: 0 0 0 .5em;
+            }
+            svg {
+                flex-grow: 1;
+                width: 100%;
+                g.chart {
+                    path.line-segment {
+                        fill: none;
                     }
-                    &.provisional {
-                        stroke: $provisional-color;
+                    .line-segment {
+                        stroke-width: 2px;
+                        &.approved {
+                            stroke: $approved-color;
+                        }
+                        &.provisional {
+                            stroke: $provisional-color;
+                        }
+                    }
+                    .overlay {
+                        fill: none;
+                        pointer-events: all;
+                        cursor: crosshair;
+                    }
+                    circle.focus {
+                        fill: #436BAF;
+                        opacity: .6;
+                    }
+                    .focus {
+                        line {
+                            opacity: .5;
+                            stroke: #436BAF;
+                            stroke-width: 1px;
+                            stroke-dasharray: 5, 5
+                        }
                     }
                 }
-                .overlay {
-                    fill: none;
-                    pointer-events: all;
-                    cursor: crosshair;
+            }
+            .tooltip {
+                pointer-events: none;
+                position: absolute;
+                right: 0;
+                background: rgba(255, 255, 255, 0.8);
+                color: $default-color;
+                .current-tooltip-text {
+                    font-weight: bold;
                 }
-                circle.focus {
-                    fill: #436BAF;
-                    opacity: .6;
+                .approved {
+                    color: $approved-color;
                 }
-                .focus {
-                    line {
-                        opacity: .5;
-                        stroke: #436BAF;
-                        stroke-width: 1px;
-                        stroke-dasharray: 5, 5
-                    }
+                .provisional {
+                    color: $provisional-color;
+                }
+                .compare-tooltip-text {
+                    font-weight: normal
                 }
             }
         }
-        .tooltip {
-            pointer-events: none;
-            position: absolute;
-            right: 0;
-            background: rgba(255, 255, 255, 0.8);
-            color: $default-color;
-            .current-tooltip-text {
-                font-weight: bold;
-            }
-            .approved {
-                color: $approved-color;
-            }
-            .provisional {
-                color: $provisional-color;
-            }
-            .compare-tooltip-text {
-                font-weight: normal
+        .legend {
+            flex-grow: 0;
+            text-align: center;
+            span {
+                padding: 0 1em;
+                &.approved {
+                    color: $approved-color;
+                }
+                &.provisional {
+                    color: $provisional-color;
+                }
             }
         }
     }

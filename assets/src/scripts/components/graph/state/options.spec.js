@@ -20,7 +20,8 @@ describe('graph component options state', () => {
     });
 
     it('getCurrentWaterLevelID returns expected ID', () => {
-        const id = getCurrentWaterLevelID.resultFunc({agencycode: 'agency', siteid: 'siteid'});
+        store.dispatch(setGraphOptions({agencycode: 'agency', siteid: 'siteid'}));
+        const id = getCurrentWaterLevelID(store.getState());
         expect(id).toBe('agency:siteid');
     });
 

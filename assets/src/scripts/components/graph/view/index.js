@@ -7,12 +7,14 @@ import { link } from 'ngwmn/lib/d3-redux';
 import { callIf } from 'ngwmn/lib/utils';
 
 import {
-    getChartPosition, getContainerSize, getCurrentWaterLevelUnit, getCursor,
-    getCursorDatum, getLineSegments, getScaleX, getScaleY, resetViewport,
-    setCursor, setContainerSize, setViewport
+    getActiveClasses, getChartPosition, getContainerSize,
+    getCurrentWaterLevelUnit, getCursor, getCursorDatum, getLineSegments,
+    getScaleX, getScaleY, resetViewport, setCursor, setContainerSize,
+    setViewport
 } from '../state';
 import { drawAxisX, drawAxisY, drawAxisYLabel } from './axes';
 import { drawFocusCircle, drawFocusLine, drawTooltip, FOCUS_CIRCLE_RADIUS } from './cursor';
+import drawLegend from './legend';
 import drawWaterLevels from './water-levels';
 
 
@@ -162,8 +164,12 @@ export const drawChart = function (elem, store, chartType) {
 export default function (elem, store) {
     // Append a container for the graph.
     // .graph-container is used to scope all the CSS styles.
-    const svg = elem.append('div')
-        .classed('graph-container', true)
+    const graphContainer = elem.append('div')
+        .classed('graph-container', true);
+
+    // Append the chart and axis labels, scoped to .chart-container
+    graphContainer.append('div')
+        .classed('chart-container', true)
         // Draw the y-axis label on the left of the chart.
         // See the SASS for the flexbox rules driving the layout.
         .call(link(store, drawAxisYLabel, createStructuredSelector({
@@ -183,19 +189,26 @@ export default function (elem, store) {
         .call(link(store, drawTooltip, createStructuredSelector({
             cursorPoint: getCursorDatum,
             unit: getCurrentWaterLevelUnit
-        })));
+        })))
+        .call(div => {
+            // Create an observer on the .chart-container node.
+            // Here, we use a ResizeObserver polyfill to trigger redraws when
+            // the CSS-driven size of our container changes.
+            const node = div.node();
+            const observer = new ResizeObserver(function (entries) {
+                store.dispatch(setContainerSize({
+                    width: parseFloat(entries[0].contentRect.width),
+                    height: parseFloat(entries[0].contentRect.height)
+                }));
+            });
+            observer.observe(node);
+        });
 
-    // Create an observer on the SVG node size.
-    // Here, we use a ResizeObserver polyfill to trigger redraws when the
-    // CSS-driven size of our container changes.
-    const node = svg.node();
-    const observer = new ResizeObserver(function (entries) {
-        store.dispatch(setContainerSize({
-            width: parseFloat(entries[0].contentRect.width),
-            height: parseFloat(entries[0].contentRect.height)
-        }));
-    });
-    observer.observe(node);
+    // Append the legend
+    graphContainer
+        .call(link(store, drawLegend, getActiveClasses));
 
-    return svg;
+    // FIXME: for CSS layout purposes, here we append the node after the parent
+    // node. Instead, it should be a child of the component div (elem).
+    //select(elem.node().parentNode).call(link(store, drawLegend, getActiveClasses));
 }

@@ -8,8 +8,9 @@ const VIEWPORT_SET = `${MOUNT_POINT}/VIEWPORT_SET`;
 
 
 /**
- * Action creator to set the current viewport date (x-axis)
- * @param {Date} date   Date of viewport
+ * Action creator to set the current viewport date range (x-axis)
+ * @param {Date} startDate  Start date of viewport
+ * @param {Date} endDate    End date of viewport
  */
 export const setViewport = function ({startDate, endDate}) {
     return {
