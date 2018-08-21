@@ -8,6 +8,7 @@ $provisional-color: color(accent-warm, dark);
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
+    margin-bottom: 1em;
 
     // Maintain a 5:3 aspect ratio on this element
     & {
@@ -139,12 +140,15 @@ $provisional-color: color(accent-warm, dark);
             flex-grow: 0;
             text-align: center;
             span {
-                padding: 0 1em;
+                padding: 0 1em 0 .5em;
+            }
+            .line-segment {
+                stroke-width: 2px;
                 &.approved {
-                    color: $approved-color;
+                    stroke: $approved-color;
                 }
                 &.provisional {
-                    color: $provisional-color;
+                    stroke: $provisional-color;
                 }
             }
         }

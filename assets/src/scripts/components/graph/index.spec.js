@@ -68,7 +68,7 @@ describe('graph component', () => {
                 expect(div.classed('has-error')).toBe(false);
                 expect(div.selectAll('.tooltip-text').size()).toEqual(1);
                 expect(div.selectAll('circle.focus').size()).toBe(2);
-                expect(div.selectAll('.line-segment').size()).toBe(2);
+                expect(div.selectAll('.line-segment').size()).toBe(3);
                 done();
             });
         });
