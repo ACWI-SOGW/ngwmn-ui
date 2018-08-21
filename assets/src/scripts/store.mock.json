@@ -6,6 +6,12 @@
         "graphSize": {
             "height": 438.828125,
             "width": 780.15625
+        },
+        "axisYBBox": {
+            "x": -34.015625,
+            "y": 0.5,
+            "width": 34.515625,
+            "height": 217.4447784423828
         }
     },
     "components/graph/options": {

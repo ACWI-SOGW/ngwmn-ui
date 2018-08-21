@@ -1,8 +1,11 @@
 import { combineReducers, createStore } from 'redux';
 
+import getMockStore from 'ngwmn/store.mock';
+
 import reducer from './layout';
-import { getChartPosition, getContainerSize, getViewport, resetViewport,
-         setContainerSize, setViewport } from './layout';
+import { getAxisYBBox, getChartPosition, getContainerSize, getViewBox,
+         getViewport, resetViewport, setAxisYBBox, setContainerSize,
+         setViewport } from './layout';
 
 
 describe('graph component layout state', () => {
@@ -28,7 +31,7 @@ describe('graph component layout state', () => {
         expect(getViewport(store.getState())).toEqual(null);
     });
 
-    it ('getChartPosition works', () => {
+    it('getChartPosition works', () => {
         // Works on container size
         expect(getChartPosition('main')(store.getState())).not.toBe(null);
         expect(getChartPosition('panner')(store.getState())).not.toBe(null);
@@ -38,5 +41,16 @@ describe('graph component layout state', () => {
         expect(getContainerSize(store.getState())).toEqual({width: 10, height: 20});
         expect(getChartPosition('main')(store.getState())).not.toBe(null);
         expect(getChartPosition('panner')(store.getState())).not.toBe(null);
+    });
+
+    it('setAxisYBBox and getAxisYBBox works', () => {
+        const bBox = {x: -10, y: -5, width: 10, height: 20};
+        store.dispatch(setAxisYBBox(bBox));
+        expect(getAxisYBBox(store.getState())).toEqual(bBox);
+    });
+
+    it('getViewBox works', () => {
+        store = getMockStore();
+        expect(getViewBox(store.getState())).not.toBe(null);
     });
 });

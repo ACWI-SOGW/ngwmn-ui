@@ -7,13 +7,12 @@ import { link } from 'ngwmn/lib/d3-redux';
 import { callIf } from 'ngwmn/lib/utils';
 
 import {
-    getActiveClasses, getChartPosition, getContainerSize,
-    getCurrentWaterLevelUnit, getCursor, getCursorDatum, getLineSegments,
-    getScaleX, getScaleY, resetViewport, setCursor, setContainerSize,
-    setViewport
+    getActiveClasses, getChartPosition, getCurrentWaterLevelUnit, getCursor,
+    getCursorDatum, getLineSegments, getScaleX, getScaleY, getViewBox,
+    resetViewport, setAxisYBBox, setCursor, setContainerSize, setViewport
 } from '../state';
 import { drawAxisX, drawAxisY, drawAxisYLabel } from './axes';
-import { drawFocusCircle, drawFocusLine, drawTooltip, FOCUS_CIRCLE_RADIUS } from './cursor';
+import { drawFocusCircle, drawFocusLine, drawTooltip } from './cursor';
 import drawLegend from './legend';
 import drawWaterLevels from './water-levels';
 
@@ -33,7 +32,7 @@ const drawClipPath = function (elem, store, chartType) {
                 .call(link(store, (rect, chartPosition) => {
                     rect.attr('x', 0)
                         .attr('y', 0)
-                        .attr('width', chartPosition.width + FOCUS_CIRCLE_RADIUS)
+                        .attr('width', chartPosition.width)
                         .attr('height', chartPosition.height);
                 }, getChartPosition(chartType)));
 };
@@ -65,10 +64,11 @@ export const drawChart = function (elem, store, chartType) {
         })))
         // Draw the y-axis, only for the main chart.
         .call(callIf(chartType === 'main', link(store, drawAxisY, createStructuredSelector({
-            yScale: getScaleY(chartType),
-            cropSvgNode: () => chartType === 'main' ? elem : null,
-            containerSize: getContainerSize
-        }))))
+            yScale: getScaleY(chartType)
+        }), (bBox) => {
+            // When the bounding box has changed, update the state with it.
+            store.dispatch(setAxisYBBox(bBox));
+        })))
         // Draw the x-axis, only for the main chart.
         .call(callIf(chartType === 'main', link(store, drawAxisX, createStructuredSelector({
             xScale: getScaleX(chartType),
@@ -96,7 +96,7 @@ export const drawChart = function (elem, store, chartType) {
                 // Set the overlay size, including a little extra space to deal
                 // with the focus circle when it's drawn on the right-most extent.
                 .call(link(store, (rect, layout) => {
-                    rect.attr('width', layout.width + FOCUS_CIRCLE_RADIUS)
+                    rect.attr('width', layout.width)
                         .attr('height', layout.height);
                 }, getChartPosition(chartType)))
                 // Clear the cursor on mouseout
@@ -179,6 +179,9 @@ export default function (elem, store) {
             // Append an SVG container that we will draw to
             elem.append('svg')
                 .attr('xmlns', 'http://www.w3.org/2000/svg')
+                .call(link(store, (svg, viewBox) => {
+                    svg.attr('viewBox', `${viewBox.left} ${viewBox.top} ${viewBox.right - viewBox.left} ${viewBox.bottom - viewBox.top}`);
+                }, getViewBox))
                 // Draw the bottom chart, enabling pan and zoom functionality
                 .call(drawChart, store, 'panner')
                 // Draw the main chart, taking up most of the visible area
