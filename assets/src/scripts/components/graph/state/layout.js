@@ -42,7 +42,7 @@ export const resetViewport = function () {
 export const getViewport = state => state[MOUNT_POINT].viewport;
 
 /**
- * Action create to set the graph size to a given (width, height)
+ * Action creator to set the graph size to a given (width, height)
  * @param {Number} options.width  Width of graph container
  * @param {Number} options.height Height of graph container
  */

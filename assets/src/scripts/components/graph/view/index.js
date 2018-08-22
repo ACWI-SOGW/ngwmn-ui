@@ -198,11 +198,16 @@ export default function (elem, store) {
             // Here, we use a ResizeObserver polyfill to trigger redraws when
             // the CSS-driven size of our container changes.
             const node = div.node();
+            let size = {};
             const observer = new ResizeObserver(function (entries) {
-                store.dispatch(setContainerSize({
+                const newSize = {
                     width: parseFloat(entries[0].contentRect.width),
                     height: parseFloat(entries[0].contentRect.height)
-                }));
+                };
+                if (size.width !== newSize.width || size.height !== newSize.height) {
+                    size = newSize;
+                    store.dispatch(setContainerSize(size));
+                }
             });
             observer.observe(node);
         });
@@ -210,8 +215,4 @@ export default function (elem, store) {
     // Append the legend
     graphContainer
         .call(link(store, drawLegend, getActiveClasses));
-
-    // FIXME: for CSS layout purposes, here we append the node after the parent
-    // node. Instead, it should be a child of the component div (elem).
-    //select(elem.node().parentNode).call(link(store, drawLegend, getActiveClasses));
 }

@@ -18,37 +18,33 @@ describe('graph component legend', () => {
 
     it('renders approved when set', () => {
         drawLegend(div, {
-            activeClasses: {
-                approved: true
-            }
+            approved: true
         });
-        expect(div.selectAll('svg.approved').size()).toBe(1);
+        expect(div.selectAll('line.approved').size()).toBe(1);
+        expect(div.selectAll('span.approved').size()).toBe(1);
     });
 
     it('does not render approved when unset', () => {
         drawLegend(div, {
-            activeClasses: {
-                approved: false
-            }
+            approved: false
         });
-        expect(div.selectAll('svg.approved').size()).toBe(0);
+        expect(div.selectAll('line.approved').size()).toBe(0);
+        expect(div.selectAll('span.approved').size()).toBe(0);
     });
 
     it('renders provisional when set', () => {
         drawLegend(div, {
-            activeClasses: {
-                provisional: true
-            }
+            provisional: true
         });
-        expect(div.selectAll('svg.provisional').size()).toBe(1);
+        expect(div.selectAll('line.provisional').size()).toBe(1);
+        expect(div.selectAll('span.provisional').size()).toBe(1);
     });
 
     it('does not render provisional when unset', () => {
         drawLegend(div, {
-            activeClasses: {
-                provisional: false
-            }
+            provisional: false
         });
-        expect(div.selectAll('svg.provisional').size()).toBe(0);
+        expect(div.selectAll('line.provisional').size()).toBe(0);
+        expect(div.selectAll('span.provisional').size()).toBe(0);
     });
 });
