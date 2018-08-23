@@ -142,3 +142,13 @@ export const getLineSegments = createSelector(
         return lines;
     }
 );
+
+export const getActiveClasses = createSelector(
+    getChartPoints,
+    (chartPoints) => {
+        return {
+            approved: chartPoints.some(pt => pt.approved),
+            provisional: chartPoints.some(pt => !pt.approved)
+        };
+    }
+);

@@ -1,7 +1,8 @@
 import getMockStore from 'ngwmn/store.mock';
 
-import { getChartPoints, getCurrentWaterLevels, getCurrentWaterLevelUnit,
-         getDomainX, getDomainY, getLineSegments, MAX_LINE_POINT_GAP } from './points';
+import { getActiveClasses, getChartPoints, getCurrentWaterLevels,
+         getCurrentWaterLevelUnit, getDomainX, getDomainY, getLineSegments,
+         MAX_LINE_POINT_GAP } from './points';
 
 
 describe('graph component points', () => {
@@ -179,6 +180,43 @@ describe('graph component points', () => {
         it('works with mock state', () => {
             const store = getMockStore();
             expect(getLineSegments(store.getState())).not.toBe(null);
+        });
+    });
+
+    describe('getActiveClasses', () => {
+        it('returns approved when any point is approved', () => {
+            expect(getActiveClasses.resultFunc([
+                {approved: true},
+                {approved: false},
+                {approved: false},
+                {approved: false}
+            ]).approved).toBe(true);
+            expect(getActiveClasses.resultFunc([
+                {approved: false},
+                {approved: false},
+                {approved: false},
+                {approved: false}
+            ]).approved).toBe(false);
+        });
+
+        it('returns provisional when any point is not approved', () => {
+            expect(getActiveClasses.resultFunc([
+                {approved: true},
+                {approved: true},
+                {approved: false},
+                {approved: true}
+            ]).provisional).toBe(true);
+            expect(getActiveClasses.resultFunc([
+                {approved: true},
+                {approved: true},
+                {approved: true},
+                {approved: true}
+            ]).provisional).toBe(false);
+        });
+
+        it('works with mock state', () => {
+            const store = getMockStore();
+            expect(getActiveClasses(store.getState())).not.toBe(null);
         });
     });
 });

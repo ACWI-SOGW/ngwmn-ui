@@ -1,8 +1,6 @@
 import { axisBottom, axisLeft } from 'd3-axis';
 import { timeFormat } from 'd3-time-format';
 
-import { FOCUS_CIRCLE_RADIUS } from './cursor';
-
 
 /**
  * Draws the x-axis
@@ -30,29 +28,33 @@ export const drawAxisX = function (elem, {xScale, layout}, axis) {
  * Draws the y-axis
  * @param  {Object} svg                     D3 selector
  * @param  {Function} options.yScale        D3 scale function
- * @param  {Function} options.cropSvgNode   If non-null, crop this svg node to
- *                                          include the drawn y-axis.
- * @param  {Function} options.containerSize Size of containing SVG node
- * @param  {Object} axis                    D3 selector returned by previous invocation
- * @return {Object}                         Container for axis (g element)
+ * @param  {Object} callback                Function will be called with bounding box after render
+ * @param  {Object} context                 Context returned by previous invocation
+ * @return {Object}                         Context for next invocation
  */
-export const drawAxisY = function (elem, {yScale, cropSvgNode, containerSize}, axis) {
-    axis = axis || elem
+export const drawAxisY = function (elem, {yScale}, callback, context) {
+    context = context || {};
+    context.axis = context.axis || elem
         .append('g')
         .classed('y-axis', true);
-    axis.transition().duration(100)
+    context.bBox = context.bBox || {};
+
+    context.axis.transition().duration(100)
         .attr('transform', 'translate(0, 0)')
         .call(axisLeft()
             .scale(yScale)
             .tickPadding(3)
             .tickSizeOuter(0))
         .on('end', function () {
-            if (!cropSvgNode) {
-                return;
-            }
             try {
-                const axisBox = axis.node().getBBox();
-                cropSvgNode.attr('viewBox', `${axisBox.x} ${0} ${containerSize.width - axisBox.x + FOCUS_CIRCLE_RADIUS} ${containerSize.height}`);
+                const newBBox = context.axis.node().getBBox();
+                if (newBBox.x !== context.bBox.x ||
+                        newBBox.y !== context.bBox.y ||
+                        newBBox.width !== context.bBox.width ||
+                        newBBox.height !== context.bBox.height) {
+                    context.bBox = newBBox;
+                    callback(newBBox);
+                }
             } catch (error) {
                 // See here for details on why we ignore getBBox() exceptions
                 // to fix issues with Firefox:
@@ -60,7 +62,8 @@ export const drawAxisY = function (elem, {yScale, cropSvgNode, containerSize}, a
                 // https://stackoverflow.com/questions/28282295/getbbox-of-svg-when-hidden.
             }
         });
-    return axis;
+
+    return context;
 };
 
 /**

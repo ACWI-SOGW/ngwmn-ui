@@ -35,19 +35,20 @@ const connect = function (store, callback) {
 
 /**
  * Calls the provided D3 callback with provided state when updated.
- * @param  {Object} store    Redux store
- * @param  {Function} func   D3 callback accepting (elem, options)
- * @param  {Object} selector Source selector for options
- * @return {Function}        D3 callback
+ * @param  {Object} store       Redux store
+ * @param  {Function} func      D3 callback accepting (elem, options)
+ * @param  {Object} selector    Source selector for options
+ * @param  {Object} ...args     Optional additional arguments to proxy to `func`
+ * @return {Function}           D3 callback
  */
-export const link = function (store, func, selector) {
+export const link = function (store, func, selector, ...args) {
     let currentOptions = null;
     let context = null;
     return connect(store, function (selection, state) {
         let nextOptions = selector(state);
         if (currentOptions !== nextOptions) {
             currentOptions = nextOptions;
-            context = func.call(null, selection, currentOptions, context);
+            context = func.call(null, selection, currentOptions, ...args, context);
         }
         return context;
     });
