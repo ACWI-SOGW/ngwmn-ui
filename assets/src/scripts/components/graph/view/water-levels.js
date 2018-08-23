@@ -7,7 +7,7 @@ const CIRCLE_RADIUS_SINGLE_PT = 2;
 /**
  * Draws a segment of a time series
  * @param  {Object} elem                D3 selector
- * @param  {Object} options.line        {classes, points}
+ * @param  {Object} options.line        {class, points}
  * @param  {Function} options.xScale    D3 scale function
  * @param  {Function} options.yScale    D3 scale function
  * @param  {Object} segment             D3 selector returned by previous invocation
@@ -19,8 +19,7 @@ export const drawDataLine = function (elem, {line, xScale, yScale}, segment) {
     if (line.points.length === 1) {
         segment = segment || elem.append('circle')
             .classed('line-segment', true)
-            .classed('approved', line.classes.approved)
-            .classed('provisional', line.classes.provisional)
+            .classed(line.class, true)
             .attr('r', CIRCLE_RADIUS_SINGLE_PT);
         segment
             .data(line.points)
@@ -30,8 +29,7 @@ export const drawDataLine = function (elem, {line, xScale, yScale}, segment) {
     } else {
         segment = segment || elem.append('path')
             .classed('line-segment', true)
-            .classed('approved', line.classes.approved)
-            .classed('provisional', line.classes.provisional)
+            .classed(line.class, true)
             .attr('vector-effect', 'non-scaling-stroke');
         segment
             .datum(line.points)

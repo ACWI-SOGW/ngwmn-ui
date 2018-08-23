@@ -90,9 +90,7 @@ $provisional-color: color(accent-warm, dark);
                     }
                     .line-segment {
                         stroke-width: 2px;
-                        &.approved {
-                            stroke: $approved-color;
-                        }
+                        stroke: $approved-color;
                         &.provisional {
                             stroke: $provisional-color;
                         }
@@ -125,9 +123,7 @@ $provisional-color: color(accent-warm, dark);
                 .current-tooltip-text {
                     font-weight: bold;
                 }
-                .approved {
-                    color: $approved-color;
-                }
+                color: $approved-color;
                 .provisional {
                     color: $provisional-color;
                 }
@@ -144,9 +140,7 @@ $provisional-color: color(accent-warm, dark);
             }
             .line-segment {
                 stroke-width: 2px;
-                &.approved {
-                    stroke: $approved-color;
-                }
+                stroke: $approved-color;
                 &.provisional {
                     stroke: $provisional-color;
                 }

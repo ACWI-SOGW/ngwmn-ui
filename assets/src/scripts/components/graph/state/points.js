@@ -46,7 +46,10 @@ export const getChartPoints = createSelector(
             return {
                 dateTime: new Date(datum.time),
                 value: parseFloat(datum.fromDatumValue),
-                approved: datum.comment === 'A'  // provisional = 'P'
+                class: {
+                    A: 'approved',
+                    P: 'provisional'
+                }[datum.comment] || null
             };
         }).sort((a, b) => {
             return a.dateTime.getTime() - b.dateTime.getTime();
@@ -102,15 +105,9 @@ export const getLineSegments = createSelector(
 
         // Accumulate data into line groups, splitting on the estimated and
         // approval status.
-        let lastClasses = {};
+        let lastClass;
 
         for (let pt of points) {
-            // Classes to put on the line with this point.
-            let lineClasses = {
-                approved: pt.approved,
-                provisional: !pt.approved
-            };
-
             // Split lines if the gap from the period point exceeds
             // MAX_LINE_POINT_GAP.
             let splitOnGap = false;
@@ -124,11 +121,9 @@ export const getLineSegments = createSelector(
 
             // If this point doesn't have the same classes as the last point,
             // create a new line for it.
-            if (lastClasses.approved !== lineClasses.approved ||
-                lastClasses.provisional !== lineClasses.provisional ||
-                splitOnGap) {
+            if (lastClass !== pt.class || splitOnGap) {
                 lines.push({
-                    classes: lineClasses,
+                    class: pt.class || 'unclassed',
                     points: []
                 });
             }
@@ -136,8 +131,8 @@ export const getLineSegments = createSelector(
             // Add this point to the current line.
             lines[lines.length - 1].points.push(pt);
 
-            // Cache the classes for the next loop iteration.
-            lastClasses = lineClasses;
+            // Cache the class for the next loop iteration.
+            lastClass = pt.class;
         }
         return lines;
     }
@@ -147,8 +142,8 @@ export const getActiveClasses = createSelector(
     getChartPoints,
     (chartPoints) => {
         return {
-            approved: chartPoints.some(pt => pt.approved),
-            provisional: chartPoints.some(pt => !pt.approved)
+            approved: chartPoints.some(pt => pt.class === 'approved'),
+            provisional: chartPoints.some(pt => pt.class === 'provisional')
         };
     }
 );

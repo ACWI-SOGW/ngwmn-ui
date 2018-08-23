@@ -29,10 +29,7 @@ describe('graph component water levels', () => {
                         dateTime: new Date('2010-10-10'),
                         value: 10
                     }],
-                    classes: {
-                        approved: true,
-                        provisional: false
-                    }
+                    class: 'approved'
                 },
                 xScale: () => 1,
                 yScale: () => 1
@@ -56,10 +53,7 @@ describe('graph component water levels', () => {
                         dateTime: new Date('2010-10-11'),
                         value: 11
                     }],
-                    classes: {
-                        approved: true,
-                        provisional: false
-                    }
+                    class: 'approved'
                 },
                 xScale: () => 1,
                 yScale: () => 1
@@ -84,19 +78,13 @@ describe('graph component water levels', () => {
                     dateTime: new Date('2010-10-11'),
                     value: 11
                 }],
-                classes: {
-                    approved: true,
-                    provisional: false
-                }
+                class: 'approved'
             }, {
                 points: [{
                     dateTime: new Date('2010-10-10'),
                     value: 10
                 }],
-                classes: {
-                    approved: true,
-                    provisional: false
-                }
+                class: 'approved'
             }],
             xScale: () => 1,
             yScale: () => 1

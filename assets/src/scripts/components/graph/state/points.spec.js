@@ -62,16 +62,16 @@ describe('graph component points', () => {
                 }, {
                     time: new Date('2010-10-10'),
                     fromDatumValue: '-1',
-                    comment: 'p'
+                    comment: 'P'
                 }]
             })).toEqual([{
                 dateTime: new Date('2010-10-10'),
                 value: 12.2,
-                approved: true
+                class: 'approved'
             }, {
                 dateTime: new Date('2010-10-10'),
                 value: -1,
-                approved: false
+                class: 'provisional'
             }]);
         });
 
@@ -137,19 +137,19 @@ describe('graph component points', () => {
             const dateTime = new Date();
             const value = 1;
             expect(getLineSegments.resultFunc([
-                {value, dateTime, approved: true},
-                {value, dateTime, approved: true},
-                {value, dateTime, approved: false}
+                {value, dateTime, class: 'approved'},
+                {value, dateTime, class: 'approved'},
+                {value, dateTime, class: 'provisional'}
             ])).toEqual([{
-                classes: {approved: true, provisional: false},
+                class: 'approved',
                 points: [
-                    {value, dateTime, approved: true},
-                    {value, dateTime, approved: true}
+                    {value, dateTime, class: 'approved'},
+                    {value, dateTime, class: 'approved'}
                 ]
             }, {
-                classes: {approved: false, provisional: true},
+                class: 'provisional',
                 points: [
-                    {value, dateTime, approved: false}
+                    {value, dateTime, class: 'provisional'}
                 ]
             }]);
         });
@@ -160,19 +160,19 @@ describe('graph component points', () => {
             dates.push(new Date(dates[0].getTime() + MAX_LINE_POINT_GAP));
             dates.push(new Date(dates[1].getTime() + MAX_LINE_POINT_GAP + 1));
             expect(getLineSegments.resultFunc([
-                {value, dateTime: dates[0], approved: true},
-                {value, dateTime: dates[1], approved: true},
-                {value, dateTime: dates[2], approved: true}
+                {value, dateTime: dates[0], class: 'approved'},
+                {value, dateTime: dates[1], class: 'approved'},
+                {value, dateTime: dates[2], class: 'approved'}
             ])).toEqual([{
-                classes: {approved: true, provisional: false},
+                class: 'approved',
                 points: [
-                    {value, dateTime: dates[0], approved: true},
-                    {value, dateTime: dates[1], approved: true}
+                    {value, dateTime: dates[0], class: 'approved'},
+                    {value, dateTime: dates[1], class: 'approved'}
                 ]
             }, {
-                classes: {approved: true, provisional: false},
+                class: 'approved',
                 points: [
-                    {value, dateTime: dates[2], approved: true}
+                    {value, dateTime: dates[2], class: 'approved'}
                 ]
             }]);
         });
@@ -186,31 +186,31 @@ describe('graph component points', () => {
     describe('getActiveClasses', () => {
         it('returns approved when any point is approved', () => {
             expect(getActiveClasses.resultFunc([
-                {approved: true},
-                {approved: false},
-                {approved: false},
-                {approved: false}
+                {class: 'approved'},
+                {class: 'provisional'},
+                {class: 'provisional'},
+                {class: 'provisional'}
             ]).approved).toBe(true);
             expect(getActiveClasses.resultFunc([
-                {approved: false},
-                {approved: false},
-                {approved: false},
-                {approved: false}
+                {class: 'provisional'},
+                {class: 'provisional'},
+                {class: 'provisional'},
+                {class: 'provisional'}
             ]).approved).toBe(false);
         });
 
         it('returns provisional when any point is not approved', () => {
             expect(getActiveClasses.resultFunc([
-                {approved: true},
-                {approved: true},
-                {approved: false},
-                {approved: true}
+                {class: 'approved'},
+                {class: 'approved'},
+                {class: 'provisional'},
+                {class: 'approved'}
             ]).provisional).toBe(true);
             expect(getActiveClasses.resultFunc([
-                {approved: true},
-                {approved: true},
-                {approved: true},
-                {approved: true}
+                {class: 'approved'},
+                {class: 'approved'},
+                {class: 'approved'},
+                {class: 'approved'}
             ]).provisional).toBe(false);
         });
 
