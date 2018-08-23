@@ -1,4 +1,4 @@
-import { line as d3Line } from 'd3-shape';
+import { area as d3Area, line as d3Line } from 'd3-shape';
 import { transition } from 'd3-transition';
 
 const CIRCLE_RADIUS_SINGLE_PT = 2;
@@ -50,9 +50,12 @@ export const drawDataLine = function (elem, {line, xScale, yScale}, segment) {
  * @param  {Object} context              Context of form {segments, container}
  * @return {Object}                      {segments, container} context for next invocation
  */
-export default function (svg, {lineSegments, xScale, yScale}, context) {
+export default function (svg, {lineSegments, chartPoints, xScale, yScale}, context) {
     context = context || {
         segments: [],
+        area: svg
+            .append('path')
+                .classed('area-path', true),
         container: svg
             .append('g')
                 .attr('id', 'ts-group')
@@ -65,6 +68,13 @@ export default function (svg, {lineSegments, xScale, yScale}, context) {
             context.segments[index]
         );
     });
+
+    context.area
+        .datum(chartPoints)
+        .transition(transition().duration(100))
+        .attr('d', d3Area().x(d => xScale(d.dateTime))
+                           .y1(d => yScale(d.value))
+                           .y0(yScale.range()[0]));
 
     return context;
 }

@@ -7,9 +7,10 @@ import { link } from 'ngwmn/lib/d3-redux';
 import { callIf } from 'ngwmn/lib/utils';
 
 import {
-    getActiveClasses, getChartPosition, getCurrentWaterLevelUnit, getCursor,
-    getCursorDatum, getLineSegments, getScaleX, getScaleY, getViewBox,
-    resetViewport, setAxisYBBox, setCursor, setContainerSize, setViewport
+    getActiveClasses, getChartPoints, getChartPosition,
+    getCurrentWaterLevelUnit, getCursor, getCursorDatum, getLineSegments,
+    getScaleX, getScaleY, getViewBox, resetViewport, setAxisYBBox, setCursor,
+    setContainerSize, setViewport
 } from '../state';
 import { drawAxisX, drawAxisY, drawAxisYLabel } from './axes';
 import { drawFocusCircle, drawFocusLine, drawTooltip } from './cursor';
@@ -59,6 +60,7 @@ export const drawChart = function (elem, store, chartType) {
         // Draw the actual lines/circles for the current water level data set.
         .call(link(store, drawWaterLevels, createStructuredSelector({
             lineSegments: getLineSegments,
+            chartPoints: getChartPoints,
             xScale: getScaleX(chartType),
             yScale: getScaleY(chartType)
         })))
