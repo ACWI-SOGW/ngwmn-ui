@@ -1,3 +1,4 @@
+import { scaleLinear } from 'd3-scale';
 import { select, selectAll } from 'd3-selection';
 
 import { default as drawWaterLevels, drawDataLine } from './water-levels';
@@ -55,8 +56,8 @@ describe('graph component water levels', () => {
                     }],
                     class: 'approved'
                 },
-                xScale: () => 1,
-                yScale: () => 1
+                xScale: scaleLinear(),
+                yScale: scaleLinear()
             });
 
             const segments = selectAll('.line-segment');
@@ -86,8 +87,18 @@ describe('graph component water levels', () => {
                 }],
                 class: 'approved'
             }],
-            xScale: () => 1,
-            yScale: () => 1
+            chartPoints: [{
+                dateTime: new Date('2010-10-10'),
+                value: 10
+            }, {
+                dateTime: new Date('2010-10-11'),
+                value: 11
+            }, {
+                dateTime: new Date('2010-10-10'),
+                value: 10
+            }],
+            xScale: scaleLinear(),
+            yScale: scaleLinear()
         });
         const group = select('g#ts-group');
         expect(group).not.toBe(null);
