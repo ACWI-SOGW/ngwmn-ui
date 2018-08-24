@@ -13,4 +13,4 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added water quality table to site location view
 - Added water levels graph to site location page
 - Added brush/pan chart under main chart
-- Add legend to chart
+- Add legend to chart when there are classed points
