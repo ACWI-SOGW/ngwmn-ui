@@ -1,6 +1,11 @@
 import { axisBottom, axisLeft } from 'd3-axis';
 import { timeFormat } from 'd3-time-format';
 
+const UNIT_DISPLAY = {
+    ft: 'feet',
+    m: 'meters'
+};
+
 
 /**
  * Draws the x-axis
@@ -80,9 +85,10 @@ export const drawAxisYLabel = function (elem, {unit}, label) {
 
     // Set the label text
     if (unit) {
-        label.text(`Water levels, ${unit}`);
+        const unitDisplay = UNIT_DISPLAY[unit.toLowerCase()] || unit;
+        label.text(`Depth to water, ${unitDisplay} below land surface`);
     } else {
-        label.text('Water levels');
+        label.text('Depth to water');
     }
 
     return label;

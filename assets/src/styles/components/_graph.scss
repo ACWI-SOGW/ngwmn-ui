@@ -76,7 +76,7 @@ $provisional-color: color(accent-warm, dark);
             flex-direction: row;
             .y-label {
                 flex-grow: 0;
-                writing-mode: vertical-lr;
+                writing-mode: vertical-rl;
                 transform: rotate(180deg);
                 text-align: center;
                 padding: 0 0 0 .5em;
