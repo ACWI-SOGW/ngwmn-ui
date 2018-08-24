@@ -1,4 +1,4 @@
-import { line as d3Line } from 'd3-shape';
+import { area as d3Area, line as d3Line } from 'd3-shape';
 import { transition } from 'd3-transition';
 
 const CIRCLE_RADIUS_SINGLE_PT = 2;
@@ -7,7 +7,7 @@ const CIRCLE_RADIUS_SINGLE_PT = 2;
 /**
  * Draws a segment of a time series
  * @param  {Object} elem                D3 selector
- * @param  {Object} options.line        {classes, points}
+ * @param  {Object} options.line        {class, points}
  * @param  {Function} options.xScale    D3 scale function
  * @param  {Function} options.yScale    D3 scale function
  * @param  {Object} segment             D3 selector returned by previous invocation
@@ -19,8 +19,7 @@ export const drawDataLine = function (elem, {line, xScale, yScale}, segment) {
     if (line.points.length === 1) {
         segment = segment || elem.append('circle')
             .classed('line-segment', true)
-            .classed('approved', line.classes.approved)
-            .classed('provisional', line.classes.provisional)
+            .classed(line.class, true)
             .attr('r', CIRCLE_RADIUS_SINGLE_PT);
         segment
             .data(line.points)
@@ -30,8 +29,7 @@ export const drawDataLine = function (elem, {line, xScale, yScale}, segment) {
     } else {
         segment = segment || elem.append('path')
             .classed('line-segment', true)
-            .classed('approved', line.classes.approved)
-            .classed('provisional', line.classes.provisional)
+            .classed(line.class, true)
             .attr('vector-effect', 'non-scaling-stroke');
         segment
             .datum(line.points)
@@ -52,9 +50,12 @@ export const drawDataLine = function (elem, {line, xScale, yScale}, segment) {
  * @param  {Object} context              Context of form {segments, container}
  * @return {Object}                      {segments, container} context for next invocation
  */
-export default function (svg, {lineSegments, xScale, yScale}, context) {
+export default function (svg, {lineSegments, chartPoints, xScale, yScale}, context) {
     context = context || {
         segments: [],
+        area: svg
+            .append('path')
+                .classed('area-path', true),
         container: svg
             .append('g')
                 .attr('id', 'ts-group')
@@ -67,6 +68,13 @@ export default function (svg, {lineSegments, xScale, yScale}, context) {
             context.segments[index]
         );
     });
+
+    context.area
+        .datum(chartPoints)
+        .transition(transition().duration(100))
+        .attr('d', d3Area().x(d => xScale(d.dateTime))
+                           .y1(d => yScale(d.value))
+                           .y0(yScale.range()[0]));
 
     return context;
 }

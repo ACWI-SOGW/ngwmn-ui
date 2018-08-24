@@ -1,6 +1,8 @@
 import { select } from 'd3-selection';
 import { transition } from 'd3-transition';
 
+import { callIf } from 'ngwmn/lib/utils';
+
 export const FOCUS_CIRCLE_RADIUS = 5.5;
 
 
@@ -86,8 +88,9 @@ export const drawTooltip = function (elem, {cursorPoint, unit}, tooltip) {
         .each(function (datum) {
             select(this)
                 .classed('tooltip-text', true)
-                .classed('approved', datum.approved)
-                .classed('provisional', !datum.approved);
+                .call(callIf(datum.class, () => {
+                    elem.classed(datum.class, true);
+                }));
         });
 
     return tooltip;
