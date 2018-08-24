@@ -46,9 +46,9 @@ describe('graph component', () => {
     describe('drawAxisYLabel function', () => {
         it('renders without a unit label and with', () => {
             let label = drawAxisYLabel(div, {});
-            expect(label.text()).toEqual('Water levels');
+            expect(label.text()).toEqual('Depth to water');
             label = drawAxisYLabel(div, {unit: 'feet'}, label);
-            expect(label.text()).toEqual('Water levels, feet');
+            expect(label.text()).toEqual('Depth to water, feet below land surface');
         });
     });
 });
