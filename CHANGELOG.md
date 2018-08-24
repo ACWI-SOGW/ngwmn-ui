@@ -14,3 +14,4 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added water levels graph to site location page
 - Added brush/pan chart under main chart
 - Add legend to chart
+- Line gaps drawn on gap of 6 months or more

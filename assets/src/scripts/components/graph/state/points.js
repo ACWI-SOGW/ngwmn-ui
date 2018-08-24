@@ -8,8 +8,9 @@ import { getViewport } from './layout';
 import { getCurrentWaterLevelID } from './options';
 
 
-// Lines will be split if the difference exceeds two years.
-export const MAX_LINE_POINT_GAP = 1000 * 60 * 60 * 24 * 365 * 2;
+// Lines will be split if the difference exceeds 6 months.
+export const MAX_LINE_POINT_GAP =
+    182/*days*/ * 24/*hrs*/ * 60/*min*/ * 60/*sec*/ * 1000/*ms*/;
 
 // 20% padding around the y-domain
 const PADDING_RATIO = 0.2;
