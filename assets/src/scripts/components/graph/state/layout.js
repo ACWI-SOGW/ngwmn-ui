@@ -1,6 +1,8 @@
 import memoize from 'fast-memoize';
 import { createSelector } from 'reselect';
 
+import { getExtentX } from './points';
+
 import { FOCUS_CIRCLE_RADIUS } from '../view/cursor';
 
 const MOUNT_POINT = 'components/graph/layout';
@@ -15,7 +17,7 @@ const VIEWPORT_SET = `${MOUNT_POINT}/VIEWPORT_SET`;
  * @param {Date} startDate  Start date of viewport
  * @param {Date} endDate    End date of viewport
  */
-export const setViewport = function ({startDate, endDate}) {
+export const setViewport = function ([startDate, endDate]) {
     return {
         type: VIEWPORT_SET,
         payload: {
@@ -39,7 +41,16 @@ export const resetViewport = function () {
  * Returns the current viewport, or the complete range if none is selection.
  * @type {Object}
  */
-export const getViewport = state => state[MOUNT_POINT].viewport;
+export const getViewport = createSelector(
+    state => state[MOUNT_POINT].viewport,
+    getExtentX,
+    (viewport, extentX) => {
+        return viewport || [
+            extentX[0],
+            extentX[1]
+        ];
+    }
+);
 
 /**
  * Action creator to set the graph size to a given (width, height)
@@ -178,10 +189,10 @@ export const reducer = function (state = {}, action) {
         case VIEWPORT_SET:
             return {
                 ...state,
-                viewport: {
-                    startDate: action.payload.startDate,
-                    endDate: action.payload.endDate
-                }
+                viewport: [
+                    action.payload.startDate,
+                    action.payload.endDate
+                ]
             };
         case VIEWPORT_RESET:
             return {

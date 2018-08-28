@@ -19,7 +19,7 @@ export const drawAxisX = function (elem, {xScale, layout}, axis) {
     axis = axis || elem
         .append('g')
         .classed('x-axis', true);
-    axis.transition().duration(100)
+    axis.transition().duration(25)
         .attr('transform', `translate(0, ${layout.height})`)
         .call(axisBottom()
             .ticks(layout.width / 100)
@@ -44,7 +44,7 @@ export const drawAxisY = function (elem, {yScale}, callback, context) {
         .classed('y-axis', true);
     context.bBox = context.bBox || {};
 
-    context.axis.transition().duration(100)
+    context.axis.transition().duration(25)
         .attr('transform', 'translate(0, 0)')
         .call(axisLeft()
             .scale(yScale)

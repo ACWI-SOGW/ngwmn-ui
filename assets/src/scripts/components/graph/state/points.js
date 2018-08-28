@@ -58,14 +58,21 @@ export const getChartPoints = createSelector(
     }
 );
 
-export const getDomainX = memoize(chartType => createSelector(
+export const getExtentX = createSelector(
     getChartPoints,
-    getViewport,
-    (chartPoints, viewport) => {
-        if (chartType === 'main' && viewport && viewport.startDate) {
-            return [viewport.startDate, viewport.endDate];
-        }
+    (chartPoints) => {
         return extent(chartPoints, pt => pt.dateTime);
+    }
+);
+
+export const getDomainX = memoize(chartType => createSelector(
+    getExtentX,
+    getViewport,
+    (extentX, viewport) => {
+        if (chartType === 'main' && viewport) {
+            return viewport;
+        }
+        return extentX;
     }
 ));
 

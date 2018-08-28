@@ -29,9 +29,9 @@ describe('graph component cursor state', () => {
     });
 
     it('getCursor returns viewport end date on null cursor', () => {
-        const viewport = {endDate: new Date('2010-10-10')};
+        const viewport = [new Date('2010-10-09'), new Date('2010-10-10')];
         const cursorDate = getCursor.resultFunc(null, viewport);
-        expect(cursorDate).toEqual(viewport.endDate);
+        expect(cursorDate).toEqual(viewport[1]);
     });
 
     it('getCursor returns right extent on null cursor and viewport', () => {

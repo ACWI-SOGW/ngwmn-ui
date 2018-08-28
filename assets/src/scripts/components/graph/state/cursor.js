@@ -32,7 +32,7 @@ export const getCursor = createSelector(
     getViewport,
     getDomainX('main'),
     (cursor, viewport, domain) => {
-        return cursor || (viewport ? viewport.endDate : domain[1]);
+        return cursor || (viewport ? viewport[1] : domain[1]);
     }
 );
 
