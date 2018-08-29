@@ -1,4 +1,4 @@
-import { mouse, select } from 'd3-selection';
+import { mouse } from 'd3-selection';
 import { createStructuredSelector } from 'reselect';
 import ResizeObserver from 'resize-observer-polyfill';
 
@@ -146,24 +146,18 @@ export default function (elem, store) {
                 .call(link(store, (svg, viewBox) => {
                     svg.attr('viewBox', `${viewBox.left} ${viewBox.top} ${viewBox.right - viewBox.left} ${viewBox.bottom - viewBox.top}`);
                 }, getViewBox))
-                .call(drawChart, store, 'main')
-                .call(drawChart, store, 'panner')
-                // Add interactive brush and zoom behavior
-                .call(link(store, addBrushZoomBehavior, createStructuredSelector({
-                    xScalePanner: getScaleX('panner'),
-                    chartPosMain: getChartPosition('main'),
-                    chartPosPanner: getChartPosition('panner'),
-                    viewport: getViewport
-                }), store, select('g.chart.main'), select('g.chart.panner')));
-                /*.call(elem => {
-                    // Draw the bottom chart, enabling pan and zoom functionality
-                    const panner = drawChart(elem, store, 'panner');
-                    // Draw the main chart, taking up most of the visible area
-                    const main = drawChart(elem, store, 'main');
-
-                    // Attach zoom and brush behaviors to both charts
-                    elem.call(addBrushZoomBehavior, store, main, panner);
-                });*/
+                .call(svg => {
+                    // Draw the charts
+                    const panner = drawChart(svg, store, 'panner');
+                    const main = drawChart(svg, store, 'main');
+                    // Add interactive brush and zoom behavior over the charts
+                    svg.call(link(store, addBrushZoomBehavior, createStructuredSelector({
+                        xScalePanner: getScaleX('panner'),
+                        chartPosMain: getChartPosition('main'),
+                        chartPosPanner: getChartPosition('panner'),
+                        viewport: getViewport
+                    }), store, main, panner));
+                });
         })
         // Draw a tooltip container. This is rendered to the upper-right and
         // shows details of the point closest to the current cursor location.
