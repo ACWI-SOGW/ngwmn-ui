@@ -147,7 +147,7 @@ export const getChartPosition = memoize(chartType => createSelector(
                     width: viewBox.right - FOCUS_CIRCLE_RADIUS,
                     height: height * 0.8
                 };
-            case 'panner':
+            case 'brush':
                 return {
                     x: 0,
                     y: height * 0.8,

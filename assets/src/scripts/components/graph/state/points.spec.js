@@ -109,7 +109,7 @@ describe('graph component points', () => {
         it('works with mock state', () => {
             const store = getMockStore();
             expect(getDomainX('main')(store.getState())).not.toBe(null);
-            expect(getDomainX('panner')(store.getState())).not.toBe(null);
+            expect(getDomainX('brush')(store.getState())).not.toBe(null);
         });
     });
 

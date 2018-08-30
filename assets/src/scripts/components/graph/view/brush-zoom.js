@@ -3,7 +3,7 @@ import { createStructuredSelector } from 'reselect';
 import { event } from 'd3-selection';
 import { zoom as d3Zoom, zoomIdentity } from 'd3-zoom';
 
-import { listen } from 'ngwmn/lib/d3-redux';
+import { link, listen } from 'ngwmn/lib/d3-redux';
 import { getChartPosition, getScaleX, getViewport, resetViewport, setViewport
 } from '../state';
 
@@ -15,10 +15,17 @@ export default function (elem, store, mainChart, brushChart) {
         .append('g')
             .classed('brush', true);
     const zoom = d3Zoom()
-        .scaleExtent([1, Infinity]);
+        .scaleExtent([1, 10000]);
+    const gZoom = mainChart
+        .append('rect')
+            .classed('zoom', true)
+            .call(link(store, (elem, chartPosMain) => {
+                elem.attr('width', chartPosMain.width)
+                    .attr('height', chartPosMain.height);
+            }, getChartPosition('main')));
 
     // Apply the zoom handlers to the main chart
-    mainChart.call(zoom);
+    gZoom.call(zoom);
 
     listen(store, getChartPosition('main'), function (chartPosMain) {
         const extent = [[chartPosMain.x, chartPosMain.y], [chartPosMain.width, chartPosMain.height]];
@@ -27,21 +34,21 @@ export default function (elem, store, mainChart, brushChart) {
     });
 
     // Update the brush extents in response to changes in the graph size.
-    listen(store, getChartPosition('panner'), function (chartPosPanner) {
+    listen(store, getChartPosition('brush'), function (chartPosBrush) {
         // Set the extent
         brush.extent([[0, 0],
-                     [chartPosPanner.width, chartPosPanner.height]]);
+                     [chartPosBrush.width, chartPosBrush.height]]);
         // Apply the brush to the DOM
         gBrush.call(brush);
-    }, true);
+    });
 
     zoom.on('zoom', function () {
         // Ignore zoom-by-brush
         if (event.sourceEvent && event.sourceEvent.type === 'brush') {
             return;
         }
-        const xScalePanner = getScaleX('panner')(store.getState());
-        const newDomain = event.transform.rescaleX(xScalePanner).domain();
+        const xScaleBrush = getScaleX('brush')(store.getState());
+        const newDomain = event.transform.rescaleX(xScaleBrush).domain();
         if (newDomain.every(isFinite)) {
             store.dispatch(setViewport(newDomain));
 
@@ -49,21 +56,21 @@ export default function (elem, store, mainChart, brushChart) {
             // We need to do this here, rather in response to viewport change,
             // to avoid an infinite loop.
             gBrush.call(brush.move, [
-                xScalePanner(newDomain[0]),
-                xScalePanner(newDomain[1])
+                xScaleBrush(newDomain[0]),
+                xScaleBrush(newDomain[1])
             ]);
         }
     });
 
     // Update zoom transforms in response to viewport changes.
     listen(store, createStructuredSelector({
-        xScalePanner: getScaleX('panner'),
+        xScaleBrush: getScaleX('brush'),
         viewport: getViewport,
         chartPosMain: getChartPosition('main')
-    }), function ({xScalePanner, viewport, chartPosMain}) {
-        mainChart.call(zoom.transform, zoomIdentity
-            .scale(chartPosMain.width / (xScalePanner(viewport[1]) - xScalePanner(viewport[0])))
-            .translate(-xScalePanner(viewport[0]), 0));
+    }), function ({xScaleBrush, viewport, chartPosMain}) {
+        gZoom.call(zoom.transform, zoomIdentity
+            .scale(chartPosMain.width / (xScaleBrush(viewport[1]) - xScaleBrush(viewport[0])))
+            .translate(-xScaleBrush(viewport[0]), 0));
     });
 
     // Attach a handler to the brush - depedent on the xScale, so reattach
@@ -72,7 +79,7 @@ export default function (elem, store, mainChart, brushChart) {
     brush
         .on('brush end', function () {
             const state = store.getState();
-            const xScalePanner = getScaleX('panner')(state);
+            const xScaleBrush = getScaleX('brush')(state);
             const chartPosMain = getChartPosition('main')(state);
             // Ignore brush-by-zoom
             if (event.sourceEvent && event.sourceEvent.type === 'zoom') {
@@ -81,11 +88,11 @@ export default function (elem, store, mainChart, brushChart) {
             const selection = brushSelection(this);
             if (selection) {
                 const selectionDomain = selection ? [
-                    xScalePanner.invert(selection[0]),
-                    xScalePanner.invert(selection[1])
+                    xScaleBrush.invert(selection[0]),
+                    xScaleBrush.invert(selection[1])
                 ] : [];
                 store.dispatch(setViewport(selectionDomain));
-                mainChart.call(zoom.transform, zoomIdentity
+                gZoom.call(zoom.transform, zoomIdentity
                     .scale(chartPosMain.width / (selection[1] - selection[0]))
                     .translate(-selection[0], 0));
             } else {

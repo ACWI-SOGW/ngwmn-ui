@@ -101,7 +101,6 @@ $provisional-color: color(accent-warm, dark);
                     .overlay {
                         fill: none;
                         pointer-events: all;
-                        cursor: crosshair;
                     }
                     circle.focus {
                         fill: #436BAF;
@@ -115,6 +114,12 @@ $provisional-color: color(accent-warm, dark);
                             stroke-width: 1px;
                             stroke-dasharray: 5, 5
                         }
+                    }
+                    // Zoom chart overlay
+                    .zoom {
+                        cursor: move;
+                        fill: none;
+                        pointer-events: all;
                     }
                 }
             }
