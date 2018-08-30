@@ -90,6 +90,6 @@ export const listen = function (store, selector, func) {
             func(current);
         }
     };
-    callback();
-    return store.subscribe(throttle(callback));
+    func(current);
+    return store.subscribe(callback);
 };
