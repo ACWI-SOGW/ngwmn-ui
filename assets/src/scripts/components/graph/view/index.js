@@ -1,4 +1,3 @@
-import { brushSelection, brushX } from 'd3-brush';
 import { mouse } from 'd3-selection';
 import { createStructuredSelector } from 'reselect';
 import ResizeObserver from 'resize-observer-polyfill';
@@ -9,10 +8,10 @@ import { callIf } from 'ngwmn/lib/utils';
 import {
     getActiveClasses, getChartPoints, getChartPosition,
     getCurrentWaterLevelUnit, getCursor, getCursorDatum, getLineSegments,
-    getScaleX, getScaleY, getViewBox, resetViewport, setAxisYBBox, setCursor,
-    setContainerSize, setViewport
+    getScaleX, getScaleY, getViewBox, setAxisYBBox, setCursor, setContainerSize
 } from '../state';
 import { drawAxisX, drawAxisY, drawAxisYLabel } from './axes';
+import addBrushZoomBehavior from './brush-zoom';
 import { drawFocusCircle, drawFocusLine, drawTooltip } from './cursor';
 import drawLegend from './legend';
 import drawWaterLevels from './water-levels';
@@ -46,7 +45,7 @@ const drawClipPath = function (elem, store, chartType) {
  */
 export const drawChart = function (elem, store, chartType) {
     // Each chart gets its own group container, classed .chart
-    elem.append('g')
+    return elem.append('g')
         .classed('chart', true)
         .classed(chartType, true)
         // Draw a clipPath on the chart to enable cropping of content to the
@@ -116,45 +115,7 @@ export const drawChart = function (elem, store, chartType) {
                         store.dispatch(setCursor(selectedTime));
                     });
                 }, getScaleX(chartType)));
-        })
-        // If drawing the panner chart, append a brush container and set the
-        // viewport when the brush selection changes.
-        .call(callIf(chartType === 'panner', link(store, (elem, {chartPos, scaleX}, context) => {
-            // Create, or reuse existing, brush container group element
-            const gBrush = context ? context.gBrush : elem
-                .append('g')
-                    .classed('brush', true);
-
-            // Create, or reuse existing, d3-brush object
-            const brush = context ? context.brush : brushX()
-                .handleSize(1);
-
-            // Create or update viewport change handler for the current
-            // chartPos and scaleX.
-            brush
-                .on('brush.panner end.panner', function () {
-                    const selection = brushSelection(this);
-                    if (selection) {
-                        store.dispatch(setViewport({
-                            startDate: scaleX.invert(selection[0]),
-                            endDate: scaleX.invert(selection[1])
-                        }));
-                    } else {
-                        store.dispatch(resetViewport());
-                    }
-                })
-                .extent([[0, 0],
-                         [chartPos.width, chartPos.height]]);
-
-            // Apply the brush to the DOM
-            gBrush.call(brush);
-
-            // Return context, to be passed on next invocation of this function
-            return {gBrush, brush};
-        }, createStructuredSelector({
-            chartPos: getChartPosition(chartType),
-            scaleX: getScaleX(chartType)
-        }))));
+        });
 };
 
 /**
@@ -184,10 +145,13 @@ export default function (elem, store) {
                 .call(link(store, (svg, viewBox) => {
                     svg.attr('viewBox', `${viewBox.left} ${viewBox.top} ${viewBox.right - viewBox.left} ${viewBox.bottom - viewBox.top}`);
                 }, getViewBox))
-                // Draw the bottom chart, enabling pan and zoom functionality
-                .call(drawChart, store, 'panner')
-                // Draw the main chart, taking up most of the visible area
-                .call(drawChart, store, 'main');
+                .call(svg => {
+                    // Draw the charts
+                    const brush = drawChart(svg, store, 'brush');
+                    const main = drawChart(svg, store, 'main');
+                    // Add interactive brush and zoom behavior over the charts
+                    svg.call(addBrushZoomBehavior, store, main, brush);
+                });
         })
         // Draw a tooltip container. This is rendered to the upper-right and
         // shows details of the point closest to the current cursor location.

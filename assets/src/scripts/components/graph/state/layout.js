@@ -1,6 +1,8 @@
 import memoize from 'fast-memoize';
 import { createSelector } from 'reselect';
 
+import { getExtentX } from './points';
+
 import { FOCUS_CIRCLE_RADIUS } from '../view/cursor';
 
 const MOUNT_POINT = 'components/graph/layout';
@@ -15,13 +17,13 @@ const VIEWPORT_SET = `${MOUNT_POINT}/VIEWPORT_SET`;
  * @param {Date} startDate  Start date of viewport
  * @param {Date} endDate    End date of viewport
  */
-export const setViewport = function ({startDate, endDate}) {
+export const setViewport = function ([startDate, endDate]) {
     return {
         type: VIEWPORT_SET,
-        payload: {
+        payload: [
             startDate,
             endDate
-        }
+        ]
     };
 };
 
@@ -39,7 +41,16 @@ export const resetViewport = function () {
  * Returns the current viewport, or the complete range if none is selection.
  * @type {Object}
  */
-export const getViewport = state => state[MOUNT_POINT].viewport;
+export const getViewport = createSelector(
+    state => state[MOUNT_POINT].viewport,
+    getExtentX,
+    (viewport, extentX) => {
+        return viewport || [
+            extentX[0],
+            extentX[1]
+        ];
+    }
+);
 
 /**
  * Action creator to set the graph size to a given (width, height)
@@ -136,7 +147,7 @@ export const getChartPosition = memoize(chartType => createSelector(
                     width: viewBox.right - FOCUS_CIRCLE_RADIUS,
                     height: height * 0.8
                 };
-            case 'panner':
+            case 'brush':
                 return {
                     x: 0,
                     y: height * 0.8,
@@ -176,12 +187,18 @@ export const reducer = function (state = {}, action) {
                 }
             };
         case VIEWPORT_SET:
+            // Don't update if values are not valid
+            if (!action.payload.every(isFinite)) {
+                return state;
+            }
+            // Don't update if new values are the same as last viewport
+            if (state.viewport && state.viewport[0] === action.payload[0] &&
+                    state.viewport[1] === action.payload[1]) {
+                return state;
+            }
             return {
                 ...state,
-                viewport: {
-                    startDate: action.payload.startDate,
-                    endDate: action.payload.endDate
-                }
+                viewport: action.payload
             };
         case VIEWPORT_RESET:
             return {

@@ -23,7 +23,7 @@ export const drawDataLine = function (elem, {line, xScale, yScale}, segment) {
             .attr('r', CIRCLE_RADIUS_SINGLE_PT);
         segment
             .data(line.points)
-            .transition(transition().duration(100))
+            .transition(transition().duration(25))
             .attr('cx', d => xScale(d.dateTime))
             .attr('cy', d => yScale(d.value));
     } else {
@@ -33,7 +33,7 @@ export const drawDataLine = function (elem, {line, xScale, yScale}, segment) {
             .attr('vector-effect', 'non-scaling-stroke');
         segment
             .datum(line.points)
-            .transition(transition().duration(100))
+            .transition(transition().duration(25))
             .attr('d', d3Line().x(d => xScale(d.dateTime))
                                .y(d => yScale(d.value)));
     }
@@ -71,7 +71,7 @@ export default function (svg, {lineSegments, chartPoints, xScale, yScale}, conte
 
     context.area
         .datum(chartPoints)
-        .transition(transition().duration(100))
+        .transition(transition().duration(25))
         .attr('d', d3Area().x(d => xScale(d.dateTime))
                            .y1(d => yScale(d.value))
                            .y0(yScale.range()[0]));

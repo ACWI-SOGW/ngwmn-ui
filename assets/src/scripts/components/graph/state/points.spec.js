@@ -1,8 +1,8 @@
 import getMockStore from 'ngwmn/store.mock';
 
 import { getActiveClasses, getChartPoints, getCurrentWaterLevels,
-         getCurrentWaterLevelUnit, getDomainX, getDomainY, getLineSegments,
-         MAX_LINE_POINT_GAP } from './points';
+         getCurrentWaterLevelUnit, getDomainX, getDomainY, getExtentX,
+         getLineSegments, MAX_LINE_POINT_GAP } from './points';
 
 
 describe('graph component points', () => {
@@ -81,9 +81,9 @@ describe('graph component points', () => {
         });
     });
 
-    describe('getDomainX', () => {
+    describe('getExtentX', () => {
         it('returns correct date range', () => {
-            expect(getDomainX('main').resultFunc([{
+            expect(getExtentX.resultFunc([{
                 dateTime: new Date('2010-10-10')
             }, {
                 dateTime: new Date('2010-10-11')
@@ -96,13 +96,20 @@ describe('graph component points', () => {
         });
 
         it('returns [undefined, undefined] on empty range', () => {
-            expect(getDomainX('main').resultFunc([])).toEqual([undefined, undefined]);
+            expect(getExtentX.resultFunc([])).toEqual([undefined, undefined]);
         });
 
         it('works with mock state', () => {
             const store = getMockStore();
+            expect(getExtentX(store.getState())).not.toBe(null);
+        });
+    });
+
+    describe('getDomainX', () => {
+        it('works with mock state', () => {
+            const store = getMockStore();
             expect(getDomainX('main')(store.getState())).not.toBe(null);
-            expect(getDomainX('panner')(store.getState())).not.toBe(null);
+            expect(getDomainX('brush')(store.getState())).not.toBe(null);
         });
     });
 
