@@ -8,8 +8,7 @@ import { callIf } from 'ngwmn/lib/utils';
 import {
     getActiveClasses, getChartPoints, getChartPosition,
     getCurrentWaterLevelUnit, getCursor, getCursorDatum, getLineSegments,
-    getScaleX, getScaleY, getViewBox, getViewport, setAxisYBBox, setCursor,
-    setContainerSize
+    getScaleX, getScaleY, getViewBox, setAxisYBBox, setCursor, setContainerSize
 } from '../state';
 import { drawAxisX, drawAxisY, drawAxisYLabel } from './axes';
 import addBrushZoomBehavior from './brush-zoom';
