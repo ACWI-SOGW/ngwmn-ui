@@ -48,21 +48,37 @@ export const drawChart = function (elem, store, chartType) {
     return elem.append('g')
         .classed('chart', true)
         .classed(chartType, true)
-        // Draw a clipPath on the chart to enable cropping of content to the
-        // current domain.
-        .call(drawClipPath, store, chartType)
         // Each chartType is drawn to a specific area of the SVG viewport.
         // Use a transform to set the location here.
         .call(link(store, (elem, pos) => {
             elem.attr('transform', `translate(${pos.x}, ${pos.y})`);
         }, getChartPosition(chartType)))
-        // Draw the actual lines/circles for the current water level data set.
-        .call(link(store, drawWaterLevels, createStructuredSelector({
-            lineSegments: getLineSegments,
-            chartPoints: getChartPoints,
-            xScale: getScaleX(chartType),
-            yScale: getScaleY(chartType)
-        })))
+        .call(elem => {
+            elem.append('g')
+                // Draw a clipPath on the chart to enable cropping of content to the
+                // current domain.
+                .call(drawClipPath, store, chartType)
+                .attr('clip-path', `url(#${chartType}-clip-path)`)
+                // Draw the actual lines/circles for the current water level data set.
+                .call(link(store, drawWaterLevels, createStructuredSelector({
+                    lineSegments: getLineSegments,
+                    chartPoints: getChartPoints,
+                    xScale: getScaleX(chartType),
+                    yScale: getScaleY(chartType)
+                })))
+                // Draw a vertical focus line representing the current cursor location.
+                .call(link(store, drawFocusLine, createStructuredSelector({
+                    cursor: getCursor,
+                    xScale: getScaleX(chartType),
+                    yScale: getScaleY(chartType)
+                })))
+                // Draw a circle around the point nearest the current cursor location.
+                .call(link(store, drawFocusCircle, createStructuredSelector({
+                    cursorPoint: getCursorDatum,
+                    xScale: getScaleX(chartType),
+                    yScale: getScaleY(chartType)
+                })));
+        })
         // Draw the y-axis, only for the main chart.
         .call(callIf(chartType === 'main', link(store, drawAxisY, createStructuredSelector({
             yScale: getScaleY(chartType)
@@ -75,18 +91,6 @@ export const drawChart = function (elem, store, chartType) {
             xScale: getScaleX(chartType),
             layout: getChartPosition(chartType)
         }))))
-        // Draw a vertical focus line representing the current cursor location.
-        .call(link(store, drawFocusLine, createStructuredSelector({
-            cursor: getCursor,
-            xScale: getScaleX(chartType),
-            yScale: getScaleY(chartType)
-        })))
-        // Draw a circle around the point nearest the current cursor location.
-        .call(link(store, drawFocusCircle, createStructuredSelector({
-            cursorPoint: getCursorDatum,
-            xScale: getScaleX(chartType),
-            yScale: getScaleY(chartType)
-        })))
         // To capture mouse events, draw an overlay rect and attach event
         // handlers to it.
         .call(g => {
