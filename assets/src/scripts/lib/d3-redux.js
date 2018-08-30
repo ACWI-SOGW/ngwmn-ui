@@ -69,3 +69,26 @@ export const initAndUpdate = function (initFunc, updateFunc) {
         updateFunc(node, options);
     };
 };
+
+/**
+ * Subscribe to state changes of a specific selector.
+ * @param  {Object} store       Redux store
+ * @param  {Function} selector  Redux selector
+ * @param  {Function} func      Callback function
+ * @param  {Function} immediate If true, call function before subscribing
+ * @return {Function}           Unsubscribe function
+ */
+export const listen = function (store, selector, func, immediate = false) {
+    let current = selector(store.getState());
+    const callback = function () {
+        let newData = selector(store.getState());
+        if (current !== newData) {
+            current = newData;
+            func(current);
+        }
+    };
+    if (immediate) {
+        callback();
+    }
+    return store.subscribe(callback);
+};

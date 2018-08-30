@@ -151,12 +151,7 @@ export default function (elem, store) {
                     const panner = drawChart(svg, store, 'panner');
                     const main = drawChart(svg, store, 'main');
                     // Add interactive brush and zoom behavior over the charts
-                    svg.call(link(store, addBrushZoomBehavior, createStructuredSelector({
-                        xScalePanner: getScaleX('panner'),
-                        chartPosMain: getChartPosition('main'),
-                        chartPosPanner: getChartPosition('panner'),
-                        viewport: getViewport
-                    }), store, main, panner));
+                    svg.call(addBrushZoomBehavior, store, main, panner);
                 });
         })
         // Draw a tooltip container. This is rendered to the upper-right and

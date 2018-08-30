@@ -20,10 +20,10 @@ const VIEWPORT_SET = `${MOUNT_POINT}/VIEWPORT_SET`;
 export const setViewport = function ([startDate, endDate]) {
     return {
         type: VIEWPORT_SET,
-        payload: {
+        payload: [
             startDate,
             endDate
-        }
+        ]
     };
 };
 
@@ -187,12 +187,18 @@ export const reducer = function (state = {}, action) {
                 }
             };
         case VIEWPORT_SET:
+            // Don't update if values are not valid
+            if (!action.payload.every(isFinite)) {
+                return state;
+            }
+            // Don't update if new values are the same as last viewport
+            if (state.viewport && state.viewport[0] === action.payload[0] &&
+                    state.viewport[1] === action.payload[1]) {
+                return state;
+            }
             return {
                 ...state,
-                viewport: [
-                    action.payload.startDate,
-                    action.payload.endDate
-                ]
+                viewport: action.payload
             };
         case VIEWPORT_RESET:
             return {
