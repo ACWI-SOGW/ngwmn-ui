@@ -139,20 +139,28 @@ export const getChartPosition = memoize(chartType => createSelector(
     getViewBox,
     (viewBox) => {
         const height = viewBox.bottom - viewBox.top;
+        const width = viewBox.right;
         switch (chartType) {
             case 'main':
                 return {
                     x: 0,
                     y: 0,
-                    width: viewBox.right - FOCUS_CIRCLE_RADIUS,
+                    width: Math.max(width * 0.9 - FOCUS_CIRCLE_RADIUS, FOCUS_CIRCLE_RADIUS),
                     height: height * 0.8
                 };
             case 'brush':
                 return {
                     x: 0,
                     y: height * 0.8,
-                    width: viewBox.right - FOCUS_CIRCLE_RADIUS,
+                    width: Math.max(width * 0.9 - FOCUS_CIRCLE_RADIUS, FOCUS_CIRCLE_RADIUS),
                     height: height * 0.2
+                };
+            case 'lithograph':
+                return {
+                    x: viewBox.right * 0.9,
+                    y: 0,
+                    width: Math.max(width * 0.1, 0),
+                    height: height * 0.8
                 };
             default:
                 return null;

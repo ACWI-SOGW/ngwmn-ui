@@ -50,7 +50,7 @@ export const drawDataLine = function (elem, {line, xScale, yScale}, segment) {
  * @param  {Object} context              Context of form {segments, container}
  * @return {Object}                      {segments, container} context for next invocation
  */
-export default function (svg, {lineSegments, chartPoints, xScale, yScale}, context) {
+export default function (svg, {lineSegments, chartPoints, xScale, yScale}, clipPathID, context) {
     context = context || {
         segments: [],
         area: svg
@@ -59,6 +59,7 @@ export default function (svg, {lineSegments, chartPoints, xScale, yScale}, conte
         container: svg
             .append('g')
                 .attr('id', 'ts-group')
+                .attr('clip-path', `url(#${clipPathID})`)
     };
 
     lineSegments.forEach((line, index) => {

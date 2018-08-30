@@ -76,7 +76,7 @@ export const getDomainX = memoize(chartType => createSelector(
     }
 ));
 
-export const getDomainY = createSelector(
+export const getDomainY = memoize(chartType => createSelector(
     getChartPoints,
     (chartPoints) => {
         const values = chartPoints.map(pt => pt.value);
@@ -85,6 +85,14 @@ export const getDomainY = createSelector(
             Math.max(...values)
         ];
         const isPositive = domain[0] >= 0 && domain[1] >= 0;
+
+        // For lithography graphs, have a zero-upper bound.
+        if (chartType === 'lithograph') {
+            domain = [
+                Math.min(0, domain[0]),
+                domain[1]
+            ];
+        }
 
         // Pad domains on both ends by PADDING_RATIO.
         const padding = PADDING_RATIO * (domain[1] - domain[0]);
@@ -99,7 +107,7 @@ export const getDomainY = createSelector(
             domain[1]
         ];
     }
-);
+));
 
 /**
  * Returns all points in the current time series split into line segments.
