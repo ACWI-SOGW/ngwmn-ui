@@ -1,6 +1,9 @@
 // This code is derived from d3-redux: https://github.com/couchand/d3-redux
 // Copyright (c) 2017 Andrew Couch, MIT licensed.
 
+import throttle from 'raf-throttle';
+
+
 const subscribe = function (store, callback, args) {
     let currentState = store.getState();
 
@@ -13,7 +16,7 @@ const subscribe = function (store, callback, args) {
         }
     }
 
-    store.subscribe(handleUpdate);
+    store.subscribe(throttle(handleUpdate));
 };
 
 /**
@@ -78,7 +81,7 @@ export const initAndUpdate = function (initFunc, updateFunc) {
  * @param  {Function} immediate If true, call function before subscribing
  * @return {Function}           Unsubscribe function
  */
-export const listen = function (store, selector, func, immediate = false) {
+export const listen = function (store, selector, func) {
     let current = selector(store.getState());
     const callback = function () {
         let newData = selector(store.getState());
@@ -87,8 +90,6 @@ export const listen = function (store, selector, func, immediate = false) {
             func(current);
         }
     };
-    if (immediate) {
-        callback();
-    }
-    return store.subscribe(callback);
+    callback();
+    return store.subscribe(throttle(callback));
 };

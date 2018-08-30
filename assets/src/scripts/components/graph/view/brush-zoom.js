@@ -26,6 +26,15 @@ export default function (elem, store, mainChart, brushChart) {
             .extent(extent);
     });
 
+    // Update the brush extents in response to changes in the graph size.
+    listen(store, getChartPosition('panner'), function (chartPosPanner) {
+        // Set the extent
+        brush.extent([[0, 0],
+                     [chartPosPanner.width, chartPosPanner.height]]);
+        // Apply the brush to the DOM
+        gBrush.call(brush);
+    }, true);
+
     zoom.on('zoom', function () {
         // Ignore zoom-by-brush
         if (event.sourceEvent && event.sourceEvent.type === 'brush') {
@@ -83,13 +92,4 @@ export default function (elem, store, mainChart, brushChart) {
                 store.dispatch(resetViewport());
             }
         });
-
-    // Update the brush extents in response to changes in the graph size.
-    listen(store, getChartPosition('panner'), function (chartPosPanner) {
-        // Set the extent
-        brush.extent([[0, 0],
-                     [chartPosPanner.width, chartPosPanner.height]]);
-        // Apply the brush to the DOM
-        gBrush.call(brush);
-    }, true);
 }
