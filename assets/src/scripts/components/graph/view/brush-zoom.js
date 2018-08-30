@@ -3,7 +3,7 @@ import { createStructuredSelector } from 'reselect';
 import { event } from 'd3-selection';
 import { zoom as d3Zoom, zoomIdentity } from 'd3-zoom';
 
-import { link, listen } from 'ngwmn/lib/d3-redux';
+import { listen } from 'ngwmn/lib/d3-redux';
 import { getChartPosition, getScaleX, getViewport, resetViewport, setViewport
 } from '../state';
 
@@ -16,16 +16,11 @@ export default function (elem, store, mainChart, brushChart) {
             .classed('brush', true);
     const zoom = d3Zoom()
         .scaleExtent([1, 10000]);
-    const gZoom = mainChart
-        .append('rect')
-            .classed('zoom', true)
-            .call(link(store, (elem, chartPosMain) => {
-                elem.attr('width', chartPosMain.width)
-                    .attr('height', chartPosMain.height);
-            }, getChartPosition('main')));
+    mainChart
+        .classed('zoom', true);
 
     // Apply the zoom handlers to the main chart
-    gZoom.call(zoom);
+    mainChart.call(zoom);
 
     listen(store, getChartPosition('main'), function (chartPosMain) {
         const extent = [[chartPosMain.x, chartPosMain.y], [chartPosMain.width, chartPosMain.height]];
@@ -68,7 +63,8 @@ export default function (elem, store, mainChart, brushChart) {
         viewport: getViewport,
         chartPosMain: getChartPosition('main')
     }), function ({xScaleBrush, viewport, chartPosMain}) {
-        gZoom.call(zoom.transform, zoomIdentity
+        mainChart
+            .call(zoom.transform, zoomIdentity
             .scale(chartPosMain.width / (xScaleBrush(viewport[1]) - xScaleBrush(viewport[0])))
             .translate(-xScaleBrush(viewport[0]), 0));
     });
@@ -92,7 +88,8 @@ export default function (elem, store, mainChart, brushChart) {
                     xScaleBrush.invert(selection[1])
                 ] : [];
                 store.dispatch(setViewport(selectionDomain));
-                gZoom.call(zoom.transform, zoomIdentity
+                mainChart
+                    .call(zoom.transform, zoomIdentity
                     .scale(chartPosMain.width / (selection[1] - selection[0]))
                     .translate(-selection[0], 0));
             } else {

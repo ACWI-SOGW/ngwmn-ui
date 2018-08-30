@@ -85,6 +85,9 @@ $provisional-color: color(accent-warm, dark);
                 flex-grow: 1;
                 width: 100%;
                 g.chart {
+                    &.zoom {
+                        cursor: move;
+                    }
                     path.line-segment {
                         fill: none;
                     }
@@ -114,12 +117,6 @@ $provisional-color: color(accent-warm, dark);
                             stroke-width: 1px;
                             stroke-dasharray: 5, 5
                         }
-                    }
-                    // Zoom chart overlay
-                    .zoom {
-                        cursor: move;
-                        fill: none;
-                        pointer-events: all;
                     }
                 }
             }
