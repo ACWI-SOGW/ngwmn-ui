@@ -9,7 +9,8 @@ import requests_mock
 
 from ngwmn.services import ServiceException
 from ngwmn.services.ngwmn import (
-    generate_bounding_box_values, get_iddata, get_water_quality_activities)
+    generate_bounding_box_values, get_iddata, get_water_quality_activities,
+    get_well_log)
 
 
 class TestGetWellLithography(TestCase):
@@ -215,6 +216,123 @@ class TestWaterQualityResults(TestCase):
             }])
 
 
+class TestWellLogResults(TestCase):
+    def test_well_log_parsing(self):
+        self.maxDiff = None
+        with requests_mock.mock() as req:
+            req.get(requests_mock.ANY, content=MOCK_WELL_LOG_RESPONSE)
+            well_log = get_well_log('USGS', 1)
+            self.assertEqual(well_log, {
+                'name': 'KSGS.381107098532401',
+                'location': {
+                    'latitude': '38.18533',
+                    'longitude': '-98.88991'
+                },
+                'elevation': {
+                    'unit': 'ft',
+                    'value': '1950'
+                },
+                'well_depth': {
+                    'unit': 'ft',
+                    'value': '214'
+                },
+                'altitude_datum': 'NAVD88',
+                'water_use': 'urn:OGC:unknown',
+                'link': {
+                    'title': 'Kansas Geological Survey',
+                    'url': 'http://ws.ncwater.org/ngwmn.php?site_no=381107098532401'
+                },
+                'log_entries': [{
+                    'method': 'borehole',
+                    'hydrostatic_graphing_unit': {
+                        'description': 'Sandstone',
+                        'purpose': 'instance',
+                        'composition':  [{
+                            'role': 'contains',
+                            'lithology': {
+                                'scheme': 'urn:x-ngwd:classifierScheme:USGS:Lithology:2011',
+                                'value': 'SANDSTONE'
+                            },
+                            'material': {
+                                'name': 'Sandstone',
+                                'purpose': 'instance'
+                            },
+                            'proportion': {
+                                'scheme': 'urn:ietf:rfc:2141',
+                                'value': 'urn:ogc:def:nil:OGC:unknown'
+                            }
+                        }]
+                    },
+                    'shape': {
+                        'coordinates': {
+                            'latitude': '0.00',
+                            'longitude': '25.00'
+                        },
+                        'dimension': '1',
+                        'unit': 'Unknown'
+                    }
+                }, {
+                    'method': 'borehole',
+                    'hydrostatic_graphing_unit': {
+                        'description': 'Siltstone',
+                        'purpose': 'instance',
+                        'composition': [{
+                            'role': 'contains',
+                            'lithology': {
+                                'scheme': 'urn:x-ngwd:classifierScheme:USGS:Lithology:2011',
+                                'value': 'SILTSTONE'
+                            },
+                            'material': {
+                                'name': 'Siltstone',
+                                'purpose': 'instance'
+                            },
+                            'proportion': {
+                                'scheme': 'urn:ietf:rfc:2141',
+                                'value': 'urn:ogc:def:nil:OGC:unknown'
+                            }
+                        }]
+                    },
+                    'shape': {
+                        'coordinates': {
+                            'latitude': '25.00',
+                            'longitude': '56.00'
+                        },
+                        'dimension': '1',
+                        'unit': 'Unknown'
+                    }
+                }, {
+                    'method': 'borehole',
+                    'hydrostatic_graphing_unit': {
+                        'description': 'Sandstone',
+                        'purpose': 'instance',
+                        'composition': [{
+                            'role': 'contains',
+                            'lithology': {
+                                'scheme': 'urn:x-ngwd:classifierScheme:USGS:Lithology:2011',
+                                'value': 'SANDSTONE'
+                            },
+                            'material': {
+                                'name': 'Sandstone',
+                                'purpose': 'instance'
+                            },
+                            'proportion': {
+                                'scheme': 'urn:ietf:rfc:2141',
+                                'value': 'urn:ogc:def:nil:OGC:unknown'
+                            }
+                        }]
+                    },
+                    'shape': {
+                        'coordinates': {
+                            'latitude': '56.00',
+                            'longitude': '155.00'
+                        },
+                        'dimension': '1',
+                        'unit': 'Unknown'
+                    }
+                }]
+            })
+
+
 MOCK_WQ_RESPONSE = b"""<?xml version="1.0" encoding="UTF-8"?>
 <WQX xmlns="http://www.exchangenetwork.net/schema/wqx/2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:fn="http://www.w3.org/2005/xpath-functions">
   <Organization>
@@ -352,3 +470,234 @@ MOCK_WQ_RESPONSE = b"""<?xml version="1.0" encoding="UTF-8"?>
     </Activity>
   </Organization>
 </WQX>"""
+
+MOCK_WELL_LOG_RESPONSE = b"""<?xml version="1.0" encoding="UTF-8"?>
+<wfs:FeatureCollection xmlns:decDat="decodeDatum" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sql="http://apache.org/cocoon/SQL/2.0" xmlns:wfs="http://www.opengis.net/wfs" xmlns:om="http://www.opengis.net/om/1.0" xmlns:gml="http://www.opengis.net/gml" xmlns:sa="http://www.opengis.net/sampling/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:gsml="urn:cgi:xmlns:CGI:GeoSciML:2.0" xmlns:gwml="http://www.nrcan.gc.ca/xml/gwml/1" xmlns:fn="http://www.w3.org/2005/xpath-functions" xmlns:h="http://apache.org/cocoon/request/2.0">
+  <gml:featureMember>
+    <gwml:WaterWell gml:id="KSGS.381107098532401">
+      <gml:name codeSpace="http://www.kgs.ku.edu/">KSGS.381107098532401</gml:name>
+      <gml:boundedBy>
+        <gml:envelope srsName="EPSG:4269">
+          <gml:pos srsDimension="2">38.18533 -98.88991</gml:pos>
+        </gml:envelope>
+      </gml:boundedBy>
+      <sa:position>
+        <gml:Point srsName="EPSG:4269">
+          <gml:pos>38.18533 -98.88991</gml:pos>
+        </gml:Point>
+      </sa:position>
+      <gwml:referenceElevation uom="ft">1950</gwml:referenceElevation>
+      <gwml:wellDepth>
+        <gsml:CGI_NumericValue>
+          <gsml:principalValue uom="ft">214</gsml:principalValue>
+        </gsml:CGI_NumericValue>
+      </gwml:wellDepth>
+      <gwml:wellStatus>
+        <gsml:CGI_TermValue>
+          <gsml:value codeSpace="urn:gov.usgs.nwis.alt_datum_cd">NAVD88</gsml:value>
+        </gsml:CGI_TermValue>
+      </gwml:wellStatus>
+      <gwml:wellType>
+        <gsml:CGI_TermValue>
+          <gsml:value codeSpace="urn:gov.usgs.nwis.nat_water_use_cd">urn:OGC:unknown</gsml:value>
+        </gsml:CGI_TermValue>
+      </gwml:wellType>
+      <gwml:onlineResource xlink:href="http://ws.ncwater.org/ngwmn.php?site_no=381107098532401" xlink:title="Kansas Geological Survey"/>
+      <gwml:logElement>
+        <gsml:MappedInterval>
+          <gsml:observationMethod>
+            <gsml:CGI_TermValue>
+              <gsml:value codeSpace="urn:x-ngwd:classifier:GIN:ObservationMethod">borehole</gsml:value>
+            </gsml:CGI_TermValue>
+          </gsml:observationMethod>
+          <gsml:specification>
+            <gwml:HydrostratigraphicUnit gml:id="USGS.430427089284901.300.">
+              <gml:description>Sandstone</gml:description>
+              <gsml:purpose>instance</gsml:purpose>
+              <gsml:composition>
+                <gsml:CompositionPart>
+                  <gsml:role codeSpace="urn:x-ngwd:classifier:GIN:Role">contains</gsml:role>
+                  <gsml:lithology>
+                    <gsml:ControlledConcept>
+                      <gml:name xmlns:mnobwell="http://mapserver.gis.umn.edu/mapserver" xmlns:lookup="http://lookup" codeSpace="urn:x-ngwd:classifierScheme:USGS:Lithology:2011">SANDSTONE</gml:name>
+                    </gsml:ControlledConcept>
+                  </gsml:lithology>
+                  <gsml:material>
+                    <gsml:UnconsolidatedMaterial>
+                      <gml:name>Sandstone</gml:name>
+                      <gsml:purpose>instance</gsml:purpose>
+                    </gsml:UnconsolidatedMaterial>
+                  </gsml:material>
+                  <gsml:proportion>
+                    <gsml:CGI_TermValue>
+                      <gsml:value codeSpace="urn:ietf:rfc:2141">urn:ogc:def:nil:OGC:unknown</gsml:value>
+                    </gsml:CGI_TermValue>
+                  </gsml:proportion>
+                </gsml:CompositionPart>
+              </gsml:composition>
+            </gwml:HydrostratigraphicUnit>
+          </gsml:specification>
+          <gsml:shape>
+            <gml:LineString srsDimension="1" uom="Unknown">
+              <gml:coordinates>0.00 25.00</gml:coordinates>
+            </gml:LineString>
+          </gsml:shape>
+        </gsml:MappedInterval>
+      </gwml:logElement>
+      <gwml:logElement>
+        <gsml:MappedInterval>
+          <gsml:observationMethod>
+            <gsml:CGI_TermValue>
+              <gsml:value codeSpace="urn:x-ngwd:classifier:GIN:ObservationMethod">borehole</gsml:value>
+            </gsml:CGI_TermValue>
+          </gsml:observationMethod>
+          <gsml:specification>
+            <gwml:HydrostratigraphicUnit gml:id="USGS.430427089284901.2.">
+              <gml:description>Siltstone</gml:description>
+              <gsml:purpose>instance</gsml:purpose>
+              <gsml:composition>
+                <gsml:CompositionPart>
+                  <gsml:role codeSpace="urn:x-ngwd:classifier:GIN:Role">contains</gsml:role>
+                  <gsml:lithology>
+                    <gsml:ControlledConcept>
+                      <gml:name xmlns:mnobwell="http://mapserver.gis.umn.edu/mapserver" xmlns:lookup="http://lookup" codeSpace="urn:x-ngwd:classifierScheme:USGS:Lithology:2011">SILTSTONE</gml:name>
+                    </gsml:ControlledConcept>
+                  </gsml:lithology>
+                  <gsml:material>
+                    <gsml:UnconsolidatedMaterial>
+                      <gml:name>Siltstone</gml:name>
+                      <gsml:purpose>instance</gsml:purpose>
+                    </gsml:UnconsolidatedMaterial>
+                  </gsml:material>
+                  <gsml:proportion>
+                    <gsml:CGI_TermValue>
+                      <gsml:value codeSpace="urn:ietf:rfc:2141">urn:ogc:def:nil:OGC:unknown</gsml:value>
+                    </gsml:CGI_TermValue>
+                  </gsml:proportion>
+                </gsml:CompositionPart>
+              </gsml:composition>
+            </gwml:HydrostratigraphicUnit>
+          </gsml:specification>
+          <gsml:shape>
+            <gml:LineString srsDimension="1" uom="Unknown">
+              <gml:coordinates>25.00 56.00</gml:coordinates>
+            </gml:LineString>
+          </gsml:shape>
+        </gsml:MappedInterval>
+      </gwml:logElement>
+      <gwml:logElement>
+        <gsml:MappedInterval>
+          <gsml:observationMethod>
+            <gsml:CGI_TermValue>
+              <gsml:value codeSpace="urn:x-ngwd:classifier:GIN:ObservationMethod">borehole</gsml:value>
+            </gsml:CGI_TermValue>
+          </gsml:observationMethod>
+          <gsml:specification>
+            <gwml:HydrostratigraphicUnit gml:id="USGS.430427089284901.3.">
+              <gml:description>Sandstone</gml:description>
+              <gsml:purpose>instance</gsml:purpose>
+              <gsml:composition>
+                <gsml:CompositionPart>
+                  <gsml:role codeSpace="urn:x-ngwd:classifier:GIN:Role">contains</gsml:role>
+                  <gsml:lithology>
+                    <gsml:ControlledConcept>
+                      <gml:name xmlns:mnobwell="http://mapserver.gis.umn.edu/mapserver" xmlns:lookup="http://lookup" codeSpace="urn:x-ngwd:classifierScheme:USGS:Lithology:2011">SANDSTONE</gml:name>
+                    </gsml:ControlledConcept>
+                  </gsml:lithology>
+                  <gsml:material>
+                    <gsml:UnconsolidatedMaterial>
+                      <gml:name>Sandstone</gml:name>
+                      <gsml:purpose>instance</gsml:purpose>
+                    </gsml:UnconsolidatedMaterial>
+                  </gsml:material>
+                  <gsml:proportion>
+                    <gsml:CGI_TermValue>
+                      <gsml:value codeSpace="urn:ietf:rfc:2141">urn:ogc:def:nil:OGC:unknown</gsml:value>
+                    </gsml:CGI_TermValue>
+                  </gsml:proportion>
+                </gsml:CompositionPart>
+              </gsml:composition>
+            </gwml:HydrostratigraphicUnit>
+          </gsml:specification>
+          <gsml:shape>
+            <gml:LineString srsDimension="1" uom="Unknown">
+              <gml:coordinates>56.00 155.00</gml:coordinates>
+            </gml:LineString>
+          </gsml:shape>
+        </gsml:MappedInterval>
+      </gwml:logElement>
+      <gwml:construction>
+        <gwml:WellCasing>
+          <gwml:wellCasingElement>
+            <gwml:WellCasingComponent gml:id="KSGS.381107098532401.CASING.1">
+              <gwml:position>
+                <gml:LineString srsName="EPSG:4269">
+                  <gml:coordinates>0 80.9</gml:coordinates>
+                  <gml:uom>ft</gml:uom>
+                </gml:LineString>
+              </gwml:position>
+              <gwml:material>
+                <gsml:CGI_TermValue>
+                  <gsml:value>PVC</gsml:value>
+                </gsml:CGI_TermValue>
+              </gwml:material>
+              <gwml:nominalPipeDimension>
+                <gsml:CGI_NumericValue>
+                  <gsml:principalValue uom="in">16</gsml:principalValue>
+                </gsml:CGI_NumericValue>
+              </gwml:nominalPipeDimension>
+            </gwml:WellCasingComponent>
+          </gwml:wellCasingElement>
+        </gwml:WellCasing>
+      </gwml:construction>
+      <gwml:construction>
+        <gwml:Screen>
+          <gwml:screenElement>
+            <gwml:ScreenComponent gml:id="KSGS.381107098532401.SCREEN.1">
+              <gwml:position>
+                <gml:LineString srsName="EPSG:4269">
+                  <gml:coordinates>80.8 90.8</gml:coordinates>
+                  <gml:uom>ft</gml:uom>
+                </gml:LineString>
+              </gwml:position>
+              <gwml:material>
+                <gsml:CGI_TermValue>
+                  <gsml:value codeSpace="urn:x-ngwd:classifierScheme:USGS:Screen:2010">PVC</gsml:value>
+                </gsml:CGI_TermValue>
+              </gwml:material>
+              <gwml:nomicalScreenDiameter>
+                <gsml:CGI_NumericValue>
+                  <gsml:principalValue uom="in"/>
+                </gsml:CGI_NumericValue>
+              </gwml:nomicalScreenDiameter>
+            </gwml:ScreenComponent>
+          </gwml:screenElement>
+        </gwml:Screen>
+      </gwml:construction>
+      <gwml:construction>
+        <gwml:Screen>
+          <gwml:screenElement>
+            <gwml:ScreenComponent gml:id="KSGS.381107098532401.SCREEN.2">
+              <gwml:position>
+                <gml:LineString srsName="EPSG:4269">
+                  <gml:coordinates>152.8 212.8</gml:coordinates>
+                  <gml:uom>ft</gml:uom>
+                </gml:LineString>
+              </gwml:position>
+              <gwml:material>
+                <gsml:CGI_TermValue>
+                  <gsml:value codeSpace="urn:x-ngwd:classifierScheme:USGS:Screen:2010">PVC</gsml:value>
+                </gsml:CGI_TermValue>
+              </gwml:material>
+              <gwml:nomicalScreenDiameter>
+                <gsml:CGI_NumericValue>
+                  <gsml:principalValue uom="in"/>
+                </gsml:CGI_NumericValue>
+              </gwml:nomicalScreenDiameter>
+            </gwml:ScreenComponent>
+          </gwml:screenElement>
+        </gwml:Screen>
+      </gwml:construction>
+    </gwml:WaterWell>
+  </gml:featureMember>
+</wfs:FeatureCollection>"""

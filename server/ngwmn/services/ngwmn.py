@@ -133,6 +133,76 @@ def get_water_quality_activities(agency_cd, location_id):
     } for activity in organization.findall('Activity', xml.nsmap)]
 
 
+def get_well_log(agency_cd, location_id):
+    """
+    Retrieves water-quality data from the NGWMN iddata service.
+
+    :param str agency_cd: agency code for the agency that manages the location
+    :param str location_id: the location's identifier
+    :return: array of activity dictionaries
+    :rtype: array
+    """
+    xml = get_iddata('well_log', agency_cd, location_id)
+    if xml is None:
+        return {}
+
+    water_well = xml.find('.//gwml:WaterWell', xml.nsmap)
+    if water_well is None:
+        return {}
+
+    return {
+        'name': _find(water_well, 'gml:name'),
+        'location': (lambda pos: {
+            'latitude': pos[0],
+            'longitude': pos[1]
+        })(_find(water_well, 'gml:boundedBy/gml:envelope/gml:pos').split(' ')),
+        'elevation': (lambda elev: {
+            'value': elev.text,
+            'unit': elev.get('uom')
+        })(water_well.find('gwml:referenceElevation', xml.nsmap)),
+        'well_depth': (lambda depth: {
+            'value': depth.text,
+            'unit': depth.get('uom')
+        })(water_well.find('gwml:wellDepth/gsml:CGI_NumericValue/gsml:principalValue', xml.nsmap)),
+        'altitude_datum': _find(water_well, 'gwml:wellStatus/gsml:CGI_TermValue/gsml:value'),
+        'water_use': _find(water_well, 'gwml:wellType/gsml:CGI_TermValue/gsml:value'),
+        'link': (lambda link: {
+            'url': link.get('{http://www.w3.org/1999/xlink}href'),
+            'title': link.get('{http://www.w3.org/1999/xlink}title')
+        })(water_well.find('gwml:onlineResource', xml.nsmap)),
+        'log_entries': [{
+            'method': _find(entry, 'gsml:observationMethod/gsml:CGI_TermValue/gsml:value'),
+            'hydrostatic_graphing_unit': (lambda unit: {
+                'description': _find(unit, 'gml:description'),
+                'purpose': _find(unit, 'gsml:purpose'),
+                'composition': [{
+                    'role': _find(part, 'gsml:role'),
+                    'lithology': (lambda lith: {
+                        'scheme': lith.get('codeSpace'),
+                        'value': lith.text
+                    })(part.find('gsml:lithology/gsml:ControlledConcept/gml:name', xml.nsmap)),
+                    'material': (lambda material: {
+                        'name': _find(material, 'gml:name'),
+                        'purpose': _find(material, 'gsml:purpose'),
+                    })(part.find('gsml:material/gsml:UnconsolidatedMaterial', xml.nsmap)),
+                    'proportion': (lambda proportion: {
+                        'scheme': proportion.get('codeSpace'),
+                        'value': proportion.text
+                    })(part.find('gsml:proportion/gsml:CGI_TermValue/gsml:value', xml.nsmap)),
+                } for part in unit.findall('gsml:composition/gsml:CompositionPart', xml.nsmap)]
+            })(entry.find('gsml:specification/gwml:HydrostratigraphicUnit', xml.nsmap)),
+            'shape': (lambda shape: {
+                'dimension': shape.get('srsDimension'),
+                'unit': shape.get('uom'),
+                'coordinates': (lambda coordinates: {
+                    'latitude': coordinates[0],
+                    'longitude': coordinates[1]
+                })(_find(shape, 'gml:coordinates').split(' '))
+            })(entry.find('gsml:shape/gml:LineString', xml.nsmap)),
+        } for entry in water_well.findall('gwml:logElement/gsml:MappedInterval', xml.nsmap)]
+    }
+
+
 def generate_bounding_box_values(latitude, longitude, delta=0.01):
     """
     Calculate a small bounding box around a point
