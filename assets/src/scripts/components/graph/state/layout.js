@@ -155,7 +155,7 @@ export const getChartPosition = memoize(chartType => createSelector(
                     width: Math.max(width * 0.9 - FOCUS_CIRCLE_RADIUS, FOCUS_CIRCLE_RADIUS),
                     height: height * 0.2
                 };
-            case 'lithograph':
+            case 'lithology':
                 return {
                     x: viewBox.right * 0.9,
                     y: 0,

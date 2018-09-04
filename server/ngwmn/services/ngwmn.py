@@ -175,7 +175,7 @@ def get_well_log(agency_cd, location_id):
             'hydrostatic_graphing_unit': (lambda unit: {
                 'description': _find(unit, 'gml:description'),
                 'purpose': _find(unit, 'gsml:purpose'),
-                'composition': [{
+                'composition': (lambda part: {
                     'role': _find(part, 'gsml:role'),
                     'lithology': (lambda lith: {
                         'scheme': lith.get('codeSpace'),
@@ -189,14 +189,14 @@ def get_well_log(agency_cd, location_id):
                         'scheme': proportion.get('codeSpace'),
                         'value': proportion.text
                     })(part.find('gsml:proportion/gsml:CGI_TermValue/gsml:value', xml.nsmap)),
-                } for part in unit.findall('gsml:composition/gsml:CompositionPart', xml.nsmap)]
+                })(unit.find('gsml:composition/gsml:CompositionPart', xml.nsmap))
             })(entry.find('gsml:specification/gwml:HydrostratigraphicUnit', xml.nsmap)),
             'shape': (lambda shape: {
                 'dimension': shape.get('srsDimension'),
                 'unit': shape.get('uom'),
                 'coordinates': (lambda coordinates: {
-                    'latitude': coordinates[0],
-                    'longitude': coordinates[1]
+                    'start': coordinates[0],
+                    'end': coordinates[1]
                 })(_find(shape, 'gml:coordinates').split(' '))
             })(entry.find('gsml:shape/gml:LineString', xml.nsmap)),
         } for entry in water_well.findall('gwml:logElement/gsml:MappedInterval', xml.nsmap)]

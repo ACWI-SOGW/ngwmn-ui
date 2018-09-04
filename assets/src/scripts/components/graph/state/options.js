@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect';
 
-import { getWaterLevelID } from 'ngwmn/services/state/index';
+import { getSiteID } from 'ngwmn/services/state/index';
 
 const MOUNT_POINT = 'components/graph/options';
 const GRAPH_OPTIONS_SET = `${MOUNT_POINT}/GRAPH_OPTIONS_SET`;
@@ -31,10 +31,10 @@ export const getGraphOptions = state => state[MOUNT_POINT];
  * @param  {Object} state Redux state
  * @return {String} Site ID
  */
-export const getCurrentWaterLevelID = createSelector(
+export const getCurrentSiteID = createSelector(
     getGraphOptions,
     (options) => {
-        return getWaterLevelID(options.agencycode, options.siteid);
+        return getSiteID(options.agencycode, options.siteid);
     }
 );
 

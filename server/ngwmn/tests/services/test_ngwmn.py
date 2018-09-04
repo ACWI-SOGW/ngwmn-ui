@@ -247,7 +247,7 @@ class TestWellLogResults(TestCase):
                     'hydrostatic_graphing_unit': {
                         'description': 'Sandstone',
                         'purpose': 'instance',
-                        'composition':  [{
+                        'composition':  {
                             'role': 'contains',
                             'lithology': {
                                 'scheme': 'urn:x-ngwd:classifierScheme:USGS:Lithology:2011',
@@ -261,12 +261,12 @@ class TestWellLogResults(TestCase):
                                 'scheme': 'urn:ietf:rfc:2141',
                                 'value': 'urn:ogc:def:nil:OGC:unknown'
                             }
-                        }]
+                        }
                     },
                     'shape': {
                         'coordinates': {
-                            'latitude': '0.00',
-                            'longitude': '25.00'
+                            'start': '0.00',
+                            'end': '25.00'
                         },
                         'dimension': '1',
                         'unit': 'Unknown'
@@ -276,7 +276,7 @@ class TestWellLogResults(TestCase):
                     'hydrostatic_graphing_unit': {
                         'description': 'Siltstone',
                         'purpose': 'instance',
-                        'composition': [{
+                        'composition': {
                             'role': 'contains',
                             'lithology': {
                                 'scheme': 'urn:x-ngwd:classifierScheme:USGS:Lithology:2011',
@@ -290,12 +290,12 @@ class TestWellLogResults(TestCase):
                                 'scheme': 'urn:ietf:rfc:2141',
                                 'value': 'urn:ogc:def:nil:OGC:unknown'
                             }
-                        }]
+                        }
                     },
                     'shape': {
                         'coordinates': {
-                            'latitude': '25.00',
-                            'longitude': '56.00'
+                            'start': '25.00',
+                            'end': '56.00'
                         },
                         'dimension': '1',
                         'unit': 'Unknown'
@@ -305,7 +305,7 @@ class TestWellLogResults(TestCase):
                     'hydrostatic_graphing_unit': {
                         'description': 'Sandstone',
                         'purpose': 'instance',
-                        'composition': [{
+                        'composition': {
                             'role': 'contains',
                             'lithology': {
                                 'scheme': 'urn:x-ngwd:classifierScheme:USGS:Lithology:2011',
@@ -319,12 +319,12 @@ class TestWellLogResults(TestCase):
                                 'scheme': 'urn:ietf:rfc:2141',
                                 'value': 'urn:ogc:def:nil:OGC:unknown'
                             }
-                        }]
+                        }
                     },
                     'shape': {
                         'coordinates': {
-                            'latitude': '56.00',
-                            'longitude': '155.00'
+                            'start': '56.00',
+                            'end': '155.00'
                         },
                         'dimension': '1',
                         'unit': 'Unknown'

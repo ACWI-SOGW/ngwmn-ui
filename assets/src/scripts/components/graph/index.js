@@ -1,7 +1,7 @@
 import { select } from 'd3-selection';
 
 import { link } from 'ngwmn/lib/d3-redux';
-import { retrieveWaterLevels } from 'ngwmn/services/state/index';
+import { setWellLog, retrieveWaterLevels } from 'ngwmn/services/state/index';
 
 import { getCurrentWaterLevels, setGraphOptions } from './state';
 import drawGraph from './view';
@@ -42,6 +42,7 @@ export default function (store, node, options = {}) {
     }
 
     store.dispatch(setGraphOptions(options));
+    store.dispatch(setWellLog(agencycode, siteid, window.wellLog));
     store.dispatch(retrieveWaterLevels(agencycode, siteid));
 
     select(node)

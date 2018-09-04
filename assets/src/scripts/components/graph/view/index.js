@@ -8,12 +8,14 @@ import { callIf } from 'ngwmn/lib/utils';
 import {
     getActiveClasses, getChartPoints, getChartPosition,
     getCurrentWaterLevelUnit, getCursor, getCursorDatum, getLineSegments,
-    getScaleX, getScaleY, getViewBox, setAxisYBBox, setCursor, setContainerSize
+    getLithology, getScaleX, getScaleY, getViewBox, setAxisYBBox, setCursor,
+    setContainerSize
 } from '../state';
 import { drawAxisX, drawAxisY, drawAxisYLabel } from './axes';
 import addBrushZoomBehavior from './brush-zoom';
 import { drawFocusCircle, drawFocusLine, drawTooltip } from './cursor';
 import drawLegend from './legend';
+import drawLithology from './lithology';
 import drawWaterLevels from './water-levels';
 
 
@@ -56,25 +58,33 @@ export const drawChart = function (elem, store, chartType) {
         .call(link(store, (elem, pos) => {
             elem.attr('transform', `translate(${pos.x}, ${pos.y})`);
         }, getChartPosition(chartType)))
-        // Draw the actual lines/circles for the current water level data set.
-        .call(link(store, drawWaterLevels, createStructuredSelector({
-            lineSegments: getLineSegments,
-            chartPoints: getChartPoints,
-            xScale: getScaleX(chartType),
-            yScale: getScaleY(chartType)
-        }), `${chartType}-clip-path`))
-        // Draw a vertical focus line representing the current cursor location.
-        .call(link(store, drawFocusLine, createStructuredSelector({
-            cursor: getCursor,
-            xScale: getScaleX(chartType),
-            yScale: getScaleY(chartType)
-        })))
-        // Draw a circle around the point nearest the current cursor location.
-        .call(callIf(chartType === 'main', link(store, drawFocusCircle, createStructuredSelector({
-            cursorPoint: getCursorDatum,
-            xScale: getScaleX(chartType),
-            yScale: getScaleY(chartType)
-        }))))
+        .call(elem => {
+            elem.append('g')
+                .attr('clip-path', `url(#${chartType}-clip-path)`)
+                // Draw well log lithology background
+                .call(link(store, drawLithology, createStructuredSelector({
+                    lithology: getLithology(chartType)
+                })))
+                // Draw the actual lines/circles for the current water level data set.
+                .call(link(store, drawWaterLevels, createStructuredSelector({
+                    lineSegments: getLineSegments,
+                    chartPoints: getChartPoints,
+                    xScale: getScaleX(chartType),
+                    yScale: getScaleY(chartType)
+                }), chartType))
+                // Draw a vertical focus line representing the current cursor location.
+                .call(link(store, drawFocusLine, createStructuredSelector({
+                    cursor: getCursor,
+                    xScale: getScaleX(chartType),
+                    yScale: getScaleY(chartType)
+                })))
+                // Draw a circle around the point nearest the current cursor location.
+                .call(callIf(chartType === 'main', link(store, drawFocusCircle, createStructuredSelector({
+                    cursorPoint: getCursorDatum,
+                    xScale: getScaleX(chartType),
+                    yScale: getScaleY(chartType)
+                }))));
+        })
         // Draw the y-axis, only for the main chart.
         .call(callIf(chartType === 'main', link(store, drawAxisY, createStructuredSelector({
             yScale: getScaleY(chartType)
@@ -149,7 +159,7 @@ export default function (elem, store) {
                     // Draw the charts
                     const brush = drawChart(svg, store, 'brush');
                     const main = drawChart(svg, store, 'main');
-                    const lithograph = drawChart(svg, store, 'lithograph');
+                    drawChart(svg, store, 'lithology');
                     // Add interactive brush and zoom behavior over the charts
                     svg.call(addBrushZoomBehavior, store, main, brush);
                 });

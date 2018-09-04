@@ -99,7 +99,8 @@ $provisional-color: color(accent-warm, dark);
                         }
                     }
                     path.area-path {
-                        fill: azure;
+                        fill: lightblue;
+                        opacity: .75;
                     }
                     .overlay {
                         fill: none;

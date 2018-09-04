@@ -57,11 +57,11 @@ describe('graph component points', () => {
             expect(getChartPoints.resultFunc({
                 samples: [{
                     time: new Date('2010-10-10'),
-                    fromDatumValue: '12.2',
+                    fromLandsurfaceValue: '12.2',
                     comment: 'A'
                 }, {
                     time: new Date('2010-10-10'),
-                    fromDatumValue: '-1',
+                    fromLandsurfaceValue: '-1',
                     comment: 'P'
                 }]
             })).toEqual([{
