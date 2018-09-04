@@ -128,6 +128,32 @@
                     </table>
                 </div>
             </li>
+            <li>
+                <button class="usa-accordion-button" aria-expanded="false" aria-controls="ts-a3">
+                    Well Log
+                </button>
+                <div id="ts-a3" class="usa-accordion-content">
+                    <table class="usa-table-borderless">
+                        <caption>Detailed Lithology</caption>
+                        <thead>
+                            <th scope="col">Depth start</th>
+                            <th scope="col">Depth end</th>
+                            <th scope="col">Lithology</th>
+                            <th scope="col">Description</th>
+                        </thead>
+                        <tbody>
+                            {% for entry in well_log.log_entries %}
+                                <tr>
+                                    <td>{{ entry.shape.coordinates.start }} {{ entry.shape.unit }}</td>
+                                    <td>{{ entry.shape.coordinates.end }} {{ entry.shape.unit }}</td>
+                                    <td>{{ _(entry.hydrostatic_graphing_unit.composition.lithology.value) }}</td>
+                                    <td>{{ _(entry.hydrostatic_graphing_unit.description) }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </li>
         </ul>
     </div>
     {% if cooperators %}
