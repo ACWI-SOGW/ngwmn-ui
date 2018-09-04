@@ -199,7 +199,35 @@ def get_well_log(agency_cd, location_id):
                     'end': coordinates[1]
                 })(_find(shape, 'gml:coordinates').split(' '))
             })(entry.find('gsml:shape/gml:LineString', xml.nsmap)),
-        } for entry in water_well.findall('gwml:logElement/gsml:MappedInterval', xml.nsmap)]
+        } for entry in water_well.findall('gwml:logElement/gsml:MappedInterval', xml.nsmap)],
+        'casings': [{
+            'position': (lambda line: {
+                'unit': _find(line, 'gml:uom'),
+                'coordinates': (lambda coordinates: {
+                    'start': coordinates[0],
+                    'end': coordinates[1]
+                })(_find(line, 'gml:coordinates').split(' '))
+            })(casing.find('gwml:position/gml:LineString', xml.nsmap)),
+            'material': _find(casing, 'gwml:material/gsml:CGI_TermValue/gsml:value'),
+            'diameter': (lambda dimension: {
+                'value': dimension.text,
+                'unit': dimension.get('uom')
+            })(casing.find('gwml:nominalPipeDimension/gsml:CGI_NumericValue/gsml:principalValue', xml.nsmap))
+        } for casing in water_well.findall('gwml:construction/gwml:WellCasing/gwml:wellCasingElement/gwml:WellCasingComponent', xml.nsmap)],
+        'screens': [{
+            'position': (lambda line: {
+                'unit': _find(line, 'gml:uom'),
+                'coordinates': (lambda coordinates: {
+                    'start': coordinates[0],
+                    'end': coordinates[1]
+                })(_find(line, 'gml:coordinates').split(' '))
+            })(screen.find('gwml:position/gml:LineString', xml.nsmap)),
+            'material': _find(screen, 'gwml:material/gsml:CGI_TermValue/gsml:value'),
+            'diameter': (lambda dimension: {
+                'value': dimension.text,
+                'unit': dimension.get('uom')
+            })(screen.find('gwml:nomicalScreenDiameter/gsml:CGI_NumericValue/gsml:principalValue', xml.nsmap))
+        } for screen in water_well.findall('gwml:construction/gwml:Screen/gwml:screenElement/gwml:ScreenComponent', xml.nsmap)]
     }
 
 

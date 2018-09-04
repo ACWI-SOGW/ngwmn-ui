@@ -329,7 +329,48 @@ class TestWellLogResults(TestCase):
                         'dimension': '1',
                         'unit': 'Unknown'
                     }
-                }]
+                }],
+                'casings': [{
+                    'position': {
+                        'coordinates': {
+                            'start': '0',
+                            'end': '80.9'
+                        },
+                        'unit': 'ft'
+                    },
+                    'material': 'PVC',
+                    'diameter': {
+                        'value': '16',
+                        'unit': 'in'
+                    }
+                }],
+                'screens': [{
+                    'diameter': {
+                        'value': None,
+                        'unit': 'in',
+                    },
+                    'material': 'PVC',
+                    'position': {
+                        'coordinates': {
+                            'start': '80.8',
+                            'end': '90.8'
+                        },
+                        'unit': 'ft'
+                    }
+                }, {
+                    'diameter': {
+                        'value': None,
+                        'unit': 'in'
+                    },
+                    'material': 'PVC',
+                    'position': {
+                        'coordinates': {
+                            'end': '212.8',
+                            'start': '152.8'
+                        },
+                        'unit': 'ft'
+                    }
+                }],
             })
 
 
