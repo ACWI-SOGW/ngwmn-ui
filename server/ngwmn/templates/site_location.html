@@ -134,6 +134,34 @@
                 </button>
                 <div id="ts-a3" class="usa-accordion-content">
                     <table class="usa-table-borderless">
+                        <caption>Basic Well Information</caption>
+                        <tbody>
+                            <tr>
+                                <th scope="row">Well depth</th>
+                                <td>{% if well_log.well_depth %}
+                                    {{ well_log.well_depth.value }} {{ well_log.well_depth.unit }}
+                                {% endif %}</td>
+                            </tr>
+                                <th scope="row">Elevation {% if well_log.elevation %}({{ well_log.elevation.scheme }}){% endif %}</th>
+                                <td>{% if well_log.elevation %}
+                                    {{ well_log.elevation.value }} {{ well_log.elevation.unit }}
+                                {% endif %}</td>
+                            <tr>
+                            </tr>
+                                <th scope="row">Latitude</th>
+                                <td>{% if well_log.location %}
+                                    {{ well_log.location.latitude }}
+                                {% endif %}</td>
+                            <tr>
+                            </tr>
+                                <th scope="row">Longitude</th>
+                                <td>{% if well_log.location %}
+                                    {{ well_log.location.longitude }}
+                                {% endif %}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="usa-table-borderless">
                         <caption>Detailed Lithology</caption>
                         <thead>
                             <th scope="col">Depth from</th>

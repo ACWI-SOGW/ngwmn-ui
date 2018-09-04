@@ -158,13 +158,13 @@ def get_well_log(agency_cd, location_id):
         })(_find(water_well, 'gml:boundedBy/gml:envelope/gml:pos').split(' ')),
         'elevation': (lambda elev: {
             'value': elev.text,
-            'unit': elev.get('uom')
+            'unit': elev.get('uom'),
+            'scheme': _find(water_well, 'gwml:wellStatus/gsml:CGI_TermValue/gsml:value[@codeSpace="urn:gov.usgs.nwis.alt_datum_cd"]')
         })(water_well.find('gwml:referenceElevation', xml.nsmap)),
         'well_depth': (lambda depth: {
             'value': depth.text,
             'unit': depth.get('uom')
         })(water_well.find('gwml:wellDepth/gsml:CGI_NumericValue/gsml:principalValue', xml.nsmap)),
-        'altitude_datum': _find(water_well, 'gwml:wellStatus/gsml:CGI_TermValue/gsml:value'),
         'water_use': _find(water_well, 'gwml:wellType/gsml:CGI_TermValue/gsml:value'),
         'link': (lambda link: {
             'url': link.get('{http://www.w3.org/1999/xlink}href'),

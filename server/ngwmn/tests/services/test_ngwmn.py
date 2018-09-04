@@ -230,13 +230,13 @@ class TestWellLogResults(TestCase):
                 },
                 'elevation': {
                     'unit': 'ft',
-                    'value': '1950'
+                    'value': '1950',
+                    'scheme': 'NAVD88',
                 },
                 'well_depth': {
                     'unit': 'ft',
                     'value': '214'
                 },
-                'altitude_datum': 'NAVD88',
                 'water_use': 'urn:OGC:unknown',
                 'link': {
                     'title': 'Kansas Geological Survey',
