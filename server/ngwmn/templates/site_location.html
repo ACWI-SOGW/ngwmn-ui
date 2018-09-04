@@ -7,8 +7,8 @@
 
 {% block page_script %}<script>window.wellLog = {{ well_log | tojson | safe }}</script>{% endblock %}
 
-{% macro _(value) -%}
-    {{ value if value is not none else '-' }}
+{% macro _(value, default='-') -%}
+    {{ value if value is not none else default }}
 {%- endmacro %}
 
 {% block content %}
@@ -136,8 +136,8 @@
                     <table class="usa-table-borderless">
                         <caption>Detailed Lithology</caption>
                         <thead>
-                            <th scope="col">Depth start</th>
-                            <th scope="col">Depth end</th>
+                            <th scope="col">Depth from</th>
+                            <th scope="col">Depth to</th>
                             <th scope="col">Lithology</th>
                             <th scope="col">Description</th>
                         </thead>
@@ -148,6 +148,44 @@
                                     <td>{{ entry.shape.coordinates.end }} {{ entry.shape.unit }}</td>
                                     <td>{{ _(entry.hydrostatic_graphing_unit.composition.lithology.value) }}</td>
                                     <td>{{ _(entry.hydrostatic_graphing_unit.description) }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <table class="usa-table-borderless">
+                        <caption>Casing Details</caption>
+                        <thead>
+                            <th scope="col">Depth from</th>
+                            <th scope="col">Depth to</th>
+                            <th scope="col">Diameter</th>
+                            <th scope="col">Material</th>
+                        </thead>
+                        <tbody>
+                            {% for casing in well_log.casings %}
+                                <tr>
+                                    <td>{{ casing.position.coordinates.start }} {{ casing.position.unit }}</td>
+                                    <td>{{ casing.position.coordinates.end }} {{ casing.position.unit }}</td>
+                                    <td>{% if casing.diameter.value %}{{ casing.diameter.value }} {{ casing.diameter.unit }}{% endif %}</td>
+                                    <td>{{ _(casing.material) }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <table class="usa-table-borderless">
+                        <caption>Screen Details</caption>
+                        <thead>
+                            <th scope="col">Depth from</th>
+                            <th scope="col">Depth to</th>
+                            <th scope="col">Diameter</th>
+                            <th scope="col">Material</th>
+                        </thead>
+                        <tbody>
+                            {% for screen in well_log.screens %}
+                                <tr>
+                                    <td>{{ screen.position.coordinates.start }} {{ screen.position.unit }}</td>
+                                    <td>{{ screen.position.coordinates.end }} {{ screen.position.unit }}</td>
+                                    <td>{% if screen.diameter.value %}{{ screen.diameter.value }} {{ screen.diameter.unit }}{% endif %}</td>
+                                    <td>{{ _(screen.material) }}</td>
                                 </tr>
                             {% endfor %}
                         </tbody>
