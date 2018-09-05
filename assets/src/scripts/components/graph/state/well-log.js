@@ -23,7 +23,7 @@ export const getCurrentWellLog = createSelector(
 /**
  * Returns the well log entries for the current site.
  * @param  {Object} state       Redux state
- * @return {Object}             Well log object
+ * @return {Array}              List of well log entries
  */
 export const getWellLogEntries = createSelector(
     getCurrentWellLog,
@@ -35,7 +35,7 @@ export const getWellLogEntries = createSelector(
 /**
  * Returns the depth extent for the current well log.
  * @param  {Object} state       Redux state
- * @return {Object}             Well log object
+ * @return {Array}              y-extent [min, max]
  */
 export const getWellLogExtentY = createSelector(
     getWellLogEntries,
@@ -73,3 +73,22 @@ export const getLithology = memoize(chartType => createSelector(
         });
     }
 ));
+
+/**
+ * Returns the construction casing entries for the current site.
+ * @param  {Object} state       Redux state
+ * @return {Array}              List of casings
+ */
+export const getCasings = createSelector(
+    getCurrentWellLog,
+    (wellLog) => {
+        return wellLog.casings || [];
+    }
+);
+
+export const getScreens = createSelector(
+    getCurrentWellLog,
+    (wellLog) => {
+        return wellLog.screens || [];
+    }
+);

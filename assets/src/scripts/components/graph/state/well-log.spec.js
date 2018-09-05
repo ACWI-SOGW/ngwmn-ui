@@ -2,11 +2,12 @@ import { scaleLinear } from 'd3-scale';
 
 import getMockStore from 'ngwmn/store.mock';
 import {
-    getCurrentWellLog, getLithology, getWellLogEntries, getWellLogExtentY
+    getCasings, getCurrentWellLog, getLithology, getScreens, getWellLogEntries,
+    getWellLogExtentY
 } from './well-log';
 
 
-describe('graph component lithology state', () => {
+describe('graph component well log state', () => {
     describe('getCurrentWellLog', () => {
         const wellLogs = {
             'log1': 'well log 1'
@@ -134,6 +135,44 @@ describe('graph component lithology state', () => {
 
         it('works with mock state', () => {
             expect(getLithology('main')(getMockStore().getState())).not.toBe(null);
+        });
+    });
+
+    describe('getCasings', () => {
+        const casings = [1, 2, 3];
+        const wellLog = {
+            casings
+        };
+
+        it('works', () => {
+            expect(getCasings.resultFunc(wellLog)).toEqual(casings);
+        });
+
+        it('works with empty log', () => {
+            expect(getCasings.resultFunc({})).toEqual([]);
+        });
+
+        it('works with mock state', () => {
+            expect(getCasings(getMockStore().getState())).not.toBe(null);
+        });
+    });
+
+    describe('getScreens', () => {
+        const screens = [1, 2, 3];
+        const wellLog = {
+            screens
+        };
+
+        it('works', () => {
+            expect(getScreens.resultFunc(wellLog)).toEqual(screens);
+        });
+
+        it('works with empty log', () => {
+            expect(getScreens.resultFunc({})).toEqual([]);
+        });
+
+        it('works with mock state', () => {
+            expect(getScreens(getMockStore().getState())).not.toBe(null);
         });
     });
 });
