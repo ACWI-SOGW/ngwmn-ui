@@ -30,9 +30,8 @@ export default function (elem, store, mainChart, brushChart) {
 
     // Update the brush extents in response to changes in the graph size.
     listen(store, getChartPosition('brush'), function (chartPosBrush) {
-        // Set the extent
-        brush.extent([[0, 0],
-                     [chartPosBrush.width, chartPosBrush.height]]);
+        brush.extent([[chartPosBrush.x, chartPosBrush.y],
+                     [chartPosBrush.x + chartPosBrush.width, chartPosBrush.y + chartPosBrush.height]]);
         // Apply the brush to the DOM
         gBrush.call(brush);
     });

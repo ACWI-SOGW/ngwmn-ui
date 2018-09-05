@@ -121,6 +121,10 @@ $provisional-color: color(accent-warm, dark);
                     }
                 }
             }
+            path.domain-mapping {
+                fill: none;
+                stroke: $secondary;
+            }
             .tooltip {
                 pointer-events: none;
                 position: absolute;

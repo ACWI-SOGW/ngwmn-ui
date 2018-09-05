@@ -82,6 +82,10 @@ export const getDomainY = memoize(chartType => createSelector(
     getWellLogExtentY,
     (chartPoints, wellLogExtentY) => {
         const values = chartPoints.map(pt => pt.value);
+        if (values.length === 0) {
+            return [0, 0];
+        }
+
         let domain = [
             Math.min(...values),
             Math.max(...values)

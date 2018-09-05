@@ -14,6 +14,7 @@ import {
 import { drawAxisX, drawAxisY, drawAxisYLabel } from './axes';
 import addBrushZoomBehavior from './brush-zoom';
 import { drawFocusCircle, drawFocusLine, drawTooltip } from './cursor';
+import drawDomainMapping from './domain-mapping';
 import drawLegend from './legend';
 import drawLithology from './lithology';
 import drawWaterLevels from './water-levels';
@@ -32,8 +33,8 @@ const drawClipPath = function (elem, store, chartType) {
             .attr('id', `${chartType}-clip-path`)
             .append('rect')
                 .call(link(store, (rect, chartPosition) => {
-                    rect.attr('x', 0)
-                        .attr('y', 0)
+                    rect.attr('x', chartPosition.x)
+                        .attr('y', chartPosition.y)
                         .attr('width', chartPosition.width)
                         .attr('height', chartPosition.height);
                 }, getChartPosition(chartType)));
@@ -45,7 +46,7 @@ const drawClipPath = function (elem, store, chartType) {
  * @param  {Object} node    DOM node to draw graph into
  * @param  {Object} options {agencycode, siteid} of site to draw
  */
-export const drawChart = function (elem, store, chartType) {
+const drawChart = function (elem, store, chartType) {
     // Each chart gets its own group container, classed .chart
     return elem.append('g')
         .classed('chart', true)
@@ -53,11 +54,6 @@ export const drawChart = function (elem, store, chartType) {
         // Draw a clipPath on the chart to enable cropping of content to the
         // current domain.
         .call(drawClipPath, store, chartType)
-        // Each chartType is drawn to a specific area of the SVG viewport.
-        // Use a transform to set the location here.
-        .call(link(store, (elem, pos) => {
-            elem.attr('transform', `translate(${pos.x}, ${pos.y})`);
-        }, getChartPosition(chartType)))
         .call(elem => {
             elem.append('g')
                 .attr('clip-path', `url(#${chartType}-clip-path)`)
@@ -87,7 +83,8 @@ export const drawChart = function (elem, store, chartType) {
         })
         // Draw the y-axis, only for the main chart.
         .call(callIf(chartType === 'main', link(store, drawAxisY, createStructuredSelector({
-            yScale: getScaleY(chartType)
+            yScale: getScaleY(chartType),
+            layout: getChartPosition(chartType)
         }), (bBox) => {
             // When the bounding box has changed, update the state with it.
             store.dispatch(setAxisYBBox(bBox));
@@ -102,12 +99,12 @@ export const drawChart = function (elem, store, chartType) {
         .call(g => {
             g.append('rect')
                 .attr('class', 'overlay')
-                .attr('x', 0)
-                .attr('y', 0)
                 // Set the overlay size, including a little extra space to deal
                 // with the focus circle when it's drawn on the right-most extent.
                 .call(link(store, (rect, layout) => {
-                    rect.attr('width', layout.width)
+                    rect.attr('x', layout.x)
+                        .attr('y', layout.y)
+                        .attr('width', layout.width)
                         .attr('height', layout.height);
                 }, getChartPosition(chartType)))
                 // Clear the cursor on mouseout
@@ -160,6 +157,16 @@ export default function (elem, store) {
                     const brush = drawChart(svg, store, 'brush');
                     const main = drawChart(svg, store, 'main');
                     drawChart(svg, store, 'lithology');
+
+                    // Draw a key mapping the domain on the main chart to the
+                    // lithology chart.
+                    svg.call(link(store, drawDomainMapping, createStructuredSelector({
+                        xScaleFrom: getScaleX('main'),
+                        yScaleFrom: getScaleY('main'),
+                        xScaleTo: getScaleX('lithology'),
+                        yScaleTo: getScaleY('lithology')
+                    })));
+
                     // Add interactive brush and zoom behavior over the charts
                     svg.call(addBrushZoomBehavior, store, main, brush);
                 });

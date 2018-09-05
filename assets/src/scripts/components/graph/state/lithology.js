@@ -19,6 +19,11 @@ export const getCurrentWellLog = createSelector(
     }
 );
 
+/**
+ * Returns the well log entries for the current site.
+ * @param  {Object} state       Redux state
+ * @return {Object}             Well log object
+ */
 export const getWellLogEntries = createSelector(
     getCurrentWellLog,
     (wellLog) => {
@@ -26,6 +31,11 @@ export const getWellLogEntries = createSelector(
     }
 );
 
+/**
+ * Returns the depth extent for the current well log.
+ * @param  {Object} state       Redux state
+ * @return {Object}             Well log object
+ */
 export const getWellLogExtentY = createSelector(
     getWellLogEntries,
     (wellLogEntries) => {
@@ -36,6 +46,11 @@ export const getWellLogExtentY = createSelector(
     }
 );
 
+/**
+ * Produces a list of lithology rectangles for a given chart type.
+ * @param  {String} chartType            Kind of chart
+ * @return {Array}                       Array of rectangles {x, y, width, height}
+ */
 export const getLithology = memoize(chartType => createSelector(
     getWellLogEntries,
     getChartPosition(chartType),
@@ -45,7 +60,7 @@ export const getLithology = memoize(chartType => createSelector(
             const top = yScale(parseFloat(entry.shape.coordinates.start)) || 0;
             const bottom = yScale(parseFloat(entry.shape.coordinates.end)) || 0;
             return {
-                x: 0,
+                x: layout.x,
                 y: top,
                 width: layout.width,
                 height: bottom - top,

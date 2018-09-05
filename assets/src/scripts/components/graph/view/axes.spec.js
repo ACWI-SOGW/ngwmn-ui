@@ -37,7 +37,8 @@ describe('graph component', () => {
         it('renders', () => {
             drawAxisY(svg, {
                 yScale: scaleLinear().domain([0, 1])
-                                     .range([0, 100])
+                                     .range([0, 100]),
+                layout: {x: 0, y: 0}
             });
             expect(svg.selectAll('.y-axis').size()).toBe(1);
         });
