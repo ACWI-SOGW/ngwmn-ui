@@ -142,7 +142,7 @@ def get_well_log(agency_cd, location_id):
     :return: array of activity dictionaries
     :rtype: array
     """
-    #pylint: disable=line-too-long
+    # pylint: disable=line-too-long
     xml = get_iddata('well_log', agency_cd, location_id)
     if xml is None:
         return {}

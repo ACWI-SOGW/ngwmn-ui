@@ -1,7 +1,5 @@
 import { scaleLinear } from 'd3-scale';
-import { combineReducers, createStore } from 'redux';
 
-import services from 'ngwmn/services/state/index';
 import getMockStore from 'ngwmn/store.mock';
 
 import {
@@ -11,14 +9,6 @@ import {
 
 
 describe('graph component lithology state', () => {
-    let store;
-
-    beforeEach(() => {
-        store = createStore(combineReducers({
-            ...services
-        }), {});
-    });
-
     describe('getCurrentWellLog', () => {
         const wellLogs = {
             'log1': 'well log 1'
@@ -33,8 +23,7 @@ describe('graph component lithology state', () => {
         });
 
         it('works with mock state', () => {
-            const store = getMockStore();
-            expect(getCurrentWellLog(store.getState())).not.toBe(null);
+            expect(getCurrentWellLog(getMockStore().getState())).not.toBe(null);
         });
     });
 
@@ -53,8 +42,7 @@ describe('graph component lithology state', () => {
         });
 
         it('works with mock state', () => {
-            const store = getMockStore();
-            expect(getWellLogEntries(store.getState())).not.toBe(null);
+            expect(getWellLogEntries(getMockStore().getState())).not.toBe(null);
         });
     });
 
@@ -84,8 +72,7 @@ describe('graph component lithology state', () => {
         });
 
         it('works with mock state', () => {
-            const store = getMockStore();
-            expect(getWellLogEntries(store.getState())).not.toBe(null);
+            expect(getWellLogEntries(getMockStore().getState())).not.toBe(null);
         });
     });
 
@@ -148,8 +135,7 @@ describe('graph component lithology state', () => {
         });
 
         it('works with mock state', () => {
-            const store = getMockStore();
-            expect(getLithology('main')(store.getState())).not.toBe(null);
+            expect(getLithology('main')(getMockStore().getState())).not.toBe(null);
         });
     });
 });
