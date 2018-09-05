@@ -39,6 +39,9 @@ export const getWellLogEntries = createSelector(
 export const getWellLogExtentY = createSelector(
     getWellLogEntries,
     (wellLogEntries) => {
+        if (wellLogEntries.length === 0) {
+            return [0, 0];
+        }
         return [
             Math.min(...wellLogEntries.map(entry => parseFloat(entry.shape.coordinates.start))),
             Math.max(...wellLogEntries.map(entry => parseFloat(entry.shape.coordinates.end)))

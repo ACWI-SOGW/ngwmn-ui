@@ -10,11 +10,13 @@
 import 'ngwmn/components/graph/index.spec.js';
 import 'ngwmn/components/graph/state/cursor.spec.js';
 import 'ngwmn/components/graph/state/layout.spec.js';
+import 'ngwmn/components/graph/state/lithology.spec.js';
 import 'ngwmn/components/graph/state/options.spec.js';
 import 'ngwmn/components/graph/state/points.spec.js';
 import 'ngwmn/components/graph/state/scales.spec.js';
 import 'ngwmn/components/graph/view/axes.spec.js';
 import 'ngwmn/components/graph/view/cursor.spec.js';
+import 'ngwmn/components/graph/view/domain-mapping.spec.js';
 import 'ngwmn/components/graph/view/legend.spec.js';
 import 'ngwmn/components/graph/view/water-levels.spec.js';
 import 'ngwmn/lib/ajax.spec';
@@ -22,3 +24,4 @@ import 'ngwmn/lib/d3-redux.spec';
 import 'ngwmn/lib/utils.spec';
 import 'ngwmn/services/cache.spec';
 import 'ngwmn/services/state/water-levels.spec';
+import 'ngwmn/services/state/well-log.spec';

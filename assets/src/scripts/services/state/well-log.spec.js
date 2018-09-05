@@ -1,24 +1,25 @@
 import { combineReducers, createStore } from 'redux';
 
 import cache from './well-log';
-import { getWellLog, setWellLog, WATER_LEVELS_SET } from './water-levels';
+import { getWellLogs, setWellLog } from './well-log';
 
 
 describe('well log service state', () => {
     describe('setWellLog works', () => {
         let store;
+        const MOCK_WELL_LOG_DATA = 'MOCK_WELL_LOG_DATA';
 
         beforeEach(() => {
             store = createStore(combineReducers({
                 ...cache
             }), {});
-            store.dispatch(getWellLog('USGS', '430406089232901', MOCK_WELL_LOG_DATA));
         });
 
-        it('and getWellLog returns correct data', () => {
-            expect(false).toBe(true);
+        it('and getWellLogs returns correct data', () => {
+            store.dispatch(setWellLog('USGS', '430406089232901', MOCK_WELL_LOG_DATA));
+            expect(getWellLogs(store.getState())).toEqual({
+                'USGS:430406089232901': MOCK_WELL_LOG_DATA
+            });
         });
     });
 });
-
-const MOCK_WELL_LOG_DATA = null;
