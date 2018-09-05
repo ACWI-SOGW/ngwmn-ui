@@ -5,8 +5,8 @@ import { createSelector } from 'reselect';
 import { getWaterLevels } from 'ngwmn/services/state/index';
 
 import { getViewport } from './layout';
-import { getWellLogExtentY } from './lithology';
 import { getCurrentSiteID } from './options';
+import { getWellLogExtentY } from './well-log';
 
 
 // Lines will be split if the difference exceeds 6 months.

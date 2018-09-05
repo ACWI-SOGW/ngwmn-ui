@@ -2,8 +2,9 @@ import memoize from 'fast-memoize';
 import { createSelector } from 'reselect';
 
 import { getWellLogs } from 'ngwmn/services/state/index';
+import { getChartPosition } from './layout';
 import { getCurrentSiteID } from './options';
-import { getChartPosition, getScaleY } from '../state';
+import { getScaleY } from './scales';
 
 
 /**

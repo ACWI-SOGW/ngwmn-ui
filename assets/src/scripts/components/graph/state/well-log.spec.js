@@ -1,11 +1,9 @@
 import { scaleLinear } from 'd3-scale';
 
 import getMockStore from 'ngwmn/store.mock';
-
 import {
     getCurrentWellLog, getLithology, getWellLogEntries, getWellLogExtentY
-} from './lithology';
-
+} from './well-log';
 
 
 describe('graph component lithology state', () => {
