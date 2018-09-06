@@ -11,7 +11,6 @@ const LITHOLOGY_COLORS = [
 export default function (elem, {lithology}, container) {
     container = container || elem
         .append('g');
-            //.style('opacity', '.5');
 
     const rects = container
         .selectAll('rect')
@@ -32,7 +31,6 @@ export default function (elem, {lithology}, container) {
 
     rects.merge(newRects)
         .transition(transition().duration(20))
-            //.style('opacity', '.6')
             .attr('x', datum => datum.x)
             .attr('y', datum => datum.y)
             .attr('width', datum => datum.width)
