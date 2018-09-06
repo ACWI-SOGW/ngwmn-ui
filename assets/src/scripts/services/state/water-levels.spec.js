@@ -2,18 +2,20 @@ import { combineReducers, createStore } from 'redux';
 import configureStore from 'redux-mock-store';
 import { default as thunk } from 'redux-thunk';
 
-import cache from './cache';
-import { getWaterLevels, retrieveWaterLevels, setWaterLevels, WATER_LEVELS_SET } from './cache';
+import {
+    default as waterLevels, getWaterLevels, retrieveWaterLevels, setWaterLevels,
+    WATER_LEVELS_SET
+} from './water-levels';
 import { MOCK_WATER_LEVEL_RESPONSE, MOCK_WATER_LEVEL_DATA } from '../cache.spec';
 
 
-describe('cache service state', () => {
+describe('water levels service state', () => {
     describe('setWaterLevels works', () => {
         let store;
 
         beforeEach(() => {
             store = createStore(combineReducers({
-                ...cache
+                ...waterLevels
             }), {});
             store.dispatch(setWaterLevels('USGS', '430406089232901', MOCK_WATER_LEVEL_DATA));
         });

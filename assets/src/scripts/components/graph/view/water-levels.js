@@ -50,7 +50,7 @@ export const drawDataLine = function (elem, {line, xScale, yScale}, segment) {
  * @param  {Object} context              Context of form {segments, container}
  * @return {Object}                      {segments, container} context for next invocation
  */
-export default function (svg, {lineSegments, chartPoints, xScale, yScale}, context) {
+export default function (svg, {lineSegments, chartPoints, xScale, yScale}, chartType, context) {
     context = context || {
         segments: [],
         area: svg
@@ -69,12 +69,14 @@ export default function (svg, {lineSegments, chartPoints, xScale, yScale}, conte
         );
     });
 
-    context.area
-        .datum(chartPoints)
-        .transition(transition().duration(25))
-        .attr('d', d3Area().x(d => xScale(d.dateTime))
-                           .y1(d => yScale(d.value))
-                           .y0(yScale.range()[0]));
+    if (chartType !== 'lithology') {
+        context.area
+            .datum(chartPoints)
+            .transition(transition().duration(25))
+            .attr('d', d3Area().x(d => xScale(d.dateTime))
+                               .y1(d => yScale(d.value))
+                               .y0(yScale.range()[1]));
+    }
 
     return context;
 }

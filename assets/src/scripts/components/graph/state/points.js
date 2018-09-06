@@ -5,7 +5,8 @@ import { createSelector } from 'reselect';
 import { getWaterLevels } from 'ngwmn/services/state/index';
 
 import { getViewport } from './layout';
-import { getCurrentWaterLevelID } from './options';
+import { getWellLogExtentY } from './lithology';
+import { getCurrentSiteID } from './options';
 
 
 // Lines will be split if the difference exceeds 6 months.
@@ -18,7 +19,7 @@ const PADDING_RATIO = 0.2;
 
 export const getCurrentWaterLevels = createSelector(
     getWaterLevels,
-    getCurrentWaterLevelID,
+    getCurrentSiteID,
     (waterLevels, waterLevelID) => {
         return waterLevels[waterLevelID] || {};
     }
@@ -46,7 +47,7 @@ export const getChartPoints = createSelector(
         return samples.map(datum => {
             return {
                 dateTime: new Date(datum.time),
-                value: parseFloat(datum.fromDatumValue),
+                value: parseFloat(datum.fromLandsurfaceValue),
                 class: {
                     A: 'approved',
                     P: 'provisional'
@@ -76,30 +77,45 @@ export const getDomainX = memoize(chartType => createSelector(
     }
 ));
 
-export const getDomainY = createSelector(
+export const getDomainY = memoize(chartType => createSelector(
     getChartPoints,
-    (chartPoints) => {
+    getWellLogExtentY,
+    (chartPoints, wellLogExtentY) => {
         const values = chartPoints.map(pt => pt.value);
+        if (values.length === 0) {
+            return [0, 0];
+        }
+
         let domain = [
             Math.min(...values),
             Math.max(...values)
         ];
         const isPositive = domain[0] >= 0 && domain[1] >= 0;
 
-        // Pad domains on both ends by PADDING_RATIO.
-        const padding = PADDING_RATIO * (domain[1] - domain[0]);
-        domain = [
-            domain[0] - padding,
-            domain[1] + padding
-        ];
+        // For lithology charts, take into account the well log's extent and
+        // go to zero (or negative, for artesian wells).
+        if (chartType === 'lithology') {
+            domain = [
+                Math.min(0, wellLogExtentY[0], domain[0]),
+                Math.max(wellLogExtentY[1], domain[1])
+            ];
+        }
 
-        // For positive domains, a zero-lower bound on the y-axis is enforced.
+        // Pad domains on both ends by PADDING_RATIO.
+        if (chartType !== 'lithology') {
+            const padding = PADDING_RATIO * (domain[1] - domain[0]);
+            domain = [
+                domain[0] - padding,
+                domain[1] + padding
+            ];
+        }
+
         return [
             isPositive ? Math.max(0, domain[0]) : domain[0],
             domain[1]
         ];
     }
-);
+));
 
 /**
  * Returns all points in the current time series split into line segments.

@@ -1,7 +1,8 @@
 import * as cache from '../cache';
+import { getSiteID } from './index';
 
 
-export const MOUNT_POINT = 'services/cache/waterLevels';
+export const MOUNT_POINT = 'services/waterLevels';
 export const WATER_LEVELS_SET = `${MOUNT_POINT}/WATER_LEVELS_SET`;
 
 /**
@@ -38,16 +39,6 @@ export const retrieveWaterLevels = (agencyCode, siteID) => (dispatch) => {
 };
 
 /**
- * Gets the unique id for a given site.
- * @param  {String} agencyCode Agency code of site
- * @param  {String} siteID     Agency's site ID for site
- * @return {String}            Unique site ID
- */
-export const getWaterLevelID = function (agencyCode, siteID) {
-    return `${agencyCode}:${siteID}`;
-};
-
-/**
  * Return all water level data
  * @param  {Object} state Redux state
  * @return {Object}       Water levels keyed on ID
@@ -55,7 +46,7 @@ export const getWaterLevelID = function (agencyCode, siteID) {
 export const getWaterLevels = state => state[MOUNT_POINT];
 
 /**
- * Cache service reducer
+ * Water levels reducer
  * @param  {Object} state  Redux state
  * @param  {Object} action Action object
  * @return {Object}        New state
@@ -65,7 +56,7 @@ const reducer = function (state = {}, action) {
         case WATER_LEVELS_SET:
             return {
                 ...state,
-                [getWaterLevelID(action.payload.agencyCode, action.payload.siteID)]: action.payload.waterLevels
+                [getSiteID(action.payload.agencyCode, action.payload.siteID)]: action.payload.waterLevels
             };
         default:
             return state;

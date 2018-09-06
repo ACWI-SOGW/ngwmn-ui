@@ -3,7 +3,7 @@ import { combineReducers, createStore } from 'redux';
 import getMockStore from 'ngwmn/store.mock';
 
 import reducer from './options';
-import { getCurrentWaterLevelID, getGraphOptions, setGraphOptions } from './options';
+import { getCurrentSiteID, getGraphOptions, setGraphOptions } from './options';
 
 
 describe('graph component options state', () => {
@@ -19,14 +19,14 @@ describe('graph component options state', () => {
         expect(getGraphOptions(store.getState())).toEqual({agencycode: 'agency', siteid: 'siteid'});
     });
 
-    it('getCurrentWaterLevelID returns expected ID', () => {
+    it('getCurrentSiteID returns expected ID', () => {
         store.dispatch(setGraphOptions({agencycode: 'agency', siteid: 'siteid'}));
-        const id = getCurrentWaterLevelID(store.getState());
+        const id = getCurrentSiteID(store.getState());
         expect(id).toBe('agency:siteid');
     });
 
-    it('getCurrentWaterLevelID works with mock state', () => {
+    it('getCurrentSiteID works with mock state', () => {
         store = getMockStore();
-        expect(getCurrentWaterLevelID(store.getState())).not.toBe(null);
+        expect(getCurrentSiteID(store.getState())).not.toBe(null);
     });
 });

@@ -20,7 +20,7 @@ export const drawAxisX = function (elem, {xScale, layout}, axis) {
         .append('g')
         .classed('x-axis', true);
     axis.transition().duration(25)
-        .attr('transform', `translate(0, ${layout.height})`)
+        .attr('transform', `translate(${layout.x}, ${layout.y + layout.height})`)
         .call(axisBottom()
             .ticks(layout.width / 100)
             .scale(xScale)
@@ -37,7 +37,7 @@ export const drawAxisX = function (elem, {xScale, layout}, axis) {
  * @param  {Object} context                 Context returned by previous invocation
  * @return {Object}                         Context for next invocation
  */
-export const drawAxisY = function (elem, {yScale}, callback, context) {
+export const drawAxisY = function (elem, {yScale, layout}, callback, context) {
     context = context || {};
     context.axis = context.axis || elem
         .append('g')
@@ -45,7 +45,7 @@ export const drawAxisY = function (elem, {yScale}, callback, context) {
     context.bBox = context.bBox || {};
 
     context.axis.transition().duration(25)
-        .attr('transform', 'translate(0, 0)')
+        .attr('transform', `translate(${layout.x}, ${layout.y})`)
         .call(axisLeft()
             .scale(yScale)
             .tickPadding(3)

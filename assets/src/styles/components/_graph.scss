@@ -85,6 +85,9 @@ $provisional-color: color(accent-warm, dark);
                 flex-grow: 1;
                 width: 100%;
                 g.chart {
+                    &.zoom {
+                        cursor: move;
+                    }
                     path.line-segment {
                         fill: none;
                     }
@@ -96,7 +99,8 @@ $provisional-color: color(accent-warm, dark);
                         }
                     }
                     path.area-path {
-                        fill: azure;
+                        fill: lightblue;
+                        opacity: .75;
                     }
                     .overlay {
                         fill: none;
@@ -115,13 +119,11 @@ $provisional-color: color(accent-warm, dark);
                             stroke-dasharray: 5, 5
                         }
                     }
-                    // Zoom chart overlay
-                    .zoom {
-                        cursor: move;
-                        fill: none;
-                        pointer-events: all;
-                    }
                 }
+            }
+            path.domain-mapping {
+                fill: none;
+                stroke: $secondary;
             }
             .tooltip {
                 pointer-events: none;

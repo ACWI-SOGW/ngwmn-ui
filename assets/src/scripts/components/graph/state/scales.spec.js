@@ -5,7 +5,7 @@ import { getScaleX, getScaleY } from './scales';
 
 describe('graph component scales state', () => {
     describe('getScaleX', () => {
-        let scale = getScaleX().resultFunc([0, 100], {width: 50});
+        let scale = getScaleX().resultFunc([0, 100], {x: 0, width: 50});
 
         it('scale created', () => {
             expect(scale).toEqual(jasmine.any(Function));
@@ -26,7 +26,7 @@ describe('graph component scales state', () => {
     });
 
     describe('getScaleY', () => {
-        let scale = getScaleY().resultFunc([0, 100], {height: 50});
+        let scale = getScaleY().resultFunc([0, 100], {y: 0, height: 50});
 
         it('scale created', () => {
             expect(scale).toEqual(jasmine.any(Function));
