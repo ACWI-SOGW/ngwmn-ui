@@ -1,7 +1,6 @@
 import { combineReducers, createStore } from 'redux';
 
-import cache from './well-log';
-import { getWellLogs, setWellLog } from './well-log';
+import { default as cache, getWellLogs, setWellLog } from './well-log';
 
 
 describe('well log service state', () => {
