@@ -53,8 +53,35 @@ def _find(parent, tag):
     if node is None:
         return None
 
+    if node.text == 'unknown':
+        return None
+
     return node.text
 
+
+def _cast(to_type, value):
+    if value is None:
+        return None
+    try:
+        return to_type(value)
+    except ValueError:
+        return None
+
+
+def _default(value, default):
+    if value in (None, 'Unknown'):
+        return default
+    return value
+
+
+def _coordinates(value):
+    if value in (None, 'Unknown'):
+        return None
+    coordinates = value.split(' ')
+    return {
+        'start': _cast(float, coordinates[0]),
+        'end': _cast(float, coordinates[1])
+    }
 
 def get_water_quality_activities(agency_cd, location_id):
     """
@@ -158,13 +185,13 @@ def get_well_log(agency_cd, location_id):
             'longitude': pos[1]
         })(_find(water_well, 'gml:boundedBy/gml:envelope/gml:pos').split(' ')),
         'elevation': (lambda elev: {
-            'value': elev.text,
-            'unit': elev.get('uom'),
+            'value': _cast(float, elev.text),
+            'unit': _default(elev.get('uom'), 'ft'),
             'scheme': _find(water_well, 'gwml:wellStatus/gsml:CGI_TermValue/gsml:value[@codeSpace="urn:gov.usgs.nwis.alt_datum_cd"]')
         })(water_well.find('gwml:referenceElevation', xml.nsmap)),
         'well_depth': (lambda depth: {
-            'value': depth.text,
-            'unit': depth.get('uom')
+            'value': _cast(float, depth.text),
+            'unit': _default(depth.get('uom'), 'ft')
         })(water_well.find('gwml:wellDepth/gsml:CGI_NumericValue/gsml:principalValue', xml.nsmap)),
         'water_use': _find(water_well, 'gwml:wellType/gsml:CGI_TermValue/gsml:value'),
         'link': (lambda link: {
@@ -194,39 +221,30 @@ def get_well_log(agency_cd, location_id):
             })(entry.find('gsml:specification/gwml:HydrostratigraphicUnit', xml.nsmap)),
             'shape': (lambda shape: {
                 'dimension': shape.get('srsDimension'),
-                'unit': shape.get('uom'),
-                'coordinates': (lambda coordinates: {
-                    'start': coordinates[0],
-                    'end': coordinates[1]
-                })(_find(shape, 'gml:coordinates').split(' '))
+                'unit': _default(shape.get('uom'), 'ft'),
+                'coordinates': _coordinates(_find(shape, 'gml:coordinates'))
             })(entry.find('gsml:shape/gml:LineString', xml.nsmap)),
         } for entry in water_well.findall('gwml:logElement/gsml:MappedInterval', xml.nsmap)],
         'casings': [{
             'position': (lambda line: {
-                'unit': _find(line, 'gml:uom'),
-                'coordinates': (lambda coordinates: {
-                    'start': coordinates[0],
-                    'end': coordinates[1]
-                })(_find(line, 'gml:coordinates').split(' '))
+                'unit': _default(_find(line, 'gml:uom'), 'ft'),
+                'coordinates': _coordinates(_find(line, 'gml:coordinates'))
             })(casing.find('gwml:position/gml:LineString', xml.nsmap)),
             'material': _find(casing, 'gwml:material/gsml:CGI_TermValue/gsml:value'),
             'diameter': (lambda dimension: {
                 'value': dimension.text,
-                'unit': dimension.get('uom')
+                'unit': _default(dimension.get('uom'), 'ft')
             })(casing.find('gwml:nominalPipeDimension/gsml:CGI_NumericValue/gsml:principalValue', xml.nsmap))
         } for casing in water_well.findall('gwml:construction/gwml:WellCasing/gwml:wellCasingElement/gwml:WellCasingComponent', xml.nsmap)],
         'screens': [{
             'position': (lambda line: {
-                'unit': _find(line, 'gml:uom'),
-                'coordinates': (lambda coordinates: {
-                    'start': coordinates[0],
-                    'end': coordinates[1]
-                })(_find(line, 'gml:coordinates').split(' '))
+                'unit': _default(_find(line, 'gml:uom'), 'ft'),
+                'coordinates': _coordinates(_find(line, 'gml:coordinates'))
             })(screen.find('gwml:position/gml:LineString', xml.nsmap)),
             'material': _find(screen, 'gwml:material/gsml:CGI_TermValue/gsml:value'),
             'diameter': (lambda dimension: {
                 'value': dimension.text,
-                'unit': dimension.get('uom')
+                'unit': _default(dimension.get('uom'), 'ft')
             })(screen.find('gwml:nomicalScreenDiameter/gsml:CGI_NumericValue/gsml:principalValue', xml.nsmap))
         } for screen in water_well.findall('gwml:construction/gwml:Screen/gwml:screenElement/gwml:ScreenComponent', xml.nsmap)]
     }

@@ -139,40 +139,52 @@ describe('graph component well log state', () => {
     });
 
     describe('getCasings', () => {
-        const casings = [1, 2, 3];
-        const wellLog = {
-            casings
-        };
+        const casings = [{
+            position: {
+                coordinates: {
+                    start: 10,
+                    end: 100
+                }
+            }
+        }];
 
         it('works', () => {
-            expect(getCasings.resultFunc(wellLog)).toEqual(casings);
+            expect(getCasings('main').resultFunc(casings, {
+                width: 10
+            }, scaleLinear(), scaleLinear()).length).toEqual(casings.length);
         });
 
-        it('works with empty log', () => {
-            expect(getCasings.resultFunc({})).toEqual([]);
+        it('works with no casings', () => {
+            expect(getCasings('main').resultFunc([])).toEqual([]);
         });
 
         it('works with mock state', () => {
-            expect(getCasings(getMockStore().getState())).not.toBe(null);
+            expect(getCasings('main')(getMockStore().getState())).not.toBe(null);
         });
     });
 
     describe('getScreens', () => {
-        const screens = [1, 2, 3];
-        const wellLog = {
-            screens
-        };
+        const screens = [{
+            position: {
+                coordinates: {
+                    start: 10,
+                    end: 100
+                }
+            }
+        }];
 
         it('works', () => {
-            expect(getScreens.resultFunc(wellLog)).toEqual(screens);
+            expect(getScreens('main').resultFunc(screens, {
+                width: 10
+            }, scaleLinear(), scaleLinear()).length).toEqual(screens.length);
         });
 
-        it('works with empty log', () => {
-            expect(getScreens.resultFunc({})).toEqual([]);
+        it('works with no screens', () => {
+            expect(getScreens('main').resultFunc([])).toEqual([]);
         });
 
         it('works with mock state', () => {
-            expect(getScreens(getMockStore().getState())).not.toBe(null);
+            expect(getScreens('main')(getMockStore().getState())).not.toBe(null);
         });
     });
 });

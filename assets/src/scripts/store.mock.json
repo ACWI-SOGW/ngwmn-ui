@@ -1,17 +1,15 @@
 {
-    "components/graph/cursor": {
-        "date": null
-    },
+    "components/graph/cursor": {},
     "components/graph/layout": {
         "axisYBBox": {
-            "height": 612.6797485351562,
+            "height": 527.8174438476562,
             "width": 28.9375,
             "x": -28.4375,
             "y": 0.5
         },
         "graphSize": {
-            "height": 745.1875,
-            "width": 1242
+            "height": 639.109375,
+            "width": 1065.1875
         },
         "viewport": [
             1334034000000,
@@ -283,8 +281,8 @@
                     "material": "PVC",
                     "position": {
                         "coordinates": {
-                            "end": "80.9",
-                            "start": "0"
+                            "end": 80.9,
+                            "start": 0
                         },
                         "unit": "ft"
                     }
@@ -293,7 +291,7 @@
             "elevation": {
                 "scheme": "NAVD88",
                 "unit": "ft",
-                "value": "1950"
+                "value": 1950
             },
             "link": {
                 "title": "Kansas Geological Survey",
@@ -327,8 +325,8 @@
                     "method": "Drilling Log",
                     "shape": {
                         "coordinates": {
-                            "end": "2",
-                            "start": "0"
+                            "end": 2,
+                            "start": 0
                         },
                         "dimension": "1",
                         "unit": "ft"
@@ -357,8 +355,8 @@
                     "method": "Drilling Log",
                     "shape": {
                         "coordinates": {
-                            "end": "6",
-                            "start": "2"
+                            "end": 6,
+                            "start": 2
                         },
                         "dimension": "1",
                         "unit": "ft"
@@ -387,8 +385,8 @@
                     "method": "Drilling Log",
                     "shape": {
                         "coordinates": {
-                            "end": "8",
-                            "start": "6"
+                            "end": 8,
+                            "start": 6
                         },
                         "dimension": "1",
                         "unit": "ft"
@@ -417,8 +415,8 @@
                     "method": "Drilling Log",
                     "shape": {
                         "coordinates": {
-                            "end": "16",
-                            "start": "8"
+                            "end": 16,
+                            "start": 8
                         },
                         "dimension": "1",
                         "unit": "ft"
@@ -447,8 +445,8 @@
                     "method": "Drilling Log",
                     "shape": {
                         "coordinates": {
-                            "end": "21",
-                            "start": "16"
+                            "end": 21,
+                            "start": 16
                         },
                         "dimension": "1",
                         "unit": "ft"
@@ -477,8 +475,8 @@
                     "method": "Drilling Log",
                     "shape": {
                         "coordinates": {
-                            "end": "23",
-                            "start": "21"
+                            "end": 23,
+                            "start": 21
                         },
                         "dimension": "1",
                         "unit": "ft"
@@ -507,8 +505,8 @@
                     "method": "Drilling Log",
                     "shape": {
                         "coordinates": {
-                            "end": "25",
-                            "start": "23"
+                            "end": 25,
+                            "start": 23
                         },
                         "dimension": "1",
                         "unit": "ft"
@@ -537,8 +535,8 @@
                     "method": "Drilling Log",
                     "shape": {
                         "coordinates": {
-                            "end": "39",
-                            "start": "25"
+                            "end": 39,
+                            "start": 25
                         },
                         "dimension": "1",
                         "unit": "ft"
@@ -567,8 +565,8 @@
                     "method": "Drilling Log",
                     "shape": {
                         "coordinates": {
-                            "end": "53",
-                            "start": "39"
+                            "end": 53,
+                            "start": 39
                         },
                         "dimension": "1",
                         "unit": "ft"
@@ -597,8 +595,8 @@
                     "method": "Drilling Log",
                     "shape": {
                         "coordinates": {
-                            "end": "73",
-                            "start": "53"
+                            "end": 73,
+                            "start": 53
                         },
                         "dimension": "1",
                         "unit": "ft"
@@ -627,8 +625,8 @@
                     "method": "Drilling Log",
                     "shape": {
                         "coordinates": {
-                            "end": "74",
-                            "start": "73"
+                            "end": 74,
+                            "start": 73
                         },
                         "dimension": "1",
                         "unit": "ft"
@@ -657,8 +655,8 @@
                     "method": "Drilling Log",
                     "shape": {
                         "coordinates": {
-                            "end": "79",
-                            "start": "74"
+                            "end": 79,
+                            "start": 74
                         },
                         "dimension": "1",
                         "unit": "ft"
@@ -687,8 +685,8 @@
                     "method": "Drilling Log",
                     "shape": {
                         "coordinates": {
-                            "end": "90",
-                            "start": "79"
+                            "end": 90,
+                            "start": 79
                         },
                         "dimension": "1",
                         "unit": "ft"
@@ -717,8 +715,8 @@
                     "method": "Drilling Log",
                     "shape": {
                         "coordinates": {
-                            "end": "110",
-                            "start": "90"
+                            "end": 110,
+                            "start": 90
                         },
                         "dimension": "1",
                         "unit": "ft"
@@ -747,8 +745,8 @@
                     "method": "Drilling Log",
                     "shape": {
                         "coordinates": {
-                            "end": "120",
-                            "start": "110"
+                            "end": 120,
+                            "start": 110
                         },
                         "dimension": "1",
                         "unit": "ft"
@@ -777,8 +775,8 @@
                     "method": "Drilling Log",
                     "shape": {
                         "coordinates": {
-                            "end": "128",
-                            "start": "120"
+                            "end": 128,
+                            "start": 120
                         },
                         "dimension": "1",
                         "unit": "ft"
@@ -807,8 +805,8 @@
                     "method": "Drilling Log",
                     "shape": {
                         "coordinates": {
-                            "end": "130",
-                            "start": "128"
+                            "end": 130,
+                            "start": 128
                         },
                         "dimension": "1",
                         "unit": "ft"
@@ -837,8 +835,8 @@
                     "method": "Drilling Log",
                     "shape": {
                         "coordinates": {
-                            "end": "151",
-                            "start": "130"
+                            "end": 151,
+                            "start": 130
                         },
                         "dimension": "1",
                         "unit": "ft"
@@ -867,8 +865,8 @@
                     "method": "Drilling Log",
                     "shape": {
                         "coordinates": {
-                            "end": "212",
-                            "start": "151"
+                            "end": 212,
+                            "start": 151
                         },
                         "dimension": "1",
                         "unit": "ft"
@@ -897,8 +895,8 @@
                     "method": "Drilling Log",
                     "shape": {
                         "coordinates": {
-                            "end": "214",
-                            "start": "212"
+                            "end": 214,
+                            "start": 212
                         },
                         "dimension": "1",
                         "unit": "ft"
@@ -915,8 +913,8 @@
                     "material": "PVC",
                     "position": {
                         "coordinates": {
-                            "end": "90.8",
-                            "start": "80.8"
+                            "end": 90.8,
+                            "start": 80.8
                         },
                         "unit": "ft"
                     }
@@ -929,8 +927,8 @@
                     "material": "PVC",
                     "position": {
                         "coordinates": {
-                            "end": "212.8",
-                            "start": "152.8"
+                            "end": 212.8,
+                            "start": 152.8
                         },
                         "unit": "ft"
                     }
@@ -939,7 +937,7 @@
             "water_use": "urn:OGC:unknown",
             "well_depth": {
                 "unit": "ft",
-                "value": "214"
+                "value": 214
             }
         }
     }

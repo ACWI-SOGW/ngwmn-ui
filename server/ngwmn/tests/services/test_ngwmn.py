@@ -230,12 +230,12 @@ class TestWellLogResults(TestCase):
                 },
                 'elevation': {
                     'unit': 'ft',
-                    'value': '1950',
+                    'value': 1950.0,
                     'scheme': 'NAVD88',
                 },
                 'well_depth': {
                     'unit': 'ft',
-                    'value': '214'
+                    'value': 214.0
                 },
                 'water_use': 'urn:OGC:unknown',
                 'link': {
@@ -265,11 +265,11 @@ class TestWellLogResults(TestCase):
                     },
                     'shape': {
                         'coordinates': {
-                            'start': '0.00',
-                            'end': '25.00'
+                            'start': 0,
+                            'end': 25
                         },
                         'dimension': '1',
-                        'unit': 'Unknown'
+                        'unit': 'ft'
                     }
                 }, {
                     'method': 'borehole',
@@ -294,11 +294,11 @@ class TestWellLogResults(TestCase):
                     },
                     'shape': {
                         'coordinates': {
-                            'start': '25.00',
-                            'end': '56.00'
+                            'start': 25,
+                            'end': 56
                         },
                         'dimension': '1',
-                        'unit': 'Unknown'
+                        'unit': 'ft'
                     }
                 }, {
                     'method': 'borehole',
@@ -323,18 +323,18 @@ class TestWellLogResults(TestCase):
                     },
                     'shape': {
                         'coordinates': {
-                            'start': '56.00',
-                            'end': '155.00'
+                            'start': 56,
+                            'end': 155
                         },
                         'dimension': '1',
-                        'unit': 'Unknown'
+                        'unit': 'ft'
                     }
                 }],
                 'casings': [{
                     'position': {
                         'coordinates': {
-                            'start': '0',
-                            'end': '80.9'
+                            'start': 0,
+                            'end': 80.9
                         },
                         'unit': 'ft'
                     },
@@ -352,8 +352,8 @@ class TestWellLogResults(TestCase):
                     'material': 'PVC',
                     'position': {
                         'coordinates': {
-                            'start': '80.8',
-                            'end': '90.8'
+                            'start': 80.8,
+                            'end': 90.8
                         },
                         'unit': 'ft'
                     }
@@ -365,8 +365,8 @@ class TestWellLogResults(TestCase):
                     'material': 'PVC',
                     'position': {
                         'coordinates': {
-                            'end': '212.8',
-                            'start': '152.8'
+                            'end': 212.8,
+                            'start': 152.8
                         },
                         'unit': 'ft'
                     }

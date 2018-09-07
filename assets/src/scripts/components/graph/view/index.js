@@ -6,13 +6,14 @@ import { link } from 'ngwmn/lib/d3-redux';
 import { callIf } from 'ngwmn/lib/utils';
 
 import {
-    getActiveClasses, getChartPoints, getChartPosition,
+    getActiveClasses, getCasings, getChartPoints, getChartPosition,
     getCurrentWaterLevelUnit, getCursor, getCursorDatum, getLineSegments,
-    getLithology, getScaleX, getScaleY, getViewBox, setAxisYBBox, setCursor,
-    setContainerSize
+    getLithology, getScaleX, getScaleY, getScreens, getViewBox,
+    getWellWaterLevel, setAxisYBBox, setCursor, setContainerSize
 } from '../state';
 import { drawAxisX, drawAxisY, drawAxisYLabel } from './axes';
 import addBrushZoomBehavior from './brush-zoom';
+import drawConstruction from './construction';
 import { drawFocusCircle, drawFocusLine, drawTooltip } from './cursor';
 import drawDomainMapping from './domain-mapping';
 import drawLegend from './legend';
@@ -61,6 +62,11 @@ const drawChart = function (elem, store, chartType) {
                 .call(link(store, drawLithology, createStructuredSelector({
                     lithology: getLithology(chartType)
                 })))
+                .call(callIf(chartType === 'lithology', link(store, drawConstruction, createStructuredSelector({
+                    screens: getScreens(chartType),
+                    casings: getCasings(chartType),
+                    cursorWaterLevel: getWellWaterLevel(chartType)
+                }))))
                 // Draw the actual lines/circles for the current water level data set.
                 .call(link(store, drawWaterLevels, createStructuredSelector({
                     lineSegments: getLineSegments,
