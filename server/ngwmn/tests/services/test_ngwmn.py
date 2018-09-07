@@ -9,8 +9,7 @@ import requests_mock
 
 from ngwmn.services import ServiceException
 from ngwmn.services.ngwmn import (
-    generate_bounding_box_values, get_iddata, get_water_quality_activities,
-    get_well_log)
+    generate_bounding_box_values, get_iddata, get_water_quality, get_well_log)
 
 
 class TestGetWellLithography(TestCase):
@@ -83,8 +82,12 @@ class TestWaterQualityResults(TestCase):
     def test_wq_parsing(self):
         with requests_mock.mock() as req:
             req.get(requests_mock.ANY, content=MOCK_WQ_RESPONSE)
-            results = get_water_quality_activities('USGS', 1)
-            self.assertEqual(results, [{
+            results = get_water_quality('USGS', 1)
+            self.assertEqual(results['organization'], {
+                'id': 'USGS-MI',
+                'name': 'USGS Michigan Water Science Center'
+            })
+            self.assertEqual(results['activities'], [{
                 'description': {
                     'comment_text': 'Test comment',
                     'identifier': 'nwismi.01.98000888',

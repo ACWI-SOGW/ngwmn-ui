@@ -2,7 +2,11 @@
 
 {% import 'macros/components.html' as components %}
 
-{% set page_title = feature.SITE_NAME %}
+{% if organization %}
+    {% set page_title = feature.SITE_NAME + ' - ' + organization %}
+{% else %}
+    {% set page_title = feature.SITE_NAME %}
+{% endif %}
 {% set body_id = 'site-location' %}
 
 {% block page_script %}<script>window.wellLog = {{ well_log | tojson | safe }}</script>{% endblock %}
@@ -12,7 +16,8 @@
 {%- endmacro %}
 
 {% block content %}
-    <h1 class="usa-heading">{{ feature.SITE_NAME }}</h1>
+    <h1>{{ feature.SITE_NAME }}</h1>
+    {% if organization %}<h2 class="usa-font-lead">{{ organization }}</h2>{% endif %}
     <div class="usa-grid">
         {{ components.Graph(feature.AGENCY_CD, feature.SITE_NO) }}
         <ul class="usa-accordion">
