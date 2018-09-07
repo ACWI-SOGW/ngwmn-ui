@@ -140,67 +140,69 @@ const drawChart = function (elem, store, chartType) {
 export default function (elem, store) {
     // Append a container for the graph.
     // .graph-container is used to scope all the CSS styles.
-    const graphContainer = elem.append('div')
-        .classed('graph-container', true);
+    const graphContainer = elem
+        .append('div')
+            .classed('graph-container', true);
 
     // Append the chart and axis labels, scoped to .chart-container
-    graphContainer.append('div')
-        .classed('chart-container', true)
-        // Draw the y-axis label on the left of the chart.
-        // See the SASS for the flexbox rules driving the layout.
-        .call(link(store, drawAxisYLabel, createStructuredSelector({
-            unit: getCurrentWaterLevelUnit
-        })))
-        .call(elem => {
-            // Append an SVG container that we will draw to
-            elem.append('svg')
-                .attr('xmlns', 'http://www.w3.org/2000/svg')
-                .call(link(store, (svg, viewBox) => {
-                    svg.attr('viewBox', `${viewBox.left} ${viewBox.top} ${viewBox.right - viewBox.left} ${viewBox.bottom - viewBox.top}`);
-                }, getViewBox))
-                .call(svg => {
-                    // Draw the charts
-                    const brush = drawChart(svg, store, 'brush');
-                    const main = drawChart(svg, store, 'main');
-                    drawChart(svg, store, 'lithology');
-
-                    // Draw a key mapping the domain on the main chart to the
-                    // lithology chart.
-                    svg.call(link(store, drawDomainMapping, createStructuredSelector({
-                        xScaleFrom: getScaleX('main'),
-                        yScaleFrom: getScaleY('main'),
-                        xScaleTo: getScaleX('lithology'),
-                        yScaleTo: getScaleY('lithology')
-                    })));
-
-                    // Add interactive brush and zoom behavior over the charts
-                    svg.call(addBrushZoomBehavior, store, main, brush);
-                });
-        })
+    graphContainer
         // Draw a tooltip container. This is rendered to the upper-right and
         // shows details of the point closest to the current cursor location.
         .call(link(store, drawTooltip, createStructuredSelector({
             cursorPoint: getCursorDatum,
             unit: getCurrentWaterLevelUnit
         })))
-        .call(div => {
-            // Create an observer on the .chart-container node.
-            // Here, we use a ResizeObserver polyfill to trigger redraws when
-            // the CSS-driven size of our container changes.
-            const node = div.node();
-            let size = {};
-            const observer = new ResizeObserver(function (entries) {
-                const newSize = {
-                    width: parseFloat(entries[0].contentRect.width),
-                    height: parseFloat(entries[0].contentRect.height)
-                };
-                if (size.width !== newSize.width || size.height !== newSize.height) {
-                    size = newSize;
-                    store.dispatch(setContainerSize(size));
-                }
+        .append('div')
+            .classed('chart-container', true)
+            // Draw the y-axis label on the left of the chart.
+            // See the SASS for the flexbox rules driving the layout.
+            .call(link(store, drawAxisYLabel, createStructuredSelector({
+                unit: getCurrentWaterLevelUnit
+            })))
+            .call(elem => {
+                // Append an SVG container that we will draw to
+                elem.append('svg')
+                    .attr('xmlns', 'http://www.w3.org/2000/svg')
+                    .call(link(store, (svg, viewBox) => {
+                        svg.attr('viewBox', `${viewBox.left} ${viewBox.top} ${viewBox.right - viewBox.left} ${viewBox.bottom - viewBox.top}`);
+                    }, getViewBox))
+                    .call(svg => {
+                        // Draw the charts
+                        const brush = drawChart(svg, store, 'brush');
+                        const main = drawChart(svg, store, 'main');
+                        drawChart(svg, store, 'lithology');
+
+                        // Draw a key mapping the domain on the main chart to the
+                        // lithology chart.
+                        svg.call(link(store, drawDomainMapping, createStructuredSelector({
+                            xScaleFrom: getScaleX('main'),
+                            yScaleFrom: getScaleY('main'),
+                            xScaleTo: getScaleX('lithology'),
+                            yScaleTo: getScaleY('lithology')
+                        })));
+
+                        // Add interactive brush and zoom behavior over the charts
+                        svg.call(addBrushZoomBehavior, store, main, brush);
+                    });
+            })
+            .call(div => {
+                // Create an observer on the .chart-container node.
+                // Here, we use a ResizeObserver polyfill to trigger redraws when
+                // the CSS-driven size of our container changes.
+                const node = div.node();
+                let size = {};
+                const observer = new ResizeObserver(function (entries) {
+                    const newSize = {
+                        width: parseFloat(entries[0].contentRect.width),
+                        height: parseFloat(entries[0].contentRect.height)
+                    };
+                    if (size.width !== newSize.width || size.height !== newSize.height) {
+                        size = newSize;
+                        store.dispatch(setContainerSize(size));
+                    }
+                });
+                observer.observe(node);
             });
-            observer.observe(node);
-        });
 
     // Append the legend
     graphContainer

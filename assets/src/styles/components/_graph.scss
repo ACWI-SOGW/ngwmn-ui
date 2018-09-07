@@ -70,6 +70,22 @@ $provisional-color: color(accent-warm, dark);
         display: flex;
         flex-direction: column;
         flex-grow: 1;
+        .tooltip {
+            text-align: right;
+            pointer-events: none;
+            background: rgba(255, 255, 255, 0.8);
+            color: $default-color;
+            .current-tooltip-text {
+                font-weight: bold;
+            }
+            color: $approved-color;
+            .provisional {
+                color: $provisional-color;
+            }
+            .compare-tooltip-text {
+                font-weight: normal
+            }
+        }
         .chart-container {
             flex-grow: 1;
             display: flex;
@@ -107,8 +123,8 @@ $provisional-color: color(accent-warm, dark);
                         pointer-events: all;
                     }
                     circle.focus {
-                        fill: #436BAF;
-                        opacity: .6;
+                        fill: $accent-warm;
+                        opacity: .9;
                     }
                     .focus {
                         line {
@@ -124,23 +140,6 @@ $provisional-color: color(accent-warm, dark);
             path.domain-mapping {
                 fill: none;
                 stroke: $secondary;
-            }
-            .tooltip {
-                pointer-events: none;
-                position: absolute;
-                right: 0;
-                background: rgba(255, 255, 255, 0.8);
-                color: $default-color;
-                .current-tooltip-text {
-                    font-weight: bold;
-                }
-                color: $approved-color;
-                .provisional {
-                    color: $provisional-color;
-                }
-                .compare-tooltip-text {
-                    font-weight: normal
-                }
             }
         }
         .legend {

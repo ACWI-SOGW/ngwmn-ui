@@ -132,7 +132,6 @@ export const drawFocusCircle = function (elem, {cursorPoint, xScale, yScale}, ci
     // Update the location of pre-existing circles
     circles.merge(newCircles)
         .transition(transition().duration(20))
-            .style('opacity', '.6')
             .attr('cx', datum => xScale(datum.dateTime))
             .attr('cy', datum => yScale(datum.value));
 
