@@ -111,9 +111,9 @@ export const getWellWaterLevel = memoize(chartType => createSelector(
         const top = yScale(cursorDatum.value);
         const bottom = yScale(extentY[1]);
         return {
-            x: xScale.range()[0] + 35,
+            x: xScale.range()[0] + 5,
             y: top,
-            width: Math.max(0, chartPos.width - 70),
+            width: Math.max(0, chartPos.width - 10),
             height: Math.max(bottom - top, 0)
         };
     }
@@ -134,9 +134,9 @@ export const getConstructionElements = memoize(chartType => createSelector(
             const loc = element.position.coordinates;
             return {
                 type: element.type,
-                x: xScale.range()[0] + 30,
+                x: xScale.range()[0],
                 y: yScale(loc.start),
-                width: Math.max(0, chartPos.width - 60),
+                width: Math.max(0, chartPos.width),
                 height: Math.max(yScale(loc.end - loc.start), 0),
                 element
             };

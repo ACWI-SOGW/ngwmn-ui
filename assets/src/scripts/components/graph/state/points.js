@@ -92,17 +92,16 @@ export const getDomainY = memoize(chartType => createSelector(
         ];
         const isPositive = domain[0] >= 0 && domain[1] >= 0;
 
-        // For lithology charts, take into account the well log's extent and
-        // go to zero (or negative, for artesian wells).
-        if (chartType === 'lithology') {
+        // For the lithology and consturction charts, take into account the
+        // well log's extent and go to zero (or negative, for artesian wells).
+        if (chartType === 'lithology' || chartType === 'construction') {
             domain = [
                 Math.min(0, wellLogExtentY[0], domain[0]),
                 Math.max(wellLogExtentY[1], domain[1])
             ];
-        }
 
         // Pad domains on both ends by PADDING_RATIO.
-        if (chartType !== 'lithology') {
+        }  else {
             const padding = PADDING_RATIO * (domain[1] - domain[0]);
             domain = [
                 domain[0] - padding,

@@ -51,7 +51,7 @@ describe('graph component', () => {
         it('renders initial chart with appropriate content', () => {
             expect(div.classed('loading')).toBe(true);
             expect(div.classed('has-error')).toBe(false);
-            expect(div.selectAll('.chart').size()).toEqual(3);
+            expect(div.selectAll('.chart').size()).toEqual(4);
             expect(div.selectAll('.tooltip-text').size()).toEqual(0);
             expect(div.selectAll('circle.focus').size()).toBe(0);
             expect(div.selectAll('.line-segment').size()).toBe(0);

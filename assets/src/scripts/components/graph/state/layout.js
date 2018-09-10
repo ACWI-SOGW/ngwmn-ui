@@ -163,6 +163,13 @@ export const getChartPosition = memoize(chartType => createSelector(
                     width: Math.max(width * 0.1, 0),
                     height: height * 0.8
                 };
+            case 'construction':
+                return {
+                    x: viewBox.right * 0.92,
+                    y: 0,
+                    width: Math.max(width * 0.06, 0),
+                    height: height * 0.8
+                };
             default:
                 return null;
         }

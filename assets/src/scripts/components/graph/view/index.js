@@ -59,26 +59,26 @@ const drawChart = function (elem, store, chartType) {
             elem.append('g')
                 .attr('clip-path', `url(#${chartType}-clip-path)`)
                 // Draw well log lithology background
-                .call(link(store, drawLithology, createStructuredSelector({
+                .call(callIf(chartType !== 'construction', link(store, drawLithology, createStructuredSelector({
                     lithology: getLithology(chartType)
-                })))
-                .call(callIf(chartType === 'lithology', link(store, drawConstruction, createStructuredSelector({
+                }))))
+                .call(callIf(chartType === 'construction', link(store, drawConstruction, createStructuredSelector({
                     elements: getConstructionElements(chartType),
                     cursorWaterLevel: getWellWaterLevel(chartType)
                 }))))
                 // Draw the actual lines/circles for the current water level data set.
-                .call(link(store, drawWaterLevels, createStructuredSelector({
+                .call(callIf(chartType !== 'construction', link(store, drawWaterLevels, createStructuredSelector({
                     lineSegments: getLineSegments,
                     chartPoints: getChartPoints,
                     xScale: getScaleX(chartType),
                     yScale: getScaleY(chartType)
-                }), chartType))
+                }), chartType)))
                 // Draw a vertical focus line representing the current cursor location.
-                .call(link(store, drawFocusLine, createStructuredSelector({
+                .call(callIf(chartType !== 'construction', link(store, drawFocusLine, createStructuredSelector({
                     cursor: getCursor,
                     xScale: getScaleX(chartType),
                     yScale: getScaleY(chartType)
-                })))
+                }))))
                 // Draw a circle around the point nearest the current cursor location.
                 .call(callIf(chartType === 'main', link(store, drawFocusCircle, createStructuredSelector({
                     cursorPoint: getCursorDatum,
@@ -170,6 +170,7 @@ export default function (elem, store) {
                         const brush = drawChart(svg, store, 'brush');
                         const main = drawChart(svg, store, 'main');
                         drawChart(svg, store, 'lithology');
+                        drawChart(svg, store, 'construction');
 
                         // Draw a key mapping the domain on the main chart to the
                         // lithology chart.

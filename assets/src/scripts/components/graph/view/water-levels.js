@@ -69,7 +69,9 @@ export default function (svg, {lineSegments, chartPoints, xScale, yScale}, chart
         );
     });
 
-    if (chartType !== 'lithology') {
+    // If this is the main chart, draw a blue polygon overlay representing the
+    // water table level.
+    if (chartType === 'main') {
         context.area
             .datum(chartPoints)
             .transition(transition().duration(25))
