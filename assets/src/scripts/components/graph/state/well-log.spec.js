@@ -2,8 +2,8 @@ import { scaleLinear } from 'd3-scale';
 
 import getMockStore from 'ngwmn/store.mock';
 import {
-    getCasings, getCurrentWellLog, getLithology, getScreens, getWellLogEntries,
-    getWellLogExtentY
+    getCurrentWellLog, getConstructionElements, getLithology,
+    getWellLogEntries, getWellLogExtentY
 } from './well-log';
 
 
@@ -138,7 +138,7 @@ describe('graph component well log state', () => {
         });
     });
 
-    describe('getCasings', () => {
+    describe('getConstructionElements', () => {
         const casings = [{
             position: {
                 coordinates: {
@@ -149,42 +149,17 @@ describe('graph component well log state', () => {
         }];
 
         it('works', () => {
-            expect(getCasings('main').resultFunc(casings, {
+            expect(getConstructionElements('main').resultFunc(casings, {
                 width: 10
             }, scaleLinear(), scaleLinear()).length).toEqual(casings.length);
         });
 
         it('works with no casings', () => {
-            expect(getCasings('main').resultFunc([])).toEqual([]);
+            expect(getConstructionElements('main').resultFunc([])).toEqual([]);
         });
 
         it('works with mock state', () => {
-            expect(getCasings('main')(getMockStore().getState())).not.toBe(null);
-        });
-    });
-
-    describe('getScreens', () => {
-        const screens = [{
-            position: {
-                coordinates: {
-                    start: 10,
-                    end: 100
-                }
-            }
-        }];
-
-        it('works', () => {
-            expect(getScreens('main').resultFunc(screens, {
-                width: 10
-            }, scaleLinear(), scaleLinear()).length).toEqual(screens.length);
-        });
-
-        it('works with no screens', () => {
-            expect(getScreens('main').resultFunc([])).toEqual([]);
-        });
-
-        it('works with mock state', () => {
-            expect(getScreens('main')(getMockStore().getState())).not.toBe(null);
+            expect(getConstructionElements('main')(getMockStore().getState())).not.toBe(null);
         });
     });
 });

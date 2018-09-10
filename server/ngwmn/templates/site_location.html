@@ -194,14 +194,14 @@
                             <th scope="col">Material</th>
                         </thead>
                         <tbody>
-                            {% for casing in well_log.casings %}
+                            {% for casing in well_log.construction %}{% if casing.type == 'casing' %}
                                 <tr>
                                     <td>{{ casing.position.coordinates.start }} {{ casing.position.unit }}</td>
                                     <td>{{ casing.position.coordinates.end }} {{ casing.position.unit }}</td>
                                     <td>{% if casing.diameter.value %}{{ casing.diameter.value }} {{ casing.diameter.unit }}{% endif %}</td>
                                     <td>{{ _(casing.material) }}</td>
                                 </tr>
-                            {% endfor %}
+                            {% endif %}{% endfor %}
                         </tbody>
                     </table>
                     <table class="usa-table-borderless">
@@ -213,14 +213,14 @@
                             <th scope="col">Material</th>
                         </thead>
                         <tbody>
-                            {% for screen in well_log.screens %}
+                            {% for screen in well_log.construction %}{% if screen.type == 'screen' %}
                                 <tr>
                                     <td>{{ screen.position.coordinates.start }} {{ screen.position.unit }}</td>
                                     <td>{{ screen.position.coordinates.end }} {{ screen.position.unit }}</td>
                                     <td>{% if screen.diameter.value %}{{ screen.diameter.value }} {{ screen.diameter.unit }}{% endif %}</td>
                                     <td>{{ _(screen.material) }}</td>
                                 </tr>
-                            {% endfor %}
+                            {% endif %}{% endfor %}
                         </tbody>
                     </table>
                 </div>

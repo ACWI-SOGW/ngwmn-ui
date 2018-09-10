@@ -268,8 +268,8 @@ class TestWellLogResults(TestCase):
                     },
                     'shape': {
                         'coordinates': {
-                            'start': 0,
-                            'end': 25
+                            'start': 0.0,
+                            'end': 25.0
                         },
                         'dimension': '1',
                         'unit': 'ft'
@@ -297,8 +297,8 @@ class TestWellLogResults(TestCase):
                     },
                     'shape': {
                         'coordinates': {
-                            'start': 25,
-                            'end': 56
+                            'start': 25.0,
+                            'end': 56.0
                         },
                         'dimension': '1',
                         'unit': 'ft'
@@ -326,28 +326,29 @@ class TestWellLogResults(TestCase):
                     },
                     'shape': {
                         'coordinates': {
-                            'start': 56,
-                            'end': 155
+                            'start': 56.0,
+                            'end': 155.0
                         },
                         'dimension': '1',
                         'unit': 'ft'
                     }
                 }],
-                'casings': [{
+                'construction': [{
+                    'type': 'casing',
                     'position': {
                         'coordinates': {
-                            'start': 0,
+                            'start': 0.0,
                             'end': 80.9
                         },
                         'unit': 'ft'
                     },
                     'material': 'PVC',
                     'diameter': {
-                        'value': 16,
+                        'value': 16.0,
                         'unit': 'in'
                     }
-                }],
-                'screens': [{
+                }, {
+                    'type': 'screen',
                     'diameter': {
                         'value': None,
                         'unit': 'in',
@@ -361,6 +362,7 @@ class TestWellLogResults(TestCase):
                         'unit': 'ft'
                     }
                 }, {
+                    'type': 'screen',
                     'diameter': {
                         'value': None,
                         'unit': 'in'
@@ -373,7 +375,7 @@ class TestWellLogResults(TestCase):
                         },
                         'unit': 'ft'
                     }
-                }],
+                }]
             })
 
 

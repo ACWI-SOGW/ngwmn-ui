@@ -2,14 +2,14 @@
     "components/graph/cursor": {},
     "components/graph/layout": {
         "axisYBBox": {
-            "height": 527.8174438476562,
+            "height": 574.5460815429688,
             "width": 28.9375,
             "x": -28.4375,
             "y": 0.5
         },
         "graphSize": {
-            "height": 639.109375,
-            "width": 1065.1875
+            "height": 698.140625,
+            "width": 1199.59375
         },
         "viewport": [
             1334034000000,
@@ -272,11 +272,11 @@
     },
     "services/wellLog": {
         "KSGS:381107098532401": {
-            "casings": [
+            "construction": [
                 {
                     "diameter": {
                         "unit": "in",
-                        "value": "16"
+                        "value": 16
                     },
                     "material": "PVC",
                     "position": {
@@ -285,7 +285,38 @@
                             "start": 0
                         },
                         "unit": "ft"
-                    }
+                    },
+                    "type": "casing"
+                },
+                {
+                    "diameter": {
+                        "unit": "in",
+                        "value": null
+                    },
+                    "material": "PVC",
+                    "position": {
+                        "coordinates": {
+                            "end": 90.8,
+                            "start": 80.8
+                        },
+                        "unit": "ft"
+                    },
+                    "type": "screen"
+                },
+                {
+                    "diameter": {
+                        "unit": "in",
+                        "value": null
+                    },
+                    "material": "PVC",
+                    "position": {
+                        "coordinates": {
+                            "end": 212.8,
+                            "start": 152.8
+                        },
+                        "unit": "ft"
+                    },
+                    "type": "screen"
                 }
             ],
             "elevation": {
@@ -904,36 +935,6 @@
                 }
             ],
             "name": "KSGS.381107098532401",
-            "screens": [
-                {
-                    "diameter": {
-                        "unit": "in",
-                        "value": null
-                    },
-                    "material": "PVC",
-                    "position": {
-                        "coordinates": {
-                            "end": 90.8,
-                            "start": 80.8
-                        },
-                        "unit": "ft"
-                    }
-                },
-                {
-                    "diameter": {
-                        "unit": "in",
-                        "value": null
-                    },
-                    "material": "PVC",
-                    "position": {
-                        "coordinates": {
-                            "end": 212.8,
-                            "start": 152.8
-                        },
-                        "unit": "ft"
-                    }
-                }
-            ],
             "water_use": "urn:OGC:unknown",
             "well_depth": {
                 "unit": "ft",

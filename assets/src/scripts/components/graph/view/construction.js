@@ -21,29 +21,6 @@ const drawCasing = function (elem, casing, index) {
         });
 };
 
-const drawCasing2 = function (elem, casing, index) {
-    elem.append('g')
-        .attr('id', `casing-${index}`)
-        .classed('casing', true)
-        .call(elem => {
-            elem.append('rect')
-                .attr('x', casing.x)
-                .attr('y', casing.y)
-                .attr('width', casing.width)
-                .attr('height', casing.height);
-            elem.append('line')
-                .attr('x1', casing.x)
-                .attr('y1', casing.y)
-                .attr('x2', casing.x)
-                .attr('y2', casing.y + casing.height);
-            elem.append('line')
-                .attr('x1', casing.x + casing.width)
-                .attr('y1', casing.y)
-                .attr('x2', casing.x + casing.width)
-                .attr('y2', casing.y + casing.height);
-        });
-};
-
 const drawScreen = function (elem, screen, index) {
     elem.append('rect')
         .attr('id', `screen-${index}`)
@@ -68,7 +45,8 @@ const drawWaterLevel = function (elem, cursorWaterLevel) {
         .attr('y', cursorWaterLevel.y)
         .attr('width', cursorWaterLevel.width)
         .attr('height', cursorWaterLevel.height)
-        .attr('fill', 'lightblue');
+        .attr('fill', 'lightblue')
+        .attr('fill-opacity', '0.85');
 };
 
 const drawPatterns = function (elem) {
@@ -98,7 +76,7 @@ const drawPatterns = function (elem) {
         });
 };
 
-export default function (elem, {casings, screens, cursorWaterLevel}, container) {
+export default function (elem, {elements, cursorWaterLevel}, container) {
     // Get/create container for construction elements
     container = container || elem
         .call(drawPatterns)
@@ -108,14 +86,17 @@ export default function (elem, {casings, screens, cursorWaterLevel}, container) 
     // Remove any previously drawn children
     container.selectAll('*').remove();
 
-    // Draw each casing
-    casings.forEach((casing, index) => drawCasing2(container, casing, index));
+    // Draw each construction element
+    elements.forEach((element, index) => {
+        if (element.type === 'casing') {
+            drawCasing(container, element, index);
+        } else {
+            drawScreen(container, element, index);
+        }
+    });
 
     // Draw the current cursor water level inside the well chamber
     drawWaterLevel(container, cursorWaterLevel);
-
-    // Draw each screen
-    screens.forEach((screen, index) => drawScreen(container, screen, index));
 
     return container;
 }
