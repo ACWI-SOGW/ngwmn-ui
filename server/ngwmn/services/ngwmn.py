@@ -239,7 +239,7 @@ def get_well_log(agency_cd, location_id):
             })(casing.find('gwml:position/gml:LineString', xml.nsmap)),
             'material': _find(casing, 'gwml:material/gsml:CGI_TermValue/gsml:value'),
             'diameter': (lambda dimension: {
-                'value': dimension.text,
+                'value': _cast(float, dimension.text),
                 'unit': _default(dimension.get('uom'), 'ft')
             })(casing.find('gwml:nominalPipeDimension/gsml:CGI_NumericValue/gsml:principalValue', xml.nsmap))
         } for casing in water_well.findall('gwml:construction/gwml:WellCasing/gwml:wellCasingElement/gwml:WellCasingComponent', xml.nsmap)],
@@ -250,7 +250,7 @@ def get_well_log(agency_cd, location_id):
             })(screen.find('gwml:position/gml:LineString', xml.nsmap)),
             'material': _find(screen, 'gwml:material/gsml:CGI_TermValue/gsml:value'),
             'diameter': (lambda dimension: {
-                'value': dimension.text,
+                'value': _cast(float, dimension.text),
                 'unit': _default(dimension.get('uom'), 'ft')
             })(screen.find('gwml:nomicalScreenDiameter/gsml:CGI_NumericValue/gsml:principalValue', xml.nsmap))
         } for screen in water_well.findall('gwml:construction/gwml:Screen/gwml:screenElement/gwml:ScreenComponent', xml.nsmap)]

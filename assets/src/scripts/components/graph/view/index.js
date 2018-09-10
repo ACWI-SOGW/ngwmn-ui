@@ -6,10 +6,10 @@ import { link } from 'ngwmn/lib/d3-redux';
 import { callIf } from 'ngwmn/lib/utils';
 
 import {
-    getActiveClasses, getCasings, getChartPoints, getChartPosition,
-    getCurrentWaterLevelUnit, getCursor, getCursorDatum, getLineSegments,
-    getLithology, getScaleX, getScaleY, getScreens, getViewBox,
-    getWellWaterLevel, setAxisYBBox, setCursor, setContainerSize
+    getActiveClasses, getCasings, getChartPoints,
+    getChartPosition, getCurrentWaterLevelUnit, getCursor, getCursorDatum,
+    getLineSegments, getLithology, getScaleX, getScaleY, getScreens,
+    getViewBox, getWellWaterLevel, setAxisYBBox, setCursor, setContainerSize
 } from '../state';
 import { drawAxisX, drawAxisY, drawAxisYLabel } from './axes';
 import addBrushZoomBehavior from './brush-zoom';

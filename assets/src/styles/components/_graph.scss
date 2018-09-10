@@ -106,6 +106,8 @@ $provisional-color: color(accent-warm, dark);
                     }
                     path.line-segment {
                         fill: none;
+                        stroke-linejoin: round;
+                        stroke-linecap: round;
                     }
                     .line-segment {
                         stroke-width: 2px;
@@ -134,6 +136,16 @@ $provisional-color: color(accent-warm, dark);
                             stroke-width: 1px;
                             stroke-dasharray: 5, 5
                         }
+                    }
+                }
+                g.casing {
+                    line {
+                        stroke: gray;
+                        stroke-width: 10;
+                        stroke-linecap: round;
+                    }
+                    rect {
+                        fill: white;
                     }
                 }
             }

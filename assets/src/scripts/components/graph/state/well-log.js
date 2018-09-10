@@ -1,3 +1,4 @@
+import { scaleLinear } from 'd3-scale';
 import memoize from 'fast-memoize';
 import { createSelector } from 'reselect';
 
@@ -83,30 +84,6 @@ const getDrawableCasings = createSelector(
     }
 );
 
-/**
- * Returns the construction casing entries for the current site.
- * @param  {Object} state       Redux state
- * @return {Array}              Array of casings
- */
-export const getCasings = memoize(chartType => createSelector(
-    getDrawableCasings,
-    getChartPosition(chartType),
-    getScaleX(chartType),
-    getScaleY(chartType),
-    (casings, chartPos, xScale, yScale) => {
-        return casings.map(casing => {
-            const loc = casing.position.coordinates;
-            return {
-                x: xScale.range()[0] + 30,
-                y: yScale(loc.start),
-                width: Math.max(0, chartPos.width - 60),
-                height: Math.max(yScale(loc.end - loc.start), 0),
-                casing
-            };
-        });
-    }
-));
-
 const getDrawableScreens = createSelector(
     getCurrentWellLog,
     (wellLog) => {
@@ -114,30 +91,6 @@ const getDrawableScreens = createSelector(
             .filter(screen => screen.position && screen.position.coordinates);
     }
 );
-
-/**
- * Returns the construction screen entries for the current site.
- * @param  {Object} state       Redux state
- * @return {Array}              Array of screens
- */
-export const getScreens = memoize(chartType => createSelector(
-    getDrawableScreens,
-    getChartPosition(chartType),
-    getScaleX(chartType),
-    getScaleY(chartType),
-    (screens, chartPos, xScale, yScale) => {
-        return screens.map(screen => {
-            const loc = screen.position.coordinates;
-            return {
-                x: xScale.range()[0] + 35,
-                y: yScale(loc.start),
-                width: Math.max(0, chartPos.width - 70),
-                height: Math.max(yScale(loc.end - loc.start), 0),
-                screen
-            };
-        });
-    }
-));
 
 const getScreenExtentY = createSelector(
     getDrawableScreens,
@@ -155,6 +108,20 @@ const getCasingExtentY = createSelector(
         return [
             Math.min(...casings.map(casing => casing.position.coordinates.start)),
             Math.max(...casings.map(casing => casing.position.coordinates.end))
+        ];
+    }
+);
+
+const getWellDiameterExtent = createSelector(
+    getDrawableScreens,
+    getDrawableCasings,
+    (screens, casings) => {
+        const values = [...screens, ...casings]
+            .map(part => part.diameter.value)
+            .filter(part => part !== null);
+        return [
+            Math.min(...values),
+            Math.max(...values)
         ];
     }
 );
@@ -193,5 +160,84 @@ export const getWellWaterLevel = memoize(chartType => createSelector(
             width: Math.max(0, chartPos.width - 70),
             height: Math.max(bottom - top, 0)
         };
+    }
+));
+
+/**
+ * Returns the construction casing entries for the current site.
+ * @param  {Object} state       Redux state
+ * @return {Array}              Array of casings
+ */
+export const getCasings = memoize(chartType => createSelector(
+    getDrawableCasings,
+    getChartPosition(chartType),
+    getScaleX(chartType),
+    getScaleY(chartType),
+    (casings, chartPos, xScale, yScale) => {
+        return casings.map(casing => {
+            const loc = casing.position.coordinates;
+            return {
+                x: xScale.range()[0] + 30,
+                y: yScale(loc.start),
+                width: Math.max(0, chartPos.width - 60),
+                height: Math.max(yScale(loc.end - loc.start), 0),
+                casing
+            };
+        });
+    }
+));
+
+/**
+ * Returns the construction screen entries for the current site.
+ * @param  {Object} state       Redux state
+ * @return {Array}              Array of screens
+ */
+export const getScreens = memoize(chartType => createSelector(
+    getDrawableScreens,
+    getChartPosition(chartType),
+    getScaleX(chartType),
+    getScaleY(chartType),
+    (screens, chartPos, xScale, yScale) => {
+        return screens.map(screen => {
+            const loc = screen.position.coordinates;
+
+            return {
+                x: xScale.range()[0] + 35,
+                y: yScale(loc.start),
+                width: Math.max(0, chartPos.width - 70),
+                height: Math.max(yScale(loc.end - loc.start), 0),
+                screen
+            };
+        });
+    }
+));
+
+export const getRadiusScale = memoize(chartType => createSelector(
+    getWellDiameterExtent,
+    getScaleY(chartType),
+    (diameterExtent, yScale) => {
+        const range = yScale.range();
+        const width = range[1] - range[0];
+        const maxRadius = diameterExtent[1] / 2;
+        return scaleLinear()
+            .domain([0, maxRadius])
+            .range([width / 2, range[1] - width * 0.05]);
+    }
+));
+
+export const getConstruction = memoize(chartType => createSelector(
+    getDrawableCasings,
+    getDrawableScreens,
+    getRadiusScale,
+    getScaleY(chartType),
+    (casings, screens, xScale, yScale) => {
+        [...casings, ...screens].map(part => {
+            return {
+                x1: 0,
+                y1: yScale(part.position.coordinates.start),
+                x2: xScale(part.diameter / 2),
+                y2: yScale(part.position.coordinates.end)
+            };
+        });
     }
 ));

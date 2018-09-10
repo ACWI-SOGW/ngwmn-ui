@@ -343,7 +343,7 @@ class TestWellLogResults(TestCase):
                     },
                     'material': 'PVC',
                     'diameter': {
-                        'value': '16',
+                        'value': 16,
                         'unit': 'in'
                     }
                 }],

@@ -1,15 +1,47 @@
 const drawCasing = function (elem, casing, index) {
-    elem.append('rect')
+    elem.append('g')
         .attr('id', `casing-${index}`)
-        .attr('x', casing.x)
-        .attr('y', casing.y)
-        .attr('width', casing.width)
-        .attr('height', casing.height)
-        .attr('fill', 'white')
-        .attr('stroke', 'wheat')
-        .attr('stroke-width', 8)
-        .attr('rx', 5)
-        .attr('ry', 5);
+        .classed('casing', true)
+        .call(elem => {
+            elem.append('rect')
+                .attr('x', casing.x)
+                .attr('y', casing.y)
+                .attr('width', casing.width)
+                .attr('height', casing.height);
+            elem.append('line')
+                .attr('x1', casing.x)
+                .attr('y1', casing.y)
+                .attr('x2', casing.x)
+                .attr('y2', casing.y + casing.height);
+            elem.append('line')
+                .attr('x1', casing.x + casing.width)
+                .attr('y1', casing.y)
+                .attr('x2', casing.x + casing.width)
+                .attr('y2', casing.y + casing.height);
+        });
+};
+
+const drawCasing2 = function (elem, casing, index) {
+    elem.append('g')
+        .attr('id', `casing-${index}`)
+        .classed('casing', true)
+        .call(elem => {
+            elem.append('rect')
+                .attr('x', casing.x)
+                .attr('y', casing.y)
+                .attr('width', casing.width)
+                .attr('height', casing.height);
+            elem.append('line')
+                .attr('x1', casing.x)
+                .attr('y1', casing.y)
+                .attr('x2', casing.x)
+                .attr('y2', casing.y + casing.height);
+            elem.append('line')
+                .attr('x1', casing.x + casing.width)
+                .attr('y1', casing.y)
+                .attr('x2', casing.x + casing.width)
+                .attr('y2', casing.y + casing.height);
+        });
 };
 
 const drawScreen = function (elem, screen, index) {
@@ -77,7 +109,7 @@ export default function (elem, {casings, screens, cursorWaterLevel}, container) 
     container.selectAll('*').remove();
 
     // Draw each casing
-    casings.forEach((casing, index) => drawCasing(container, casing, index));
+    casings.forEach((casing, index) => drawCasing2(container, casing, index));
 
     // Draw the current cursor water level inside the well chamber
     drawWaterLevel(container, cursorWaterLevel);
