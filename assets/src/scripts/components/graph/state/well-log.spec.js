@@ -2,8 +2,9 @@ import { scaleLinear } from 'd3-scale';
 
 import getMockStore from 'ngwmn/store.mock';
 import {
-    getCurrentWellLog, getConstructionElements, getLithology,
-    getWellLogEntries, getWellLogExtentY, getWellWaterLevel
+    getCurrentWellLog, getConstructionElements, getConstructionExtentY,
+    getLithology, getWellLogEntries, getWellLogEntriesExtentY,
+    getWellLogExtentY, getWellWaterLevel
 } from './well-log';
 
 
@@ -45,7 +46,7 @@ describe('graph component well log state', () => {
         });
     });
 
-    describe('getWellLogExtentY', () => {
+    describe('getWellLogEntriesExtentY', () => {
         const logEntries = [{
             shape: {
                 coordinates: {
@@ -63,15 +64,51 @@ describe('graph component well log state', () => {
         }];
 
         it('works', () => {
-            expect(getWellLogExtentY.resultFunc(logEntries)).toEqual([1, 3]);
+            expect(getWellLogEntriesExtentY.resultFunc(logEntries)).toEqual([1, 3]);
         });
 
         it('works with empty log', () => {
-            expect(getWellLogExtentY.resultFunc([])).toEqual([0, 0]);
+            expect(getWellLogEntriesExtentY.resultFunc([])).toEqual([0, 0]);
         });
 
         it('works with mock state', () => {
-            expect(getWellLogEntries(getMockStore().getState())).not.toBe(null);
+            expect(getWellLogEntriesExtentY(getMockStore().getState())).not.toBe(null);
+        });
+    });
+
+    describe('getWellLogExtentY', () => {
+        it('works', () => {
+            expect(getWellLogExtentY.resultFunc([0, 3], [1, 4])).toEqual([0, 4]);
+        });
+
+        it('works with mock state', () => {
+            expect(getWellLogExtentY(getMockStore().getState())).not.toBe(null);
+        });
+    });
+
+    describe('getConstructionExtentY', () => {
+        const elements = [{
+            position: {
+                coordinates: {
+                    start: '1',
+                    end: '2'
+                }
+            }
+        }, {
+            position: {
+                coordinates: {
+                    start: '2',
+                    end: '3'
+                }
+            }
+        }];
+
+        it('works', () => {
+            expect(getConstructionExtentY.resultFunc(elements)).toEqual([1, 3]);
+        });
+
+        it('works with mock state', () => {
+            expect(getConstructionExtentY(getMockStore().getState())).not.toBe(null);
         });
     });
 
@@ -148,7 +185,8 @@ describe('graph component well log state', () => {
                 }
             },
             diameter: {
-                value: 10
+                value: 10,
+                unit: 'in'
             }
         }, {
             type: 'screen',
@@ -159,7 +197,8 @@ describe('graph component well log state', () => {
                 }
             },
             diameter: {
-                value: 12
+                value: 12,
+                unit: 'in'
             }
         }, {
             type: 'screen',
@@ -170,7 +209,8 @@ describe('graph component well log state', () => {
                 }
             },
             diameter: {
-                value: 10
+                value: 10,
+                unit: 'in'
             }
         }];
 
@@ -181,7 +221,23 @@ describe('graph component well log state', () => {
                 scaleLinear()
             )).toEqual([{
                 type: 'screen',
+                radius: 5,
+                title: 'Screen, 10 in diameter, 100 - 200 undefined depth',
+                thickness: 0.5,
+                left: {
+                    x: -5,
+                    y1: 100,
+                    y2: 200
+                },
+                right: {
+                    x: 5,
+                    y1: 100,
+                    y2: 200
+                }
+            }, {
+                type: 'screen',
                 radius: 6,
+                title: 'Screen, 12 in diameter, 10 - 100 undefined depth',
                 thickness: 0.5,
                 left: {
                     x: -6,
@@ -196,6 +252,7 @@ describe('graph component well log state', () => {
             }, {
                 type: 'screen',
                 radius: 5,
+                title: 'Screen, 10 in diameter, 10 - 100 undefined depth',
                 thickness: 0.5,
                 left: {
                     x: -5,
@@ -206,20 +263,6 @@ describe('graph component well log state', () => {
                     x: 5,
                     y1: 10,
                     y2: 100
-                }
-            }, {
-                type: 'screen',
-                radius: 5,
-                thickness: 0.5,
-                left: {
-                    x: -5,
-                    y1: 100,
-                    y2: 200
-                },
-                right: {
-                    x: 5,
-                    y1: 100,
-                    y2: 200
                 }
             }]);
         });

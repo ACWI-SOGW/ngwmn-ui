@@ -146,6 +146,9 @@ $provisional-color: color(accent-warm, dark);
                         rect {
                             fill: white;
                             fill-opacity: 0.75;
+                            &:hover {
+                                fill: yellow;
+                            }
                         }
                     }
                     .screen {
@@ -162,7 +165,6 @@ $provisional-color: color(accent-warm, dark);
                                 fill: url(#screen-0);
                             }
                             &:hover {
-                                pointer-events: all;
                                 fill: yellow;
                                 fill-opacity: 0.75;
                             }

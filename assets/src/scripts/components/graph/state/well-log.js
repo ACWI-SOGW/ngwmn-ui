@@ -1,5 +1,6 @@
 import { scaleLinear } from 'd3-scale';
 import memoize from 'fast-memoize';
+import capitalize from 'lodash/capitalize';
 import { createSelector } from 'reselect';
 
 import { getWellLogs } from 'ngwmn/services/state/index';
@@ -35,11 +36,11 @@ export const getWellLogEntries = createSelector(
 );
 
 /**
- * Returns the depth extent for the current well log.
+ * Returns the depth extent for the well log entries.
  * @param  {Object} state       Redux state
  * @return {Array}              y-extent [min, max]
  */
-export const getWellLogExtentY = createSelector(
+export const getWellLogEntriesExtentY = createSelector(
     getWellLogEntries,
     (wellLogEntries) => {
         if (wellLogEntries.length === 0) {
@@ -84,12 +85,28 @@ const getDrawableElements = createSelector(
     }
 );
 
-const getWellExtentY = createSelector(
+export const getConstructionExtentY = createSelector(
     getDrawableElements,
     (elements) => {
         return [
             Math.min(...elements.map(elem => elem.position.coordinates.start)),
             Math.max(...elements.map(elem => elem.position.coordinates.end))
+        ];
+    }
+);
+
+/**
+ * Returns the depth extent for the current well log.
+ * @param  {Object} state       Redux state
+ * @return {Array}              y-extent [min, max]
+ */
+export const getWellLogExtentY = createSelector(
+    getWellLogEntriesExtentY,
+    getConstructionExtentY,
+    (extentA, extentB) => {
+        return [
+            Math.min(extentA[0], extentB[0]),
+            Math.max(extentA[1], extentB[1])
         ];
     }
 );
@@ -103,7 +120,7 @@ export const getWellWaterLevel = memoize(chartType => createSelector(
     getScaleX(chartType),
     getScaleY(chartType),
     getCursorDatum,
-    getWellExtentY,
+    getConstructionExtentY,
     (xScale, yScale, cursorDatum, extentY) => {
         if (!cursorDatum) {
             return null;
@@ -164,10 +181,14 @@ export const getConstructionElements = memoize(chartType => createSelector(
     (elements, xScale, yScale) => {
         const parts = elements.map(element => {
             const loc = element.position.coordinates;
+            const unit = element.position.unit;
             const radius = element.diameter.value / 2;
+            const diamStr = radius ? `${element.diameter.value} ${element.diameter.unit}` : 'unknown';
+            const locString = `${loc.start} - ${loc.end} ${unit}`;
             return {
                 type: element.type,
                 radius: radius,
+                title: `${capitalize(element.type)}, ${diamStr} diameter, ${locString} depth`,
                 thickness: xScale(.5) - xScale(0),  // 0.5" pipe thickness
                 left: {
                     x: radius ? xScale(-radius) : null,
@@ -212,15 +233,16 @@ export const getConstructionElements = memoize(chartType => createSelector(
             part.right.x = xScale(1);
         }
 
-        // Sort the parts by start location and radius.
+        // Sort the parts by end location and radius.
         // They should already be sorted by location, but we also want to draw
-        // the wider diameter pipes before drawing the smaller ones.
+        // the wider diameter pipes before drawing the smaller ones, and have
+        // overlapping elements hoverable.
         parts.sort(function (a, b) {
-            if (a.left.y1 < b.left.y1) {
-                return -1;
-            }
-            if (a.left.y1 > b.left.y1) {
+            if (a.left.y2 < b.left.y2) {
                 return 1;
+            }
+            if (a.left.y2 > b.left.y2) {
+                return -1;
             }
             if (a.radius < b.radius) {
                 return 1;

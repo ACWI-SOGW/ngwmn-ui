@@ -7,7 +7,9 @@ const drawElement = function (elem, element, index) {
                 .attr('x', element.left.x)
                 .attr('y', element.left.y1)
                 .attr('width', element.right.x - element.left.x)
-                .attr('height', element.right.y2 - element.right.y1);
+                .attr('height', element.right.y2 - element.right.y1)
+                .append('title')
+                    .text(element.title);
             elem.append('line')
                 .attr('x1', element.left.x)
                 .attr('y1', element.left.y1)
