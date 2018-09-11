@@ -1,3 +1,6 @@
+import { callIf } from 'ngwmn/lib/utils';
+
+
 const drawElement = function (elem, element, index) {
     elem.append('g')
         .attr('id', `${element.type}-${index}`)
@@ -8,6 +11,9 @@ const drawElement = function (elem, element, index) {
                 .attr('y', element.left.y1)
                 .attr('width', element.right.x - element.left.x)
                 .attr('height', element.right.y2 - element.right.y1)
+                .call(callIf(element.type === 'screen', (rect) => {
+                    rect.attr('fill', `url(#screen-${index % 2})`);
+                }))
                 .append('title')
                     .text(element.title);
             elem.append('line')
@@ -25,20 +31,36 @@ const drawElement = function (elem, element, index) {
         });
 };
 
-const drawWaterLevel = function (elem, cursorWaterLevel) {
+const drawWaterLevel = function (elem, elements, cursorWaterLevel) {
     // Don't draw anything if there is not a cursor datum.
     if (!cursorWaterLevel) {
         return;
     }
 
-    elem.append('rect')
-        .attr('id', 'water-level')
-        .attr('x', cursorWaterLevel.x)
-        .attr('y', cursorWaterLevel.y)
-        .attr('width', cursorWaterLevel.width)
-        .attr('height', cursorWaterLevel.height)
-        .attr('fill', 'lightblue')
-        .attr('fill-opacity', '0.85');
+    const container = elem.append('g');
+
+    container
+        .append('clipPath')
+            .attr('id', 'water-level-path')
+            .call(path => {
+                for (const element of elements) {
+                    path.append('rect')
+                        .attr('x', element.left.x)
+                        .attr('y', element.left.y1)
+                        .attr('width', element.right.x - element.left.x)
+                        .attr('height', element.right.y2 - element.right.y1);
+                }
+            });
+    container
+        .append('rect')
+            .attr('id', 'water-level')
+            .attr('clip-path', 'url(#water-level-path)')
+            .attr('x', cursorWaterLevel.x)
+            .attr('y', cursorWaterLevel.y)
+            .attr('width', cursorWaterLevel.width)
+            .attr('height', cursorWaterLevel.height)
+            .attr('fill', 'lightblue')
+            .attr('fill-opacity', '0.85');
 };
 
 const drawPatterns = function (elem) {
@@ -79,13 +101,13 @@ export default function (elem, {elements, cursorWaterLevel}, container) {
     // Remove any previously drawn children
     container.selectAll('*').remove();
 
+    // Draw the current cursor water level inside the well chamber
+    drawWaterLevel(container, elements, cursorWaterLevel);
+
     // Draw each construction element
     elements.forEach((element, index) => {
         drawElement(container, element, index);
     });
-
-    // Draw the current cursor water level inside the well chamber
-    //drawWaterLevel(container, cursorWaterLevel);
 
     return container;
 }

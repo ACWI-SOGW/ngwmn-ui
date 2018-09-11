@@ -145,7 +145,7 @@ $provisional-color: color(accent-warm, dark);
                         }
                         rect {
                             fill: white;
-                            fill-opacity: 0.75;
+                            fill-opacity: 0.25;
                             &:hover {
                                 fill: yellow;
                             }
@@ -158,12 +158,6 @@ $provisional-color: color(accent-warm, dark);
                         }
                         rect {
                             fill-opacity: 1;
-                            &:nth-child(odd) {
-                                fill: url(#screen-0);
-                            }
-                            &:nth-child(even) {
-                                fill: url(#screen-0);
-                            }
                             &:hover {
                                 fill: yellow;
                                 fill-opacity: 0.75;

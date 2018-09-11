@@ -287,9 +287,9 @@ describe('graph component well log state', () => {
                 {value: new Date('2010-10-10')},
                 [0, 100]
             )).toEqual({
-                x: 5,
+                x: 0,
                 y: 50,
-                width: 90,
+                width: 100,
                 height: 0
             });
         });
