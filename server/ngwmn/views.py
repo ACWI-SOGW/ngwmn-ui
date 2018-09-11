@@ -59,6 +59,7 @@ def site_page(agency_cd, location_id):
     geolocation = geolocation_element.text
     latitude, longitude = geolocation.split(' ')
     summary = get_features(latitude, longitude)
+    feature = summary['features'][0]['properties']
 
     wq = get_water_quality(agency_cd, location_id)
     well_log = get_well_log(agency_cd, location_id)
@@ -66,8 +67,8 @@ def site_page(agency_cd, location_id):
     return render_template(
         'site_location.html',
         cooperators=get_cooperators(location_id),
-        feature=summary['features'][0]['properties'],
-        organization=wq['organization']['name'] if 'organization' in wq else None,
+        feature=feature,
+        organization=wq['organization']['name'] if 'organization' in wq else feature.get('AGENCY_NM'),
         water_quality_activities=wq.get('activities') or [],
         well_log=well_log
     ), 200
