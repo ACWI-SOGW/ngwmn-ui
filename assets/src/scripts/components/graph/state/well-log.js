@@ -1,3 +1,4 @@
+import { scaleLinear } from 'd3-scale';
 import memoize from 'fast-memoize';
 import { createSelector } from 'reselect';
 
@@ -99,23 +100,55 @@ const getWellExtentY = createSelector(
  * @return {Array}              Water level rectangle
  */
 export const getWellWaterLevel = memoize(chartType => createSelector(
-    getChartPosition(chartType),
     getScaleX(chartType),
     getScaleY(chartType),
     getCursorDatum,
     getWellExtentY,
-    (chartPos, xScale, yScale, cursorDatum, extentY) => {
+    (xScale, yScale, cursorDatum, extentY) => {
         if (!cursorDatum) {
             return null;
         }
         const top = yScale(cursorDatum.value);
         const bottom = yScale(extentY[1]);
+        const xRange = xScale.range();
         return {
-            x: xScale.range()[0] + 5,
+            x: xRange[0] + 5,
             y: top,
-            width: Math.max(0, chartPos.width - 10),
+            width: Math.max(0, xRange[1] - xRange[0] - 10),
             height: Math.max(bottom - top, 0)
         };
+    }
+));
+
+const getWellRadius = createSelector(
+    getDrawableElements,
+    (elements) => {
+        const values = elements
+            .map(part => part.diameter.value)
+            .filter(part => part !== null);
+
+        // If we lack data, default to a radius of 1.
+        if (!values.length) {
+            return 1;
+        }
+
+        return Math.max(...values) / 2;
+    }
+);
+
+/**
+ * Returns an xScale corresponding over the range of [-radius, radius] for the
+ * given chartType.
+ * @param  {Object} state       Redux state
+ * @return {Array}              D3 linear scale
+ */
+const getRadiusScale = memoize(chartType => createSelector(
+    getWellRadius,
+    getChartPosition(chartType),
+    (wellRadius, chartPos) => {
+        return scaleLinear()
+            .domain([-wellRadius, wellRadius])
+            .range([chartPos.x, chartPos.x + chartPos.width]);
     }
 ));
 
@@ -126,64 +159,78 @@ export const getWellWaterLevel = memoize(chartType => createSelector(
  */
 export const getConstructionElements = memoize(chartType => createSelector(
     getDrawableElements,
-    getChartPosition(chartType),
-    getScaleX(chartType),
-    getScaleY(chartType),
-    (elements, chartPos, xScale, yScale) => {
-        return elements.map(element => {
-            const loc = element.position.coordinates;
-            return {
-                type: element.type,
-                x: xScale.range()[0],
-                y: yScale(loc.start),
-                width: Math.max(0, chartPos.width),
-                height: Math.max(yScale(loc.end - loc.start), 0),
-                element
-            };
-        });
-    }
-));
-
-/*
-const getWellDiameterExtent = createSelector(
-    getDrawableElements,
-    (elements) => {
-        const values = elements
-            .map(part => part.diameter.value)
-            .filter(part => part !== null);
-        return [
-            Math.min(...values),
-            Math.max(...values)
-        ];
-    }
-);
-
-export const getRadiusScale = memoize(chartType => createSelector(
-    getWellDiameterExtent,
-    getScaleY(chartType),
-    (diameterExtent, yScale) => {
-        const range = yScale.range();
-        const width = range[1] - range[0];
-        const maxRadius = diameterExtent[1] / 2;
-        return scaleLinear()
-            .domain([0, maxRadius])
-            .range([width / 2, range[1] - width * 0.05]);
-    }
-));
-
-export const getConstruction = memoize(chartType => createSelector(
-    getDrawableElements,
-    getRadiusScale,
+    getRadiusScale(chartType),
     getScaleY(chartType),
     (elements, xScale, yScale) => {
-        elements.map(part => {
+        const parts = elements.map(element => {
+            const loc = element.position.coordinates;
+            const radius = element.diameter.value / 2;
             return {
-                x1: 0,
-                y1: yScale(part.position.coordinates.start),
-                x2: xScale(part.diameter / 2),
-                y2: yScale(part.position.coordinates.end)
+                type: element.type,
+                radius: radius,
+                thickness: xScale(.5) - xScale(0),  // 0.5" pipe thickness
+                left: {
+                    x: radius ? xScale(-radius) : null,
+                    y1: yScale(loc.start),
+                    y2: yScale(loc.end)
+                },
+                right: {
+                    x: radius ? xScale(radius) : null,
+                    y1: yScale(loc.start),
+                    y2: yScale(loc.end)
+                }
             };
         });
+
+        // For parts with null radii, fill in with something that will render
+        // reasonably.
+        for (let index = 0; index < parts.length; index++) {
+            const part = parts[index];
+
+            // We already have a radius... skip
+            if (part.radius) {
+                continue;
+            }
+
+            // If we have neighboring parts, use the smaller of the two.
+            const neighbors = [
+                // Closest left-side neighbor with a radius
+                parts.slice(0, index).reverse().find(part => part.radius),
+                // Closest right-side neighbor with a radius
+                parts.slice(index + 1).find(part => part.radius)
+            ].filter(neighbor => neighbor && neighbor.radius);
+
+            const min = Math.min(...neighbors.map(n => n.radius));
+            if (min && isFinite(min)) {
+                part.left.x = xScale(-min);
+                part.right.x = xScale(min);
+                continue;
+            }
+
+            // If there isn't a neighboring part, default to a radius of 1
+            part.left.x = xScale(-1);
+            part.right.x = xScale(1);
+        }
+
+        // Sort the parts by start location and radius.
+        // They should already be sorted by location, but we also want to draw
+        // the wider diameter pipes before drawing the smaller ones.
+        parts.sort(function (a, b) {
+            if (a.left.y1 < b.left.y1) {
+                return -1;
+            }
+            if (a.left.y1 > b.left.y1) {
+                return 1;
+            }
+            if (a.radius < b.radius) {
+                return 1;
+            }
+            if (a.radius > b.radius) {
+                return -1;
+            }
+            return 0;
+        });
+
+        return parts;
     }
 ));
-*/

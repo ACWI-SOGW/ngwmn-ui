@@ -101,7 +101,7 @@ const drawChart = function (elem, store, chartType) {
         }))))
         // To capture mouse events, draw an overlay rect and attach event
         // handlers to it.
-        .call(g => {
+        .call(callIf(chartType !== 'construction', g => {
             g.append('rect')
                 .attr('class', 'overlay')
                 // Set the overlay size, including a little extra space to deal
@@ -127,7 +127,7 @@ const drawChart = function (elem, store, chartType) {
                         store.dispatch(setCursor(selectedTime));
                     });
                 }, getScaleX(chartType)));
-        });
+        }));
 };
 
 /**

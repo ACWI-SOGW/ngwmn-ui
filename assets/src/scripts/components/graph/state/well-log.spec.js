@@ -3,7 +3,7 @@ import { scaleLinear } from 'd3-scale';
 import getMockStore from 'ngwmn/store.mock';
 import {
     getCurrentWellLog, getConstructionElements, getLithology,
-    getWellLogEntries, getWellLogExtentY
+    getWellLogEntries, getWellLogExtentY, getWellWaterLevel
 } from './well-log';
 
 
@@ -139,27 +139,120 @@ describe('graph component well log state', () => {
     });
 
     describe('getConstructionElements', () => {
-        const casings = [{
+        const elements = [{
+            type: 'screen',
+            position: {
+                coordinates: {
+                    start: 100,
+                    end: 200
+                }
+            },
+            diameter: {
+                value: 10
+            }
+        }, {
+            type: 'screen',
             position: {
                 coordinates: {
                     start: 10,
                     end: 100
                 }
+            },
+            diameter: {
+                value: 12
+            }
+        }, {
+            type: 'screen',
+            position: {
+                coordinates: {
+                    start: 10,
+                    end: 100
+                }
+            },
+            diameter: {
+                value: 10
             }
         }];
 
-        it('works', () => {
-            expect(getConstructionElements('main').resultFunc(casings, {
-                width: 10
-            }, scaleLinear(), scaleLinear()).length).toEqual(casings.length);
+        it('returns correct data properly sorted', () => {
+            expect(getConstructionElements('main').resultFunc(
+                elements,
+                scaleLinear(),
+                scaleLinear()
+            )).toEqual([{
+                type: 'screen',
+                radius: 6,
+                thickness: 0.5,
+                left: {
+                    x: -6,
+                    y1: 10,
+                    y2: 100
+                },
+                right: {
+                    x: 6,
+                    y1: 10,
+                    y2: 100
+                }
+            }, {
+                type: 'screen',
+                radius: 5,
+                thickness: 0.5,
+                left: {
+                    x: -5,
+                    y1: 10,
+                    y2: 100
+                },
+                right: {
+                    x: 5,
+                    y1: 10,
+                    y2: 100
+                }
+            }, {
+                type: 'screen',
+                radius: 5,
+                thickness: 0.5,
+                left: {
+                    x: -5,
+                    y1: 100,
+                    y2: 200
+                },
+                right: {
+                    x: 5,
+                    y1: 100,
+                    y2: 200
+                }
+            }]);
         });
 
-        it('works with no casings', () => {
+        it('works with no elements', () => {
             expect(getConstructionElements('main').resultFunc([])).toEqual([]);
         });
 
         it('works with mock state', () => {
-            expect(getConstructionElements('main')(getMockStore().getState())).not.toBe(null);
+            expect(getConstructionElements('main')(
+                getMockStore().getState())
+            ).not.toBe(null);
+        });
+    });
+
+    describe('getWellWaterLevel', () => {
+        it('works', () => {
+            expect(getWellWaterLevel('main').resultFunc(
+                scaleLinear().range([0, 100]).domain([0, 100]),
+                scaleLinear().range([0, 100]).domain([new Date('2009-10-10'),
+                                                      new Date('2011-10-10')]),
+                {value: new Date('2010-10-10')},
+                [0, 100]
+            )).toEqual({
+                x: 5,
+                y: 50,
+                width: 90,
+                height: 0
+            });
+        });
+
+        it('works with mock state', () => {
+            expect(getWellWaterLevel('main')(getMockStore().getState())).not.toBe(null);
         });
     });
 });

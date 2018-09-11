@@ -1,36 +1,26 @@
-const drawCasing = function (elem, casing, index) {
+const drawElement = function (elem, element, index) {
     elem.append('g')
-        .attr('id', `casing-${index}`)
-        .classed('casing', true)
+        .attr('id', `${element.type}-${index}`)
+        .classed(element.type, true)
         .call(elem => {
             elem.append('rect')
-                .attr('x', casing.x)
-                .attr('y', casing.y)
-                .attr('width', casing.width)
-                .attr('height', casing.height);
+                .attr('x', element.left.x)
+                .attr('y', element.left.y1)
+                .attr('width', element.right.x - element.left.x)
+                .attr('height', element.right.y2 - element.right.y1);
             elem.append('line')
-                .attr('x1', casing.x)
-                .attr('y1', casing.y)
-                .attr('x2', casing.x)
-                .attr('y2', casing.y + casing.height);
+                .attr('x1', element.left.x)
+                .attr('y1', element.left.y1)
+                .attr('x2', element.left.x)
+                .attr('y2', element.left.y2)
+                .attr('stroke-width', element.thickness);
             elem.append('line')
-                .attr('x1', casing.x + casing.width)
-                .attr('y1', casing.y)
-                .attr('x2', casing.x + casing.width)
-                .attr('y2', casing.y + casing.height);
+                .attr('x1', element.right.x)
+                .attr('y1', element.right.y1)
+                .attr('x2', element.right.x)
+                .attr('y2', element.right.y2)
+                .attr('stroke-width', element.thickness);
         });
-};
-
-const drawScreen = function (elem, screen, index) {
-    elem.append('rect')
-        .attr('id', `screen-${index}`)
-        .attr('x', screen.x)
-        .attr('y', screen.y)
-        .attr('width', screen.width)
-        .attr('height', screen.height)
-        .attr('fill', 'url(#screen-pattern)')
-        .attr('rx', 5)
-        .attr('ry', 5);
 };
 
 const drawWaterLevel = function (elem, cursorWaterLevel) {
@@ -52,18 +42,8 @@ const drawWaterLevel = function (elem, cursorWaterLevel) {
 const drawPatterns = function (elem) {
     elem.append('defs')
         .call(defs => {
-            defs.append('mask')
-                .attr('id', 'screen-mask')
-                .attr('maskUnits', 'userSpaceOnUse')
-                .append('rect')
-                    .attr('x', '0')
-                    .attr('y', '0')
-                    .attr('width', '100%')
-                    .attr('height', '100%')
-                    .attr('fill', '#0000ff');
-
             defs.append('pattern')
-                .attr('id', 'screen-pattern')
+                .attr('id', 'screen-0')
                 .attr('width', '3')
                 .attr('height', '3')
                 .attr('patternUnits', 'userSpaceOnUse')
@@ -71,8 +51,19 @@ const drawPatterns = function (elem) {
                 .append('rect')
                     .attr('width', '1')
                     .attr('height', '3')
-                    .attr('transform', 'translate(0, 0)')
-                    .attr('mask', 'url(#screen-mask)');
+                    .attr('fill', 'gray')
+                    .attr('transform', 'translate(0, 0)');
+            defs.append('pattern')
+                .attr('id', 'screen-1')
+                .attr('width', '3')
+                .attr('height', '3')
+                .attr('patternUnits', 'userSpaceOnUse')
+                .attr('patternTransform', 'rotate(-45)')
+                .append('rect')
+                    .attr('width', '1')
+                    .attr('height', '3')
+                    .attr('fill', 'gray')
+                    .attr('transform', 'translate(0, 0)');
         });
 };
 
@@ -88,15 +79,11 @@ export default function (elem, {elements, cursorWaterLevel}, container) {
 
     // Draw each construction element
     elements.forEach((element, index) => {
-        if (element.type === 'casing') {
-            drawCasing(container, element, index);
-        } else {
-            drawScreen(container, element, index);
-        }
+        drawElement(container, element, index);
     });
 
     // Draw the current cursor water level inside the well chamber
-    drawWaterLevel(container, cursorWaterLevel);
+    //drawWaterLevel(container, cursorWaterLevel);
 
     return container;
 }

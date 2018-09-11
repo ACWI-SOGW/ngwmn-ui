@@ -138,14 +138,35 @@ $provisional-color: color(accent-warm, dark);
                         }
                     }
                 }
-                g.casing {
-                    line {
-                        stroke: gray;
-                        stroke-width: 10;
-                        stroke-linecap: round;
+                g.construction {
+                    .casing {
+                        line {
+                            stroke: gray;
+                        }
+                        rect {
+                            fill: white;
+                            fill-opacity: 0.75;
+                        }
                     }
-                    rect {
-                        fill: white;
+                    .screen {
+                        line {
+                            stroke: gray;
+                            stroke-linecap: round;
+                        }
+                        rect {
+                            fill-opacity: 1;
+                            &:nth-child(odd) {
+                                fill: url(#screen-0);
+                            }
+                            &:nth-child(even) {
+                                fill: url(#screen-0);
+                            }
+                            &:hover {
+                                pointer-events: all;
+                                fill: yellow;
+                                fill-opacity: 0.75;
+                            }
+                        }
                     }
                 }
             }
