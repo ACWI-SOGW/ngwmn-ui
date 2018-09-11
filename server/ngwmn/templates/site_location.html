@@ -2,7 +2,11 @@
 
 {% import 'macros/components.html' as components %}
 
-{% set page_title = feature.SITE_NAME %}
+{% if organization %}
+    {% set page_title = feature.SITE_NAME + ' - ' + organization %}
+{% else %}
+    {% set page_title = feature.SITE_NAME %}
+{% endif %}
 {% set body_id = 'site-location' %}
 
 {% block page_script %}<script>window.wellLog = {{ well_log | tojson | safe }}</script>{% endblock %}
@@ -12,7 +16,8 @@
 {%- endmacro %}
 
 {% block content %}
-    <h1 class="usa-heading">{{ feature.SITE_NAME }}</h1>
+    <h1>{{ feature.SITE_NAME }}</h1>
+    {% if organization %}<h2 class="usa-font-lead">{{ organization }}</h2>{% endif %}
     <div class="usa-grid">
         {{ components.Graph(feature.AGENCY_CD, feature.SITE_NO) }}
         <ul class="usa-accordion">
@@ -189,14 +194,14 @@
                             <th scope="col">Material</th>
                         </thead>
                         <tbody>
-                            {% for casing in well_log.casings %}
+                            {% for casing in well_log.construction %}{% if casing.type == 'casing' %}
                                 <tr>
                                     <td>{{ casing.position.coordinates.start }} {{ casing.position.unit }}</td>
                                     <td>{{ casing.position.coordinates.end }} {{ casing.position.unit }}</td>
                                     <td>{% if casing.diameter.value %}{{ casing.diameter.value }} {{ casing.diameter.unit }}{% endif %}</td>
                                     <td>{{ _(casing.material) }}</td>
                                 </tr>
-                            {% endfor %}
+                            {% endif %}{% endfor %}
                         </tbody>
                     </table>
                     <table class="usa-table-borderless">
@@ -208,14 +213,14 @@
                             <th scope="col">Material</th>
                         </thead>
                         <tbody>
-                            {% for screen in well_log.screens %}
+                            {% for screen in well_log.construction %}{% if screen.type == 'screen' %}
                                 <tr>
                                     <td>{{ screen.position.coordinates.start }} {{ screen.position.unit }}</td>
                                     <td>{{ screen.position.coordinates.end }} {{ screen.position.unit }}</td>
                                     <td>{% if screen.diameter.value %}{{ screen.diameter.value }} {{ screen.diameter.unit }}{% endif %}</td>
                                     <td>{{ _(screen.material) }}</td>
                                 </tr>
-                            {% endfor %}
+                            {% endif %}{% endfor %}
                         </tbody>
                     </table>
                 </div>

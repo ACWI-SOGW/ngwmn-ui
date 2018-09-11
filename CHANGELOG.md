@@ -19,3 +19,4 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added zoom behaviors to main chart
 - Added lithology chart
 - Added well log tables
+- Added well construction drawing (screens, casings)

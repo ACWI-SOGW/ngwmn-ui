@@ -43,6 +43,7 @@ describe('graph component layout state', () => {
         expect(getChartPosition('main')(store.getState())).not.toBe(null);
         expect(getChartPosition('brush')(store.getState())).not.toBe(null);
         expect(getChartPosition('lithology')(store.getState())).not.toBe(null);
+        expect(getChartPosition('construction')(store.getState())).not.toBe(null);
 
         // Works with specific container size
         store.dispatch(setContainerSize({width: 10, height: 20}));
@@ -50,6 +51,7 @@ describe('graph component layout state', () => {
         expect(getChartPosition('main')(store.getState())).not.toBe(null);
         expect(getChartPosition('brush')(store.getState())).not.toBe(null);
         expect(getChartPosition('lithology')(store.getState())).not.toBe(null);
+        expect(getChartPosition('construction')(store.getState())).not.toBe(null);
     });
 
     it('setAxisYBBox and getAxisYBBox works', () => {

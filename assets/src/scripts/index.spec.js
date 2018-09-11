@@ -10,11 +10,12 @@
 import 'ngwmn/components/graph/index.spec.js';
 import 'ngwmn/components/graph/state/cursor.spec.js';
 import 'ngwmn/components/graph/state/layout.spec.js';
-import 'ngwmn/components/graph/state/lithology.spec.js';
 import 'ngwmn/components/graph/state/options.spec.js';
 import 'ngwmn/components/graph/state/points.spec.js';
 import 'ngwmn/components/graph/state/scales.spec.js';
+import 'ngwmn/components/graph/state/well-log.spec.js';
 import 'ngwmn/components/graph/view/axes.spec.js';
+import 'ngwmn/components/graph/view/construction.spec.js';
 import 'ngwmn/components/graph/view/cursor.spec.js';
 import 'ngwmn/components/graph/view/domain-mapping.spec.js';
 import 'ngwmn/components/graph/view/legend.spec.js';

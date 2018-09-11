@@ -7,7 +7,7 @@ from flask import abort, jsonify, render_template
 
 from . import __version__, app
 from .services.ngwmn import (
-    get_features, get_iddata, get_water_quality_activities, get_well_log)
+    get_features, get_iddata, get_water_quality, get_well_log)
 from .services.sifta import get_cooperators
 
 
@@ -60,13 +60,21 @@ def site_page(agency_cd, location_id):
     latitude, longitude = geolocation.split(' ')
     summary = get_features(latitude, longitude)
 
-    water_quality_activities = get_water_quality_activities(agency_cd, location_id)
+    water_quality = get_water_quality(agency_cd, location_id)
     well_log = get_well_log(agency_cd, location_id)
+
+    feature = summary['features'][0]['properties']
+
+    if 'organization' in water_quality:
+        organization = water_quality['organization']['name']
+    else:
+        organization = feature.get('AGENCY_NM')
 
     return render_template(
         'site_location.html',
         cooperators=get_cooperators(location_id),
-        feature=summary['features'][0]['properties'],
-        water_quality_activities=water_quality_activities,
+        feature=feature,
+        organization=organization,
+        water_quality_activities=water_quality.get('activities') or [],
         well_log=well_log
     ), 200

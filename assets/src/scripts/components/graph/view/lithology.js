@@ -3,7 +3,7 @@ import { transition } from 'd3-transition';
 const LITHOLOGY_COLORS = [
     '#9A887E',
     '#72655C',
-    '#CDE569',
+    '#F0E68C',
     '#C6BBB7'
 ];
 

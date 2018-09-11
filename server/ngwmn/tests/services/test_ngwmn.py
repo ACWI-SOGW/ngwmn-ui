@@ -9,8 +9,7 @@ import requests_mock
 
 from ngwmn.services import ServiceException
 from ngwmn.services.ngwmn import (
-    generate_bounding_box_values, get_iddata, get_water_quality_activities,
-    get_well_log)
+    generate_bounding_box_values, get_iddata, get_water_quality, get_well_log)
 
 
 class TestGetWellLithography(TestCase):
@@ -83,8 +82,12 @@ class TestWaterQualityResults(TestCase):
     def test_wq_parsing(self):
         with requests_mock.mock() as req:
             req.get(requests_mock.ANY, content=MOCK_WQ_RESPONSE)
-            results = get_water_quality_activities('USGS', 1)
-            self.assertEqual(results, [{
+            results = get_water_quality('USGS', 1)
+            self.assertEqual(results['organization'], {
+                'id': 'USGS-MI',
+                'name': 'USGS Michigan Water Science Center'
+            })
+            self.assertEqual(results['activities'], [{
                 'description': {
                     'comment_text': 'Test comment',
                     'identifier': 'nwismi.01.98000888',
@@ -230,12 +233,12 @@ class TestWellLogResults(TestCase):
                 },
                 'elevation': {
                     'unit': 'ft',
-                    'value': '1950',
+                    'value': 1950.0,
                     'scheme': 'NAVD88',
                 },
                 'well_depth': {
                     'unit': 'ft',
-                    'value': '214'
+                    'value': 214.0
                 },
                 'water_use': 'urn:OGC:unknown',
                 'link': {
@@ -265,11 +268,11 @@ class TestWellLogResults(TestCase):
                     },
                     'shape': {
                         'coordinates': {
-                            'start': '0.00',
-                            'end': '25.00'
+                            'start': 0.0,
+                            'end': 25.0
                         },
                         'dimension': '1',
-                        'unit': 'Unknown'
+                        'unit': 'ft'
                     }
                 }, {
                     'method': 'borehole',
@@ -294,11 +297,11 @@ class TestWellLogResults(TestCase):
                     },
                     'shape': {
                         'coordinates': {
-                            'start': '25.00',
-                            'end': '56.00'
+                            'start': 25.0,
+                            'end': 56.0
                         },
                         'dimension': '1',
-                        'unit': 'Unknown'
+                        'unit': 'ft'
                     }
                 }, {
                     'method': 'borehole',
@@ -323,28 +326,29 @@ class TestWellLogResults(TestCase):
                     },
                     'shape': {
                         'coordinates': {
-                            'start': '56.00',
-                            'end': '155.00'
+                            'start': 56.0,
+                            'end': 155.0
                         },
                         'dimension': '1',
-                        'unit': 'Unknown'
+                        'unit': 'ft'
                     }
                 }],
-                'casings': [{
+                'construction': [{
+                    'type': 'casing',
                     'position': {
                         'coordinates': {
-                            'start': '0',
-                            'end': '80.9'
+                            'start': 0.0,
+                            'end': 80.9
                         },
                         'unit': 'ft'
                     },
                     'material': 'PVC',
                     'diameter': {
-                        'value': '16',
+                        'value': 16.0,
                         'unit': 'in'
                     }
-                }],
-                'screens': [{
+                }, {
+                    'type': 'screen',
                     'diameter': {
                         'value': None,
                         'unit': 'in',
@@ -352,12 +356,13 @@ class TestWellLogResults(TestCase):
                     'material': 'PVC',
                     'position': {
                         'coordinates': {
-                            'start': '80.8',
-                            'end': '90.8'
+                            'start': 80.8,
+                            'end': 90.8
                         },
                         'unit': 'ft'
                     }
                 }, {
+                    'type': 'screen',
                     'diameter': {
                         'value': None,
                         'unit': 'in'
@@ -365,12 +370,12 @@ class TestWellLogResults(TestCase):
                     'material': 'PVC',
                     'position': {
                         'coordinates': {
-                            'end': '212.8',
-                            'start': '152.8'
+                            'end': 212.8,
+                            'start': 152.8
                         },
                         'unit': 'ft'
                     }
-                }],
+                }]
             })
 
 

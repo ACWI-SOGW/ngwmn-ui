@@ -5,8 +5,8 @@ import { createSelector } from 'reselect';
 import { getWaterLevels } from 'ngwmn/services/state/index';
 
 import { getViewport } from './layout';
-import { getWellLogExtentY } from './lithology';
 import { getCurrentSiteID } from './options';
+import { getWellLogExtentY } from './well-log';
 
 
 // Lines will be split if the difference exceeds 6 months.
@@ -90,19 +90,20 @@ export const getDomainY = memoize(chartType => createSelector(
             Math.min(...values),
             Math.max(...values)
         ];
-        const isPositive = domain[0] >= 0 && domain[1] >= 0;
 
-        // For lithology charts, take into account the well log's extent and
-        // go to zero (or negative, for artesian wells).
-        if (chartType === 'lithology') {
+        // For the lithology and construction charts, take into account the
+        // well log's extent and go to zero (or negative, for artesian wells).
+        if (chartType === 'lithology' || chartType === 'construction') {
             domain = [
                 Math.min(0, wellLogExtentY[0], domain[0]),
                 Math.max(wellLogExtentY[1], domain[1])
             ];
         }
 
+        const isPositive = domain[0] >= 0 && domain[1] >= 0;
+
         // Pad domains on both ends by PADDING_RATIO.
-        if (chartType !== 'lithology') {
+        if (chartType !== 'lithology' && chartType !== 'construction') {
             const padding = PADDING_RATIO * (domain[1] - domain[0]);
             domain = [
                 domain[0] - padding,
