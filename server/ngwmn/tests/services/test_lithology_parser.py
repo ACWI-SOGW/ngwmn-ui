@@ -1,3 +1,7 @@
+"""
+Tests for lithology string parsing.
+"""
+
 import os
 
 from ngwmn.services import lithology_parser
@@ -5,8 +9,9 @@ from ngwmn.services import lithology_parser
 
 def test_classify_material():
     scores = []
-    with open(os.path.join(os.path.dirname(__file__), 'materials.txt')) as f:
-        for index, material in enumerate(f):
+    materials_txt = os.path.join(os.path.dirname(__file__), 'materials.txt')
+    with open(materials_txt) as file:
+        for index, material in enumerate(file):
             # To speed up the test, only test every 50th material
             if index % 50:
                 continue

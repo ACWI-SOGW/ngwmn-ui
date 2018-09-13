@@ -1,3 +1,8 @@
+"""
+This module includes routines to parse unstructured lithology material strings
+and extract a structured list of lithology types and colors.
+"""
+
 from difflib import SequenceMatcher
 from functools import cmp_to_key
 import re
@@ -11,13 +16,13 @@ LITHOLOGY = {
     # Gravel or conglomerate (1st option):
     601: {('gravel',), ('conglomerate',)},
     # Gravel or conglomerate (2nd option):
-    #602: {('gravel',), ('conglomerate',)},
+    # 602: {('gravel',), ('conglomerate',)},
     # Crossbedded gravel or conglomerate:
     603: {('crossbedded', 'gravel',), ('crossbedded', 'conglomerate',)},
     # Breccia (1st option):
     605: {('breccia',)},
     # Breccia (2nd option):
-    #606: {('breccia',)},
+    # 606: {('breccia',)},
     # Massive sand or sandstone:
     607: {('massive', 'sand',), ('sandstone',)},
     # Bedded sand or sandstone:
@@ -25,7 +30,7 @@ LITHOLOGY = {
     # Crossbedded sand or sandstone (1st option):
     609: {('crossbedded', 'sand',), ('crossbedded', 'sandstone',)},
     # Crossbedded sand or sandstone (2nd option):
-    #610: {('crossbedded', 'sand',), ('sandstone',)},
+    # 610: {('crossbedded', 'sand',), ('sandstone',)},
     # Ripple-bedded sand or sandstone:
     611: {('ripple-bedded', 'sand',), ('ripple-bedded', 'sandstone',)},
     # Argillaceous or shaly sandstone:
@@ -83,7 +88,7 @@ LITHOLOGY = {
     # Cherty limestone (1st option):
     639: {('cherty', 'limestone',)},
     # Cherty limestone (2nd option):
-    #640: {('cherty', 'limestone',)},
+    # 640: {('cherty', 'limestone',)},
     # Dolomitic limestone, limy dolostone, or limy dolomite:
     641: {('dolomitic', 'limestone',), ('limy', 'dolostone',), ('limy', 'dolomite',)},
     # Dolostone or dolomite:
@@ -103,7 +108,7 @@ LITHOLOGY = {
     # Bedded chert (1st option):
     649: {('bedded', 'chert',)},
     # Bedded chert (2nd option):
-    #650: {('bedded', 'chert',)},
+    # 650: {('bedded', 'chert',)},
     # Fossiliferous bedded chert:
     651: {('fossiliferous', 'bedded', 'chert',)},
     # Fossiliferous rock:
@@ -151,7 +156,7 @@ LITHOLOGY = {
     # Interbedded shale and limestone (shale dominant) (1st option):
     673: {('shale', 'limestone',)},
     # Interbedded shale and limestone (shale dominant) (2nd option):
-    #674: {('interbedded', 'shale', 'limestone',)},
+    # 674: {('interbedded', 'shale', 'limestone',)},
     # Interbedded calcareous shale and limestone (shale dominant):
     675: {('calcareous', 'shale', 'limestone',)},
     # Interbedded silty limestone and shale:
@@ -159,7 +164,7 @@ LITHOLOGY = {
     # Interbedded limestone and shale (1st option):
     677: {('limestone', 'shale',)},
     # Interbedded limestone and shale (2nd option):
-    #678: {('interbedded', 'limestone', 'shale',)},
+    # 678: {('interbedded', 'limestone', 'shale',)},
     # Interbedded limestone and shale (limestone dominant):
     679: {('limestone' 'shale',)},
     # Interbedded limestone and calcareous shale:
@@ -167,15 +172,15 @@ LITHOLOGY = {
     # Till or diamicton (1st option):
     681: {('till',), ('diamicton',)},
     # Till or diamicton (2nd option):
-    #682: {('till',), ('diamicton',)},
+    # 682: {('till',), ('diamicton',)},
     # Till or diamicton (3rd option):
-    #683: {('till',), ('diamicton',)},
+    # 683: {('till',), ('diamicton',)},
     # Loess (1st option):
     684: {('loess',)},
     # Loess (2nd option):
-    #685: {('loess',)},
+    # 685: {('loess',)},
     # Loess (3rd option):
-    #686: {('loess',)},
+    # 686: {('loess',)},
     # Metamorphism:
     701: {('metamorphism',)},
     # Quartzite:
@@ -213,29 +218,29 @@ LITHOLOGY = {
     # Granite (1st option):
     718: {('granite',)},
     # Granite (2nd option):
-    #719: {('granite',)},
+    # 719: {('granite',)},
     # Banded igneous rock:
     720: {('banded', 'igneous', 'rock',)},
     # Igneous rock (1st option):
     721: {('igneous', 'rock',)},
     # Igneous rock (2nd option):
-    #722: {('igneous', 'rock',)},
+    # 722: {('igneous', 'rock',)},
     # Igneous rock (3rd option):
-    #723: {('igneous', 'rock',)},
+    # 723: {('igneous', 'rock',)},
     # Igneous rock (4th option):
-    #724: {('igneous', 'rock',)},
+    # 724: {('igneous', 'rock',)},
     # Igneous rock (5th option):
-    #725: {('igneous', 'rock',)},
+    # 725: {('igneous', 'rock',)},
     # Igneous rock (6th option):
-    #726: {('igneous', 'rock',)},
+    # 726: {('igneous', 'rock',)},
     # Igneous rock (7th option):
-    #727: {('igneous', 'rock',)},
+    # 727: {('igneous', 'rock',)},
     # Igneous rock (8th option):
-    #728: {('igneous', 'rock',)},
+    # 728: {('igneous', 'rock',)},
     # Porphyritic rock (1st option):
     729: {('porphyritic', 'rock',)},
     # Porphyritic rock (2nd option):
-    #730: {('porphyritic', 'rock',)},
+    # 730: {('porphyritic', 'rock',)},
     # Vitrophyre:
     731: {('vitrophyre',)},
     # Quartz:
@@ -254,20 +259,15 @@ LITH_OPTIONS = {
 COLORS = set(webcolors.CSS3_NAMES_TO_HEX.keys())
 
 
-# This option does whole-sequence comparison - so doesn't get sub-parts very well
-# def _score_material(words):
-#     matches = get_close_matches(words, LITH_OPTIONS.keys(), cutoff=0)
-#     return matches
-
-def _compare_scores(a, b):
+def _compare_scores(score_a, score_b):
     # a and b are of form: (option, score)
 
     # If the scores are the same, give preference to the option with a longer
     # length - which should be more "specific".
-    if a[1] == b[1]:
-        return len(a[0]) - len(b[0])
+    if score_a[1] == score_b[1]:
+        return len(score_a[0]) - len(score_b[0])
 
-    return a[1] - b[1]
+    return score_a[1] - score_b[1]
 
 
 def classify_material(words, max_matches=5):
@@ -275,7 +275,7 @@ def classify_material(words, max_matches=5):
     Returns the top-five matching materials defined in LITHOLOGY
     """
 
-    # Check all possibily lithology options, and store in ranked order
+    # Check all possible lithology options, and store in ranked order
     scores = sorted(
         ((option, SequenceMatcher(None, words, option).ratio())
          for option in LITH_OPTIONS.keys()),
@@ -294,6 +294,7 @@ def classify_material(words, max_matches=5):
             materials.append(material)
         if len(materials) == 5:
             break
+
     return materials
 
 
