@@ -13,7 +13,7 @@ LITHOLOGY = {
     # Gravel or conglomerate (2nd option):
     #602: {('gravel',), ('conglomerate',)},
     # Crossbedded gravel or conglomerate:
-    603: {('crossbedded', 'gravel',), ('conglomerate',)},
+    603: {('crossbedded', 'gravel',), ('crossbedded', 'conglomerate',)},
     # Breccia (1st option):
     605: {('breccia',)},
     # Breccia (2nd option):
@@ -23,13 +23,13 @@ LITHOLOGY = {
     # Bedded sand or sandstone:
     608: {('bedded', 'sand',), ('sandstone',)},
     # Crossbedded sand or sandstone (1st option):
-    609: {('crossbedded', 'sand',), ('sandstone',)},
+    609: {('crossbedded', 'sand',), ('crossbedded', 'sandstone',)},
     # Crossbedded sand or sandstone (2nd option):
     #610: {('crossbedded', 'sand',), ('sandstone',)},
     # Ripple-bedded sand or sandstone:
     611: {('ripple-bedded', 'sand',), ('ripple-bedded', 'sandstone',)},
     # Argillaceous or shaly sandstone:
-    612: {('argillaceous',), ('shaly', 'sandstone',)},
+    612: {('argillaceous', 'sandstone'), ('shaly', 'sandstone',)},
     # Calcareous sandstone:
     613: {('calcareous', 'sandstone',)},
     # Dolomitic sandstone:

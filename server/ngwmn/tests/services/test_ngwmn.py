@@ -261,7 +261,7 @@ class TestWellLogResults(TestCase):
                                 'purpose': 'instance',
                                 'ui': {
                                     'colors': [],
-                                    'materials': [609, 611, 612, 613, 614]
+                                    'materials': [608, 609, 611, 612]
                                 }
                             },
                             'proportion': {
@@ -327,7 +327,7 @@ class TestWellLogResults(TestCase):
                                 'purpose': 'instance',
                                 'ui': {
                                     'colors': [],
-                                    'materials': [609, 611, 612, 613, 614]
+                                    'materials': [608, 609, 611, 612]
                                 }
                             },
                             'proportion': {
