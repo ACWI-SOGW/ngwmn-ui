@@ -258,7 +258,11 @@ class TestWellLogResults(TestCase):
                             },
                             'material': {
                                 'name': 'Sandstone',
-                                'purpose': 'instance'
+                                'purpose': 'instance',
+                                'ui': {
+                                    'colors': [],
+                                    'materials': [609, 611, 612, 613, 614]
+                                }
                             },
                             'proportion': {
                                 'scheme': 'urn:ietf:rfc:2141',
@@ -287,7 +291,11 @@ class TestWellLogResults(TestCase):
                             },
                             'material': {
                                 'name': 'Siltstone',
-                                'purpose': 'instance'
+                                'purpose': 'instance',
+                                'ui': {
+                                    'colors': [],
+                                    'materials': [616, 617, 618, 669, 631]
+                                }
                             },
                             'proportion': {
                                 'scheme': 'urn:ietf:rfc:2141',
@@ -316,7 +324,11 @@ class TestWellLogResults(TestCase):
                             },
                             'material': {
                                 'name': 'Sandstone',
-                                'purpose': 'instance'
+                                'purpose': 'instance',
+                                'ui': {
+                                    'colors': [],
+                                    'materials': [609, 611, 612, 613, 614]
+                                }
                             },
                             'proportion': {
                                 'scheme': 'urn:ietf:rfc:2141',

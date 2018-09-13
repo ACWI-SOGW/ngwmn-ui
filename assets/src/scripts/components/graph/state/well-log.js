@@ -64,14 +64,17 @@ export const getLithology = memoize(chartType => createSelector(
     getScaleY(chartType),
     (wellLogEntries, layout, yScale) => {
         return wellLogEntries.map(entry => {
-            const top = yScale(entry.shape.coordinates.start) || 0;
-            const bottom = yScale(entry.shape.coordinates.end) || 0;
+            const loc = entry.shape.coordinates;
+            const top = yScale(loc.start) || 0;
+            const bottom = yScale(loc.end) || 0;
+            const name = entry.hydrostatic_graphing_unit.composition.material.name;
             return {
                 x: layout.x,
                 y: top,
                 width: layout.width,
                 height: bottom - top,
-                entry
+                colors: entry.hydrostatic_graphing_unit.composition.material.ui.colors,
+                title: `${loc.start} - ${loc.end} ${entry.shape.unit}, ${name}`
             };
         });
     }

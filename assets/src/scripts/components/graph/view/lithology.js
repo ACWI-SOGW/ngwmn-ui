@@ -10,7 +10,8 @@ const LITHOLOGY_COLORS = [
 
 export default function (elem, {lithology}, container) {
     container = container || elem
-        .append('g');
+        .append('g')
+            .classed('lithology', true);
 
     const rects = container
         .selectAll('rect')
@@ -23,18 +24,23 @@ export default function (elem, {lithology}, container) {
 
     const newRects = rects.enter()
         .append('rect')
-            .attr('x', datum => datum.x)
-            .attr('y', datum => datum.y)
-            .attr('width', datum => datum.width)
-            .attr('height', datum => datum.height)
-            .attr('fill', (_, index) => LITHOLOGY_COLORS[index % LITHOLOGY_COLORS.length]);
+            .call(rect => {
+                rect.append('title')
+                    .text(datum => datum.title);
+            });
 
     rects.merge(newRects)
         .transition(transition().duration(20))
             .attr('x', datum => datum.x)
             .attr('y', datum => datum.y)
             .attr('width', datum => datum.width)
-            .attr('height', datum => datum.height);
+            .attr('height', datum => datum.height)
+            .attr('fill', (datum, index) => {
+                if (!datum.colors.length) {
+                    return LITHOLOGY_COLORS[index % LITHOLOGY_COLORS.length];
+                }
+                return datum.colors[0];
+            });
 
     return container;
 }

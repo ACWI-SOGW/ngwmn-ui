@@ -1,6 +1,5 @@
 """
 Utility functions for fetching data
-
 """
 from urllib.parse import urljoin
 
@@ -8,6 +7,7 @@ import requests as r
 
 from ngwmn import app
 from ngwmn.services import ServiceException
+from ngwmn.services.lithology_parser import parse_material
 from ngwmn.xml_utils import parse_xml
 
 
@@ -219,6 +219,7 @@ def get_well_log(agency_cd, location_id):
                     'material': (lambda material: {
                         'name': _find(material, 'gml:name'),
                         'purpose': _find(material, 'gsml:purpose'),
+                        'ui': parse_material(_find(material, 'gml:name'))
                     })(part.find('gsml:material/gsml:UnconsolidatedMaterial', xml.nsmap)),
                     'proportion': (lambda proportion: {
                         'scheme': proportion.get('codeSpace'),

@@ -51,7 +51,7 @@ const drawWaterLevel = function (elem, elements, cursorWaterLevel) {
                         .attr('height', element.right.y2 - element.right.y1);
                 }
             });
-    container
+    /*container
         .append('rect')
             .attr('id', 'well-interior')
             .attr('clip-path', 'url(#water-level-path)')
@@ -59,7 +59,7 @@ const drawWaterLevel = function (elem, elements, cursorWaterLevel) {
             .attr('y', 0)
             .attr('width', cursorWaterLevel.width)
             .attr('height', cursorWaterLevel.height)
-            .attr('fill', 'white');
+            .attr('fill', 'white');*/
     container
         .append('rect')
             .attr('id', 'water-level')

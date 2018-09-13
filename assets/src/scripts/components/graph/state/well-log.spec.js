@@ -118,6 +118,18 @@ describe('graph component well log state', () => {
                 coordinates: {
                     start: '1',
                     end: '2'
+                },
+                'unit': 'ft'
+            },
+            hydrostatic_graphing_unit: {
+                composition: {
+                    material: {
+                        name: 'Siltstone',
+                        ui: {
+                            colors: ['brown'],
+                            materials: [616, 617, 618, 669, 631]
+                        }
+                    }
                 }
             }
         }, {
@@ -125,6 +137,18 @@ describe('graph component well log state', () => {
                 coordinates: {
                     start: '2',
                     end: '3'
+                },
+                'unit': 'ft'
+            },
+            hydrostatic_graphing_unit: {
+                composition: {
+                    material: {
+                        name: 'Siltstone',
+                        ui: {
+                            colors: ['yellow'],
+                            materials: [616, 617, 618, 669, 631]
+                        }
+                    }
                 }
             }
         }];
@@ -142,27 +166,15 @@ describe('graph component well log state', () => {
                 y: 1,
                 width: 100,
                 height: 1,
-                entry: {
-                    shape: {
-                        coordinates: {
-                            start: '1',
-                            end: '2'
-                        }
-                    }
-                }
+                colors: ['brown'],
+                title: '1 - 2 ft, Siltstone'
             }, {
                 x: 10,
                 y: 2,
                 width: 100,
                 height: 1,
-                entry: {
-                    shape: {
-                        coordinates: {
-                            start: '2',
-                            end: '3'
-                        }
-                    }
-                }
+                colors: ['yellow'],
+                title: '2 - 3 ft, Siltstone'
             }]);
         });
 
