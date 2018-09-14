@@ -121,7 +121,7 @@ describe('graph component well log state', () => {
                 },
                 'unit': 'ft'
             },
-            hydrostatic_graphing_unit: {
+            unit: {
                 composition: {
                     material: {
                         name: 'Siltstone',
@@ -140,7 +140,7 @@ describe('graph component well log state', () => {
                 },
                 'unit': 'ft'
             },
-            hydrostatic_graphing_unit: {
+            unit: {
                 composition: {
                     material: {
                         name: 'Siltstone',

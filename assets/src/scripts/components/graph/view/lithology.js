@@ -13,45 +13,7 @@ const LITHOLOGY_COLORS = [
 export default function (elem, {lithology}, container) {
     container = container || elem
         .append('g')
-            .classed('lithology', true)
-            .call(g => {
-                g.append('defs')
-                    .append('pattern')
-                        .attr('id', 'lithology-601')
-                        .attr('patternUnits', 'userSpaceOnUse')
-                        .attr('width', 53.2)
-                        .attr('height', 53.4)
-                        .append('image')
-                            .attr('xlink:href', `${config.STATIC_ROOT}/img/lithology-patterns/605.svg`)
-                            .attr('x', 0)
-                            .attr('y', 0)
-                            .attr('width', 53.2)
-                            .attr('height', 53.4);
-                g.append('defs')
-                    .append('pattern')
-                        .attr('id', 'lithology-603')
-                        .attr('patternUnits', 'userSpaceOnUse')
-                        .attr('width', 85)
-                        .attr('height', 85.1)
-                        .append('image')
-                            .attr('xlink:href', `${config.STATIC_ROOT}/img/lithology-patterns/609.svg`)
-                            .attr('x', 0)
-                            .attr('y', 0)
-                            .attr('width', 85)
-                            .attr('height', 85.1);
-                g.append('defs')
-                    .append('pattern')
-                        .attr('id', 'lithology-602')
-                        .attr('patternUnits', 'userSpaceOnUse')
-                        .attr('width', 54.1)
-                        .attr('height', 58)
-                        .append('image')
-                            .attr('xlink:href', `${config.STATIC_ROOT}/img/lithology-patterns/625.svg`)
-                            .attr('x', 0)
-                            .attr('y', 0)
-                            .attr('width', 54.1)
-                            .attr('height', 58);
-            });
+            .classed('lithology', true);
 
     const rects = container
         .selectAll('rect')
@@ -75,18 +37,12 @@ export default function (elem, {lithology}, container) {
             .attr('y', datum => datum.y)
             .attr('width', datum => datum.width)
             .attr('height', datum => datum.height)
-            .attr('fill', (datum, index) => {
-                return `url(#lithology-60${index % 3 + 1})`;
-                if (index % 3) {
-                    return 'url(#lithology-601)';
-                } else {
-                    return 'url(#lithology-602)';
-                }
-
-                if (!datum.colors.length) {
+            .attr('fill', (datum) => {
+                return `url(#lithology-${datum.materials[0]})`;
+                /*if (!datum.colors.length) {
                     return LITHOLOGY_COLORS[index % LITHOLOGY_COLORS.length];
                 }
-                return datum.colors[0];
+                return datum.colors[0];*/
             });
 
     return container;

@@ -8136,7 +8136,7 @@
             },
             "log_entries": [
                 {
-                    "hydrostatic_graphing_unit": {
+                    "unit": {
                         "composition": {
                             "lithology": {
                                 "scheme": "urn:x-ngwd:classifierScheme:USGS:Lithology:2011",
@@ -8176,7 +8176,7 @@
                     }
                 },
                 {
-                    "hydrostatic_graphing_unit": {
+                    "unit": {
                         "composition": {
                             "lithology": {
                                 "scheme": "urn:x-ngwd:classifierScheme:USGS:Lithology:2011",
@@ -8215,7 +8215,7 @@
                     }
                 },
                 {
-                    "hydrostatic_graphing_unit": {
+                    "unit": {
                         "composition": {
                             "lithology": {
                                 "scheme": "urn:x-ngwd:classifierScheme:USGS:Lithology:2011",
@@ -8255,7 +8255,7 @@
                     }
                 },
                 {
-                    "hydrostatic_graphing_unit": {
+                    "unit": {
                         "composition": {
                             "lithology": {
                                 "scheme": "urn:x-ngwd:classifierScheme:USGS:Lithology:2011",
@@ -8294,7 +8294,7 @@
                     }
                 },
                 {
-                    "hydrostatic_graphing_unit": {
+                    "unit": {
                         "composition": {
                             "lithology": {
                                 "scheme": "urn:x-ngwd:classifierScheme:USGS:Lithology:2011",
@@ -8333,7 +8333,7 @@
                     }
                 },
                 {
-                    "hydrostatic_graphing_unit": {
+                    "unit": {
                         "composition": {
                             "lithology": {
                                 "scheme": "urn:x-ngwd:classifierScheme:USGS:Lithology:2011",
@@ -8373,7 +8373,7 @@
                     }
                 },
                 {
-                    "hydrostatic_graphing_unit": {
+                    "unit": {
                         "composition": {
                             "lithology": {
                                 "scheme": "urn:x-ngwd:classifierScheme:USGS:Lithology:2011",
@@ -8412,7 +8412,7 @@
                     }
                 },
                 {
-                    "hydrostatic_graphing_unit": {
+                    "unit": {
                         "composition": {
                             "lithology": {
                                 "scheme": "urn:x-ngwd:classifierScheme:USGS:Lithology:2011",
@@ -8451,7 +8451,7 @@
                     }
                 },
                 {
-                    "hydrostatic_graphing_unit": {
+                    "unit": {
                         "composition": {
                             "lithology": {
                                 "scheme": "urn:x-ngwd:classifierScheme:USGS:Lithology:2011",
@@ -8491,7 +8491,7 @@
                     }
                 },
                 {
-                    "hydrostatic_graphing_unit": {
+                    "unit": {
                         "composition": {
                             "lithology": {
                                 "scheme": "urn:x-ngwd:classifierScheme:USGS:Lithology:2011",
@@ -8531,7 +8531,7 @@
                     }
                 },
                 {
-                    "hydrostatic_graphing_unit": {
+                    "unit": {
                         "composition": {
                             "lithology": {
                                 "scheme": "urn:x-ngwd:classifierScheme:USGS:Lithology:2011",

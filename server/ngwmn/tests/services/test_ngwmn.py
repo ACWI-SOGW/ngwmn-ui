@@ -247,7 +247,7 @@ class TestWellLogResults(TestCase):
                 },
                 'log_entries': [{
                     'method': 'borehole',
-                    'hydrostatic_graphing_unit': {
+                    'unit': {
                         'description': 'Sandstone',
                         'purpose': 'instance',
                         'composition':  {
@@ -280,7 +280,7 @@ class TestWellLogResults(TestCase):
                     }
                 }, {
                     'method': 'borehole',
-                    'hydrostatic_graphing_unit': {
+                    'unit': {
                         'description': 'Siltstone',
                         'purpose': 'instance',
                         'composition': {
@@ -313,7 +313,7 @@ class TestWellLogResults(TestCase):
                     }
                 }, {
                     'method': 'borehole',
-                    'hydrostatic_graphing_unit': {
+                    'unit': {
                         'description': 'Sandstone',
                         'purpose': 'instance',
                         'composition': {

@@ -1,4 +1,14 @@
-{% macro Graph(agency_code, site_no) -%}
+{% macro Graph(agency_code, site_no, lithology_ids) -%}
+    {# Insert lithology pattern defs #}
+    <svg height="79.6" width="79.4" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1">
+        <defs>
+            {% for lith_id in lithology_ids %}
+                <pattern id="lithology-{{ lith_id }}" patternUnits="userSpaceOnUse" width="53.2" height="53.4">
+                    <image xlink:href="{{ ('img/lithology-patterns/' + lith_id|string + '.svg') | asset_url }}" x="0" y="0" width="53.2" height="53.4" />
+                </pattern>
+            {% endfor %}
+        </defs>
+    </svg>
     <div class="has-script">
         <div class="ngwmn-component loading" data-component="graph" data-siteID="{{ site_no }}" data-agencyCode="{{ agency_code }}">
             <div class="indicators">

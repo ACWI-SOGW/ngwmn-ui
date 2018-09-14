@@ -3,6 +3,8 @@ NGWMN UI application views
 
 """
 
+from functools import reduce
+
 from flask import abort, jsonify, render_template
 
 from . import __version__, app
@@ -70,11 +72,19 @@ def site_page(agency_cd, location_id):
     else:
         organization = feature.get('AGENCY_NM')
 
+    # Get the unique list of lithology IDs in the well log
+    lithology_ids = reduce(
+        lambda ids, entry: ids.union(entry['unit']['composition']['material']['ui']['materials']),
+        well_log.get('log_entries', []),
+        set()
+    )
+
     return render_template(
         'site_location.html',
         cooperators=get_cooperators(location_id),
         feature=feature,
         organization=organization,
         water_quality_activities=water_quality.get('activities') or [],
-        well_log=well_log
+        well_log=well_log,
+        lithology_ids=lithology_ids
     ), 200

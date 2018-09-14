@@ -216,9 +216,9 @@ LITHOLOGY = {
     # Basaltic flows:
     717: {('basaltic', 'flows',)},
     # Granite (1st option):
-    718: {('granite',)},
+    # 718: {('granite',)},
     # Granite (2nd option):
-    # 719: {('granite',)},
+    719: {('granite',)},
     # Banded igneous rock:
     720: {('banded', 'igneous', 'rock',)},
     # Igneous rock (1st option):

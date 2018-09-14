@@ -207,7 +207,7 @@ def get_well_log(agency_cd, location_id):
         })(water_well.find('gwml:onlineResource', xml.nsmap)),
         'log_entries': [{
             'method': _find(entry, 'gsml:observationMethod/gsml:CGI_TermValue/gsml:value'),
-            'hydrostatic_graphing_unit': (lambda unit: {
+            'unit': (lambda unit: {
                 'description': _find(unit, 'gml:description'),
                 'purpose': _find(unit, 'gsml:purpose'),
                 'composition': (lambda part: {
