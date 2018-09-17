@@ -15,35 +15,29 @@ export default function (elem, {lithology}, container) {
         .append('g')
             .classed('lithology', true);
 
-    const rects = container
-        .selectAll('rect')
-            .data(lithology);
+    // Remove any previously drawn children
+    container.selectAll('*').remove();
 
-    rects.exit()
-        .transition(transition().duration(500))
-            .style('opacity', '0')
-            .remove();
-
-    const newRects = rects.enter()
-        .append('rect')
-            .call(rect => {
-                rect.append('title')
-                    .text(datum => datum.title);
-            });
-
-    rects.merge(newRects)
-        .transition(transition().duration(20))
-            .attr('x', datum => datum.x)
-            .attr('y', datum => datum.y)
-            .attr('width', datum => datum.width)
-            .attr('height', datum => datum.height)
-            .attr('fill', (datum) => {
-                return `url(#lithology-${datum.materials[0]})`;
-                /*if (!datum.colors.length) {
-                    return LITHOLOGY_COLORS[index % LITHOLOGY_COLORS.length];
-                }
-                return datum.colors[0];*/
-            });
+    for (let i = 0; i < lithology.length; i++) {
+        const layer = lithology[i];
+        container
+            .append('rect')
+                .call(rect => {
+                    rect.append('title')
+                        .text(layer.title);
+                })
+                .attr('x', layer.x)
+                .attr('y', layer.y)
+                .attr('width', layer.width)
+                .attr('height', layer.height)
+                .attr('fill', `url(#lithology-${layer.materials[0]})`)
+                .attr('color', () => {
+                    if (!layer.colors.length) {
+                        return LITHOLOGY_COLORS[i % LITHOLOGY_COLORS.length];
+                    }
+                    return layer.colors[0];
+                });
+    }
 
     return container;
 }

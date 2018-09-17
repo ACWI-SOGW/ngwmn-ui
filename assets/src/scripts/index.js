@@ -4,14 +4,15 @@
 
 import 'uswds';
 
+import SVGPattern from 'ngwmn/components/svg-pattern/index';
 import GraphComponent from 'ngwmn/components/graph/index';
 import configureStore from 'ngwmn/store';
 
 
 const COMPONENTS = {
-    graph: GraphComponent
+    graph: GraphComponent,
+    'svg-pattern': SVGPattern
 };
-
 
 const main = function () {
     // NOTE: Here we use a try/catch block rather than a global "onerror"
