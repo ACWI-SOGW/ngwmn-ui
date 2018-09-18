@@ -16,6 +16,8 @@ export default function (store, node, {url, id}) {
         const svgElem = document.documentElement;
         const width = svgElem.getAttribute('width');
         const height = svgElem.getAttribute('height');
+        // Get svg string, with "#" escaped
+        const svgStr = svgElem.outerHTML.replace(/#/g, '%23');
         select(node)
             .append('svg')
                 .attr('xmlns', 'http://www.w3.org/2000/svg')
@@ -32,7 +34,7 @@ export default function (store, node, {url, id}) {
                         .attr('width', width)
                         .attr('height', height)
                         .append('image')
-                            .attr('xlink:href', `data:image/svg+xml;utf8,${svgElem.outerHTML}`)
+                            .attr('xlink:href', `data:image/svg+xml;utf8,${svgStr}`)
                             .attr('width', width)
                             .attr('height', height);
     });
