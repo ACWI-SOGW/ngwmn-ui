@@ -270,6 +270,13 @@ def _compare_scores(score_a, score_b):
 
 
 def classify_material(material_string):
+    """
+    Returns a list of lithology classifications given a textual description.
+
+    :param str material_string: free-form text description of lithology
+    :return: list of material classifications
+    :rtype: list
+    """
     matches = process.extract(
         material_string,
         LITH_STRINGS.keys(),

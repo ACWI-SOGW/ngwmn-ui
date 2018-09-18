@@ -1,8 +1,3 @@
-import { transition } from 'd3-transition';
-
-import config from 'ngwmn/config';
-
-
 const LITHOLOGY_COLORS = [
     '#9A887E',
     '#72655C',
