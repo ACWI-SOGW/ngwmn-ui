@@ -167,6 +167,7 @@ describe('graph component well log state', () => {
                 width: 100,
                 height: 1,
                 colors: ['brown'],
+                materials: [616, 617, 618, 669, 631],
                 title: '1 - 2 ft, Siltstone'
             }, {
                 x: 10,
@@ -174,6 +175,7 @@ describe('graph component well log state', () => {
                 width: 100,
                 height: 1,
                 colors: ['yellow'],
+                materials: [616, 617, 618, 669, 631],
                 title: '2 - 3 ft, Siltstone'
             }]);
         });

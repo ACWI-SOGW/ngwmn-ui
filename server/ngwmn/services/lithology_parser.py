@@ -304,6 +304,9 @@ def parse_material(material_string):
     normalized = ' '.join(words)
 
     return {
-        'colors': list(COLORS & set(words)),
+        'colors': [
+            webcolors.CSS3_NAMES_TO_HEX[color]
+            for color in COLORS & set(words)
+        ],
         'materials': classify_material(normalized)
     }

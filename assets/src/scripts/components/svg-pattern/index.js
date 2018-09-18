@@ -14,6 +14,8 @@ import { get } from 'ngwmn/lib/ajax';
 export default function (store, node, {url, id}) {
     get(url, 'responseXML').then(function (document) {
         const svgElem = document.documentElement;
+        const width = svgElem.getAttribute('width');
+        const height = svgElem.getAttribute('height');
         select(node)
             .append('svg')
                 .attr('xmlns', 'http://www.w3.org/2000/svg')
@@ -27,12 +29,11 @@ export default function (store, node, {url, id}) {
                         .attr('patternUnits', 'userSpaceOnUse')
                         .attr('x', 0)
                         .attr('y', 0)
-                        .attr('width', svgElem.getAttribute('width'))
-                        .attr('height', svgElem.getAttribute('height'))
-                        .call(function (pattern) {
-                            Array.from(svgElem.childNodes).forEach(n => {
-                                pattern.node().appendChild(n);
-                            });
-                        });
+                        .attr('width', width)
+                        .attr('height', height)
+                        .append('image')
+                            .attr('xlink:href', `data:image/svg+xml;utf8,${svgElem.outerHTML}`)
+                            .attr('width', width)
+                            .attr('height', height);
     });
 }

@@ -20,7 +20,11 @@ library and then exported:
 
 ## Notes
 
-Some exports resulted in an Illustrator message, and should be revisited:
+All exports will need to be redone with zero-sized paths expanded and clip
+paths fixed so all the patterns tile properly. Ideally we'd automate it but not
+certain how to go about that.
+
+Here are some notes about the patterns that have clip paths assigned to them:
 
 > A clipping mask was created around the pattern tile bounds to preserve legacy
 > pattern appearance.

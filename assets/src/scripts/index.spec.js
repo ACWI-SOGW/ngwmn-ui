@@ -19,6 +19,7 @@ import 'ngwmn/components/graph/view/construction.spec.js';
 import 'ngwmn/components/graph/view/cursor.spec.js';
 import 'ngwmn/components/graph/view/domain-mapping.spec.js';
 import 'ngwmn/components/graph/view/legend.spec.js';
+import 'ngwmn/components/graph/view/lithology.spec.js';
 import 'ngwmn/components/graph/view/water-levels.spec.js';
 import 'ngwmn/lib/ajax.spec';
 import 'ngwmn/lib/d3-redux.spec';
