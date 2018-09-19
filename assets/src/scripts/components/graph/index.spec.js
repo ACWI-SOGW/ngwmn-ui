@@ -63,6 +63,7 @@ describe('graph component', () => {
                 responseText: MOCK_WATER_LEVEL_RESPONSE,
                 contentType: 'text/xml'
             });
+            spyOn(window, 'requestAnimationFrame').and.callFake(func => func());
             window.setTimeout(() => {
                 expect(div.classed('loading')).toBe(false);
                 expect(div.classed('has-error')).toBe(false);
@@ -79,6 +80,7 @@ describe('graph component', () => {
                 reason: 'oops uh oh!',
                 contentType: 'text/xml'
             });
+            spyOn(window, 'requestAnimationFrame').and.callFake(func => func());
             window.setTimeout(() => {
                 expect(div.classed('loading')).toBe(false);
                 expect(div.classed('has-error')).toBe(true);

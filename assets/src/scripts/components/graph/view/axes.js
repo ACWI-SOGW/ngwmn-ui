@@ -85,7 +85,8 @@ export const drawAxisYLabel = function (elem, {unit}, label) {
 
     // Set the label text
     if (unit) {
-        const unitDisplay = UNIT_DISPLAY[unit.toLowerCase()] || unit;
+        unit = unit.toLowerCase();
+        const unitDisplay = UNIT_DISPLAY[unit] || unit;
         label.text(`Depth to water, ${unitDisplay} below land surface`);
     } else {
         label.text('Depth to water');

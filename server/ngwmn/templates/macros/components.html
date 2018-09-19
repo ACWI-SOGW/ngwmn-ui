@@ -1,4 +1,13 @@
-{% macro Graph(agency_code, site_no) -%}
+{# This component will request a remote resource and then insert it as a child into the DOM #}
+{% macro SVGPattern(url, id) %}
+    <div class="ngwmn-component" data-component="svg-pattern" data-url="{{ url }}" data-id="{{ id }}"></div>
+{%- endmacro %}
+
+{% macro Graph(agency_code, site_no, lithology_ids) -%}
+    {# Insert lithology pattern defs #}
+    {% for lith_id in lithology_ids %}
+        {{ SVGPattern(('patterns/' ~ lith_id ~ '.svg') | asset_url, 'lithology-' ~ lith_id) }}
+    {% endfor %}
     <div class="has-script">
         <div class="ngwmn-component loading" data-component="graph" data-siteID="{{ site_no }}" data-agencyCode="{{ agency_code }}">
             <div class="indicators">

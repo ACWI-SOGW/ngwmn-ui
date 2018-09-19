@@ -165,6 +165,15 @@ $provisional-color: color(accent-warm, dark);
                         }
                     }
                 }
+                g.lithology {
+                    rect {
+                        &:hover {
+                            stroke: yellow;
+                            stroke-opacity: 0.5;
+                            stroke-width: 4px;
+                        }
+                    }
+                }
             }
             path.domain-mapping {
                 fill: none;

@@ -118,6 +118,19 @@ describe('graph component well log state', () => {
                 coordinates: {
                     start: '1',
                     end: '2'
+                },
+                'unit': 'ft'
+            },
+            unit: {
+                description: 'Siltstone',
+                ui: {
+                    colors: ['brown'],
+                    materials: [616, 617, 618, 669, 631]
+                },
+                composition: {
+                    material: {
+                        name: 'Siltstone'
+                    }
                 }
             }
         }, {
@@ -125,6 +138,19 @@ describe('graph component well log state', () => {
                 coordinates: {
                     start: '2',
                     end: '3'
+                },
+                'unit': 'ft'
+            },
+            unit: {
+                description: 'Siltstone',
+                ui: {
+                    colors: ['yellow'],
+                    materials: [616, 617, 618, 669, 631]
+                },
+                composition: {
+                    material: {
+                        name: 'Siltstone'
+                    }
                 }
             }
         }];
@@ -142,27 +168,17 @@ describe('graph component well log state', () => {
                 y: 1,
                 width: 100,
                 height: 1,
-                entry: {
-                    shape: {
-                        coordinates: {
-                            start: '1',
-                            end: '2'
-                        }
-                    }
-                }
+                colors: ['brown'],
+                materials: [616, 617, 618, 669, 631],
+                title: '1 - 2 ft, Siltstone'
             }, {
                 x: 10,
                 y: 2,
                 width: 100,
                 height: 1,
-                entry: {
-                    shape: {
-                        coordinates: {
-                            start: '2',
-                            end: '3'
-                        }
-                    }
-                }
+                colors: ['yellow'],
+                materials: [616, 617, 618, 669, 631],
+                title: '2 - 3 ft, Siltstone'
             }]);
         });
 

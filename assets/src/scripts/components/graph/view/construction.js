@@ -12,7 +12,7 @@ const drawElement = function (elem, element, index) {
                 .attr('width', element.right.x - element.left.x)
                 .attr('height', element.right.y2 - element.right.y1)
                 .call(callIf(element.type === 'screen', (rect) => {
-                    rect.attr('fill', `url(#screen-${index % 2})`);
+                    rect.attr('fill', `url(#screen-pattern-${index % 2})`);
                 }))
                 .append('title')
                     .text(element.title);
@@ -53,15 +53,6 @@ const drawWaterLevel = function (elem, elements, cursorWaterLevel) {
             });
     container
         .append('rect')
-            .attr('id', 'well-interior')
-            .attr('clip-path', 'url(#water-level-path)')
-            .attr('x', cursorWaterLevel.x)
-            .attr('y', 0)
-            .attr('width', cursorWaterLevel.width)
-            .attr('height', cursorWaterLevel.height)
-            .attr('fill', 'white');
-    container
-        .append('rect')
             .attr('id', 'water-level')
             .attr('clip-path', 'url(#water-level-path)')
             .attr('x', cursorWaterLevel.x)
@@ -76,7 +67,7 @@ const drawPatterns = function (elem) {
     elem.append('defs')
         .call(defs => {
             defs.append('pattern')
-                .attr('id', 'screen-0')
+                .attr('id', 'screen-pattern-0')
                 .attr('width', '3')
                 .attr('height', '3')
                 .attr('patternUnits', 'userSpaceOnUse')
@@ -87,7 +78,7 @@ const drawPatterns = function (elem) {
                     .attr('fill', 'gray')
                     .attr('transform', 'translate(0, 0)');
             defs.append('pattern')
-                .attr('id', 'screen-1')
+                .attr('id', 'screen-pattern-1')
                 .attr('width', '3')
                 .attr('height', '3')
                 .attr('patternUnits', 'userSpaceOnUse')

@@ -20,3 +20,4 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added lithology chart
 - Added well log tables
 - Added well construction drawing (screens, casings)
+- Fill lithology layers with FGDC Digital Cartographic Standard patterns

@@ -19,7 +19,7 @@
     <h1>{{ feature.SITE_NAME }}</h1>
     {% if organization %}<h2 class="usa-font-lead">{{ organization }}</h2>{% endif %}
     <div class="usa-grid">
-        {{ components.Graph(feature.AGENCY_CD, feature.SITE_NO) }}
+        {{ components.Graph(feature.AGENCY_CD, feature.SITE_NO, lithology_ids) }}
         <ul class="usa-accordion">
             <li>
                 <button class="usa-accordion-button" aria-expanded="false" aria-controls="ts-a1">
@@ -179,8 +179,8 @@
                                 <tr>
                                     <td>{{ entry.shape.coordinates.start }} {{ entry.shape.unit }}</td>
                                     <td>{{ entry.shape.coordinates.end }} {{ entry.shape.unit }}</td>
-                                    <td>{{ _(entry.hydrostatic_graphing_unit.composition.lithology.value) }}</td>
-                                    <td>{{ _(entry.hydrostatic_graphing_unit.description) }}</td>
+                                    <td>{{ _(entry.unit.composition.lithology.value) }}</td>
+                                    <td>{{ _(entry.unit.description) }}</td>
                                 </tr>
                             {% endfor %}
                         </tbody>

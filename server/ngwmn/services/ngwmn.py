@@ -1,13 +1,14 @@
 """
 Utility functions for fetching data
-
 """
+import re
 from urllib.parse import urljoin
 
 import requests as r
 
 from ngwmn import app
 from ngwmn.services import ServiceException
+from ngwmn.services.lithology_parser import classify_material, get_colors
 from ngwmn.xml_utils import parse_xml
 
 
@@ -45,16 +46,16 @@ def get_iddata(request, agency_cd, location_id, service_root=SERVICE_ROOT):
     return parse_xml(resp.content)
 
 
-def _find(parent, tag):
+def _find(parent, tag, default=None):
     if parent is None:
-        return None
+        return default
 
     node = parent.find(tag, parent.nsmap)
     if node is None:
-        return None
+        return default
 
     if node.text == 'unknown':
-        return None
+        return default
 
     return node.text
 
@@ -207,8 +208,12 @@ def get_well_log(agency_cd, location_id):
         })(water_well.find('gwml:onlineResource', xml.nsmap)),
         'log_entries': [{
             'method': _find(entry, 'gsml:observationMethod/gsml:CGI_TermValue/gsml:value'),
-            'hydrostatic_graphing_unit': (lambda unit: {
+            'unit': (lambda unit: {
                 'description': _find(unit, 'gml:description'),
+                'ui': (lambda words: {
+                    'colors': get_colors(words),
+                    'materials': classify_material(words)
+                })(re.findall(r'\w+', _find(unit, 'gml:description', '').lower())),
                 'purpose': _find(unit, 'gsml:purpose'),
                 'composition': (lambda part: {
                     'role': _find(part, 'gsml:role'),
@@ -218,7 +223,7 @@ def get_well_log(agency_cd, location_id):
                     })(part.find('gsml:lithology/gsml:ControlledConcept/gml:name', xml.nsmap)),
                     'material': (lambda material: {
                         'name': _find(material, 'gml:name'),
-                        'purpose': _find(material, 'gsml:purpose'),
+                        'purpose': _find(material, 'gsml:purpose')
                     })(part.find('gsml:material/gsml:UnconsolidatedMaterial', xml.nsmap)),
                     'proportion': (lambda proportion: {
                         'scheme': proportion.get('codeSpace'),
