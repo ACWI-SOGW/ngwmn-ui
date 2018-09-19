@@ -67,14 +67,14 @@ export const getLithology = memoize(chartType => createSelector(
             const loc = entry.shape.coordinates;
             const top = yScale(loc.start) || 0;
             const bottom = yScale(loc.end) || 0;
-            const name = entry.unit.composition.material.name;
+            const name = entry.unit.description;
             return {
                 x: layout.x,
                 y: top,
                 width: layout.width,
                 height: bottom - top,
-                colors: entry.unit.composition.material.ui.colors,
-                materials: entry.unit.composition.material.ui.materials,
+                colors: entry.unit.ui.colors,
+                materials: entry.unit.ui.materials,
                 title: `${loc.start} - ${loc.end} ${entry.shape.unit}, ${name}`
             };
         });

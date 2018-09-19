@@ -249,6 +249,10 @@ class TestWellLogResults(TestCase):
                     'method': 'borehole',
                     'unit': {
                         'description': 'Sandstone',
+                        'ui': {
+                            'colors': [],
+                            'materials': [608, 609, 611, 612, 613]
+                        },
                         'purpose': 'instance',
                         'composition':  {
                             'role': 'contains',
@@ -258,11 +262,7 @@ class TestWellLogResults(TestCase):
                             },
                             'material': {
                                 'name': 'Sandstone',
-                                'purpose': 'instance',
-                                'ui': {
-                                    'colors': [],
-                                    'materials': [608, 609, 611, 612, 613]
-                                }
+                                'purpose': 'instance'
                             },
                             'proportion': {
                                 'scheme': 'urn:ietf:rfc:2141',
@@ -282,6 +282,10 @@ class TestWellLogResults(TestCase):
                     'method': 'borehole',
                     'unit': {
                         'description': 'Siltstone',
+                        'ui': {
+                            'colors': [],
+                            'materials': [616, 617, 618, 669, 637]
+                        },
                         'purpose': 'instance',
                         'composition': {
                             'role': 'contains',
@@ -291,11 +295,7 @@ class TestWellLogResults(TestCase):
                             },
                             'material': {
                                 'name': 'Siltstone',
-                                'purpose': 'instance',
-                                'ui': {
-                                    'colors': [],
-                                    'materials': [616, 617, 618, 669, 637]
-                                }
+                                'purpose': 'instance'
                             },
                             'proportion': {
                                 'scheme': 'urn:ietf:rfc:2141',
@@ -315,6 +315,10 @@ class TestWellLogResults(TestCase):
                     'method': 'borehole',
                     'unit': {
                         'description': 'Sandstone',
+                        'ui': {
+                            'colors': [],
+                            'materials': [608, 609, 611, 612, 613]
+                        },
                         'purpose': 'instance',
                         'composition': {
                             'role': 'contains',
@@ -324,11 +328,7 @@ class TestWellLogResults(TestCase):
                             },
                             'material': {
                                 'name': 'Sandstone',
-                                'purpose': 'instance',
-                                'ui': {
-                                    'colors': [],
-                                    'materials': [608, 609, 611, 612, 613]
-                                }
+                                'purpose': 'instance'
                             },
                             'proportion': {
                                 'scheme': 'urn:ietf:rfc:2141',

@@ -122,13 +122,14 @@ describe('graph component well log state', () => {
                 'unit': 'ft'
             },
             unit: {
+                description: 'Siltstone',
+                ui: {
+                    colors: ['brown'],
+                    materials: [616, 617, 618, 669, 631]
+                },
                 composition: {
                     material: {
-                        name: 'Siltstone',
-                        ui: {
-                            colors: ['brown'],
-                            materials: [616, 617, 618, 669, 631]
-                        }
+                        name: 'Siltstone'
                     }
                 }
             }
@@ -141,13 +142,14 @@ describe('graph component well log state', () => {
                 'unit': 'ft'
             },
             unit: {
+                description: 'Siltstone',
+                ui: {
+                    colors: ['yellow'],
+                    materials: [616, 617, 618, 669, 631]
+                },
                 composition: {
                     material: {
-                        name: 'Siltstone',
-                        ui: {
-                            colors: ['yellow'],
-                            materials: [616, 617, 618, 669, 631]
-                        }
+                        name: 'Siltstone'
                     }
                 }
             }

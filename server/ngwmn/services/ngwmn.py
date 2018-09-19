@@ -209,6 +209,7 @@ def get_well_log(agency_cd, location_id):
             'method': _find(entry, 'gsml:observationMethod/gsml:CGI_TermValue/gsml:value'),
             'unit': (lambda unit: {
                 'description': _find(unit, 'gml:description'),
+                'ui': parse_material(_find(unit, 'gml:description')),
                 'purpose': _find(unit, 'gsml:purpose'),
                 'composition': (lambda part: {
                     'role': _find(part, 'gsml:role'),
@@ -218,8 +219,7 @@ def get_well_log(agency_cd, location_id):
                     })(part.find('gsml:lithology/gsml:ControlledConcept/gml:name', xml.nsmap)),
                     'material': (lambda material: {
                         'name': _find(material, 'gml:name'),
-                        'purpose': _find(material, 'gsml:purpose'),
-                        'ui': parse_material(_find(material, 'gml:name'))
+                        'purpose': _find(material, 'gsml:purpose')
                     })(part.find('gsml:material/gsml:UnconsolidatedMaterial', xml.nsmap)),
                     'proportion': (lambda proportion: {
                         'scheme': proportion.get('codeSpace'),

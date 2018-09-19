@@ -74,7 +74,7 @@ def site_page(agency_cd, location_id):
 
     # Get the unique list of lithology IDs in the well log
     lithology_ids = reduce(
-        lambda ids, entry: ids.union(entry['unit']['composition']['material']['ui']['materials']),
+        lambda ids, entry: ids.union(entry['unit']['ui']['materials']),
         well_log.get('log_entries', []),
         set()
     )

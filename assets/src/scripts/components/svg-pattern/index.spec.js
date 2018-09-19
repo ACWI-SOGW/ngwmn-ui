@@ -43,12 +43,12 @@ describe('svg pattern component', () => {
             expect(div.selectAll('svg').size()).toEqual(1);
             expect(div.selectAll('pattern').size()).toEqual(1);
             const pattern = div.select('pattern');
-            expect(pattern.attr('width')).toEqual('53.2px');
-            expect(pattern.attr('height')).toEqual('53.4px');
+            expect(pattern.attr('width')).toEqual('106.4');
+            expect(pattern.attr('height')).toEqual('106.8');
             expect(pattern.attr('id')).toEqual('my-id');
             const image = pattern.select('image');
-            expect(image.attr('width')).toEqual('53.2px');
-            expect(image.attr('height')).toEqual('53.4px');
+            expect(image.attr('width')).toEqual('106.4');
+            expect(image.attr('height')).toEqual('106.8');
         });
     });
 });

@@ -4,14 +4,14 @@
     },
     "components/graph/layout": {
         "axisYBBox": {
-            "height": 307.9297790527344,
+            "height": 479.7520446777344,
             "width": 26.171875,
             "x": -25.671875,
             "y": 0.5
         },
         "graphSize": {
-            "height": 367.90625,
-            "width": 685.1875
+            "height": 582,
+            "width": 1042
         },
         "viewport": [
             -2145852000000,
@@ -8136,35 +8136,6 @@
             },
             "log_entries": [
                 {
-                    "unit": {
-                        "composition": {
-                            "lithology": {
-                                "scheme": "urn:x-ngwd:classifierScheme:USGS:Lithology:2011",
-                                "value": "GRAVEL"
-                            },
-                            "material": {
-                                "name": "Gravel",
-                                "purpose": "instance",
-                                "ui": {
-                                    "colors": [],
-                                    "materials": [
-                                        601,
-                                        603,
-                                        631,
-                                        634,
-                                        629
-                                    ]
-                                }
-                            },
-                            "proportion": {
-                                "scheme": "urn:ietf:rfc:2141",
-                                "value": "urn:ogc:def:nil:OGC:unknown"
-                            },
-                            "role": "contains"
-                        },
-                        "description": "Gravel",
-                        "purpose": "instance"
-                    },
                     "method": "borehole",
                     "shape": {
                         "coordinates": {
@@ -8173,27 +8144,16 @@
                         },
                         "dimension": "1",
                         "unit": "ft"
-                    }
-                },
-                {
+                    },
                     "unit": {
                         "composition": {
                             "lithology": {
                                 "scheme": "urn:x-ngwd:classifierScheme:USGS:Lithology:2011",
-                                "value": "CLAY"
+                                "value": "GRAVEL"
                             },
                             "material": {
-                                "name": "Clay",
-                                "purpose": "instance",
-                                "ui": {
-                                    "colors": [],
-                                    "materials": [
-                                        620,
-                                        661,
-                                        631,
-                                        634
-                                    ]
-                                }
+                                "name": "Gravel",
+                                "purpose": "instance"
                             },
                             "proportion": {
                                 "scheme": "urn:ietf:rfc:2141",
@@ -8201,9 +8161,21 @@
                             },
                             "role": "contains"
                         },
-                        "description": "Clay",
-                        "purpose": "instance"
-                    },
+                        "description": "Gravel",
+                        "purpose": "instance",
+                        "ui": {
+                            "colors": [],
+                            "materials": [
+                                601,
+                                603,
+                                719,
+                                715,
+                                623
+                            ]
+                        }
+                    }
+                },
+                {
                     "method": "borehole",
                     "shape": {
                         "coordinates": {
@@ -8212,88 +8184,7 @@
                         },
                         "dimension": "1",
                         "unit": "ft"
-                    }
-                },
-                {
-                    "unit": {
-                        "composition": {
-                            "lithology": {
-                                "scheme": "urn:x-ngwd:classifierScheme:USGS:Lithology:2011",
-                                "value": "GRAVEL"
-                            },
-                            "material": {
-                                "name": "Gravel",
-                                "purpose": "instance",
-                                "ui": {
-                                    "colors": [],
-                                    "materials": [
-                                        601,
-                                        603,
-                                        631,
-                                        634,
-                                        629
-                                    ]
-                                }
-                            },
-                            "proportion": {
-                                "scheme": "urn:ietf:rfc:2141",
-                                "value": "urn:ogc:def:nil:OGC:unknown"
-                            },
-                            "role": "contains"
-                        },
-                        "description": "Gravel",
-                        "purpose": "instance"
                     },
-                    "method": "borehole",
-                    "shape": {
-                        "coordinates": {
-                            "end": 40,
-                            "start": 35
-                        },
-                        "dimension": "1",
-                        "unit": "ft"
-                    }
-                },
-                {
-                    "unit": {
-                        "composition": {
-                            "lithology": {
-                                "scheme": "urn:x-ngwd:classifierScheme:USGS:Lithology:2011",
-                                "value": "UNKNOWN"
-                            },
-                            "material": {
-                                "name": "Hard Pan",
-                                "purpose": "instance",
-                                "ui": {
-                                    "colors": [],
-                                    "materials": [
-                                        631,
-                                        634,
-                                        629,
-                                        630
-                                    ]
-                                }
-                            },
-                            "proportion": {
-                                "scheme": "urn:ietf:rfc:2141",
-                                "value": "urn:ogc:def:nil:OGC:unknown"
-                            },
-                            "role": "contains"
-                        },
-                        "description": "Hard Pan",
-                        "purpose": "instance"
-                    },
-                    "method": "borehole",
-                    "shape": {
-                        "coordinates": {
-                            "end": 95,
-                            "start": 40
-                        },
-                        "dimension": "1",
-                        "unit": "ft"
-                    }
-                },
-                {
                     "unit": {
                         "composition": {
                             "lithology": {
@@ -8302,16 +8193,7 @@
                             },
                             "material": {
                                 "name": "Clay",
-                                "purpose": "instance",
-                                "ui": {
-                                    "colors": [],
-                                    "materials": [
-                                        620,
-                                        661,
-                                        631,
-                                        634
-                                    ]
-                                }
+                                "purpose": "instance"
                             },
                             "proportion": {
                                 "scheme": "urn:ietf:rfc:2141",
@@ -8320,19 +8202,29 @@
                             "role": "contains"
                         },
                         "description": "Clay",
-                        "purpose": "instance"
-                    },
-                    "method": "borehole",
-                    "shape": {
-                        "coordinates": {
-                            "end": 180,
-                            "start": 95
-                        },
-                        "dimension": "1",
-                        "unit": "ft"
+                        "purpose": "instance",
+                        "ui": {
+                            "colors": [],
+                            "materials": [
+                                620,
+                                660,
+                                661,
+                                628,
+                                629
+                            ]
+                        }
                     }
                 },
                 {
+                    "method": "borehole",
+                    "shape": {
+                        "coordinates": {
+                            "end": 40,
+                            "start": 35
+                        },
+                        "dimension": "1",
+                        "unit": "ft"
+                    },
                     "unit": {
                         "composition": {
                             "lithology": {
@@ -8341,17 +8233,7 @@
                             },
                             "material": {
                                 "name": "Gravel",
-                                "purpose": "instance",
-                                "ui": {
-                                    "colors": [],
-                                    "materials": [
-                                        601,
-                                        603,
-                                        631,
-                                        634,
-                                        629
-                                    ]
-                                }
+                                "purpose": "instance"
                             },
                             "proportion": {
                                 "scheme": "urn:ietf:rfc:2141",
@@ -8360,8 +8242,100 @@
                             "role": "contains"
                         },
                         "description": "Gravel",
-                        "purpose": "instance"
+                        "purpose": "instance",
+                        "ui": {
+                            "colors": [],
+                            "materials": [
+                                601,
+                                603,
+                                719,
+                                715,
+                                623
+                            ]
+                        }
+                    }
+                },
+                {
+                    "method": "borehole",
+                    "shape": {
+                        "coordinates": {
+                            "end": 95,
+                            "start": 40
+                        },
+                        "dimension": "1",
+                        "unit": "ft"
                     },
+                    "unit": {
+                        "composition": {
+                            "lithology": {
+                                "scheme": "urn:x-ngwd:classifierScheme:USGS:Lithology:2011",
+                                "value": "UNKNOWN"
+                            },
+                            "material": {
+                                "name": "Hard Pan",
+                                "purpose": "instance"
+                            },
+                            "proportion": {
+                                "scheme": "urn:ietf:rfc:2141",
+                                "value": "urn:ogc:def:nil:OGC:unknown"
+                            },
+                            "role": "contains"
+                        },
+                        "description": "Hard Pan",
+                        "purpose": "instance",
+                        "ui": {
+                            "colors": [],
+                            "materials": [
+                                612,
+                                631,
+                                609,
+                                611,
+                                623
+                            ]
+                        }
+                    }
+                },
+                {
+                    "method": "borehole",
+                    "shape": {
+                        "coordinates": {
+                            "end": 180,
+                            "start": 95
+                        },
+                        "dimension": "1",
+                        "unit": "ft"
+                    },
+                    "unit": {
+                        "composition": {
+                            "lithology": {
+                                "scheme": "urn:x-ngwd:classifierScheme:USGS:Lithology:2011",
+                                "value": "CLAY"
+                            },
+                            "material": {
+                                "name": "Clay",
+                                "purpose": "instance"
+                            },
+                            "proportion": {
+                                "scheme": "urn:ietf:rfc:2141",
+                                "value": "urn:ogc:def:nil:OGC:unknown"
+                            },
+                            "role": "contains"
+                        },
+                        "description": "Clay",
+                        "purpose": "instance",
+                        "ui": {
+                            "colors": [],
+                            "materials": [
+                                620,
+                                660,
+                                661,
+                                628,
+                                629
+                            ]
+                        }
+                    }
+                },
+                {
                     "method": "borehole",
                     "shape": {
                         "coordinates": {
@@ -8370,27 +8344,16 @@
                         },
                         "dimension": "1",
                         "unit": "ft"
-                    }
-                },
-                {
+                    },
                     "unit": {
                         "composition": {
                             "lithology": {
                                 "scheme": "urn:x-ngwd:classifierScheme:USGS:Lithology:2011",
-                                "value": "SHALE"
+                                "value": "GRAVEL"
                             },
                             "material": {
-                                "name": "Shale",
-                                "purpose": "instance",
-                                "ui": {
-                                    "colors": [],
-                                    "materials": [
-                                        619,
-                                        620,
-                                        621,
-                                        622
-                                    ]
-                                }
+                                "name": "Gravel",
+                                "purpose": "instance"
                             },
                             "proportion": {
                                 "scheme": "urn:ietf:rfc:2141",
@@ -8398,9 +8361,21 @@
                             },
                             "role": "contains"
                         },
-                        "description": "Shale",
-                        "purpose": "instance"
-                    },
+                        "description": "Gravel",
+                        "purpose": "instance",
+                        "ui": {
+                            "colors": [],
+                            "materials": [
+                                601,
+                                603,
+                                719,
+                                715,
+                                623
+                            ]
+                        }
+                    }
+                },
+                {
                     "method": "borehole",
                     "shape": {
                         "coordinates": {
@@ -8409,9 +8384,7 @@
                         },
                         "dimension": "1",
                         "unit": "ft"
-                    }
-                },
-                {
+                    },
                     "unit": {
                         "composition": {
                             "lithology": {
@@ -8420,16 +8393,7 @@
                             },
                             "material": {
                                 "name": "Shale",
-                                "purpose": "instance",
-                                "ui": {
-                                    "colors": [],
-                                    "materials": [
-                                        619,
-                                        620,
-                                        621,
-                                        622
-                                    ]
-                                }
+                                "purpose": "instance"
                             },
                             "proportion": {
                                 "scheme": "urn:ietf:rfc:2141",
@@ -8438,8 +8402,20 @@
                             "role": "contains"
                         },
                         "description": "Shale",
-                        "purpose": "instance"
-                    },
+                        "purpose": "instance",
+                        "ui": {
+                            "colors": [],
+                            "materials": [
+                                619,
+                                620,
+                                621,
+                                622,
+                                623
+                            ]
+                        }
+                    }
+                },
+                {
                     "method": "borehole",
                     "shape": {
                         "coordinates": {
@@ -8448,28 +8424,16 @@
                         },
                         "dimension": "1",
                         "unit": "ft"
-                    }
-                },
-                {
+                    },
                     "unit": {
                         "composition": {
                             "lithology": {
                                 "scheme": "urn:x-ngwd:classifierScheme:USGS:Lithology:2011",
-                                "value": "DOLOSTONE"
+                                "value": "SHALE"
                             },
                             "material": {
-                                "name": "Dolomite",
-                                "purpose": "instance",
-                                "ui": {
-                                    "colors": [],
-                                    "materials": [
-                                        642,
-                                        641,
-                                        643,
-                                        644,
-                                        645
-                                    ]
-                                }
+                                "name": "Shale",
+                                "purpose": "instance"
                             },
                             "proportion": {
                                 "scheme": "urn:ietf:rfc:2141",
@@ -8477,9 +8441,21 @@
                             },
                             "role": "contains"
                         },
-                        "description": "Dolomite",
-                        "purpose": "instance"
-                    },
+                        "description": "Shale",
+                        "purpose": "instance",
+                        "ui": {
+                            "colors": [],
+                            "materials": [
+                                619,
+                                620,
+                                621,
+                                622,
+                                623
+                            ]
+                        }
+                    }
+                },
+                {
                     "method": "borehole",
                     "shape": {
                         "coordinates": {
@@ -8488,28 +8464,16 @@
                         },
                         "dimension": "1",
                         "unit": "ft"
-                    }
-                },
-                {
+                    },
                     "unit": {
                         "composition": {
                             "lithology": {
                                 "scheme": "urn:x-ngwd:classifierScheme:USGS:Lithology:2011",
-                                "value": "SANDSTONE"
+                                "value": "DOLOSTONE"
                             },
                             "material": {
-                                "name": "Sandstone",
-                                "purpose": "instance",
-                                "ui": {
-                                    "colors": [],
-                                    "materials": [
-                                        609,
-                                        611,
-                                        612,
-                                        613,
-                                        614
-                                    ]
-                                }
+                                "name": "Dolomite",
+                                "purpose": "instance"
                             },
                             "proportion": {
                                 "scheme": "urn:ietf:rfc:2141",
@@ -8517,9 +8481,21 @@
                             },
                             "role": "contains"
                         },
-                        "description": "Sandstone",
-                        "purpose": "instance"
-                    },
+                        "description": "Dolomite",
+                        "purpose": "instance",
+                        "ui": {
+                            "colors": [],
+                            "materials": [
+                                642,
+                                631,
+                                641,
+                                643,
+                                644
+                            ]
+                        }
+                    }
+                },
+                {
                     "method": "borehole",
                     "shape": {
                         "coordinates": {
@@ -8528,27 +8504,16 @@
                         },
                         "dimension": "1",
                         "unit": "ft"
-                    }
-                },
-                {
+                    },
                     "unit": {
                         "composition": {
                             "lithology": {
                                 "scheme": "urn:x-ngwd:classifierScheme:USGS:Lithology:2011",
-                                "value": "SHALE"
+                                "value": "SANDSTONE"
                             },
                             "material": {
-                                "name": "Shale",
-                                "purpose": "instance",
-                                "ui": {
-                                    "colors": [],
-                                    "materials": [
-                                        619,
-                                        620,
-                                        621,
-                                        622
-                                    ]
-                                }
+                                "name": "Sandstone",
+                                "purpose": "instance"
                             },
                             "proportion": {
                                 "scheme": "urn:ietf:rfc:2141",
@@ -8556,9 +8521,21 @@
                             },
                             "role": "contains"
                         },
-                        "description": "Shale",
-                        "purpose": "instance"
-                    },
+                        "description": "Sandstone",
+                        "purpose": "instance",
+                        "ui": {
+                            "colors": [],
+                            "materials": [
+                                608,
+                                609,
+                                611,
+                                612,
+                                613
+                            ]
+                        }
+                    }
+                },
+                {
                     "method": "borehole",
                     "shape": {
                         "coordinates": {
@@ -8567,6 +8544,35 @@
                         },
                         "dimension": "1",
                         "unit": "ft"
+                    },
+                    "unit": {
+                        "composition": {
+                            "lithology": {
+                                "scheme": "urn:x-ngwd:classifierScheme:USGS:Lithology:2011",
+                                "value": "SHALE"
+                            },
+                            "material": {
+                                "name": "Shale",
+                                "purpose": "instance"
+                            },
+                            "proportion": {
+                                "scheme": "urn:ietf:rfc:2141",
+                                "value": "urn:ogc:def:nil:OGC:unknown"
+                            },
+                            "role": "contains"
+                        },
+                        "description": "Shale",
+                        "purpose": "instance",
+                        "ui": {
+                            "colors": [],
+                            "materials": [
+                                619,
+                                620,
+                                621,
+                                622,
+                                623
+                            ]
+                        }
                     }
                 }
             ],

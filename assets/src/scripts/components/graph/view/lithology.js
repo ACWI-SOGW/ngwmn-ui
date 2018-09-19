@@ -32,7 +32,7 @@ export default function (elem, {lithology}, container) {
         const [r, g, b] = rgbFromHex(color);
         container
             .append('filter')
-                .attr('id', `filter-${layer.materials[0]}`)
+                .attr('id', `filter-${i}`)
                 .append('feColorMatrix')
                     .attr('in', 'SourceGraphic')
                     .attr('type', 'matrix')
@@ -47,7 +47,7 @@ export default function (elem, {lithology}, container) {
                 .attr('width', layer.width)
                 .attr('height', layer.height)
                 .attr('fill', `url(#lithology-${layer.materials[0]})`)
-                .attr('filter', `url(#filter-${layer.materials[0]})`)
+                .attr('filter', `url(#filter-${i})`)
                 .append('title')
                     .text(layer.title);
     }
