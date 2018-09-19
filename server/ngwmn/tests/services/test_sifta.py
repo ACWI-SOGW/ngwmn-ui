@@ -11,15 +11,15 @@ import requests_mock
 from ngwmn.services import sifta
 
 
-MOCK_RESPONSE = """
+MOCK_SIFTA_RESPONSE = """
 {"Site": "06864000", "Date": "6/19/2018", "Customers":[{"Name":"Kansas Water Office","URL":"http://www.kwo.org/","IconURL":"http://water.usgs.gov/customer/icons/6737.gif"},{"Name":"USGS - Cooperative Matching Funds","URL":"http://water.usgs.gov/coop/","IconURL":"http://water.usgs.gov/customer/icons/usgsIcon.gif"}]}
 """
-MOCK_CUSTOMER_LIST = json.loads(MOCK_RESPONSE)['Customers']
+MOCK_CUSTOMER_LIST = json.loads(MOCK_SIFTA_RESPONSE)['Customers']
 
 
 def test_sifta_response():
     with requests_mock.mock() as req:
-        req.get(requests_mock.ANY, text=MOCK_RESPONSE)
+        req.get(requests_mock.ANY, text=MOCK_SIFTA_RESPONSE)
         cooperators = sifta.get_cooperators('12345')
         assert cooperators == MOCK_CUSTOMER_LIST
 
