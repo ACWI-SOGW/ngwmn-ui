@@ -8,8 +8,7 @@ from functools import reduce
 from flask import abort, jsonify, render_template
 
 from . import __version__, app
-from .services.ngwmn import (
-    get_features, get_iddata, get_water_quality, get_well_log)
+from .services.ngwmn import get_features, get_water_quality, get_well_log
 from .services.sifta import get_cooperators
 
 
@@ -53,17 +52,15 @@ def site_page(agency_cd, location_id):
 
     """
 
-    root = get_iddata('well_log', agency_cd, location_id)
-    if root is None or 'gml' not in root.nsmap.keys():
+    well_log = get_well_log(agency_cd, location_id)
+    if not well_log:
         return abort(404)
 
-    geolocation_element = root.find('.//gml:Point/gml:pos', namespaces=root.nsmap)
-    geolocation = geolocation_element.text
-    latitude, longitude = geolocation.split(' ')
-    summary = get_features(latitude, longitude)
-
+    summary = get_features(
+        well_log['location']['latitude'],
+        well_log['location']['longitude']
+    )
     water_quality = get_water_quality(agency_cd, location_id)
-    well_log = get_well_log(agency_cd, location_id)
 
     feature = summary['features'][0]['properties']
 

@@ -2,13 +2,18 @@
 Unit tests for NGWMN views
 
 """
-import json
-from unittest import TestCase, mock
+from unittest import TestCase
+from urllib.parse import urljoin
 
-from defusedxml.lxml import fromstring
-import requests as r
+import requests_mock
 
 from .. import app
+from .services.test_ngwmn import MOCK_WELL_LOG_RESPONSE, MOCK_WQ_RESPONSE
+from .services.test_sifta import MOCK_SIFTA_RESPONSE
+
+
+SERVICE_ROOT = app.config.get('SERVICE_ROOT')
+COOP_SERVICE_PATTERN = app.config['COOPERATOR_SERVICE_PATTERN']
 
 
 class TestWellPageView(TestCase):
@@ -17,57 +22,42 @@ class TestWellPageView(TestCase):
         self.app_client = app.test_client()
         self.test_agency_cd = 'DOOP'
         self.test_location_id = 'BP-1729'
-        self.test_well_xml = (
-            '<wfs xmlns:gml="http://www.opengis.net/gml"><gml:Point srsName="EPSG:4269">'
-            '<gml:pos srsDimension="2">39.443328281 -75.634096999</gml:pos></gml:Point></wfs>'
-        )
-        self.test_summary_json = TEST_SUMMARY_JSON
+        self.well_log_url = urljoin(SERVICE_ROOT, f'ngwmn/iddata?request=well_log&agency_cd={self.test_agency_cd}&siteNo={self.test_location_id}')
+        self.wq_url = urljoin(SERVICE_ROOT, f'ngwmn/iddata?request=water_quality&agency_cd={self.test_agency_cd}&siteNo={self.test_location_id}')
+        self.sifta_url = COOP_SERVICE_PATTERN.format(site_no=self.test_location_id)
 
-    @mock.patch('ngwmn.services.ngwmn.r.post')
-    @mock.patch('ngwmn.views.get_iddata')
-    def test_best_case(self, well_lith_mock, post_mock):
-        well_lith_mock.return_value = fromstring(self.test_well_xml)
-        post_resp = mock.Mock(r.Response)
-        post_resp.content = self.test_summary_json
-        post_resp.json.return_value = json.loads(self.test_summary_json)
-        post_resp.status_code = 200
-        post_mock.return_value = post_resp
-
+    @requests_mock.Mocker()
+    def test_best_case(self, mocker):
+        mocker.post(requests_mock.ANY, text=TEST_SUMMARY_JSON, status_code=200)
+        mocker.get(self.well_log_url, content=MOCK_WELL_LOG_RESPONSE, status_code=200)
+        mocker.get(self.wq_url, content=MOCK_WQ_RESPONSE, status_code=200)
+        mocker.get(self.sifta_url, text=MOCK_SIFTA_RESPONSE, status_code=200)
         response = self.app_client.get('/site-location/{}/{}/'.format(self.test_agency_cd, self.test_location_id))
-        post_mock.assert_called_once()
         self.assertEqual(response.status_code, 200)
 
-    @mock.patch('ngwmn.services.ngwmn.r.post')
-    @mock.patch('ngwmn.views.get_iddata')
-    def test_failed_service_with_non_server_error(self, well_lith_mock, post_mock):
-        well_lith_mock.return_value = fromstring(self.test_well_xml)
-        post_resp = mock.Mock(r.Response)
-        post_resp.content = self.test_summary_json
-        post_resp.status_code = 403
-        post_resp.reason = 'Forbidden'
-        post_mock.return_value = post_resp
+    @requests_mock.Mocker()
+    def test_failed_service_with_non_server_error(self, mocker):
+        mocker.post(requests_mock.ANY, status_code=403)
+        mocker.get(self.well_log_url, content=MOCK_WELL_LOG_RESPONSE, status_code=200)
+        mocker.get(self.wq_url, content=MOCK_WQ_RESPONSE, status_code=200)
+        mocker.get(self.sifta_url, text=MOCK_SIFTA_RESPONSE, status_code=200)
 
         response = self.app_client.get('/site-location/{}/{}/'.format(self.test_agency_cd, self.test_location_id))
-        post_mock.assert_called_once()
         self.assertEqual(response.status_code, 503)
 
-    @mock.patch('ngwmn.services.ngwmn.r.post')
-    @mock.patch('ngwmn.views.get_iddata')
-    def test_failed_service_with_server_error(self, well_lith_mock, post_mock):
-        well_lith_mock.return_value = fromstring(self.test_well_xml)
-        post_resp = mock.Mock(r.Response)
-        post_resp.content = self.test_summary_json
-        post_resp.status_code = 500
-        post_resp.reason = 'server error'
-        post_mock.return_value = post_resp
+    @requests_mock.Mocker()
+    def test_failed_service_with_server_error(self, mocker):
+        mocker.post(requests_mock.ANY, status_code=500)
+        mocker.get(self.well_log_url, content=MOCK_WELL_LOG_RESPONSE, status_code=200)
+        mocker.get(self.wq_url, content=MOCK_WQ_RESPONSE, status_code=200)
+        mocker.get(self.sifta_url, text=MOCK_SIFTA_RESPONSE, status_code=200)
 
         response = self.app_client.get('/site-location/{}/{}/'.format(self.test_agency_cd, self.test_location_id))
-        post_mock.assert_called_once()
         self.assertEqual(response.status_code, 503)
 
-    @mock.patch('ngwmn.views.get_iddata')
-    def test_no_xml(self, well_lith_mock):
-        well_lith_mock.return_value = None
+    @requests_mock.Mocker()
+    def test_no_xml(self, mocker):
+        mocker.get(requests_mock.ANY, status_code=404)
         response = self.app_client.get('/site-location/{}/{}/'.format(self.test_agency_cd, self.test_location_id))
         self.assertEqual(response.status_code, 404)
 
