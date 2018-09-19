@@ -3,8 +3,6 @@ This module includes routines to parse unstructured lithology material strings
 and extract a structured list of lithology types and colors.
 """
 
-import re
-
 from fuzzywuzzy import process
 import webcolors
 
@@ -269,14 +267,19 @@ def _compare_scores(score_a, score_b):
     return score_a[1] - score_b[1]
 
 
-def classify_material(material_string):
+def classify_material(words):
     """
     Returns a list of lithology classifications given a textual description.
 
-    :param str material_string: free-form text description of lithology
+    :param list words: array of free-form words describing a material
     :return: list of material classifications
     :rtype: list
     """
+
+    if not words:
+        return []
+
+    material_string = ' '.join(words)
     matches = process.extract(
         material_string,
         LITH_STRINGS.keys(),
@@ -295,25 +298,8 @@ def classify_material(material_string):
     return materials
 
 
-def parse_material(material_string):
-    """
-    Parse a material string and return a list of possible matching colors and
-    standard lithology definitions.
-    """
-    if not material_string:
-        return {
-            'colors': [],
-            'materials': []
-        }
-
-    # Normalize the string to just words
-    words = re.findall(r'\w+', material_string.lower())
-    normalized = ' '.join(words)
-
-    return {
-        'colors': [
-            webcolors.CSS3_NAMES_TO_HEX[color]
-            for color in COLORS & set(words)
-        ],
-        'materials': classify_material(normalized)
-    }
+def get_colors(words):
+    return [
+        webcolors.CSS3_NAMES_TO_HEX[color]
+        for color in COLORS & set(words)
+    ]
