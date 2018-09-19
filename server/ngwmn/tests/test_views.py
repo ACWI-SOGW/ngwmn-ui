@@ -2,6 +2,8 @@
 Unit tests for NGWMN views
 
 """
+# pylint: disable=C0103
+
 from unittest import TestCase
 from urllib.parse import urljoin
 
@@ -20,11 +22,13 @@ class TestWellPageView(TestCase):
 
     def setUp(self):
         self.app_client = app.test_client()
-        self.test_agency_cd = 'DOOP'
-        self.test_location_id = 'BP-1729'
-        self.well_log_url = urljoin(SERVICE_ROOT, f'ngwmn/iddata?request=well_log&agency_cd={self.test_agency_cd}&siteNo={self.test_location_id}')
-        self.wq_url = urljoin(SERVICE_ROOT, f'ngwmn/iddata?request=water_quality&agency_cd={self.test_agency_cd}&siteNo={self.test_location_id}')
-        self.sifta_url = COOP_SERVICE_PATTERN.format(site_no=self.test_location_id)
+        _agency_cd = 'DOOP'
+        _location_id = 'BP-1729'
+        _iddata_url = 'ngwmn/iddata?request={}&agency_cd={}&siteNo={}'
+        self.well_log_url = urljoin(SERVICE_ROOT, _iddata_url.format('well_log', _agency_cd, _location_id))
+        self.wq_url = urljoin(SERVICE_ROOT, _iddata_url.format('water_quality', _agency_cd, _location_id))
+        self.sifta_url = COOP_SERVICE_PATTERN.format(site_no=_location_id)
+        self.site_loc_url = '/site-location/{}/{}/'.format(_agency_cd, _location_id)
 
     @requests_mock.Mocker()
     def test_best_case(self, mocker):
@@ -32,7 +36,7 @@ class TestWellPageView(TestCase):
         mocker.get(self.well_log_url, content=MOCK_WELL_LOG_RESPONSE, status_code=200)
         mocker.get(self.wq_url, content=MOCK_WQ_RESPONSE, status_code=200)
         mocker.get(self.sifta_url, text=MOCK_SIFTA_RESPONSE, status_code=200)
-        response = self.app_client.get('/site-location/{}/{}/'.format(self.test_agency_cd, self.test_location_id))
+        response = self.app_client.get()
         self.assertEqual(response.status_code, 200)
 
     @requests_mock.Mocker()
@@ -42,7 +46,7 @@ class TestWellPageView(TestCase):
         mocker.get(self.wq_url, content=MOCK_WQ_RESPONSE, status_code=200)
         mocker.get(self.sifta_url, text=MOCK_SIFTA_RESPONSE, status_code=200)
 
-        response = self.app_client.get('/site-location/{}/{}/'.format(self.test_agency_cd, self.test_location_id))
+        response = self.app_client.get(self.site_loc_url)
         self.assertEqual(response.status_code, 503)
 
     @requests_mock.Mocker()
@@ -52,13 +56,13 @@ class TestWellPageView(TestCase):
         mocker.get(self.wq_url, content=MOCK_WQ_RESPONSE, status_code=200)
         mocker.get(self.sifta_url, text=MOCK_SIFTA_RESPONSE, status_code=200)
 
-        response = self.app_client.get('/site-location/{}/{}/'.format(self.test_agency_cd, self.test_location_id))
+        response = self.app_client.get(self.site_loc_url)
         self.assertEqual(response.status_code, 503)
 
     @requests_mock.Mocker()
     def test_no_xml(self, mocker):
         mocker.get(requests_mock.ANY, status_code=404)
-        response = self.app_client.get('/site-location/{}/{}/'.format(self.test_agency_cd, self.test_location_id))
+        response = self.app_client.get(self.site_loc_url)
         self.assertEqual(response.status_code, 404)
 
 

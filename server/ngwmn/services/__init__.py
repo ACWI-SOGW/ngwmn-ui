@@ -5,7 +5,7 @@ from ngwmn import app
 
 class ServiceException(Exception):
     """
-    Exception to be raised by external-service calls when an service error is
+    Exception to be raised by external-service calls when a service error is
     encountered. This exception will be passed to the end-user in the form of
     a response with the given status code, message, and dict payload.
     """
