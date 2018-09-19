@@ -11,11 +11,11 @@ import { get } from 'ngwmn/lib/ajax';
  * @param  {String} options.url URL of SVG document
  * @param  {String} options.id  ID to give to SVG pattern definition
  */
-export default function (store, node, {url, id}) {
+export default function (store, node, {url, id, multiplier = 2}) {
     get(url, 'responseXML').then(function (document) {
         const svgElem = document.documentElement;
-        const width = svgElem.getAttribute('width');
-        const height = svgElem.getAttribute('height');
+        const width = parseFloat(svgElem.getAttribute('width')) * multiplier;
+        const height = parseFloat(svgElem.getAttribute('height')) * multiplier;
         // Get svg string, with "#" escaped
         const svgStr = svgElem.outerHTML.replace(/#/g, '%23');
         select(node)
