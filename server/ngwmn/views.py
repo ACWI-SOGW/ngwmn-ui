@@ -8,7 +8,7 @@ from functools import reduce
 from flask import abort, jsonify, render_template
 
 from . import __version__, app
-from .services.ngwmn import get_features, get_water_quality, get_well_log
+from .services.ngwmn import get_features, get_water_quality, get_well_log, get_statistics
 from .services.sifta import get_cooperators
 
 
@@ -84,24 +84,6 @@ def site_page(agency_cd, location_id):
         water_quality_activities=water_quality.get('activities') or [],
         well_log=well_log,
         lithology_ids=lithology_ids,
-        stats={
-            "alt_datum": 'Below Land Surface',
-            "calc_date": '2018-10-10',
-            "overall": ['1.0', '5.5', '42', '2001-01-01', '2018-10-10', '4242', '18'],
-            "monthly": [
-                ['Jan', '5.5', '42', '24', '12', '6.6', '3.3', '12', '10', '18'],
-                ['Feb', '5.5', '42', '24', '12', '6.6', '3.3', '12', '10', '18'],
-                ['Mar', '5.5', '42', '24', '12', '6.6', '3.3', '12', '10', '18'],
-                ['Apr', '5.5', '42', '24', '12', '6.6', '3.3', '12', '10', '18'],
-                ['May', '5.5', '42', '24', '12', '6.6', '3.3', '12', '10', '18'],
-                ['Jun', '5.5', '42', '24', '12', '6.6', '3.3', '12', '10', '18'],
-                ['Jul', '5.5', '42', '24', '12', '6.6', '3.3', '12', '10', '18'],
-                ['Aug', '5.5', '42', '24', '12', '6.6', '3.3', '12', '10', '18'],
-                ['Sep', '5.5', '42', '24', '12', '6.6', '3.3', '12', '10', '18'],
-                ['Oct', '5.5', '42', '24', '12', '6.6', '3.3', '12', '10', '18'],
-                ['Nov', '5.5', '42', '24', '12', '6.6', '3.3', '12', '10', '18'],
-                ['Dec', '5.5', '42', '24', '12', '6.6', '3.3', '12', '10', '18']
-            ]
-        }
+        stats=get_statistics(agency_cd, location_id)
     ), 200
 
