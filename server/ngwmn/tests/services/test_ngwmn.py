@@ -6,6 +6,7 @@ from unittest import TestCase, mock
 
 import requests as r
 import requests_mock
+import copy
 
 from ngwmn.services import ServiceException
 from ngwmn.services.ngwmn import (
@@ -19,6 +20,163 @@ class TestGetStatistics(TestCase):
         self.test_service_root = 'http://test.gov'
         self.test_agency_cd = 'TEST'
         self.test_site_no = 'TS-42'
+
+        self.overall_not_ranked = {
+            "CALC_DATE": "2018-10-18",
+            "SAMPLE_COUNT": "2330",
+            "MAX_DATE": "2018-10-02T00:00:00-07:00",
+            "MEDIATION": "BelowLand",
+            "RECORD_YEARS": "11.5",
+            "MEDIAN_VALUE": "26.963750",
+            "LATEST_PCTILE": "1",
+            "MAX_VALUE": "23.960000",
+            "MIN_VALUE": "30.469583",
+            "LATEST_VALUE": "24.370000",
+            "MIN_DATE": "2007-04-26T00:00:00-07:00",
+            "IS_RANKED": "N"
+        }
+        self.overall_ranked = copy.copy(self.overall_not_ranked)
+        self.overall_ranked['IS_RANKED'] = 'Y'
+
+        self.monthly = {
+            "1": {
+                "P75": "25.150000",
+                "SAMPLE_COUNT": "217",
+                "MONTH": "1",
+                "P50_MIN": "27.204583",
+                "P10": "27.095166",
+                "P25": "26.565417",
+                "P90": "24.582500",
+                "P50_MAX": "24.518125",
+                "RECORD_YEARS": "11",
+                "P50": "25.650000"
+            },
+            "2": {
+                "P75": "25.256979",
+                "SAMPLE_COUNT": "200",
+                "MONTH": "2",
+                "P50_MIN": "27.233333",
+                "P10": "27.216812",
+                "P25": "26.992969",
+                "P90": "25.187354",
+                "P50_MAX": "25.183958",
+                "RECORD_YEARS": "10",
+                "P50": "25.840000"
+            },
+            "3": {
+                "P75": "25.820729",
+                "SAMPLE_COUNT": "221",
+                "MONTH": "3",
+                "P50_MIN": "27.565833",
+                "P10": "27.532083",
+                "P25": "27.148333",
+                "P90": "25.518792",
+                "P50_MAX": "25.505000",
+                "RECORD_YEARS": "10",
+                "P50": "26.440000"
+            },
+            "4": {
+                "P75": "26.160000",
+                "SAMPLE_COUNT": "187",
+                "MONTH": "4",
+                "P50_MIN": "27.838750",
+                "P10": "27.790375",
+                "P25": "27.266042",
+                "P90": "25.016125",
+                "P50_MAX": "24.732083",
+                "RECORD_YEARS": "11",
+                "P50": "26.480000"
+            },
+            "5": {
+                "P75": "26.360000",
+                "SAMPLE_COUNT": "192",
+                "MONTH": "5",
+                "P50_MIN": "28.068333",
+                "P10": "28.040666",
+                "P25": "27.644583",
+                "P90": "24.422000",
+                "P50_MAX": "23.960000",
+                "RECORD_YEARS": "11",
+                "P50": "26.740000"
+            },
+            "6": {
+                "P75": "26.507500",
+                "SAMPLE_COUNT": "185",
+                "MONTH": "6",
+                "P50_MIN": "29.867708",
+                "P10": "29.784146",
+                "P25": "28.916459",
+                "P90": "26.374000",
+                "P50_MAX": "26.370000",
+                "RECORD_YEARS": "10",
+                "P50": "27.656563"
+            },
+            "7": {
+                "P75": "27.610000",
+                "SAMPLE_COUNT": "191",
+                "MONTH": "7",
+                "P50_MIN": "29.775833",
+                "P10": "29.745583",
+                "P25": "29.295000",
+                "P90": "26.956000",
+                "P50_MAX": "26.940000",
+                "RECORD_YEARS": "11",
+                "P50": "28.260000"
+            },
+            "8": {
+                "P75": "27.792500",
+                "SAMPLE_COUNT": "191",
+                "MONTH": "8",
+                "P50_MIN": "29.451250",
+                "P10": "29.349125",
+                "P25": "28.229687",
+                "P90": "27.662000",
+                "P50_MAX": "27.650000",
+                "RECORD_YEARS": "10",
+                "P50": "28.040833"
+            },
+            "9": {
+                "P75": "25.260009",
+                "SAMPLE_COUNT": "199",
+                "MONTH": "9",
+                "P50_MIN": "27.040009",
+                "P10": "27.026009",
+                "P25": "26.693759",
+                "P90": "24.480009",
+                "P50_MAX": "24.370009",
+                "RECORD_YEARS": "19",
+                "P50": "25.915419"
+            },
+            "10": {
+                "P75": "25.260000",
+                "SAMPLE_COUNT": "191",
+                "MONTH": "10",
+                "P50_MIN": "27.040000",
+                "P10": "27.026000",
+                "P25": "26.693750",
+                "P90": "24.480000",
+                "P50_MAX": "24.370000",
+                "RECORD_YEARS": "11",
+                "P50": "25.915416"
+            },
+        }
+
+        self.test_stats = { self.test_agency_cd : {
+            '-'.join([self.test_site_no, 'NOT_RANKED']) : {
+                'wl-overall' : self.overall_not_ranked,
+                'site-info': {'altDatumCd':'NGW1701A'},
+                'wl-monthly' : {
+                    'N/A': 'not called'
+                }
+            },
+            self.test_site_no: {
+                'wl-overall': self.overall_ranked,
+                'site-info': {'altDatumCd': 'NGW1701B'},
+                'wl-monthly': {
+                    '1': self.monthly['1']
+                }
+            }
+        }}
 
     @mock.patch('ngwmn.services.ngwmn.r.get')
     def test_get_statistic__success(self, r_mock):
@@ -53,6 +211,14 @@ class TestGetStatistics(TestCase):
         result = get_statistic(self.test_agency_cd, self.test_site_no, 'site-info', self.test_service_root)
         self.assertEqual(result['IS_FETCHED'], 'N')
         self.assertEqual(result['IS_RANKED'], 'N')
+
+    def mock_stat(self, agency_cd, site_no, stat_type, service):
+        return self.test_stats[agency_cd][site_no][stat_type]
+
+    @mock.patch('ngwmn.services.ngwmn')
+    def test_get_statistics__status_404(self, ngwmn_mock):
+        ngwmn_mock.get_statistic = self.mock_stat
+        result = ngwmn_mock.get_statistic(self.test_agency_cd, self.test_site_no, 'site-info', self.test_service_root)
 
 
 class TestGetWellLithography(TestCase):

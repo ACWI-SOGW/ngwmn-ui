@@ -396,13 +396,13 @@ def get_statistics(agency_cd, site_no):
       }
     }
     """
+    site_info = monthly = {'IS_FETCHED': 'N'}
 
     overall = get_statistic(agency_cd, site_no, 'wl-overall')
-
-    site_info = monthly = {'IS_FETCHED': 'N'}
-    if overall['IS_RANKED'] == 'Y':
+    if overall['IS_FETCHED'] == 'Y':
         site_info = get_statistic(agency_cd, site_no, 'site-info')
-        monthly = get_statistic(agency_cd, site_no, 'wl-monthly')
+        if overall['IS_RANKED'] == 'Y':
+            monthly = get_statistic(agency_cd, site_no, 'wl-monthly')
 
     # handle to potential fetch fail with default
     stats = {
