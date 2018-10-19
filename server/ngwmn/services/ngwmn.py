@@ -13,6 +13,7 @@ from ngwmn.services.lithology_parser import classify_material, get_colors
 from ngwmn.xml_utils import parse_xml
 
 SERVICE_ROOT = app.config.get('SERVICE_ROOT')
+SERVICE_ROOT_CACHE = app.config.get('SERVICE_ROOT_CACHE')
 
 
 def get_iddata(request, agency_cd, location_id, service_root=SERVICE_ROOT):
@@ -311,13 +312,10 @@ def get_features(latitude, longitude, service_root=SERVICE_ROOT):
     return response.json()
 
 
-def get_statistic(agency_cd, site_no, stat_type):
+def get_statistic(agency_cd, site_no, stat_type, service_root=SERVICE_ROOT_CACHE):
     # base_url = "http://cida-eros-ngwmndev:8080/ngwmn_cache/direct/json/"
-    # TODO lookup the server
-    base_url = "https://cida.usgs.gov/ngwmn_cache/direct/json/"
-    parm_url = '/' + agency_cd + '/' + site_no
-
-    stats_url = base_url + stat_type + parm_url
+    # base_url = "https://cida.usgs.gov/ngwmn_cache/direct/json/"
+    stats_url = '/'.join([service_root, 'ngwmn_cache', 'direct', 'json', stat_type, agency_cd, site_no])
     resp = r.get(stats_url)
 
     if resp.status_code == 404:

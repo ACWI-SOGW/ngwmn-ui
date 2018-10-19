@@ -9,7 +9,49 @@ import requests_mock
 
 from ngwmn.services import ServiceException
 from ngwmn.services.ngwmn import (
-    generate_bounding_box_values, get_iddata, get_water_quality, get_well_log)
+    generate_bounding_box_values, get_iddata, get_water_quality, get_well_log, get_statistic, get_statistics)
+
+
+class TestGetStatistics(TestCase):
+
+    def setUp(self):
+        self.test_service_root = 'http://test.gov'
+        self.test_agency_cd = 'TEST'
+        self.test_site_no = 'TS-42'
+
+    @mock.patch('ngwmn.services.ngwmn.r.get')
+    def test_get_statistic__success(self, r_mock):
+        m_resp = mock.Mock(r.Response)
+        m_resp.text = '{"value":"SUCCESS"}'
+        m_resp.status_code = 200
+        m_resp.url = self.test_service_root
+        r_mock.return_value = m_resp
+        result = get_statistic(self.test_agency_cd, self.test_site_no, 'site-info', self.test_service_root)
+        self.assertEqual(result['value'], 'SUCCESS')
+        self.assertEqual(result['IS_FETCHED'], 'Y')
+        url = '/'.join([self.test_service_root, 'ngwmn_cache/direct/json/site-info', self.test_agency_cd, self.test_site_no])
+        r_mock.assert_called_with(url)
+
+    @mock.patch('ngwmn.services.ngwmn.r.get')
+    def test_get_statistics__status_500(self, r_mock):
+        m_resp = mock.Mock(r.Response)
+        m_resp.status_code = 500
+        m_resp.url = 'http://url'
+        m_resp.reason = 'reason 500'
+        r_mock.return_value = m_resp
+        with self.assertRaises(ServiceException):
+            result = get_statistic(self.test_agency_cd, self.test_site_no, 'site-info', self.test_service_root)
+
+    @mock.patch('ngwmn.services.ngwmn.r.get')
+    def test_get_statistics__status_404(self, r_mock):
+        m_resp = mock.Mock(r.Response)
+        m_resp.status_code = 404
+        m_resp.url = self.test_service_root
+        m_resp.reason = 'reason 404'
+        r_mock.return_value = m_resp
+        result = get_statistic(self.test_agency_cd, self.test_site_no, 'site-info', self.test_service_root)
+        self.assertEqual(result['IS_FETCHED'], 'N')
+        self.assertEqual(result['IS_RANKED'], 'N')
 
 
 class TestGetWellLithography(TestCase):
