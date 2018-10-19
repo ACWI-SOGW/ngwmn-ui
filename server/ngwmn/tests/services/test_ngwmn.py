@@ -21,7 +21,7 @@ class TestGetWellLithography(TestCase):
         self.test_xml = '<site><agency>DOOP</agency><id>BP-1729</id></site>'
 
     @mock.patch('ngwmn.services.ngwmn.r.get')
-    def test_success(self, r_mock):
+    def test_get_iddata__success(self, r_mock):
         m_resp = mock.Mock(r.Response)
         m_resp.content = self.test_xml
         m_resp.status_code = 200
@@ -35,7 +35,7 @@ class TestGetWellLithography(TestCase):
         )
 
     @mock.patch('ngwmn.services.ngwmn.r.get')
-    def test_service_failure(self, r_mock):
+    def test_get_iddata__service_failure(self, r_mock):
         m_resp = mock.Mock(r.Response)
         m_resp.status_code = 500
         m_resp.url = 'http://url'
@@ -43,10 +43,11 @@ class TestGetWellLithography(TestCase):
         r_mock.return_value = m_resp
         with self.assertRaises(ServiceException):
             result = get_iddata('well_log', self.test_agency_cd, self.test_location_id, self.test_service_root)
+            # TODO this assertion is not executed
             self.assertIsNone(result)
 
     @mock.patch('ngwmn.services.ngwmn.r.get')
-    def test_syntax_error(self, r_mock):
+    def test_get_iddata__syntax_error(self, r_mock):
         m_resp = mock.Mock(r.Response)
         m_resp.content = 'Stuff'
         m_resp.status_code = 200
