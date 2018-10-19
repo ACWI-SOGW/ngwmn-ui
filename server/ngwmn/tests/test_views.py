@@ -10,9 +10,7 @@ from urllib.parse import urljoin
 import requests_mock
 
 from .. import app
-from .services.test_ngwmn import MOCK_WELL_LOG_RESPONSE, MOCK_WQ_RESPONSE
-from .services.test_sifta import MOCK_SIFTA_RESPONSE
-
+from .services.mock_data import MOCK_SIFTA_RESPONSE, MOCK_WELL_LOG_RESPONSE, MOCK_WQ_RESPONSE
 
 SERVICE_ROOT = app.config.get('SERVICE_ROOT')
 COOP_SERVICE_PATTERN = app.config['COOPERATOR_SERVICE_PATTERN']
