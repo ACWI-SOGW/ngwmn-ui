@@ -5,12 +5,12 @@ import re
 from urllib.parse import urljoin
 
 import requests as r
+import json
 
 from ngwmn import app
 from ngwmn.services import ServiceException
 from ngwmn.services.lithology_parser import classify_material, get_colors
 from ngwmn.xml_utils import parse_xml
-
 
 SERVICE_ROOT = app.config.get('SERVICE_ROOT')
 
@@ -310,23 +310,170 @@ def get_features(latitude, longitude, service_root=SERVICE_ROOT):
 
     return response.json()
 
-def get_statistics(agency_cd, site_no):
-    return {
-            "alt_datum": 'Below Land Surface',
-            "calc_date": '2018-10-10',
-            "overall": ['1.0', '5.5', '42', '2001-01-01', '2018-10-10', '4242', '18'],
-            "monthly": [
-                ['Jan', '5.5', '42', '24', '12', '6.6', '3.3', '12', '10', '18'],
-                ['Feb', '5.5', '42', '24', '12', '6.6', '3.3', '12', '10', '18'],
-                ['Mar', '5.5', '42', '24', '12', '6.6', '3.3', '12', '10', '18'],
-                ['Apr', '5.5', '42', '24', '12', '6.6', '3.3', '12', '10', '18'],
-                ['May', '5.5', '42', '24', '12', '6.6', '3.3', '12', '10', '18'],
-                ['Jun', '5.5', '42', '24', '12', '6.6', '3.3', '12', '10', '18'],
-                ['Jul', '5.5', '42', '24', '12', '6.6', '3.3', '12', '10', '18'],
-                ['Aug', '5.5', '42', '24', '12', '6.6', '3.3', '12', '10', '18'],
-                ['Sep', '5.5', '42', '24', '12', '6.6', '3.3', '12', '10', '18'],
-                ['Oct', '5.5', '42', '24', '12', '6.6', '3.3', '12', '10', '18'],
-                ['Nov', '5.5', '42', '24', '12', '6.6', '3.3', '12', '10', '18'],
-                ['Dec', '5.5', '42', '24', '12', '6.6', '3.3', '12', '10', '18']
-            ]
+
+def get_statistic(agency_cd, site_no, stat_type):
+    # base_url = "http://cida-eros-ngwmndev:8080/ngwmn_cache/direct/json/"
+    # TODO lookup the server
+    base_url = "https://cida.usgs.gov/ngwmn_cache/direct/json/"
+    parm_url = '/' + agency_cd + '/' + site_no
+
+    stats_url = base_url + stat_type + parm_url
+    resp = r.get(stats_url)
+
+    if resp.status_code == 404:
+        return {
+            'IS_RANKED': 'N',
+            'IS_FETCHED': 'N'
         }
+
+    if resp.status_code != 200:
+        msg = '%s statistics fetch error from %s (reason: %s)'
+        app.logger.error(msg, resp.status_code, resp.url, resp.reason)
+        raise ServiceException()
+
+    json_txt = resp.text
+    stats = json.loads(json_txt)
+    # TODO log in trace mode
+    # print(json.dumps(stats, indent=2) + '\n')
+
+    stats['IS_FETCHED'] = 'Y'
+
+    return stats
+
+
+def get_statistics(agency_cd, site_no):
+    """
+    Call ngwmn_cache for site statistics data.
+
+    :param agency_cd: string agency code
+    :param site_no: alphanumeric site number
+    :returns overall and monthly statistics
+
+    SAMPLE overall
+    {
+      "CALC_DATE": "2018-07-04",
+      "LATEST_VALUE": "213.84",
+      "MAX_DATE": "2018-04-10T13:18:00-06:00",
+      "AGENCY_CD": "USGS",
+      "MEDIAN_VALUE": "217.82",
+      "RECORD_YEARS": "31.6",
+      "MAX_VALUE": "181.7",
+      "MEDIATION": "BelowLand",
+      "MIN_VALUE": "232.96",
+      "SAMPLE_COUNT": "7456",
+      "SITE_NO": "353945105574502",
+      "MIN_DATE": "1986-09-26T12:00:00",
+      "LATEST_PCTILE": "0.78606",
+      "IS_RANKED": "Y"
+    }
+    SAMPLE monthly
+    {
+      "3": {
+        "RECORD_YEARS": "23",
+        "P50": "216.54",
+        "P25": "222.72",
+        "P10": "226.24",
+        "P50_MAX": "184.17",
+        "P90": "188.72",
+        "P75": "212.37",
+        "AGENCY_CD": "USGS",
+        "SAMPLE_COUNT": "673",
+        "MONTH": "3",
+        "SITE_NO": "353945105574502",
+        "P50_MIN": "227.46"
+      },
+      "1": {
+        "RECORD_YEARS": "20",
+        "P50": "218.28",
+        "P25": "225.50",
+        "P10": "227.03",
+        "P50_MAX": "184.14",
+        "P90": "190.49",
+        "P75": "214.81",
+        "AGENCY_CD": "USGS",
+        "SAMPLE_COUNT": "608",
+        "MONTH": "1",
+        "SITE_NO": "353945105574502",
+        "P50_MIN": "227.89"
+      }
+    }
+    """
+
+    overall = get_statistic(agency_cd, site_no, 'wl-overall')
+
+    site_info = monthly = {'IS_FETCHED': 'N'}
+    if overall['IS_RANKED'] == 'Y':
+        site_info = get_statistic(agency_cd, site_no, 'site-info')
+        monthly = get_statistic(agency_cd, site_no, 'wl-monthly')
+
+    # handle to potential fetch fail with default
+    stats = {
+        'alt_datum': 'unknown',
+        'calc_date': 'unknown',
+        'overall': [],
+        'monthly': []
+    }
+
+    if overall['IS_FETCHED'] == 'Y':
+        alt_datum_cd = ''
+        if site_info['IS_FETCHED'] == 'Y':
+            alt_datum_cd = site_info['altDatumCd']
+
+        if overall['MEDIATION'] == 'BelowLand':
+            stats['alt_datum'] = 'Depth to water, feet below land surface'
+        else:
+            stats['alt_datum'] = 'Water level in feet relative to ' + alt_datum_cd
+
+        stats['calc_date'] = overall['CALC_DATE']
+
+        stats['overall'] = [
+            overall['MIN_VALUE'],
+            overall['MEDIAN_VALUE'],
+            overall['MAX_VALUE'],
+            overall['MIN_DATE'],
+            overall['MAX_DATE'],
+            overall['SAMPLE_COUNT'],
+            overall['RECORD_YEARS'],
+            overall['LATEST_VALUE'],
+            overall['LATEST_PCTILE']
+        ]
+
+    if monthly['IS_FETCHED'] == 'Y':
+        month_names = ["Non", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+        for month in range(1, 12):
+            if str(month) in monthly:
+                month_stats = monthly[str(month)]
+                stats['monthly'].append([
+                    month_names[month],
+                    month_stats['P50_MIN'],
+                    month_stats['P10'],
+                    month_stats['P25'],
+                    month_stats['P50'],
+                    month_stats['P75'],
+                    month_stats['P90'],
+                    month_stats['P50_MAX'],
+                    month_stats['SAMPLE_COUNT'],
+                    month_stats['RECORD_YEARS']
+                ])
+
+    return stats
+
+    # { SAMPLE stats
+    #     "alt_datum": 'Below Land Surface',
+    #     "calc_date": '2018-10-10',
+    #     "overall": ['1.0', '5.5', '42', '2001-01-01', '2018-10-10', '4242', '18'],
+    #     "monthly": [
+    #         ['Jan', '5.5', '42', '24', '12', '6.6', '3.3', '12', '10', '18'],
+    #         ['Feb', '5.5', '42', '24', '12', '6.6', '3.3', '12', '10', '18'],
+    #         ['Mar', '5.5', '42', '24', '12', '6.6', '3.3', '12', '10', '18'],
+    #         ['Apr', '5.5', '42', '24', '12', '6.6', '3.3', '12', '10', '18'],
+    #         ['May', '5.5', '42', '24', '12', '6.6', '3.3', '12', '10', '18'],
+    #         ['Jun', '5.5', '42', '24', '12', '6.6', '3.3', '12', '10', '18'],
+    #         ['Jul', '5.5', '42', '24', '12', '6.6', '3.3', '12', '10', '18'],
+    #         ['Aug', '5.5', '42', '24', '12', '6.6', '3.3', '12', '10', '18'],
+    #         ['Sep', '5.5', '42', '24', '12', '6.6', '3.3', '12', '10', '18'],
+    #         ['Oct', '5.5', '42', '24', '12', '6.6', '3.3', '12', '10', '18'],
+    #         ['Nov', '5.5', '42', '24', '12', '6.6', '3.3', '12', '10', '18'],
+    #         ['Dec', '5.5', '42', '24', '12', '6.6', '3.3', '12', '10', '18']
+    #     ]
+    #}

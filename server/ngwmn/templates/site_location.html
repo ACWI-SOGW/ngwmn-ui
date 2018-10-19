@@ -232,65 +232,55 @@
                 <div id="ts-a4" class="usa-accordion-content">
 
                     <table id="overallStats" class="usa-table-borderless waterStatsTable">
-                        <!--
-                        <div class="loadingMask loadingOverallStats"><span>LOADING...<img class="spinner" src="/ngwmn/assets/images/SpinnerGray.gif"></span></div>
-                        <caption>Overall Statistics</caption>
-                        -->
                         <caption>
                             <h5>Overall Water Level Statistics (<span class="MEDIATION"></span><span class="altDatumCd">{{ stats.alt_datum }}</span>)</h5>
                         </caption>
+                        <thead">
+                            <tr class="light">
+                                <th>Highest Water Level</th>
+                                <th>Median Water Level</th>
+                                <th>Lowest Water Level</th>
+                                <th>First Measurement Date</th>
+                                <th>Last Measurement Date</th>
+                                <th>Number of Measurements</th>
+                                <th>Years of Record</th>
+                                <th>Latest Value</th>
+                                <th>Latest Percentile</th>
+                            </tr>
+                        </thead>
                         <tbody>
-                            <thead>
-                                <tr class="light">
-                                    <th>Highest Water Level</th>
-                                    <th>Median Water Level</th>
-                                    <th>Lowest Water Level</th>
-                                    <th>First Measurement Date</th>
-                                    <th>Last Measurement Date</th>
-                                    <th>Number of Measurements</th>
-                                    <th>Years of Record</th>
-                                </tr>
-                            </thead>
                             <tr>
                                 {% for stat in stats.overall %}
                                     <td>{{ stat }} </td>
                                 {% endfor %}
-                                <!--
-                                    <td class="MAX_VALUE"></td>
-                                    <td class="MEDIAN_VALUE"></td>
-                                    <td class="MIN_VALUE"></td>
-                                    <td class="MIN_DATE"></td>
-                                    <td class="MAX_DATE"></td>
-                                    <td class="SAMPLE_COUNT"></td>
-                                    <td class="RECORD_YEARS"></td>
-                                -->
                             </tr>
                         </tbody>
+                        <tfoot id="overallWaterLevelFooter">
+                            <tr>
+                                <td colspan="9">Statistics Calculated <span class="CALC_DATE">{{ stats.calc_date }}</span></td>
+                            </tr>
+                        </tfoot>
                     </table>
 
-                    <table id="monthlyStats" class="usa-table-borderless waterStatsTable">
-                        <!--
-                        <div class="loadingMask loadingMonthlyStats"><span>LOADING...<img class="spinner" src="/ngwmn/assets/images/SpinnerGray.gif"></span></div>
-                        <caption>Monthly Statistics</caption>
-                        -->
+                    <table id="monthlyStats" class="usa-table-borderless waterStatsTable"  style="{{ stats.display_monthly }}">
                         <caption>
                             <h5>Monthly Water Level Statistics  (<span class="MEDIATION"></span><span class="altDatumCd">{{ stats.alt_datum }}</span>)</h5>
                         </caption>
+                        <thead">
+                            <tr class="light">
+                                <th>Month</th>
+                                <th>Lowest Median</th>
+                                <th>10th Percentile</th>
+                                <th>25th Percentile</th>
+                                <th>50th Percentile</th>
+                                <th>75th Percentile</th>
+                                <th>90th Percentile</th>
+                                <th>Highest Median</th>
+                                <th>Number of Measurements</th>
+                                <th>Years of Record</th>
+                            </tr>
+                        </thead>
                         <tbody>
-                            <thead>
-                                <tr class="light">
-                                    <th>Month</th>
-                                    <th>Lowest Median</th>
-                                    <th>10th Percentile</th>
-                                    <th>25th Percentile</th>
-                                    <th>50th Percentile</th>
-                                    <th>75th Percentile</th>
-                                    <th>90th Percentile</th>
-                                    <th>Highest Median</th>
-                                    <th>Number of Measurements</th>
-                                    <th>Years of Record</th>
-                                </tr>
-                            </thead>
                             {% for month in stats.monthly %}
                                 <tr>
                                     {% for stat in month %}
@@ -298,20 +288,8 @@
                                     {% endfor %}
                                 </tr>
                             {% endfor %}
-                            <!--
-                                <td class="MONTH"></td>
-                                <td class="P50_MIN"></td>
-                                <td class="P10"></td>
-                                <td class="P25"></td>
-                                <td class="P50"></td>
-                                <td class="P75"></td>
-                                <td class="P90"></td>
-                                <td class="P50_MAX"></td>
-                                <td class="SAMPLE_COUNT"></td>
-                                <td class="RECORD_YEARS"></td>
-                            -->
                         </tbody>
-                        <tfoot id="depthWaterLevelFooter">
+                        <tfoot id="monthlyWaterLevelFooter">
                             <tr>
                                 <td colspan="10">Statistics Calculated <span class="CALC_DATE">{{ stats.calc_date }}</span></td>
                             </tr>
