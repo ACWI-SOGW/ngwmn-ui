@@ -371,6 +371,10 @@ MOCK_WELL_LOG_RESPONSE = b"""<?xml version="1.0" encoding="UTF-8"?>
   </gml:featureMember>
 </wfs:FeatureCollection>"""
 
+MOCK_SITE_INFO = {
+    'altDatumCd': 'NGW1701B'
+}
+
 MOCK_OVERALL_STATS = {
     "CALC_DATE": "2018-10-18",
     "SAMPLE_COUNT": "2330",
