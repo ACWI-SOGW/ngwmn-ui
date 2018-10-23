@@ -231,11 +231,11 @@
                 </button>
                 <div id="ts-a4" class="usa-accordion-content">
 
-                    <table id="overallStats" class="usa-table-borderless waterStatsTable">
+                    <table id="overall-stats" class="usa-table-borderless">
                         <caption>
-                            <h5>Overall Water Level Statistics (<span class="MEDIATION"></span><span class="altDatumCd">{{ stats.alt_datum }}</span>)</h5>
+                            <h5>Overall Water Level Statistics ({{ stats.alt_datum }})</h5>
                         </caption>
-                        <thead">
+                        <thead>
                             <tr class="light">
                                 <th>Highest Water Level</th>
                                 <th>Median Water Level</th>
@@ -255,18 +255,18 @@
                                 {% endfor %}
                             </tr>
                         </tbody>
-                        <tfoot id="overallWaterLevelFooter">
+                        <tfoot id="overall-water-level-stats-footer">
                             <tr>
-                                <td colspan="9">Statistics Calculated <span class="CALC_DATE">{{ stats.calc_date }}</span></td>
+                                <td colspan="9">Statistics Calculated {{ stats.calc_date }}</td>
                             </tr>
                         </tfoot>
                     </table>
-
-                    <table id="monthlyStats" class="usa-table-borderless waterStatsTable"  style="{{ stats.display_monthly }}">
+                    {% if stats.monthly|length > 0 %}
+                    <table id="monthly-stats" class="usa-table-borderless">
                         <caption>
-                            <h5>Monthly Water Level Statistics  (<span class="MEDIATION"></span><span class="altDatumCd">{{ stats.alt_datum }}</span>)</h5>
+                            <h5>Monthly Water Level Statistics ({{ stats.alt_datum }})</h5>
                         </caption>
-                        <thead">
+                        <thead>
                             <tr class="light">
                                 <th>Month</th>
                                 <th>Lowest Median</th>
@@ -289,12 +289,13 @@
                                 </tr>
                             {% endfor %}
                         </tbody>
-                        <tfoot id="monthlyWaterLevelFooter">
+                        <tfoot id="monthly-water-level-stats-footer">
                             <tr>
-                                <td colspan="10">Statistics Calculated <span class="CALC_DATE">{{ stats.calc_date }}</span></td>
+                                <td colspan="10">Statistics Calculated {{ stats.calc_date }}</td>
                             </tr>
                         </tfoot>
                     </table>
+                    {% endif %}
                 </div>
 
             </li>

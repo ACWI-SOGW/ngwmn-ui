@@ -2,31 +2,32 @@
 Unit tests for data fetch utility functions
 """
 
+import copy
 from unittest import TestCase, mock
 
 import requests as r
 import requests_mock
-import copy
-import ngwmn.services.ngwmn as ngwmn
+import ngwmn.services.ngwmn as mock_ngwmn
 
 from ngwmn.services import ServiceException
 from ngwmn.services.ngwmn import (
-    generate_bounding_box_values, get_iddata, get_water_quality, get_well_log, get_statistic, get_statistics)
+    generate_bounding_box_values, get_iddata, get_water_quality, get_well_log, get_statistic)
 from .mock_data import MOCK_WELL_LOG_RESPONSE, MOCK_WQ_RESPONSE, MOCK_OVERALL_STATS, MOCK_MONTHLY_STATS
 
 
 class TestGetStatistics(TestCase):
+    # pylint: disable=too-many-instance-attributes
 
     def tearDown(self):
         """
             This Tear Down replaces ngwmn.get_statistics with the original.
             Note, that his could be replaced with a with-clause mock.
         """
-        ngwmn.get_statistic = self.save_ngwmn_get_statistic
+        mock_ngwmn.get_statistic = self.save_ngwmn_get_statistic
 
     def setUp(self):
         # save the method for replacement in tearDown
-        self.save_ngwmn_get_statistic = ngwmn.get_statistic
+        self.save_ngwmn_get_statistic = mock_ngwmn.get_statistic
 
         self.test_service_root = 'http://test.gov'
         self.test_agency_cd = 'TEST'
@@ -88,7 +89,10 @@ class TestGetStatistics(TestCase):
         result = get_statistic(self.test_agency_cd, self.test_site_no, 'site-info', self.test_service_root)
         self.assertEqual('SUCCESS', result['value'])
         self.assertEqual('Y', result['IS_FETCHED'])
-        url = '/'.join([self.test_service_root, 'ngwmn_cache/direct/json/site-info', self.test_agency_cd, self.test_site_no])
+        url = '/'.join([
+            self.test_service_root,
+            'ngwmn_cache/direct/json/site-info',
+            self.test_agency_cd, self.test_site_no])
         r_mock.assert_called_with(url)
 
     @mock.patch('ngwmn.services.ngwmn.r.get')
@@ -99,7 +103,7 @@ class TestGetStatistics(TestCase):
         m_resp.reason = 'reason 500'
         r_mock.return_value = m_resp
         with self.assertRaises(ServiceException):
-            result = get_statistic(self.test_agency_cd, self.test_site_no, 'site-info', self.test_service_root)
+            get_statistic(self.test_agency_cd, self.test_site_no, 'site-info', self.test_service_root)
 
     @mock.patch('ngwmn.services.ngwmn.r.get')
     def test_get_statistic__status_404(self, r_mock):
@@ -117,14 +121,16 @@ class TestGetStatistics(TestCase):
             This is used to replace the ngwmn.get_statistic method.
             It returns data as if it called the ngwmn_cache statistics service
         """
-        # the nonranked sites should not call monthly.
+        # pylint: disable=unused-argument
+        # The non-ranked sites should not call monthly.
+        # This exception proves it is not called under this condition.
         if "NOT_RANKED" in site_no and "month" in stat_type:
             raise ServiceException()
         return self.test_stats[agency_cd][site_no][stat_type]
 
     def test_get_statistics__below(self):
-        ngwmn.get_statistic = self.mock_stat
-        stats = ngwmn.get_statistics(self.test_agency_cd, self.test_site_no_below)
+        mock_ngwmn.get_statistic = self.mock_stat
+        stats = mock_ngwmn.get_statistics(self.test_agency_cd, self.test_site_no_below)
         self.assertEqual('Depth to water, feet below land surface', stats['alt_datum'],
                          'When MEDIATION is BelowLand then alt_datum is not displayed.')
         self.assertEqual(1, len(stats['monthly']),
@@ -144,14 +150,14 @@ class TestGetStatistics(TestCase):
         self.assertEqual(jan['RECORD_YEARS'], stats['monthly'][0][9], 'Expect the record years value.')
 
     def test_get_statistics__above(self):
-        ngwmn.get_statistic = self.mock_stat
-        stats = ngwmn.get_statistics(self.test_agency_cd, self.test_site_no_above)
+        mock_ngwmn.get_statistic = self.mock_stat
+        stats = mock_ngwmn.get_statistics(self.test_agency_cd, self.test_site_no_above)
         self.assertEqual('Water level in feet relative to NGW1701C', stats['alt_datum'],
                          'When MEDIATION is AboveDatum then alt_datum is displayed.')
 
     def test_get_statistics__not_ranked(self):
-        ngwmn.get_statistic = self.mock_stat
-        stats = ngwmn.get_statistics(self.test_agency_cd, self.test_site_no_not_ranked)
+        mock_ngwmn.get_statistic = self.mock_stat
+        stats = mock_ngwmn.get_statistics(self.test_agency_cd, self.test_site_no_not_ranked)
         self.assertEqual('Depth to water, feet below land surface', stats['alt_datum'],
                          'When MEDIATION is BelowLand then alt_datum is not displayed.')
         self.assertEqual(0, len(stats['monthly']),
@@ -171,7 +177,7 @@ class TestGetStatistics(TestCase):
         self.assertEqual(overall['LATEST_PCTILE'], stats['overall'][8], 'Expect the latest percentile.')
 
 
-class TestGetWellLithography(TestCase):
+class TestGetWellData(TestCase):
 
     def setUp(self):
         self.test_service_root = 'http://fake.gov'

@@ -1,11 +1,11 @@
 """
 Utility functions for fetching data
 """
+import json
 import re
 from urllib.parse import urljoin
 
 import requests as r
-import json
 
 from ngwmn import app
 from ngwmn.services import ServiceException
@@ -313,8 +313,21 @@ def get_features(latitude, longitude, service_root=SERVICE_ROOT):
 
 
 def get_statistic(agency_cd, site_no, stat_type, service_root=SERVICE_ROOT_CACHE):
-    # base_url = "http://cida-eros-ngwmndev:8080/ngwmn_cache/direct/json/"
-    # base_url = "https://cida.usgs.gov/ngwmn_cache/direct/json/"
+    """
+    fetches the statistics from the ngwmn cache
+
+    :param agency_cd: the agency code
+    :param site_no:  the site number
+    :param stat_type: there are three statistic types:
+    'site-info', 'wl-overall', 'wl-monthly'
+    :param service_root: the server for the ngwmn_cache service. This has the
+    potential to be different than the UI service and hence has its own const.
+    Example Service Roots
+    http://cida-eros-ngwmndev:8080
+    https://cida.usgs.gov
+
+    :return: json data response from the http(s) request
+    """
     stats_url = '/'.join([service_root, 'ngwmn_cache', 'direct', 'json', stat_type, agency_cd, site_no])
     resp = r.get(stats_url)
 
@@ -331,10 +344,9 @@ def get_statistic(agency_cd, site_no, stat_type, service_root=SERVICE_ROOT_CACHE
 
     json_txt = resp.text
     stats = json.loads(json_txt)
-    # TODO log in trace mode
-    # print(json.dumps(stats, indent=2) + '\n')
-
     stats['IS_FETCHED'] = 'Y'
+
+    app.logger.debug(stats)
 
     return stats
 
@@ -454,8 +466,6 @@ def get_statistics(agency_cd, site_no):
                     month_stats['RECORD_YEARS']
                 ])
 
-    return stats
-
     # { SAMPLE stats
     #     "alt_datum": 'Below Land Surface',
     #     "calc_date": '2018-10-10',
@@ -474,4 +484,5 @@ def get_statistics(agency_cd, site_no):
     #         ['Nov', '5.5', '42', '24', '12', '6.6', '3.3', '12', '10', '18'],
     #         ['Dec', '5.5', '42', '24', '12', '6.6', '3.3', '12', '10', '18']
     #     ]
-    #}
+    # }
+    return stats

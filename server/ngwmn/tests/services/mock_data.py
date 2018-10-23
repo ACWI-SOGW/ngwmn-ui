@@ -1,3 +1,7 @@
+"""
+Mock data for unit testing. It is a convenient place for potentially shared test data.
+"""
+
 MOCK_SIFTA_RESPONSE = """
 {"Site": "06864000", "Date": "6/19/2018", "Customers":[{"Name":"Kansas Water Office","URL":"http://www.kwo.org/","IconURL":"http://water.usgs.gov/customer/icons/6737.gif"},{"Name":"USGS - Cooperative Matching Funds","URL":"http://water.usgs.gov/coop/","IconURL":"http://water.usgs.gov/customer/icons/usgsIcon.gif"}]}
 """

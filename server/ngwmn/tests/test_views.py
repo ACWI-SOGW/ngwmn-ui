@@ -4,11 +4,11 @@ Unit tests for NGWMN views
 """
 # pylint: disable=C0103
 
+import json
 from unittest import TestCase
 from urllib.parse import urljoin
 
 import requests_mock
-import json
 
 from .. import app
 from .services.mock_data import MOCK_SIFTA_RESPONSE, MOCK_WELL_LOG_RESPONSE, MOCK_WQ_RESPONSE,\
@@ -20,6 +20,7 @@ COOP_SERVICE_PATTERN = app.config['COOPERATOR_SERVICE_PATTERN']
 
 
 class TestWellPageView(TestCase):
+    # pylint: disable=too-many-instance-attributes
 
     def setUp(self):
         self.app_client = app.test_client()

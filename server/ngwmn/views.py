@@ -14,6 +14,7 @@ from .services.sifta import get_cooperators
 
 @app.route('/')
 def home():
+    """testing home page"""
     return render_template(
         'index.html',
         version=__version__,
@@ -76,11 +77,6 @@ def site_page(agency_cd, location_id):
         set()
     )
 
-    statistics = get_statistics(agency_cd, location_id)
-    statistics['display_monthly'] = ''
-    if len(statistics['monthly']) == 0:
-        statistics['display_monthly'] = 'display:none'
-
     return render_template(
         'site_location.html',
         cooperators=get_cooperators(location_id),
@@ -89,6 +85,5 @@ def site_page(agency_cd, location_id):
         water_quality_activities=water_quality.get('activities') or [],
         well_log=well_log,
         lithology_ids=lithology_ids,
-        stats=statistics
+        stats=get_statistics(agency_cd, location_id)
     ), 200
-
