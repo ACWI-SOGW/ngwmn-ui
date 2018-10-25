@@ -3,6 +3,7 @@ Utility functions for fetching data
 """
 import json
 import re
+import string
 from urllib.parse import urljoin
 
 import requests as r
@@ -327,37 +328,6 @@ def get_statistic(agency_cd, site_no, stat_type, service_root=SERVICE_ROOT_CACHE
     https://cida.usgs.gov
 
     :return: json data response from the http(s) request
-    """
-    stats_url = '/'.join([service_root, 'ngwmn_cache', 'direct', 'json', stat_type, agency_cd, site_no])
-    resp = r.get(stats_url)
-
-    if resp.status_code == 404:
-        return {
-            'IS_RANKED': 'N',
-            'IS_FETCHED': 'N'
-        }
-
-    if resp.status_code != 200:
-        msg = '%s statistics fetch error from %s (reason: %s)'
-        app.logger.error(msg, resp.status_code, resp.url, resp.reason)
-        raise ServiceException()
-
-    json_txt = resp.text
-    stats = json.loads(json_txt)
-    stats['IS_FETCHED'] = 'Y'
-
-    app.logger.debug(stats)
-
-    return stats
-
-
-def get_statistics(agency_cd, site_no):
-    """
-    Call ngwmn_cache for site statistics data.
-
-    :param agency_cd: string agency code
-    :param site_no: alphanumeric site number
-    :returns overall and monthly statistics
 
     SAMPLE overall
     {
@@ -408,63 +378,88 @@ def get_statistics(agency_cd, site_no):
       }
     }
     """
-    site_info = monthly = {'IS_FETCHED': 'N'}
+    url = '/'.join([service_root, 'ngwmn_cache', 'direct', 'json', stat_type, agency_cd, site_no])
+    resp = r.get(url)
 
-    overall = get_statistic(agency_cd, site_no, 'wl-overall')
-    if overall['IS_FETCHED'] == 'Y':
-        site_info = get_statistic(agency_cd, site_no, 'site-info')
-        if overall['IS_RANKED'] == 'Y':
-            monthly = get_statistic(agency_cd, site_no, 'wl-monthly')
+    statistics = {
+            'is_ranked': False,
+            'is_fetched': False
+        }
+    if resp.status_code == 404:
+        return statistics
 
+    if resp.status_code != 200:
+        msg = '%s statistics fetch error from %s (reason: %s)'
+        app.logger.error(msg, resp.status_code, resp.url, resp.reason)
+        raise ServiceException()
+
+    json_txt = resp.text
+    stats = json.loads(json_txt)
+    stats['is_fetched'] = True
+
+    statistics = convert_keys_and_Booleans(stats)
+    app.logger.debug(statistics)
+
+    return statistics
+
+
+def convert_keys_and_Booleans(dictionary):
+        """
+        Local recursive helper method to convert 'all caps' keys to lowercase
+        :param dictionary: the dict for whom's keys need lowercase
+        :return: the new dictionary with lowercase keys
+        """
+        lower_case = {}
+        for key in dictionary:
+            value = dictionary[key]
+            if isinstance(value, dict):
+                value = convert_keys_and_Booleans(value)
+            elif value in ['N', 'Y']:
+                value = (value == 'Y')
+            lower_case[key.lower()] = value
+        return lower_case
+
+
+def get_statistics(agency_cd, site_no):
+    """
+    Call ngwmn_cache for site statistics data.
+
+    :param agency_cd: string agency code
+    :param site_no: alphanumeric site number
+    :returns overall and monthly statistics
+    """
     # handle to potential fetch fail with default
     stats = {
-        'alt_datum': 'unknown',
-        'calc_date': 'unknown',
-        'overall': [],
+        'overall': {
+            'alt_datum': 'unknown',
+            'calc_date': 'unknown',
+        },
         'monthly': []
     }
 
-    if overall['IS_FETCHED'] == 'Y':
+    overall = get_statistic(agency_cd, site_no, 'wl-overall')
+    if overall['is_fetched']:
+        stats['overall'] = overall
+        site_info = get_statistic(agency_cd, site_no, 'site-info')
         alt_datum_cd = ''
-        if site_info['IS_FETCHED'] == 'Y':
-            alt_datum_cd = site_info['altDatumCd']
+        if site_info['is_fetched']:
+            alt_datum_cd = site_info['altdatumcd']
 
-        if overall['MEDIATION'] == 'BelowLand':
-            stats['alt_datum'] = 'Depth to water, feet below land surface'
+        if overall['is_ranked']:
+            monthly = get_statistic(agency_cd, site_no, 'wl-monthly')
+            if monthly['is_fetched']:
+                stats['monthly'] = []
+                month_names = ["Non", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+                for month in range(1, 13):
+                    if str(month) in monthly:
+                        month_stats = monthly[str(month)]
+                        month_stats['month'] = month_names[month]
+                        stats['monthly'].append(month_stats)
+
+        if overall['mediation'] == 'BelowLand':
+            stats['overall']['alt_datum'] = 'Depth to water, feet below land surface'
         else:
-            stats['alt_datum'] = 'Water level in feet relative to ' + alt_datum_cd
-
-        stats['calc_date'] = overall['CALC_DATE']
-
-        stats['overall'] = [
-            overall['MIN_VALUE'],
-            overall['MEDIAN_VALUE'],
-            overall['MAX_VALUE'],
-            overall['MIN_DATE'],
-            overall['MAX_DATE'],
-            overall['SAMPLE_COUNT'],
-            overall['RECORD_YEARS'],
-            overall['LATEST_VALUE'],
-            overall['LATEST_PCTILE']
-        ]
-
-    if monthly['IS_FETCHED'] == 'Y':
-        month_names = ["Non", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-        for month in range(1, 12):
-            if str(month) in monthly:
-                month_stats = monthly[str(month)]
-                stats['monthly'].append([
-                    month_names[month],
-                    month_stats['P50_MIN'],
-                    month_stats['P10'],
-                    month_stats['P25'],
-                    month_stats['P50'],
-                    month_stats['P75'],
-                    month_stats['P90'],
-                    month_stats['P50_MAX'],
-                    month_stats['SAMPLE_COUNT'],
-                    month_stats['RECORD_YEARS']
-                ])
+            stats['overall']['alt_datum'] = 'Water level in feet relative to ' + alt_datum_cd
 
     # { SAMPLE stats
     #     "alt_datum": 'Below Land Surface',

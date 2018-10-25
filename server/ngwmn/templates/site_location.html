@@ -233,7 +233,7 @@
 
                     <table id="overall-stats" class="usa-table-borderless water-stats-table">
                         <caption>
-                            <h5>Overall Water Level Statistics ({{ stats.alt_datum }})</h5>
+                            <h5>Overall Water Level Statistics ({{ stats.overall.alt_datum }})</h5>
                         </caption>
                         <thead>
                             <tr class="light">
@@ -250,21 +250,27 @@
                         </thead>
                         <tbody>
                             <tr>
-                                {% for stat in stats.overall %}
-                                    <td>{{ stat }} </td>
-                                {% endfor %}
+                                <td>{{ stats.overall.min_value }}</td>
+                                <td>{{ stats.overall.median_value }}</td>
+                                <td>{{ stats.overall.max_value }}</td>
+                                <td>{{ stats.overall.min_date }}</td>
+                                <td>{{ stats.overall.max_date }}</td>
+                                <td>{{ stats.overall.sample_count }}</td>
+                                <td>{{ stats.overall.record_years }}</td>
+                                <td>{{ stats.overall.latest_value }}</td>
+                                <td>{{ stats.overall.latest_pctile }}</td>
                             </tr>
                         </tbody>
                         <tfoot id="overall-water-level-stats-footer">
                             <tr>
-                                <td colspan="9">Statistics Calculated {{ stats.calc_date }}</td>
+                                <td colspan="9">Statistics Calculated {{ stats.overall.calc_date }}</td>
                             </tr>
                         </tfoot>
                     </table>
                     {% if stats.monthly|length > 0 %}
                     <table id="monthly-stats" class="usa-table-borderless water-stats-table">
                         <caption>
-                            <h5>Monthly Water Level Statistics ({{ stats.alt_datum }})</h5>
+                            <h5>Monthly Water Level Statistics ({{ stats.overall.alt_datum }})</h5>
                         </caption>
                         <thead>
                             <tr class="light">
@@ -281,17 +287,24 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for month in stats.monthly %}
+                            {% for stat in stats.monthly %}
                                 <tr>
-                                    {% for stat in month %}
-                                        <td>{{ stat }} </td>
-                                    {% endfor %}
+                                    <td>{{ stat.month }}</td>
+                                    <td>{{ stat.p50_min }}</td>
+                                    <td>{{ stat.p10 }}</td>
+                                    <td>{{ stat.p25 }}</td>
+                                    <td>{{ stat.p50 }}</td>
+                                    <td>{{ stat.p75 }}</td>
+                                    <td>{{ stat.p90 }}</td>
+                                    <td>{{ stat.p50_max }}</td>
+                                    <td>{{ stat.sample_count }}</td>
+                                    <td>{{ stat.record_years }}</td>
                                 </tr>
                             {% endfor %}
                         </tbody>
                         <tfoot id="monthly-water-level-stats-footer">
                             <tr>
-                                <td colspan="10">Statistics Calculated {{ stats.calc_date }}</td>
+                                <td colspan="10">Statistics Calculated {{ stats.overall.calc_date }}</td>
                             </tr>
                         </tfoot>
                     </table>

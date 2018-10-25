@@ -48,7 +48,7 @@ class TestGetStatistics(TestCase):
             self.test_site_no_not_ranked: {
                 'wl-overall': self.overall_not_ranked,
                 'site-info': {
-                    'IS_FETCHED': 'Y',
+                    'is_fetched': True,
                     'altDatumCd': 'NGW1701A'
                 },
                 'wl-monthly': {
@@ -58,22 +58,22 @@ class TestGetStatistics(TestCase):
             self.test_site_no_below: {
                 'wl-overall': self.overall_ranked_below,
                 'site-info': {
-                    'IS_FETCHED': 'Y',
+                    'is_fetched': True,
                     'altDatumCd': 'NGW1701B'
                 },
                 'wl-monthly': {
-                    'IS_FETCHED': 'Y',
+                    'is_fetched': True,
                     '1': MOCK_MONTHLY_STATS['1']
                 }
             },
             self.test_site_no_above: {
                 'wl-overall': self.overall_ranked_above,
                 'site-info': {
-                    'IS_FETCHED': 'Y',
+                    'is_fetched': True,
                     'altDatumCd': 'NGW1701C'
                 },
                 'wl-monthly': {
-                    'IS_FETCHED': 'Y',
+                    'is_fetched': True,
                     '1': MOCK_MONTHLY_STATS['1']
                 }
             }
@@ -88,7 +88,7 @@ class TestGetStatistics(TestCase):
         r_mock.return_value = m_resp
         result = get_statistic(self.test_agency_cd, self.test_site_no, 'site-info', self.test_service_root)
         self.assertEqual('SUCCESS', result['value'])
-        self.assertEqual('Y', result['IS_FETCHED'])
+        self.assertEqual(True, result['is_fetched'])
         url = '/'.join([
             self.test_service_root,
             'ngwmn_cache/direct/json/site-info',
@@ -113,68 +113,68 @@ class TestGetStatistics(TestCase):
         m_resp.reason = 'reason 404'
         r_mock.return_value = m_resp
         result = get_statistic(self.test_agency_cd, self.test_site_no, 'site-info', self.test_service_root)
-        self.assertEqual('N', result['IS_FETCHED'])
-        self.assertEqual('N', result['IS_RANKED'])
+        self.assertEqual(False, result['is_fetched'])
+        self.assertEqual(False, result['is_ranked'])
 
     def mock_stat(self, agency_cd, site_no, stat_type, service='http://test.gov'):
         """
-            This is used to replace the ngwmn.get_statistic method.
-            It returns data as if it called the ngwmn_cache statistics service
+        This is used to replace the ngwmn.get_statistic method.
+        It returns data as if it called the ngwmn_cache statistics service
         """
         # pylint: disable=unused-argument
         # The non-ranked sites should not call monthly.
         # This exception proves it is not called under this condition.
         if "NOT_RANKED" in site_no and "month" in stat_type:
             raise ServiceException()
-        return self.test_stats[agency_cd][site_no][stat_type]
+        data = self.test_stats[agency_cd][site_no][stat_type]
+        return mock_ngwmn.convert_keys_and_Booleans(data)
 
     def test_get_statistics__below(self):
         mock_ngwmn.get_statistic = self.mock_stat
         stats = mock_ngwmn.get_statistics(self.test_agency_cd, self.test_site_no_below)
-        self.assertEqual('Depth to water, feet below land surface', stats['alt_datum'],
+        self.assertEqual('Depth to water, feet below land surface', stats['overall']['alt_datum'],
                          'When MEDIATION is BelowLand then alt_datum is not displayed.')
         self.assertEqual(1, len(stats['monthly']),
                          'With one month returned there should only be one entry.')
-        self.assertEqual('Jan', stats['monthly'][0][0],
+        self.assertEqual('Jan', stats['monthly'][0]['month'],
                          'Month numbers should be replaced with month abbrev.')
 
         jan = self.test_stats[self.test_agency_cd][self.test_site_no_below]['wl-monthly']['1']
-        self.assertEqual(jan['P50_MIN'], stats['monthly'][0][1], 'Expect the P50 minimum value.')
-        self.assertEqual(jan['P10'], stats['monthly'][0][2], 'Expect the P10 value.')
-        self.assertEqual(jan['P25'], stats['monthly'][0][3], 'Expect the P25 value.')
-        self.assertEqual(jan['P50'], stats['monthly'][0][4], 'Expect the P50 value.')
-        self.assertEqual(jan['P75'], stats['monthly'][0][5], 'Expect the P75 value.')
-        self.assertEqual(jan['P90'], stats['monthly'][0][6], 'Expect the P90 value.')
-        self.assertEqual(jan['P50_MAX'], stats['monthly'][0][7], 'Expect the P50 maximum value.')
-        self.assertEqual(jan['SAMPLE_COUNT'], stats['monthly'][0][8], 'Expect the sample count value.')
-        self.assertEqual(jan['RECORD_YEARS'], stats['monthly'][0][9], 'Expect the record years value.')
+        self.assertEqual(jan['P50_MIN'], stats['monthly'][0]['p50_min'], 'Expect the P50 minimum value.')
+        self.assertEqual(jan['P10'], stats['monthly'][0]['p10'], 'Expect the P10 value.')
+        self.assertEqual(jan['P25'], stats['monthly'][0]['p25'], 'Expect the P25 value.')
+        self.assertEqual(jan['P50'], stats['monthly'][0]['p50'], 'Expect the P50 value.')
+        self.assertEqual(jan['P75'], stats['monthly'][0]['p75'], 'Expect the P75 value.')
+        self.assertEqual(jan['P90'], stats['monthly'][0]['p90'], 'Expect the P90 value.')
+        self.assertEqual(jan['P50_MAX'], stats['monthly'][0]['p50_max'], 'Expect the P50 maximum value.')
+        self.assertEqual(jan['SAMPLE_COUNT'], stats['monthly'][0]['sample_count'], 'Expect the sample count value.')
+        self.assertEqual(jan['RECORD_YEARS'], stats['monthly'][0]['record_years'], 'Expect the record years value.')
 
     def test_get_statistics__above(self):
         mock_ngwmn.get_statistic = self.mock_stat
         stats = mock_ngwmn.get_statistics(self.test_agency_cd, self.test_site_no_above)
-        self.assertEqual('Water level in feet relative to NGW1701C', stats['alt_datum'],
+        self.assertEqual('Water level in feet relative to NGW1701C', stats['overall']['alt_datum'],
                          'When MEDIATION is AboveDatum then alt_datum is displayed.')
 
     def test_get_statistics__not_ranked(self):
         mock_ngwmn.get_statistic = self.mock_stat
         stats = mock_ngwmn.get_statistics(self.test_agency_cd, self.test_site_no_not_ranked)
-        self.assertEqual('Depth to water, feet below land surface', stats['alt_datum'],
+        self.assertEqual('Depth to water, feet below land surface', stats['overall']['alt_datum'],
                          'When MEDIATION is BelowLand then alt_datum is not displayed.')
         self.assertEqual(0, len(stats['monthly']),
                          'With the site is not ranked there should be no monthly data and no mock exception thrown.')
 
         overall = self.test_stats[self.test_agency_cd][self.test_site_no_below]['wl-overall']
-        self.assertEqual(overall['CALC_DATE'], stats['calc_date'], 'Expect the calculated date.')
-
-        self.assertEqual(overall['MIN_VALUE'], stats['overall'][0], 'Expect the minimum value.')
-        self.assertEqual(overall['MEDIAN_VALUE'], stats['overall'][1], 'Expect the median value.')
-        self.assertEqual(overall['MAX_VALUE'], stats['overall'][2], 'Expect the maximum value.')
-        self.assertEqual(overall['MIN_DATE'], stats['overall'][3], 'Expect the minimum date value.')
-        self.assertEqual(overall['MAX_DATE'], stats['overall'][4], 'Expect the maximum date value.')
-        self.assertEqual(overall['SAMPLE_COUNT'], stats['overall'][5], 'Expect the sample count value.')
-        self.assertEqual(overall['RECORD_YEARS'], stats['overall'][6], 'Expect the record years value.')
-        self.assertEqual(overall['LATEST_VALUE'], stats['overall'][7], 'Expect the latest value.')
-        self.assertEqual(overall['LATEST_PCTILE'], stats['overall'][8], 'Expect the latest percentile.')
+        self.assertEqual(overall['CALC_DATE'], stats['overall']['calc_date'], 'Expect the calculated date.')
+        self.assertEqual(overall['MIN_VALUE'], stats['overall']['min_value'], 'Expect the minimum value.')
+        self.assertEqual(overall['MEDIAN_VALUE'], stats['overall']['median_value'], 'Expect the median value.')
+        self.assertEqual(overall['MAX_VALUE'], stats['overall']['max_value'], 'Expect the maximum value.')
+        self.assertEqual(overall['MIN_DATE'], stats['overall']['min_date'], 'Expect the minimum date value.')
+        self.assertEqual(overall['MAX_DATE'], stats['overall']['max_date'], 'Expect the maximum date value.')
+        self.assertEqual(overall['SAMPLE_COUNT'], stats['overall']['sample_count'], 'Expect the sample count value.')
+        self.assertEqual(overall['RECORD_YEARS'], stats['overall']['record_years'], 'Expect the record years value.')
+        self.assertEqual(overall['LATEST_VALUE'], stats['overall']['latest_value'], 'Expect the latest value.')
+        self.assertEqual(overall['LATEST_PCTILE'], stats['overall']['latest_pctile'], 'Expect the latest percentile.')
 
 
 class TestGetWellData(TestCase):
