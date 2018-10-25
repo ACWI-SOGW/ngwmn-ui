@@ -15,3 +15,4 @@ server/ngwmn_ui.egg-info
 .sublimelinterrc
 *.sublime-project
 *.sublime-workspace
+.idea/
