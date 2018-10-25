@@ -1,9 +1,9 @@
 """
 Utility functions for fetching data
 """
+import calendar
 import json
 import re
-import string
 from urllib.parse import urljoin
 
 import requests as r
@@ -449,11 +449,12 @@ def get_statistics(agency_cd, site_no):
             monthly = get_statistic(agency_cd, site_no, 'wl-monthly')
             if monthly['is_fetched']:
                 stats['monthly'] = []
-                month_names = ["Non", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-                for month in range(1, 13):
-                    if str(month) in monthly:
-                        month_stats = monthly[str(month)]
-                        month_stats['month'] = month_names[month]
+                month_num = 0
+                for month_abbr in calendar.month_abbr[1:]:
+                    month_num += 1
+                    if str(month_num) in monthly:
+                        month_stats = monthly[str(month_num)]
+                        month_stats['month'] = month_abbr
                         stats['monthly'].append(month_stats)
 
         if overall['mediation'] == 'BelowLand':
