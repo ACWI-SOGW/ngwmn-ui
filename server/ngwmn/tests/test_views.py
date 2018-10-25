@@ -4,21 +4,23 @@ Unit tests for NGWMN views
 """
 # pylint: disable=C0103
 
+import json
 from unittest import TestCase
 from urllib.parse import urljoin
 
 import requests_mock
 
 from .. import app
-from .services.test_ngwmn import MOCK_WELL_LOG_RESPONSE, MOCK_WQ_RESPONSE
-from .services.test_sifta import MOCK_SIFTA_RESPONSE
-
+from .services.mock_data import MOCK_SIFTA_RESPONSE, MOCK_WELL_LOG_RESPONSE, MOCK_WQ_RESPONSE,\
+    MOCK_OVERALL_STATS, MOCK_MONTHLY_STATS, MOCK_SITE_INFO
 
 SERVICE_ROOT = app.config.get('SERVICE_ROOT')
+SERVICE_ROOT_CACHE = app.config.get('SERVICE_ROOT_CACHE')
 COOP_SERVICE_PATTERN = app.config['COOPERATOR_SERVICE_PATTERN']
 
 
 class TestWellPageView(TestCase):
+    # pylint: disable=too-many-instance-attributes
 
     def setUp(self):
         self.app_client = app.test_client()
@@ -30,12 +32,24 @@ class TestWellPageView(TestCase):
         self.sifta_url = COOP_SERVICE_PATTERN.format(site_no=_location_id)
         self.site_loc_url = '/site-location/{}/{}/'.format(_agency_cd, _location_id)
 
+        _stats_url = '/'.join(['ngwmn_cache', 'direct', 'json'])
+        self.site_info_url = '/'.join([SERVICE_ROOT_CACHE, _stats_url, 'site-info', _agency_cd, _location_id])
+        self.stats_overall_url = '/'.join([SERVICE_ROOT_CACHE, _stats_url, 'wl-overall', _agency_cd, _location_id])
+        self.stats_monthly_url = '/'.join([SERVICE_ROOT_CACHE, _stats_url, 'wl-monthly', _agency_cd, _location_id])
+        self.mock_site_info_json = json.dumps(MOCK_SITE_INFO)
+        self.mock_overall_json = json.dumps(MOCK_OVERALL_STATS)
+        self.mock_monthly_json = json.dumps(MOCK_MONTHLY_STATS)
+
     @requests_mock.Mocker()
     def test_best_case(self, mocker):
         mocker.post(requests_mock.ANY, text=TEST_SUMMARY_JSON, status_code=200)
         mocker.get(self.well_log_url, content=MOCK_WELL_LOG_RESPONSE, status_code=200)
         mocker.get(self.wq_url, content=MOCK_WQ_RESPONSE, status_code=200)
         mocker.get(self.sifta_url, text=MOCK_SIFTA_RESPONSE, status_code=200)
+        mocker.get(self.site_info_url, text=self.mock_site_info_json, status_code=200)
+        mocker.get(self.stats_overall_url, text=self.stats_overall_url, status_code=200)
+        mocker.get(self.stats_monthly_url, text=self.stats_monthly_url, status_code=200)
+
         response = self.app_client.get()
         self.assertEqual(response.status_code, 200)
 
@@ -45,6 +59,9 @@ class TestWellPageView(TestCase):
         mocker.get(self.well_log_url, content=MOCK_WELL_LOG_RESPONSE, status_code=200)
         mocker.get(self.wq_url, content=MOCK_WQ_RESPONSE, status_code=200)
         mocker.get(self.sifta_url, text=MOCK_SIFTA_RESPONSE, status_code=200)
+        mocker.get(self.site_info_url, text=self.mock_site_info_json, status_code=200)
+        mocker.get(self.stats_overall_url, text=self.stats_overall_url, status_code=200)
+        mocker.get(self.stats_monthly_url, text=self.stats_monthly_url, status_code=200)
 
         response = self.app_client.get(self.site_loc_url)
         self.assertEqual(response.status_code, 503)
@@ -55,6 +72,9 @@ class TestWellPageView(TestCase):
         mocker.get(self.well_log_url, content=MOCK_WELL_LOG_RESPONSE, status_code=200)
         mocker.get(self.wq_url, content=MOCK_WQ_RESPONSE, status_code=200)
         mocker.get(self.sifta_url, text=MOCK_SIFTA_RESPONSE, status_code=200)
+        mocker.get(self.site_info_url, text=self.mock_site_info_json, status_code=200)
+        mocker.get(self.stats_overall_url, text=self.stats_overall_url, status_code=200)
+        mocker.get(self.stats_monthly_url, text=self.stats_monthly_url, status_code=200)
 
         response = self.app_client.get(self.site_loc_url)
         self.assertEqual(response.status_code, 503)

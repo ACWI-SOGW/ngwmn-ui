@@ -78,7 +78,7 @@ setup(
     name='ngwmn_ui',
     version='0.1.0dev',
     description='USGS Water Data',
-    author='Andrew Yan, Mary Bucknell, Dan Naab',
+    author='Andrew Yan, Mary Bucknell, Dan Naab, David Uselmann',
     author_email='ayan@usgs.gov',
     packages=find_packages(),
     include_package_data=True,

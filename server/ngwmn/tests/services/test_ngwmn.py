@@ -2,17 +2,182 @@
 Unit tests for data fetch utility functions
 """
 
+import copy
 from unittest import TestCase, mock
 
 import requests as r
 import requests_mock
+import ngwmn.services.ngwmn as mock_ngwmn
 
 from ngwmn.services import ServiceException
 from ngwmn.services.ngwmn import (
-    generate_bounding_box_values, get_iddata, get_water_quality, get_well_log)
+    generate_bounding_box_values, get_iddata, get_water_quality, get_well_log, get_statistic)
+from .mock_data import MOCK_WELL_LOG_RESPONSE, MOCK_WQ_RESPONSE, MOCK_OVERALL_STATS, MOCK_MONTHLY_STATS
 
 
-class TestGetWellLithography(TestCase):
+class TestGetStatistics(TestCase):
+    # pylint: disable=too-many-instance-attributes
+
+    def tearDown(self):
+        """
+            This Tear Down replaces ngwmn.get_statistics with the original.
+            Note, that his could be replaced with a with-clause mock.
+        """
+        mock_ngwmn.get_statistic = self.save_ngwmn_get_statistic
+
+    def setUp(self):
+        # save the method for replacement in tearDown
+        self.save_ngwmn_get_statistic = mock_ngwmn.get_statistic
+
+        self.test_service_root = 'http://test.gov'
+        self.test_agency_cd = 'TEST'
+        self.test_site_no = 'TS-42'
+        self.test_site_no_not_ranked = '-'.join([self.test_site_no, 'NOT_RANKED'])
+        self.test_site_no_below = '-'.join([self.test_site_no, 'BELOW'])
+        self.test_site_no_above = '-'.join([self.test_site_no, 'ABOVE'])
+
+        self.overall_not_ranked = copy.copy(MOCK_OVERALL_STATS)
+        self.overall_not_ranked['IS_RANKED'] = 'N'
+        self.overall_ranked_below = copy.copy(MOCK_OVERALL_STATS)
+        self.overall_ranked_below['IS_RANKED'] = 'Y'
+        self.overall_ranked_above = copy.copy(MOCK_OVERALL_STATS)
+        self.overall_ranked_above['IS_RANKED'] = 'Y'
+        self.overall_ranked_above['MEDIATION'] = 'AboveDatum'
+
+        self.test_stats = {self.test_agency_cd: {
+            self.test_site_no_not_ranked: {
+                'wl-overall': self.overall_not_ranked,
+                'site-info': {
+                    'is_fetched': True,
+                    'altDatumCd': 'NGW1701A'
+                },
+                'wl-monthly': {
+                    'N/A': 'not called'
+                }
+            },
+            self.test_site_no_below: {
+                'wl-overall': self.overall_ranked_below,
+                'site-info': {
+                    'is_fetched': True,
+                    'altDatumCd': 'NGW1701B'
+                },
+                'wl-monthly': {
+                    'is_fetched': True,
+                    '1': MOCK_MONTHLY_STATS['1']
+                }
+            },
+            self.test_site_no_above: {
+                'wl-overall': self.overall_ranked_above,
+                'site-info': {
+                    'is_fetched': True,
+                    'altDatumCd': 'NGW1701C'
+                },
+                'wl-monthly': {
+                    'is_fetched': True,
+                    '1': MOCK_MONTHLY_STATS['1']
+                }
+            }
+        }}
+
+    @mock.patch('ngwmn.services.ngwmn.r.get')
+    def test_get_statistic__success(self, r_mock):
+        m_resp = mock.Mock(r.Response)
+        m_resp.text = '{"value":"SUCCESS"}'
+        m_resp.status_code = 200
+        m_resp.url = self.test_service_root
+        r_mock.return_value = m_resp
+        result = get_statistic(self.test_agency_cd, self.test_site_no, 'site-info', self.test_service_root)
+        self.assertEqual('SUCCESS', result['value'])
+        self.assertEqual(True, result['is_fetched'])
+        url = '/'.join([
+            self.test_service_root,
+            'ngwmn_cache/direct/json/site-info',
+            self.test_agency_cd, self.test_site_no])
+        r_mock.assert_called_with(url)
+
+    @mock.patch('ngwmn.services.ngwmn.r.get')
+    def test_get_statistic__status_500(self, r_mock):
+        m_resp = mock.Mock(r.Response)
+        m_resp.status_code = 500
+        m_resp.url = 'http://url'
+        m_resp.reason = 'reason 500'
+        r_mock.return_value = m_resp
+        with self.assertRaises(ServiceException):
+            get_statistic(self.test_agency_cd, self.test_site_no, 'site-info', self.test_service_root)
+
+    @mock.patch('ngwmn.services.ngwmn.r.get')
+    def test_get_statistic__status_404(self, r_mock):
+        m_resp = mock.Mock(r.Response)
+        m_resp.status_code = 404
+        m_resp.url = self.test_service_root
+        m_resp.reason = 'reason 404'
+        r_mock.return_value = m_resp
+        result = get_statistic(self.test_agency_cd, self.test_site_no, 'site-info', self.test_service_root)
+        self.assertEqual(False, result['is_fetched'])
+        self.assertEqual(False, result['is_ranked'])
+
+    def mock_stat(self, agency_cd, site_no, stat_type, service='http://test.gov'):
+        """
+        This is used to replace the ngwmn.get_statistic method.
+        It returns data as if it called the ngwmn_cache statistics service
+        """
+        # pylint: disable=unused-argument
+        # The non-ranked sites should not call monthly.
+        # This exception proves it is not called under this condition.
+        if "NOT_RANKED" in site_no and "month" in stat_type:
+            raise ServiceException()
+        data = self.test_stats[agency_cd][site_no][stat_type]
+        return mock_ngwmn.convert_keys_and_Booleans(data)
+
+    def test_get_statistics__below(self):
+        mock_ngwmn.get_statistic = self.mock_stat
+        stats = mock_ngwmn.get_statistics(self.test_agency_cd, self.test_site_no_below)
+        self.assertEqual('Depth to water, feet below land surface', stats['overall']['alt_datum'],
+                         'When MEDIATION is BelowLand then alt_datum is not displayed.')
+        self.assertEqual(1, len(stats['monthly']),
+                         'With one month returned there should only be one entry.')
+        self.assertEqual('Jan', stats['monthly'][0]['month'],
+                         'Month numbers should be replaced with month abbrev.')
+
+        jan = self.test_stats[self.test_agency_cd][self.test_site_no_below]['wl-monthly']['1']
+        self.assertEqual(jan['P50_MIN'], stats['monthly'][0]['p50_min'], 'Expect the P50 minimum value.')
+        self.assertEqual(jan['P10'], stats['monthly'][0]['p10'], 'Expect the P10 value.')
+        self.assertEqual(jan['P25'], stats['monthly'][0]['p25'], 'Expect the P25 value.')
+        self.assertEqual(jan['P50'], stats['monthly'][0]['p50'], 'Expect the P50 value.')
+        self.assertEqual(jan['P75'], stats['monthly'][0]['p75'], 'Expect the P75 value.')
+        self.assertEqual(jan['P90'], stats['monthly'][0]['p90'], 'Expect the P90 value.')
+        self.assertEqual(jan['P50_MAX'], stats['monthly'][0]['p50_max'], 'Expect the P50 maximum value.')
+        self.assertEqual(jan['SAMPLE_COUNT'], stats['monthly'][0]['sample_count'], 'Expect the sample count value.')
+        self.assertEqual(jan['RECORD_YEARS'], stats['monthly'][0]['record_years'], 'Expect the record years value.')
+
+    def test_get_statistics__above(self):
+        mock_ngwmn.get_statistic = self.mock_stat
+        stats = mock_ngwmn.get_statistics(self.test_agency_cd, self.test_site_no_above)
+        self.assertEqual('Water level in feet relative to NGW1701C', stats['overall']['alt_datum'],
+                         'When MEDIATION is AboveDatum then alt_datum is displayed.')
+
+    def test_get_statistics__not_ranked(self):
+        mock_ngwmn.get_statistic = self.mock_stat
+        stats = mock_ngwmn.get_statistics(self.test_agency_cd, self.test_site_no_not_ranked)
+        self.assertEqual('Depth to water, feet below land surface', stats['overall']['alt_datum'],
+                         'When MEDIATION is BelowLand then alt_datum is not displayed.')
+        self.assertEqual(0, len(stats['monthly']),
+                         'With the site is not ranked there should be no monthly data and no mock exception thrown.')
+
+        overall = self.test_stats[self.test_agency_cd][self.test_site_no_below]['wl-overall']
+        self.assertEqual(overall['CALC_DATE'], stats['overall']['calc_date'], 'Expect the calculated date.')
+        self.assertEqual(overall['MIN_VALUE'], stats['overall']['min_value'], 'Expect the minimum value.')
+        self.assertEqual(overall['MEDIAN_VALUE'], stats['overall']['median_value'], 'Expect the median value.')
+        self.assertEqual(overall['MAX_VALUE'], stats['overall']['max_value'], 'Expect the maximum value.')
+        self.assertEqual(overall['MIN_DATE'], stats['overall']['min_date'], 'Expect the minimum date value.')
+        self.assertEqual(overall['MAX_DATE'], stats['overall']['max_date'], 'Expect the maximum date value.')
+        self.assertEqual(overall['SAMPLE_COUNT'], stats['overall']['sample_count'], 'Expect the sample count value.')
+        self.assertEqual(overall['RECORD_YEARS'], stats['overall']['record_years'], 'Expect the record years value.')
+        self.assertEqual(overall['LATEST_VALUE'], stats['overall']['latest_value'], 'Expect the latest value.')
+        self.assertEqual(overall['LATEST_PCTILE'], stats['overall']['latest_pctile'], 'Expect the latest percentile.')
+
+
+class TestGetWellData(TestCase):
 
     def setUp(self):
         self.test_service_root = 'http://fake.gov'
@@ -21,7 +186,7 @@ class TestGetWellLithography(TestCase):
         self.test_xml = '<site><agency>DOOP</agency><id>BP-1729</id></site>'
 
     @mock.patch('ngwmn.services.ngwmn.r.get')
-    def test_success(self, r_mock):
+    def test_get_iddata__success(self, r_mock):
         m_resp = mock.Mock(r.Response)
         m_resp.content = self.test_xml
         m_resp.status_code = 200
@@ -35,7 +200,7 @@ class TestGetWellLithography(TestCase):
         )
 
     @mock.patch('ngwmn.services.ngwmn.r.get')
-    def test_service_failure(self, r_mock):
+    def test_get_iddata__service_failure(self, r_mock):
         m_resp = mock.Mock(r.Response)
         m_resp.status_code = 500
         m_resp.url = 'http://url'
@@ -43,10 +208,11 @@ class TestGetWellLithography(TestCase):
         r_mock.return_value = m_resp
         with self.assertRaises(ServiceException):
             result = get_iddata('well_log', self.test_agency_cd, self.test_location_id, self.test_service_root)
+            # TODO this assertion is not executed
             self.assertIsNone(result)
 
     @mock.patch('ngwmn.services.ngwmn.r.get')
-    def test_syntax_error(self, r_mock):
+    def test_get_iddata__syntax_error(self, r_mock):
         m_resp = mock.Mock(r.Response)
         m_resp.content = 'Stuff'
         m_resp.status_code = 200
@@ -82,7 +248,7 @@ class TestWaterQualityResults(TestCase):
     def test_wq_parsing(self):
         with requests_mock.mock() as req:
             req.get(requests_mock.ANY, content=MOCK_WQ_RESPONSE)
-            results = get_water_quality('USGS', 1)
+            results = get_water_quality('USGS', '1')
             self.assertEqual(results['organization'], {
                 'id': 'USGS-MI',
                 'name': 'USGS Michigan Water Science Center'
@@ -224,7 +390,7 @@ class TestWellLogResults(TestCase):
         self.maxDiff = None
         with requests_mock.mock() as req:
             req.get(requests_mock.ANY, content=MOCK_WELL_LOG_RESPONSE)
-            well_log = get_well_log('USGS', 1)
+            well_log = get_well_log('USGS', '1')
             self.assertEqual(well_log, {
                 'name': 'KSGS.381107098532401',
                 'location': {
@@ -389,373 +555,3 @@ class TestWellLogResults(TestCase):
                     }
                 }]
             })
-
-
-MOCK_WQ_RESPONSE = b"""<?xml version="1.0" encoding="UTF-8"?>
-<WQX xmlns="http://www.exchangenetwork.net/schema/wqx/2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:fn="http://www.w3.org/2005/xpath-functions">
-  <Organization>
-    <OrganizationDescription>
-      <OrganizationIdentifier>USGS-MI</OrganizationIdentifier>
-      <OrganizationFormalName>USGS Michigan Water Science Center</OrganizationFormalName>
-    </OrganizationDescription>
-    <Activity>
-      <ActivityDescription>
-        <ActivityIdentifier>nwismi.01.98000888</ActivityIdentifier>
-        <ActivityTypeCode>Sample-Routine</ActivityTypeCode>
-        <ActivityMediaName>Water</ActivityMediaName>
-        <ActivityStartDate>1980-07-24</ActivityStartDate>
-        <ActivityStartTime>
-          <Time>14:15:00</Time>
-          <TimeZoneCode>EDT</TimeZoneCode>
-        </ActivityStartTime>
-        <ProjectIdentifier>Unknown</ProjectIdentifier>
-        <MonitoringLocationIdentifier>USGS-462421087242701</MonitoringLocationIdentifier>
-        <ActivityCommentText>Test comment</ActivityCommentText>
-      </ActivityDescription>
-      <SampleDescription>
-        <SampleCollectionMethod>
-          <MethodIdentifier>USGS</MethodIdentifier>
-          <MethodIdentifierContext>USGS</MethodIdentifierContext>
-          <MethodName>USGS</MethodName>
-        </SampleCollectionMethod>
-        <SampleCollectionEquipmentName>Unknown</SampleCollectionEquipmentName>
-      </SampleDescription>
-      <Result>
-        <USGSPcode>00405</USGSPcode>
-        <ProviderName>USGS-MI</ProviderName>
-        <ResultDescription>
-          <ResultDetectionConditionText/>
-          <CharacteristicName>Carbon dioxide</CharacteristicName>
-          <ResultSampleFractionText>Total</ResultSampleFractionText>
-          <ResultMeasure>
-            <ResultMeasureValue>0.1</ResultMeasureValue>
-            <MeasureUnitCode>mg/l</MeasureUnitCode>
-          </ResultMeasure>
-          <ResultValueTypeName>Actual</ResultValueTypeName>
-          <ResultTemperatureBasisText/>
-          <ResultCommentText/>
-        </ResultDescription>
-        <ResultAnalyticalMethod>
-          <MethodIdentifier>Unknown</MethodIdentifier>
-          <MethodIdentifierContext>Unknown</MethodIdentifierContext>
-          <MethodName>Unknown</MethodName>
-        </ResultAnalyticalMethod>
-        <ResultLabInformation>
-          <AnalysisStartDate>Unknown</AnalysisStartDate>
-          <AnalysisStartTime>
-            <Time>00:00:00</Time>
-            <TimeZoneCode>EDT</TimeZoneCode>
-          </AnalysisStartTime>
-          <ResultDetectionQuantitationLimit>
-            <DetectionQuantitationLimitTypeName/>
-            <DetectionQuantitationLimitMeasure>
-              <MeasureValue/>
-              <MeasureUnitCode/>
-            </DetectionQuantitationLimitMeasure>
-          </ResultDetectionQuantitationLimit>
-        </ResultLabInformation>
-      </Result>
-      <Result>
-        <USGSPcode>00400</USGSPcode>
-        <ProviderName>USGS-MI</ProviderName>
-        <ResultDescription>
-          <ResultDetectionConditionText/>
-          <CharacteristicName>pH</CharacteristicName>
-          <ResultSampleFractionText>Total</ResultSampleFractionText>
-          <ResultMeasure>
-            <ResultMeasureValue>9.0</ResultMeasureValue>
-            <MeasureUnitCode>std units</MeasureUnitCode>
-          </ResultMeasure>
-          <ResultValueTypeName>Actual</ResultValueTypeName>
-          <ResultTemperatureBasisText/>
-          <ResultCommentText/>
-        </ResultDescription>
-        <ResultAnalyticalMethod>
-          <MethodIdentifier>Unknown</MethodIdentifier>
-          <MethodIdentifierContext>Unknown</MethodIdentifierContext>
-          <MethodName>Unknown</MethodName>
-        </ResultAnalyticalMethod>
-        <ResultLabInformation>
-          <AnalysisStartDate>Unknown</AnalysisStartDate>
-          <AnalysisStartTime>
-            <Time>00:00:00</Time>
-            <TimeZoneCode>EDT</TimeZoneCode>
-          </AnalysisStartTime>
-          <ResultDetectionQuantitationLimit>
-            <DetectionQuantitationLimitTypeName/>
-            <DetectionQuantitationLimitMeasure>
-              <MeasureValue/>
-              <MeasureUnitCode/>
-            </DetectionQuantitationLimitMeasure>
-          </ResultDetectionQuantitationLimit>
-        </ResultLabInformation>
-      </Result>
-      <Result>
-        <USGSPcode>00095</USGSPcode>
-        <ProviderName>USGS-MI</ProviderName>
-        <ResultDescription>
-          <ResultDetectionConditionText/>
-          <CharacteristicName>Specific conductance</CharacteristicName>
-          <ResultSampleFractionText>Total</ResultSampleFractionText>
-          <ResultMeasure>
-            <ResultMeasureValue>73</ResultMeasureValue>
-            <MeasureUnitCode>uS/cm @25C</MeasureUnitCode>
-          </ResultMeasure>
-          <ResultValueTypeName>Actual</ResultValueTypeName>
-          <ResultTemperatureBasisText/>
-          <ResultCommentText/>
-        </ResultDescription>
-        <ResultAnalyticalMethod>
-          <MethodIdentifier>Unknown</MethodIdentifier>
-          <MethodIdentifierContext>Unknown</MethodIdentifierContext>
-          <MethodName>Unknown</MethodName>
-        </ResultAnalyticalMethod>
-        <ResultLabInformation>
-          <AnalysisStartDate>Unknown</AnalysisStartDate>
-          <AnalysisStartTime>
-            <Time>00:00:00</Time>
-            <TimeZoneCode>EDT</TimeZoneCode>
-          </AnalysisStartTime>
-          <ResultDetectionQuantitationLimit>
-            <DetectionQuantitationLimitTypeName/>
-            <DetectionQuantitationLimitMeasure>
-              <MeasureValue/>
-              <MeasureUnitCode/>
-            </DetectionQuantitationLimitMeasure>
-          </ResultDetectionQuantitationLimit>
-        </ResultLabInformation>
-      </Result>
-    </Activity>
-  </Organization>
-</WQX>"""
-
-MOCK_WELL_LOG_RESPONSE = b"""<?xml version="1.0" encoding="UTF-8"?>
-<wfs:FeatureCollection xmlns:decDat="decodeDatum" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sql="http://apache.org/cocoon/SQL/2.0" xmlns:wfs="http://www.opengis.net/wfs" xmlns:om="http://www.opengis.net/om/1.0" xmlns:gml="http://www.opengis.net/gml" xmlns:sa="http://www.opengis.net/sampling/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:gsml="urn:cgi:xmlns:CGI:GeoSciML:2.0" xmlns:gwml="http://www.nrcan.gc.ca/xml/gwml/1" xmlns:fn="http://www.w3.org/2005/xpath-functions" xmlns:h="http://apache.org/cocoon/request/2.0">
-  <gml:featureMember>
-    <gwml:WaterWell gml:id="KSGS.381107098532401">
-      <gml:name codeSpace="http://www.kgs.ku.edu/">KSGS.381107098532401</gml:name>
-      <gml:boundedBy>
-        <gml:envelope srsName="EPSG:4269">
-          <gml:pos srsDimension="2">38.18533 -98.88991</gml:pos>
-        </gml:envelope>
-      </gml:boundedBy>
-      <sa:position>
-        <gml:Point srsName="EPSG:4269">
-          <gml:pos>38.18533 -98.88991</gml:pos>
-        </gml:Point>
-      </sa:position>
-      <gwml:referenceElevation uom="ft">1950</gwml:referenceElevation>
-      <gwml:wellDepth>
-        <gsml:CGI_NumericValue>
-          <gsml:principalValue uom="ft">214</gsml:principalValue>
-        </gsml:CGI_NumericValue>
-      </gwml:wellDepth>
-      <gwml:wellStatus>
-        <gsml:CGI_TermValue>
-          <gsml:value codeSpace="urn:gov.usgs.nwis.alt_datum_cd">NAVD88</gsml:value>
-        </gsml:CGI_TermValue>
-      </gwml:wellStatus>
-      <gwml:wellType>
-        <gsml:CGI_TermValue>
-          <gsml:value codeSpace="urn:gov.usgs.nwis.nat_water_use_cd">urn:OGC:unknown</gsml:value>
-        </gsml:CGI_TermValue>
-      </gwml:wellType>
-      <gwml:onlineResource xlink:href="http://ws.ncwater.org/ngwmn.php?site_no=381107098532401" xlink:title="Kansas Geological Survey"/>
-      <gwml:logElement>
-        <gsml:MappedInterval>
-          <gsml:observationMethod>
-            <gsml:CGI_TermValue>
-              <gsml:value codeSpace="urn:x-ngwd:classifier:GIN:ObservationMethod">borehole</gsml:value>
-            </gsml:CGI_TermValue>
-          </gsml:observationMethod>
-          <gsml:specification>
-            <gwml:HydrostratigraphicUnit gml:id="USGS.430427089284901.300.">
-              <gml:description>Sandstone</gml:description>
-              <gsml:purpose>instance</gsml:purpose>
-              <gsml:composition>
-                <gsml:CompositionPart>
-                  <gsml:role codeSpace="urn:x-ngwd:classifier:GIN:Role">contains</gsml:role>
-                  <gsml:lithology>
-                    <gsml:ControlledConcept>
-                      <gml:name xmlns:mnobwell="http://mapserver.gis.umn.edu/mapserver" xmlns:lookup="http://lookup" codeSpace="urn:x-ngwd:classifierScheme:USGS:Lithology:2011">SANDSTONE</gml:name>
-                    </gsml:ControlledConcept>
-                  </gsml:lithology>
-                  <gsml:material>
-                    <gsml:UnconsolidatedMaterial>
-                      <gml:name>Sandstone</gml:name>
-                      <gsml:purpose>instance</gsml:purpose>
-                    </gsml:UnconsolidatedMaterial>
-                  </gsml:material>
-                  <gsml:proportion>
-                    <gsml:CGI_TermValue>
-                      <gsml:value codeSpace="urn:ietf:rfc:2141">urn:ogc:def:nil:OGC:unknown</gsml:value>
-                    </gsml:CGI_TermValue>
-                  </gsml:proportion>
-                </gsml:CompositionPart>
-              </gsml:composition>
-            </gwml:HydrostratigraphicUnit>
-          </gsml:specification>
-          <gsml:shape>
-            <gml:LineString srsDimension="1" uom="Unknown">
-              <gml:coordinates>0.00 25.00</gml:coordinates>
-            </gml:LineString>
-          </gsml:shape>
-        </gsml:MappedInterval>
-      </gwml:logElement>
-      <gwml:logElement>
-        <gsml:MappedInterval>
-          <gsml:observationMethod>
-            <gsml:CGI_TermValue>
-              <gsml:value codeSpace="urn:x-ngwd:classifier:GIN:ObservationMethod">borehole</gsml:value>
-            </gsml:CGI_TermValue>
-          </gsml:observationMethod>
-          <gsml:specification>
-            <gwml:HydrostratigraphicUnit gml:id="USGS.430427089284901.2.">
-              <gml:description>Siltstone</gml:description>
-              <gsml:purpose>instance</gsml:purpose>
-              <gsml:composition>
-                <gsml:CompositionPart>
-                  <gsml:role codeSpace="urn:x-ngwd:classifier:GIN:Role">contains</gsml:role>
-                  <gsml:lithology>
-                    <gsml:ControlledConcept>
-                      <gml:name xmlns:mnobwell="http://mapserver.gis.umn.edu/mapserver" xmlns:lookup="http://lookup" codeSpace="urn:x-ngwd:classifierScheme:USGS:Lithology:2011">SILTSTONE</gml:name>
-                    </gsml:ControlledConcept>
-                  </gsml:lithology>
-                  <gsml:material>
-                    <gsml:UnconsolidatedMaterial>
-                      <gml:name>Siltstone</gml:name>
-                      <gsml:purpose>instance</gsml:purpose>
-                    </gsml:UnconsolidatedMaterial>
-                  </gsml:material>
-                  <gsml:proportion>
-                    <gsml:CGI_TermValue>
-                      <gsml:value codeSpace="urn:ietf:rfc:2141">urn:ogc:def:nil:OGC:unknown</gsml:value>
-                    </gsml:CGI_TermValue>
-                  </gsml:proportion>
-                </gsml:CompositionPart>
-              </gsml:composition>
-            </gwml:HydrostratigraphicUnit>
-          </gsml:specification>
-          <gsml:shape>
-            <gml:LineString srsDimension="1" uom="Unknown">
-              <gml:coordinates>25.00 56.00</gml:coordinates>
-            </gml:LineString>
-          </gsml:shape>
-        </gsml:MappedInterval>
-      </gwml:logElement>
-      <gwml:logElement>
-        <gsml:MappedInterval>
-          <gsml:observationMethod>
-            <gsml:CGI_TermValue>
-              <gsml:value codeSpace="urn:x-ngwd:classifier:GIN:ObservationMethod">borehole</gsml:value>
-            </gsml:CGI_TermValue>
-          </gsml:observationMethod>
-          <gsml:specification>
-            <gwml:HydrostratigraphicUnit gml:id="USGS.430427089284901.3.">
-              <gml:description>Sandstone</gml:description>
-              <gsml:purpose>instance</gsml:purpose>
-              <gsml:composition>
-                <gsml:CompositionPart>
-                  <gsml:role codeSpace="urn:x-ngwd:classifier:GIN:Role">contains</gsml:role>
-                  <gsml:lithology>
-                    <gsml:ControlledConcept>
-                      <gml:name xmlns:mnobwell="http://mapserver.gis.umn.edu/mapserver" xmlns:lookup="http://lookup" codeSpace="urn:x-ngwd:classifierScheme:USGS:Lithology:2011">SANDSTONE</gml:name>
-                    </gsml:ControlledConcept>
-                  </gsml:lithology>
-                  <gsml:material>
-                    <gsml:UnconsolidatedMaterial>
-                      <gml:name>Sandstone</gml:name>
-                      <gsml:purpose>instance</gsml:purpose>
-                    </gsml:UnconsolidatedMaterial>
-                  </gsml:material>
-                  <gsml:proportion>
-                    <gsml:CGI_TermValue>
-                      <gsml:value codeSpace="urn:ietf:rfc:2141">urn:ogc:def:nil:OGC:unknown</gsml:value>
-                    </gsml:CGI_TermValue>
-                  </gsml:proportion>
-                </gsml:CompositionPart>
-              </gsml:composition>
-            </gwml:HydrostratigraphicUnit>
-          </gsml:specification>
-          <gsml:shape>
-            <gml:LineString srsDimension="1" uom="Unknown">
-              <gml:coordinates>56.00 155.00</gml:coordinates>
-            </gml:LineString>
-          </gsml:shape>
-        </gsml:MappedInterval>
-      </gwml:logElement>
-      <gwml:construction>
-        <gwml:WellCasing>
-          <gwml:wellCasingElement>
-            <gwml:WellCasingComponent gml:id="KSGS.381107098532401.CASING.1">
-              <gwml:position>
-                <gml:LineString srsName="EPSG:4269">
-                  <gml:coordinates>0 80.9</gml:coordinates>
-                  <gml:uom>ft</gml:uom>
-                </gml:LineString>
-              </gwml:position>
-              <gwml:material>
-                <gsml:CGI_TermValue>
-                  <gsml:value>PVC</gsml:value>
-                </gsml:CGI_TermValue>
-              </gwml:material>
-              <gwml:nominalPipeDimension>
-                <gsml:CGI_NumericValue>
-                  <gsml:principalValue uom="in">16</gsml:principalValue>
-                </gsml:CGI_NumericValue>
-              </gwml:nominalPipeDimension>
-            </gwml:WellCasingComponent>
-          </gwml:wellCasingElement>
-        </gwml:WellCasing>
-      </gwml:construction>
-      <gwml:construction>
-        <gwml:Screen>
-          <gwml:screenElement>
-            <gwml:ScreenComponent gml:id="KSGS.381107098532401.SCREEN.1">
-              <gwml:position>
-                <gml:LineString srsName="EPSG:4269">
-                  <gml:coordinates>80.8 90.8</gml:coordinates>
-                  <gml:uom>ft</gml:uom>
-                </gml:LineString>
-              </gwml:position>
-              <gwml:material>
-                <gsml:CGI_TermValue>
-                  <gsml:value codeSpace="urn:x-ngwd:classifierScheme:USGS:Screen:2010">PVC</gsml:value>
-                </gsml:CGI_TermValue>
-              </gwml:material>
-              <gwml:nomicalScreenDiameter>
-                <gsml:CGI_NumericValue>
-                  <gsml:principalValue uom="in"/>
-                </gsml:CGI_NumericValue>
-              </gwml:nomicalScreenDiameter>
-            </gwml:ScreenComponent>
-          </gwml:screenElement>
-        </gwml:Screen>
-      </gwml:construction>
-      <gwml:construction>
-        <gwml:Screen>
-          <gwml:screenElement>
-            <gwml:ScreenComponent gml:id="KSGS.381107098532401.SCREEN.2">
-              <gwml:position>
-                <gml:LineString srsName="EPSG:4269">
-                  <gml:coordinates>152.8 212.8</gml:coordinates>
-                  <gml:uom>ft</gml:uom>
-                </gml:LineString>
-              </gwml:position>
-              <gwml:material>
-                <gsml:CGI_TermValue>
-                  <gsml:value codeSpace="urn:x-ngwd:classifierScheme:USGS:Screen:2010">PVC</gsml:value>
-                </gsml:CGI_TermValue>
-              </gwml:material>
-              <gwml:nomicalScreenDiameter>
-                <gsml:CGI_NumericValue>
-                  <gsml:principalValue uom="in"/>
-                </gsml:CGI_NumericValue>
-              </gwml:nomicalScreenDiameter>
-            </gwml:ScreenComponent>
-          </gwml:screenElement>
-        </gwml:Screen>
-      </gwml:construction>
-    </gwml:WaterWell>
-  </gml:featureMember>
-</wfs:FeatureCollection>"""

@@ -11,7 +11,9 @@ server/coverage
 server/dev_cache.sqlite
 server/dist
 server/env
+server/venv
 server/ngwmn_ui.egg-info
 .sublimelinterrc
 *.sublime-project
 *.sublime-workspace
+.idea
