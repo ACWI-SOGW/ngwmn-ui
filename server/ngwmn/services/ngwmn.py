@@ -1,6 +1,8 @@
 """
 Utility functions for fetching data
 """
+import calendar
+import json
 import re
 from urllib.parse import urljoin
 
@@ -11,8 +13,8 @@ from ngwmn.services import ServiceException
 from ngwmn.services.lithology_parser import classify_material, get_colors
 from ngwmn.xml_utils import parse_xml
 
-
 SERVICE_ROOT = app.config.get('SERVICE_ROOT')
+SERVICE_ROOT_CACHE = app.config.get('SERVICE_ROOT_CACHE')
 
 
 def get_iddata(request, agency_cd, location_id, service_root=SERVICE_ROOT):
@@ -309,3 +311,174 @@ def get_features(latitude, longitude, service_root=SERVICE_ROOT):
         raise ServiceException()
 
     return response.json()
+
+
+def get_statistic(agency_cd, site_no, stat_type, service_root=SERVICE_ROOT_CACHE):
+    """
+    fetches the statistics from the ngwmn cache
+
+    :param agency_cd: the agency code
+    :param site_no:  the site number
+    :param stat_type: there are three statistic types:
+    'site-info', 'wl-overall', 'wl-monthly'
+    :param service_root: the server for the ngwmn_cache service. This has the
+    potential to be different than the UI service and hence has its own const.
+    Example Service Roots
+    http://cida-eros-ngwmndev:8080
+    https://cida.usgs.gov
+
+    :return: json data response from the http(s) request
+
+    SAMPLE overall
+    {
+      "CALC_DATE": "2018-07-04",
+      "LATEST_VALUE": "213.84",
+      "MAX_DATE": "2018-04-10T13:18:00-06:00",
+      "AGENCY_CD": "USGS",
+      "MEDIAN_VALUE": "217.82",
+      "RECORD_YEARS": "31.6",
+      "MAX_VALUE": "181.7",
+      "MEDIATION": "BelowLand",
+      "MIN_VALUE": "232.96",
+      "SAMPLE_COUNT": "7456",
+      "SITE_NO": "353945105574502",
+      "MIN_DATE": "1986-09-26T12:00:00",
+      "LATEST_PCTILE": "0.78606",
+      "IS_RANKED": "Y"
+    }
+    SAMPLE monthly
+    {
+      "3": {
+        "RECORD_YEARS": "23",
+        "P50": "216.54",
+        "P25": "222.72",
+        "P10": "226.24",
+        "P50_MAX": "184.17",
+        "P90": "188.72",
+        "P75": "212.37",
+        "AGENCY_CD": "USGS",
+        "SAMPLE_COUNT": "673",
+        "MONTH": "3",
+        "SITE_NO": "353945105574502",
+        "P50_MIN": "227.46"
+      },
+      "1": {
+        "RECORD_YEARS": "20",
+        "P50": "218.28",
+        "P25": "225.50",
+        "P10": "227.03",
+        "P50_MAX": "184.14",
+        "P90": "190.49",
+        "P75": "214.81",
+        "AGENCY_CD": "USGS",
+        "SAMPLE_COUNT": "608",
+        "MONTH": "1",
+        "SITE_NO": "353945105574502",
+        "P50_MIN": "227.89"
+      }
+    }
+    """
+    url = '/'.join([service_root, 'ngwmn_cache', 'direct', 'json', stat_type, agency_cd, site_no])
+    resp = r.get(url)
+
+    statistics = {
+            'is_ranked': False,
+            'is_fetched': False
+        }
+    if resp.status_code == 404:
+        return statistics
+
+    if resp.status_code != 200:
+        msg = '%s statistics fetch error from %s (reason: %s)'
+        app.logger.error(msg, resp.status_code, resp.url, resp.reason)
+        raise ServiceException()
+
+    json_txt = resp.text
+    stats = json.loads(json_txt)
+    stats['is_fetched'] = True
+
+    statistics = convert_keys_and_Booleans(stats)
+    app.logger.debug(statistics)
+
+    return statistics
+
+
+def convert_keys_and_Booleans(dictionary):
+        """
+        Local recursive helper method to convert 'all caps' keys to lowercase
+        :param dictionary: the dict for whom's keys need lowercase
+        :return: the new dictionary with lowercase keys
+        """
+        lower_case = {}
+        for key in dictionary:
+            value = dictionary[key]
+            if isinstance(value, dict):
+                value = convert_keys_and_Booleans(value)
+            elif value in ['N', 'Y']:
+                value = (value == 'Y')
+            lower_case[key.lower()] = value
+        return lower_case
+
+
+def get_statistics(agency_cd, site_no):
+    """
+    Call ngwmn_cache for site statistics data.
+
+    :param agency_cd: string agency code
+    :param site_no: alphanumeric site number
+    :returns overall and monthly statistics
+    """
+    # handle to potential fetch fail with default
+    stats = {
+        'overall': {
+            'alt_datum': 'unknown',
+            'calc_date': 'unknown',
+        },
+        'monthly': []
+    }
+
+    overall = get_statistic(agency_cd, site_no, 'wl-overall')
+    if overall['is_fetched']:
+        stats['overall'] = overall
+        site_info = get_statistic(agency_cd, site_no, 'site-info')
+        alt_datum_cd = ''
+        if site_info['is_fetched']:
+            alt_datum_cd = site_info['altdatumcd']
+
+        if overall['is_ranked']:
+            monthly = get_statistic(agency_cd, site_no, 'wl-monthly')
+            if monthly['is_fetched']:
+                stats['monthly'] = []
+                month_num = 0
+                for month_abbr in calendar.month_abbr[1:]:
+                    month_num += 1
+                    if str(month_num) in monthly:
+                        month_stats = monthly[str(month_num)]
+                        month_stats['month'] = month_abbr
+                        stats['monthly'].append(month_stats)
+
+        if overall['mediation'] == 'BelowLand':
+            stats['overall']['alt_datum'] = 'Depth to water, feet below land surface'
+        else:
+            stats['overall']['alt_datum'] = 'Water level in feet relative to ' + alt_datum_cd
+
+    # { SAMPLE stats
+    #     "alt_datum": 'Below Land Surface',
+    #     "calc_date": '2018-10-10',
+    #     "overall": ['1.0', '5.5', '42', '2001-01-01', '2018-10-10', '4242', '18'],
+    #     "monthly": [
+    #         ['Jan', '5.5', '42', '24', '12', '6.6', '3.3', '12', '10', '18'],
+    #         ['Feb', '5.5', '42', '24', '12', '6.6', '3.3', '12', '10', '18'],
+    #         ['Mar', '5.5', '42', '24', '12', '6.6', '3.3', '12', '10', '18'],
+    #         ['Apr', '5.5', '42', '24', '12', '6.6', '3.3', '12', '10', '18'],
+    #         ['May', '5.5', '42', '24', '12', '6.6', '3.3', '12', '10', '18'],
+    #         ['Jun', '5.5', '42', '24', '12', '6.6', '3.3', '12', '10', '18'],
+    #         ['Jul', '5.5', '42', '24', '12', '6.6', '3.3', '12', '10', '18'],
+    #         ['Aug', '5.5', '42', '24', '12', '6.6', '3.3', '12', '10', '18'],
+    #         ['Sep', '5.5', '42', '24', '12', '6.6', '3.3', '12', '10', '18'],
+    #         ['Oct', '5.5', '42', '24', '12', '6.6', '3.3', '12', '10', '18'],
+    #         ['Nov', '5.5', '42', '24', '12', '6.6', '3.3', '12', '10', '18'],
+    #         ['Dec', '5.5', '42', '24', '12', '6.6', '3.3', '12', '10', '18']
+    #     ]
+    # }
+    return stats

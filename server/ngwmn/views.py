@@ -8,12 +8,13 @@ from functools import reduce
 from flask import abort, jsonify, render_template
 
 from . import __version__, app
-from .services.ngwmn import get_features, get_water_quality, get_well_log
+from .services.ngwmn import get_features, get_water_quality, get_well_log, get_statistics
 from .services.sifta import get_cooperators
 
 
 @app.route('/')
 def home():
+    """testing home page"""
     return render_template(
         'index.html',
         version=__version__,
@@ -83,5 +84,6 @@ def site_page(agency_cd, location_id):
         organization=organization,
         water_quality_activities=water_quality.get('activities') or [],
         well_log=well_log,
-        lithology_ids=lithology_ids
+        lithology_ids=lithology_ids,
+        stats=get_statistics(agency_cd, location_id)
     ), 200
