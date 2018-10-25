@@ -63,14 +63,15 @@ describe('graph component', () => {
                 responseText: MOCK_WATER_LEVEL_RESPONSE,
                 contentType: 'text/xml'
             });
-            spyOn(window, 'requestAnimationFrame').and.callFake(func => func());
-            window.setTimeout(() => {
-                expect(div.classed('loading')).toBe(false);
-                expect(div.classed('has-error')).toBe(false);
-                expect(div.selectAll('.tooltip-text').size()).toEqual(1);
-                expect(div.selectAll('circle.focus').size()).toBe(1);
-                expect(div.selectAll('.line-segment').size()).toBe(4);
-                done();
+            window.requestAnimationFrame(() => {
+                window.requestAnimationFrame(() => {
+                    expect(div.classed('loading')).toBe(false);
+                    expect(div.classed('has-error')).toBe(false);
+                    expect(div.selectAll('.tooltip-text').size()).toEqual(1);
+                    expect(div.selectAll('circle.focus').size()).toBe(1);
+                    expect(div.selectAll('.line-segment').size()).toBe(4);
+                    done();
+                });
             });
         });
 
@@ -80,11 +81,12 @@ describe('graph component', () => {
                 reason: 'oops uh oh!',
                 contentType: 'text/xml'
             });
-            spyOn(window, 'requestAnimationFrame').and.callFake(func => func());
-            window.setTimeout(() => {
-                expect(div.classed('loading')).toBe(false);
-                expect(div.classed('has-error')).toBe(true);
-                done();
+            window.requestAnimationFrame(() => {
+                window.requestAnimationFrame(() => {
+                    expect(div.classed('loading')).toBe(false);
+                    expect(div.classed('has-error')).toBe(true);
+                    done();
+                });
             });
         });
     });
