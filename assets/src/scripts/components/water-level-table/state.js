@@ -9,7 +9,7 @@ export const renderTable = function() {
     };
 };
 
-export const isTableRendered = state => state.isRendered || false;
+export const isTableRendered = state => state[MOUNT_POINT].isRendered || false;
 
 
 export const reducer = function(state = {}, action) {

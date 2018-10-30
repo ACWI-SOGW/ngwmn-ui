@@ -225,14 +225,9 @@
                     </table>
                 </div>
             </li>
-            <li>
-                <button class="usa-accordion-button" aria-expanded="false" aria-controls="water-levels-div">
-                    Water Levels
-                </button>
-                <div id="water-levels-div" class="usa-accordion-content">
-                    {{ components.WaterLevelTable(feature.AGENCY_CD, feature.SITE_NO
-                </div>
-            </li>
+
+            {{ components.WaterLevelTable(feature.AGENCY_CD, feature.SITE_NO) }}
+
             <li>
                 <button class="usa-accordion-button" aria-expanded="false" aria-controls="ts-a4">
                     Water Level Statistics
