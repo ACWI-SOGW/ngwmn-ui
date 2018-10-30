@@ -5,6 +5,5 @@ pylint==2.1.1
 pytest==3.9.1
 pytest-flask==0.10.0
 pytest-mock==1.10.0
-requests-cache==0.4.13
 requests-mock==1.5.2
 SaltPyLint==2018.10.12
