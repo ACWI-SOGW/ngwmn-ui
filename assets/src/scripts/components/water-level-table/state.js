@@ -12,7 +12,7 @@ export const renderTable = function() {
 export const isTableRendered = state => state[MOUNT_POINT].isRendered || false;
 
 
-export const reducer = function(state = {}, action) {
+const reducer = function(state = {}, action) {
     switch (action.type) {
         case TABLE_RENDERED:
             return {
