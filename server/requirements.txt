@@ -1,15 +1,8 @@
-certifi==2018.4.16
-chardet==3.0.4
 click==6.7
 defusedxml==0.5.0
 Flask==1.0.2
 fuzzywuzzy[speedup]==0.17.0
-idna==2.6
-itsdangerous==0.24
 Jinja2==2.10
 lxml==4.2.5
-MarkupSafe==1.0
-requests==2.19.1
-urllib3==1.22
+requests==2.20.0
 webcolors==1.8.1
-Werkzeug==0.14.1
