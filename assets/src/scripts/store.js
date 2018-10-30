@@ -3,6 +3,7 @@ import { default as thunk } from 'redux-thunk';
 
 import graphReducers from './components/graph/state';
 import serviceReducers from './services/state';
+import waterLevelTableReducers from './water-level-table';
 
 
 const MIDDLEWARES = [thunk];
