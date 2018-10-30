@@ -80,7 +80,7 @@
     "fast-memoize": "^2.5.1",
     "lodash": "^4.17.10",
     "raf-throttle": "^2.0.3",
-    "redux": "^4.0.0",
+    "redux": "^4.0.1",
     "redux-thunk": "^2.3.0",
     "reselect": "^3.0.1",
     "resize-observer-polyfill": "^1.5.0",
