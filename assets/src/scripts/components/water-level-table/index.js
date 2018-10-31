@@ -17,9 +17,7 @@ const COLUMN_HEADINGS = [
     'Water level in feet relative to NAVD88'
 ];
 
-const drawTable = function(node, waterLevels, table) {
-    table = table || node.append('table')
-        .classed('usa-table', true);
+const drawTableBody = function(table, waterLevels) {
     const samples = waterLevels.samples || [];
     const tableData = samples.map((sample) => {
         return [
@@ -33,12 +31,6 @@ const drawTable = function(node, waterLevels, table) {
             sample.fromDatumValue
         ];
     });
-    table.append('thead')
-        .append('tr')
-            .selectAll('th')
-            .data(COLUMN_HEADINGS).enter()
-            .append('th')
-                .text((col) => col);
 
     const rows = table.append('tbody')
         .selectAll('tr')
@@ -50,8 +42,6 @@ const drawTable = function(node, waterLevels, table) {
         .enter()
         .append('td')
             .text((d) => d);
-
-    return table;
 };
 /*
  * Renders the water level table
@@ -63,15 +53,26 @@ export default function(store, node, {agencycd, siteid}) {
     component.select('button').on('click', () => {
         store.dispatch(renderTable());
     });
-    component
+    const table = component
         .select('#water-levels-div')
-        .call(link(store, (elem, {isRendered, waterLevels}) => {
-            // Add code to rendered
-            if (isRendered) {
-                drawTable(elem, waterLevels);
-            }
-        }, createStructuredSelector({
-            isRendered: isTableRendered,
-            waterLevels: getSiteWaterLevels(agencycd, siteid)
-        })));
+            .append('table')
+            .classed('usa-table', true);
+    table.append('thead')
+        .append('tr')
+            .selectAll('th')
+            .data(COLUMN_HEADINGS).enter()
+            .append('th')
+                .text((col) => col);
+
+    table.call(link(store, (elem, {isRendered, waterLevels}) => {
+        // Add code to rendered
+        if (isRendered) {
+            window.requestAnimationFrame(() => {
+                drawTableBody(elem, waterLevels);
+            });
+        }
+    }, createStructuredSelector({
+        isRendered: isTableRendered,
+        waterLevels: getSiteWaterLevels(agencycd, siteid)
+    })));
 }
