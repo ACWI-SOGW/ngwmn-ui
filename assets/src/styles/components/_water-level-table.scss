@@ -1,0 +1,21 @@
+.pagination {
+  li {
+    display: inline-block;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+    padding: 1rem;
+    @include u-border('solid');
+    @include u-border(1px);
+    @include u-radius('md');
+  }
+  .active {
+    background-color: $color-gray-lighter;
+  }
+
+  .disabled {
+    border: none;
+    a {
+      cursor: not-allowed;
+    }
+  }
+}

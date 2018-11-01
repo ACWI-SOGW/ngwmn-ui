@@ -14,6 +14,7 @@
     "build:fonts": "mkdir -p dist/fonts && cp -r node_modules/uswds/dist/fonts/* dist/fonts && cp node_modules/@fortawesome/fontawesome-free/webfonts/* dist/fonts",
     "build:images": "mkdir -p dist/img && mkdir -p dist/img && cp -r src/images/* dist/img && cp -r node_modules/uswds/dist/img/* dist/img",
     "build:patterns": "mkdir -p dist/patterns && cp src/patterns/* dist/patterns",
+    "build:vendorjs": "mkdir -p dist/scripts && concat -o dist/scripts/vendor.js node_modules/list.js/dist/list.js",
     "build:js": "mkdir -p dist/scripts && rollup -c --environment NODE_ENV:production",
     "hash-assets": "gulp --gulpfile ./gulpfile.js revall",
     "serve:static": "live-server --port=9000 --cors --no-browser dist",
@@ -41,6 +42,7 @@
   "homepage": "https://github.com/ACWI-SSWD/ngwmn-ui#readme",
   "devDependencies": {
     "autoprefixer": "^8.4.1",
+    "concat": "^1.0.3",
     "eslint": "^4.19.1",
     "eslint-plugin-jasmine": "^2.9.2",
     "gulp": "^3.9.1",
@@ -78,6 +80,7 @@
     "autotrack": "^2.4.1",
     "d3": "^5.5.0",
     "fast-memoize": "^2.5.1",
+    "list.js": "^1.5.0",
     "lodash": "^4.17.10",
     "raf-throttle": "^2.0.3",
     "redux": "^4.0.1",

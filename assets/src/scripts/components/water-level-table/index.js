@@ -19,29 +19,21 @@ const COLUMN_HEADINGS = [
 
 const drawTableBody = function(table, waterLevels) {
     const samples = waterLevels.samples || [];
-    const tableData = samples.map((sample) => {
-        return [
-            sample.time,
-            sample.originalValue,
-            sample.unit,
-            sample.accuracyValue,
-            sample.accuracyUnit,
-            sample.sourceCode,
-            sample.fromLandsurfaceValue,
-            sample.fromDatumValue
-        ];
-    });
-
-    const rows = table.append('tbody')
-        .selectAll('tr')
-        .data(tableData).enter()
-        .append('tr');
-
-    rows.selectAll('td')
-        .data((row) => row)
-        .enter()
-        .append('td')
-            .text((d) => d);
+    const valueNames = ['time', 'originalValue', 'unit', 'accuracyValue', 'accuracyUnit',
+            'sourceCode', 'fromLandsurfaceValue', 'fromDatumValue'];
+    const item = valueNames.reduce(function(total, name) {
+        return `${total}<td class="${name}"></td>`;
+    }, '');
+    const options = {
+        valueNames: valueNames,
+        item: `<tr>${item}</tr>`,
+        page: 10,
+        pagination: true,
+        outerWindow: 2,
+        innderWindow: 3
+    };
+    console.log('Item is ' + item);
+    const pagedTable = new List('water-levels-div', options, samples);
 };
 /*
  * Renders the water level table
@@ -56,13 +48,20 @@ export default function(store, node, {agencycd, siteid}) {
     const table = component
         .select('#water-levels-div')
             .append('table')
+        .attr('id', 'water-levels-table')
             .classed('usa-table', true);
+    component.select('#water-levels-div')
+        .append('ul')
+        .classed('pagination', true);
+
     table.append('thead')
         .append('tr')
             .selectAll('th')
             .data(COLUMN_HEADINGS).enter()
             .append('th')
                 .text((col) => col);
+    table.append('tbody')
+        .classed('list', true);
 
     table.call(link(store, (elem, {isRendered, waterLevels}) => {
         // Add code to rendered
