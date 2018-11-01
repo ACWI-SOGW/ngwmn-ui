@@ -23,6 +23,7 @@ const COLUMN_HEADINGS = [
  * Draws the waterLevels data into table
  * @param {D3 node} table
  * @param {Array of Object} waterLevels
+ * @return {Object} - Return the tbody element for the table
  */
 const drawTableBody = function(table, waterLevels, tbody) {
     tbody = tbody || table
