@@ -21,6 +21,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added well log tables
 - Added well construction drawing (screens, casings)
 - Fill lithology layers with FGDC Digital Cartographic Standard patterns
+- Added water level data table
+
 ### Changed
 - Removed duplicate service call to retrieve well log data
 - Using headless Firefox to run tests for CI
