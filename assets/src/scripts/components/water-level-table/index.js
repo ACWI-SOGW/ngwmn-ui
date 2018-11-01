@@ -19,8 +19,16 @@ const COLUMN_HEADINGS = [
     'Water level in feet relative to NAVD88'
 ];
 
-const drawTableBody = function(table, waterLevels) {
-    const samples = waterLevels.samples || [];
+/*
+ * Draws the waterLevels data into table
+ * @param {D3 node} table
+ * @param {Array of Object} waterLevels
+ */
+const drawTableBody = function(table, waterLevels, tbody) {
+    tbody = tbody || table
+        .append('tbody')
+        .classed('list', true);
+    const samples = waterLevels.samples.reverse() || [];
     const valueNames = ['time', 'originalValue', 'unit', 'accuracyValue', 'accuracyUnit',
             'sourceCode', 'fromLandsurfaceValue', 'fromDatumValue'];
     const item = valueNames.reduce(function(total, name) {
@@ -32,13 +40,15 @@ const drawTableBody = function(table, waterLevels) {
         page: 30,
         pagination: true
     };
-    console.log('Item is ' + item);
     new List('water-levels-div', options, samples);
+
+    return tbody;
 };
 /*
  * Renders the water level table
- *  * @param  {Object} store   Redux store
+ * @param  {Object} store   Redux store
  * @param  {Object} node    DOM node to draw graph into
+ * @param  {Object} options {agencycode, siteid} of site to draw
  */
 export default function(store, node, {agencycd, siteid}) {
     const component = select(node);
@@ -60,8 +70,6 @@ export default function(store, node, {agencycd, siteid}) {
             .data(COLUMN_HEADINGS).enter()
             .append('th')
                 .text((col) => col);
-    table.append('tbody')
-        .classed('list', true);
 
     table.call(link(store, (elem, {isRendered, waterLevels}) => {
         // Add code to rendered
