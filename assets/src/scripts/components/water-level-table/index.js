@@ -1,3 +1,5 @@
+/* global List */
+
 import { select } from 'd3-selection';
 import { createStructuredSelector } from 'reselect';
 
@@ -27,13 +29,11 @@ const drawTableBody = function(table, waterLevels) {
     const options = {
         valueNames: valueNames,
         item: `<tr>${item}</tr>`,
-        page: 10,
-        pagination: true,
-        outerWindow: 2,
-        innderWindow: 3
+        page: 30,
+        pagination: true
     };
     console.log('Item is ' + item);
-    const pagedTable = new List('water-levels-div', options, samples);
+    new List('water-levels-div', options, samples);
 };
 /*
  * Renders the water level table
@@ -66,9 +66,7 @@ export default function(store, node, {agencycd, siteid}) {
     table.call(link(store, (elem, {isRendered, waterLevels}) => {
         // Add code to rendered
         if (isRendered) {
-            window.requestAnimationFrame(() => {
-                drawTableBody(elem, waterLevels);
-            });
+            drawTableBody(elem, waterLevels);
         }
     }, createStructuredSelector({
         isRendered: isTableRendered,

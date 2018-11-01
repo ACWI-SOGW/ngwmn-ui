@@ -5,7 +5,7 @@ import mockStore from 'ngwmn/store.mock';
 import attachToNode from './index';
 import { isTableRendered, renderTable } from './state';
 
-fdescribe('water level table component', () => {
+describe('water level table component', () => {
 
     let div;
 
@@ -35,7 +35,7 @@ fdescribe('water level table component', () => {
                 siteid: '423532088254601'
             });
 
-            expect(div.selectAll('table').size()).toBe(0);
+            expect(div.selectAll('tbody tr').size()).toBe(0);
         });
 
         it('If the button is clicked store is updated', () => {
@@ -50,15 +50,14 @@ fdescribe('water level table component', () => {
             expect(isTableRendered(store.getState())).toBe(true);
         });
 
-        it('The table should be rendered if the table rendered is true in the store', () => {
+        it('The table should be rendered if the table rendered state is true in the store', () => {
             store.dispatch(renderTable());
             attachToNode(store, div.node(), {
                 agencycd: 'USGS',
                 siteid: '423532088254601'
             });
 
-            expect(div.selectAll('table').size()).toBe(1);
-            expect(div.selectAll('tbody tr').size()).toBe(529);
+            expect(div.selectAll('tbody tr').size()).not.toBe(0);
         });
 
     });
