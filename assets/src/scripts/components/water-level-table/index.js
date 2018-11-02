@@ -1,7 +1,8 @@
-/* global List */
 
 import { select } from 'd3-selection';
 import { createStructuredSelector } from 'reselect';
+
+import List from 'list.js';
 
 import { link } from 'ngwmn/lib/d3-redux';
 import { getSiteWaterLevels} from 'ngwmn/services/state/index';
@@ -29,7 +30,7 @@ const drawTableBody = function(table, waterLevels, tbody) {
     tbody = tbody || table
         .append('tbody')
         .classed('list', true);
-    const samples = waterLevels.samples.reverse() || [];
+    const samples = (waterLevels.samples || []).reverse();
     const valueNames = ['time', 'originalValue', 'unit', 'accuracyValue', 'accuracyUnit',
             'sourceCode', 'fromLandsurfaceValue', 'fromDatumValue'];
     const item = valueNames.reduce(function(total, name) {

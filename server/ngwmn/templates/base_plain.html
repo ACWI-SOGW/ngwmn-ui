@@ -12,7 +12,6 @@
                 'STATIC_ROOT': '{{ config.STATIC_ROOT }}'
             };
         </script>
-        <script async src="{{ 'scripts/vendor.js' | asset_url }}"></script>
         <script async src="{{ 'bundle.js' | asset_url }}"></script>
         {% block extra_head_tags %}{% endblock %}
         {% block page_script %}{% endblock %}
