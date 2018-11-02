@@ -31,7 +31,7 @@ describe('water levels service state', () => {
 
         it('Returns the expected data if agency:site is in the water levels data', () => {
             expect(getSiteWaterLevels('USGS', '12345678')(mockStoreData)).toEqual(mockStoreData[MOUNT_POINT]['USGS:12345678']);
-        })
+        });
     });
 
     describe('setWaterLevels works', () => {
