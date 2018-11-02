@@ -26,3 +26,4 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - Removed duplicate service call to retrieve well log data
 - Using headless Firefox to run tests for CI
+- Using node 10.13.0
