@@ -1,3 +1,6 @@
+import memoize from 'fast-memoize';
+import { createSelector } from 'reselect';
+
 import * as cache from '../cache';
 import { getSiteID } from './index';
 
@@ -10,7 +13,7 @@ export const WATER_LEVELS_SET = `${MOUNT_POINT}/WATER_LEVELS_SET`;
  * Store the specified water levels for a given site in the store.
  * @param  {String} agencyCode  Agency code
  * @param  {String} siteID      Site ID
- * @params {Object} waterLevels Water level details to set
+ * @param {Object} waterLevels Water level details to set
  * @return {Object}             WATER_LEVELS_SET action
  */
 export const setWaterLevels = function (agencyCode, siteID, waterLevels) {
@@ -44,6 +47,20 @@ export const retrieveWaterLevels = (agencyCode, siteID) => (dispatch) => {
  * @return {Object}       Water levels keyed on ID
  */
 export const getWaterLevels = state => state[MOUNT_POINT];
+
+/**
+ * Return water level data for the site or the empty object if no data available
+ * @param {String} agencyCode
+ * @param {String} siteID
+ * @return {Function} selector to return water level data for the site. Returns empty object if no data available.
+ */
+export const getSiteWaterLevels = memoize((agencyCode, siteID) =>  createSelector(
+    getWaterLevels,
+    (waterLevels) => {
+        const id = getSiteID(agencyCode, siteID);
+        return waterLevels[id] || {};
+    }
+));
 
 /**
  * Water levels reducer

@@ -22,6 +22,7 @@ module.exports = {
             ngwmn: path.resolve(__dirname, 'src/scripts'),
             resolve: ['.js', '.json']
         }),
+
         resolve({
             // use "module" field for ES6 module if possible
             module: true, // Default: true

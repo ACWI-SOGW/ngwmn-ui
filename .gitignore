@@ -17,3 +17,5 @@ server/ngwmn_ui.egg-info
 *.sublime-project
 *.sublime-workspace
 .idea
+.DS_Store
+assets/.DS_Store
