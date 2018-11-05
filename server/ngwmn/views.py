@@ -8,7 +8,7 @@ from functools import reduce
 from flask import abort, jsonify, render_template
 
 from . import __version__, app
-from .services.ngwmn import get_features, get_water_quality, get_well_log, get_statistics
+from .services.ngwmn import get_features, get_water_quality, get_well_log, get_statistics, get_providers
 from .services.sifta import get_cooperators
 
 
@@ -41,6 +41,22 @@ def version():
     return jsonify({
         'version': __version__
     })
+
+@app.route('/provider/', methods=['GET'])
+def providers():
+    """
+    NGWMN available providers view
+
+    """
+    return render_template('providers.html', providers=get_providers())
+
+
+@app.route('/provider/<agency_cd>/', methods=['GET'])
+def provider(agency_cd):
+    """
+    NGWMN provider information view
+    """
+    return 'Not yet implemented'
 
 
 @app.route('/site-location/<agency_cd>/<location_id>/', methods=['GET'])

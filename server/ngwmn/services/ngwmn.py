@@ -397,13 +397,29 @@ def get_statistic(agency_cd, site_no, stat_type, service_root=SERVICE_ROOT_CACHE
     stats = json.loads(json_txt)
     stats['is_fetched'] = True
 
-    statistics = convert_keys_and_Booleans(stats)
+    statistics = convert_keys_and_booleans(stats)
     app.logger.debug(statistics)
 
     return statistics
 
 
-def convert_keys_and_Booleans(dictionary):
+def get_providers(service_root=SERVICE_ROOT):
+    """
+    Retrieves the list of providers
+    :param service_root: root url of service which serves provider metadata
+    :return: a list of dictionaries containing the list of providers. Note that
+    the JSON that is returned from the service will have it's keys changed to lowercase
+    """
+    target = urljoin(SERVICE_ROOT, 'ngwmn/metadata/agencies')
+    response = r.get(target)
+    if response.status_code != 200:
+        app.logger.error('Service request error for {0}'.format(target))
+        raise ServiceException()
+
+    return list(map(convert_keys_and_booleans,response.json()))
+
+
+def convert_keys_and_booleans(dictionary):
         """
         Local recursive helper method to convert 'all caps' keys to lowercase
         :param dictionary: the dict for whom's keys need lowercase
@@ -413,7 +429,7 @@ def convert_keys_and_Booleans(dictionary):
         for key in dictionary:
             value = dictionary[key]
             if isinstance(value, dict):
-                value = convert_keys_and_Booleans(value)
+                value = convert_keys_and_booleans(value)
             elif value in ['N', 'Y']:
                 value = (value == 'Y')
             lower_case[key.lower()] = value
