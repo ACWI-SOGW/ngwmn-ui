@@ -7,4 +7,4 @@ pytest-flask==0.10.0
 pytest-mock==1.10.0
 requests-cache==0.4.13
 requests-mock==1.5.2
-SaltPyLint==2018.10.29
+SaltPyLint==2018.10.31
