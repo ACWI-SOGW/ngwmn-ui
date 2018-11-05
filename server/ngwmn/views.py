@@ -10,6 +10,7 @@ from flask import abort, jsonify, render_template
 from . import __version__, app
 from .services.ngwmn import get_features, get_water_quality, get_well_log, get_statistics, get_providers
 from .services.sifta import get_cooperators
+from .utils import pull_feed
 
 
 @app.route('/')
@@ -56,7 +57,20 @@ def provider(agency_cd):
     """
     NGWMN provider information view
     """
-    return 'Not yet implemented'
+    providers = get_providers()
+    providers_by_agency_cd = dict(map(lambda x: (x['agency_cd'], x), providers))
+    if agency_cd not in providers_by_agency_cd:
+        return '{0} is not a valid agency code'.format(agency_cd), 404
+
+    url = '{0}createrssfeed.action?types=page&spaces=GWDataPortal&title=X&labelString=ngwmn_provider_{1}_{2}&amp;excludedSpaceKeys%3D&sort=modified&maxResults=10&timeSpan=3600&showContent=true&confirm=Create+RSS+Feed'.format(
+        app.config['CONFLUENCE_URL'],
+        agency_cd,
+        'main'
+    )
+    return render_template('provider.html',
+        agency_metadata=providers_by_agency_cd.get(agency_cd),
+        provider_content=pull_feed(url)
+    )
 
 
 @app.route('/site-location/<agency_cd>/<location_id>/', methods=['GET'])
