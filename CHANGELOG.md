@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [0.1.0]
 ### Added
 - Added view for a site location
 - Added cooperator logos to site location view
@@ -27,3 +29,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Removed duplicate service call to retrieve well log data
 - Using headless Firefox to run tests for CI
 - Using node 10.13.0
+
+[Unreleased]: https://github.com/ACWI-SOGW/ngwmn-ui-0.1.0...master
+[0.1.0]: https://github.com/ACWI-SOGW/ngwmn-ui/tree/ngwmn-ui-0.1.0
