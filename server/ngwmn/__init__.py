@@ -4,7 +4,7 @@ Initialize the NGWMN UI application
 from flask import Flask
 
 
-__version__ = '0.1.0.dev'
+__version__ = '0.2.0dev'
 
 app = Flask(__name__.split()[0], instance_relative_config=True)
 
