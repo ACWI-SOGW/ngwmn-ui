@@ -5,7 +5,7 @@ Unit tests for NGWMN views
 # pylint: disable=C0103
 
 import json
-from unittest import TestCase
+from unittest import TestCase, mock
 from urllib.parse import urljoin
 
 import requests_mock
@@ -84,6 +84,18 @@ class TestWellPageView(TestCase):
         mocker.get(requests_mock.ANY, status_code=404)
         response = self.app_client.get(self.site_loc_url)
         self.assertEqual(response.status_code, 404)
+
+@mock.patch('ngwmn.views.get_providers')
+class TestProvidersView(TestCase):
+
+    def setUp(self):
+        self.app_client = app.test_client()
+
+    def test_view(self, m):
+        m.return_value = [{'agency_cd': 'A', 'agency_nm': 'Agency A'}, {'agency_cd': 'B', 'agency_nm': 'Agency B'}]
+        response = self.app_client.get('/provider/')
+        self.assertIn(b'Agency A', response.data)
+        self.assertIn(b'Agency B', response.data)
 
 
 TEST_SUMMARY_JSON = """{

@@ -518,3 +518,5 @@ MOCK_MONTHLY_STATS = {
         "P50": "25.915416"
     },
 }
+
+MOCK_PROVIDERS_RESPONSE = '[{"AGENCY_CD":"AKDNR","AGENCY_NM":"Alaska Department of Natural Resources","AGENCY_LINK":"http://dnr.alaska.gov/","COUNT":15},{"AGENCY_CD":"ADWR","AGENCY_NM":"Arizona Department of Water Resources","AGENCY_LINK":"http://www.azwater.gov/azdwr/","COUNT":5}]'

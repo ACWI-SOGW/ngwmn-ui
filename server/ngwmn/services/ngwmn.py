@@ -410,7 +410,7 @@ def get_providers(service_root=SERVICE_ROOT):
     :return: a list of dictionaries containing the list of providers. Note that
     the JSON that is returned from the service will have it's keys changed to lowercase
     """
-    target = urljoin(SERVICE_ROOT, 'ngwmn/metadata/agencies')
+    target = urljoin(service_root, 'ngwmn/metadata/agencies')
     response = r.get(target)
     if response.status_code != 200:
         app.logger.error('Service request error for {0}'.format(target))

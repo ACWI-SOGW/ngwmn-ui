@@ -11,8 +11,9 @@ import ngwmn.services.ngwmn as mock_ngwmn
 
 from ngwmn.services import ServiceException
 from ngwmn.services.ngwmn import (
-    generate_bounding_box_values, get_iddata, get_water_quality, get_well_log, get_statistic)
-from .mock_data import MOCK_WELL_LOG_RESPONSE, MOCK_WQ_RESPONSE, MOCK_OVERALL_STATS, MOCK_MONTHLY_STATS
+    generate_bounding_box_values, get_iddata, get_water_quality, get_well_log, get_statistic, get_providers)
+from .mock_data import (
+    MOCK_WELL_LOG_RESPONSE, MOCK_WQ_RESPONSE, MOCK_OVERALL_STATS, MOCK_MONTHLY_STATS, MOCK_PROVIDERS_RESPONSE)
 
 
 class TestGetStatistics(TestCase):
@@ -175,6 +176,36 @@ class TestGetStatistics(TestCase):
         self.assertEqual(overall['RECORD_YEARS'], stats['overall']['record_years'], 'Expect the record years value.')
         self.assertEqual(overall['LATEST_VALUE'], stats['overall']['latest_value'], 'Expect the latest value.')
         self.assertEqual(overall['LATEST_PCTILE'], stats['overall']['latest_pctile'], 'Expect the latest percentile.')
+
+
+class TestGetProviders(TestCase):
+
+    def setUp(self):
+        self.test_service_root = 'https://fake.gov'
+
+    def test_success_good_data(self):
+        with requests_mock.mock() as m:
+            m.get('https://fake.gov/ngwmn/metadata/agencies', text=MOCK_PROVIDERS_RESPONSE)
+            result = get_providers(service_root=self.test_service_root)
+
+            self.assertEqual(len(result), 2)
+            self.assertEqual(result, [{
+                'agency_cd': 'AKDNR',
+                'agency_nm': 'Alaska Department of Natural Resources',
+                'agency_link': 'http://dnr.alaska.gov/',
+                'count': 15
+            }, {
+                'agency_cd': 'ADWR',
+                'agency_nm': 'Arizona Department of Water Resources',
+                'agency_link': 'http://www.azwater.gov/azdwr/',
+                'count': 5
+            }])
+
+    def test_bad_request(self):
+        with requests_mock.mock() as m:
+            m.get('https://fake.gov/ngwmn/metadata/agencies', status_code=500)
+            with self.assertRaises(ServiceException):
+                get_providers(service_root=self.test_service_root)
 
 
 class TestGetWellData(TestCase):
