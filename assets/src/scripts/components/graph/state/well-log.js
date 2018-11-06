@@ -4,7 +4,9 @@ import capitalize from 'lodash/capitalize';
 import { createSelector } from 'reselect';
 
 import { getWellLogs } from 'ngwmn/services/state/index';
-import { getVisibleConstructionIndices } from 'ngwmn/components/well-log/state';
+import {
+    getSelectedConstructionId, getVisibleConstructionIds
+} from 'ngwmn/components/well-log/state';
 import { getCursorDatum } from './cursor';
 import { getChartPosition } from './layout';
 import { getCurrentSiteID } from './options';
@@ -84,12 +86,12 @@ export const getLithology = memoize(chartType => createSelector(
 
 const getDrawableElements = createSelector(
     getCurrentWellLog,
-    getVisibleConstructionIndices,
-    (wellLog, visibleIndices) => {
+    getVisibleConstructionIds,
+    (wellLog, visibleIds) => {
         return (wellLog.construction || [])
-            .filter((element, index) => {
+            .filter(element => {
                 return element.position && element.position.coordinates &&
-                       visibleIndices && visibleIndices.indexOf(index) !== -1;
+                       visibleIds && visibleIds.indexOf(element.id) !== -1;
             });
     }
 );
@@ -187,7 +189,8 @@ export const getConstructionElements = memoize(chartType => createSelector(
     getDrawableElements,
     getRadiusScale(chartType),
     getScaleY(chartType),
-    (elements, xScale, yScale) => {
+    getSelectedConstructionId,
+    (elements, xScale, yScale, selectedId) => {
         const parts = elements.map(element => {
             const loc = element.position.coordinates;
             const unit = element.position.unit;
@@ -195,6 +198,8 @@ export const getConstructionElements = memoize(chartType => createSelector(
             const diamStr = radius ? `${element.diameter.value} ${element.diameter.unit}` : 'unknown';
             const locString = `${loc.start} - ${loc.end} ${unit}`;
             return {
+                id: element.id,
+                isSelected: element.id == selectedId,
                 type: element.type,
                 radius: radius,
                 title: `${capitalize(element.type)}, ${diamStr} diameter, ${locString} depth`,

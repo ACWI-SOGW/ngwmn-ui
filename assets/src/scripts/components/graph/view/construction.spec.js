@@ -2,7 +2,6 @@ import { select } from 'd3-selection';
 import { createStructuredSelector } from 'reselect';
 
 import getMockStore from 'ngwmn/store.mock';
-import { getSelectedConstructionIndex } from 'ngwmn/components/well-log/state';
 import drawConstruction from './construction';
 import { getConstructionElements, getWellWaterLevel } from '../state';
 
@@ -21,11 +20,10 @@ describe('graph component construction', () => {
         svg.remove();
     });
 
-    fdescribe('drawConstruction function', () => {
+    describe('drawConstruction function', () => {
         const selector = createStructuredSelector({
             elements: getConstructionElements('construction'),
-            cursorWaterLevel: getWellWaterLevel('construction'),
-            selectedIndex: getSelectedConstructionIndex
+            cursorWaterLevel: getWellWaterLevel('construction')
         });
 
         it('draws screen and casing representations', () => {

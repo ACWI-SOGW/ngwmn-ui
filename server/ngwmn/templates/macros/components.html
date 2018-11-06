@@ -50,7 +50,7 @@
             </thead>
             <tbody>
                 {% for item in well_log.construction %}
-                    <tr class="{{ item.type }}" data-constructionIndex="{{ loop.index0 }}">
+                    <tr class="{{ item.type }}" data-local-id="{{ item.id }}">
                         <td>
                             {% if item.type == 'screen' %}
                                 <svg width="30" height="30" viewBox="0 0 30 30">

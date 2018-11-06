@@ -2,18 +2,18 @@ import { select } from 'd3-selection';
 
 import { link } from 'ngwmn/lib/d3-redux';
 import {
-    getSelectedConstructionIndex, setSelectedConstructionIndex,
-    setVisibleConstructionIndices
+    getSelectedConstructionId, setSelectedConstructionId,
+    setVisibleConstructionIds
 } from './state';
 
 
-const updateVisibleIndices = function (store, elem) {
-    const indices = elem
+const updateVisibleIds = function (store, elem) {
+    const ids = elem
         .selectAll('tbody tr')
             .nodes()
             .filter(node => node.offsetParent)
-            .map(node => Number.parseInt(node.dataset.constructionindex));
-    store.dispatch(setVisibleConstructionIndices(indices));
+            .map(node => node.dataset.localId);
+    store.dispatch(setVisibleConstructionIds(ids));
 };
 
 /**
@@ -24,29 +24,29 @@ const updateVisibleIndices = function (store, elem) {
  */
 export default function (store, node) {
     select(node)
-        // Initialize visible indices from the DOM
-        .call((elem) => updateVisibleIndices(store, elem))
+        // Initialize visible IDs from the DOM
+        .call((elem) => updateVisibleIds(store, elem))
         // Toggle "selected" class on state change.
-        .call(link(store, (elem, selectedIndex) => {
+        .call(link(store, (elem, selectedId) => {
             elem.select('.selected')
                 .classed('selected', false);
-            elem.select(`[data-constructionindex="${selectedIndex}"]`)
+            elem.select(`[data-local-id="${selectedId}"]`)
                 .classed('selected', true);
-        }, getSelectedConstructionIndex))
-        // Visible construction indices on checkbox click
+        }, getSelectedConstructionId))
+        // Visible construction IDs on checkbox click
         .call((elem) => {
             elem.selectAll('input')
                 .on('click', function () {
-                    updateVisibleIndices(store, elem);
+                    updateVisibleIds(store, elem);
                 });
         })
         // Clear selection on mouse exit
         .on('mouseout', function () {
-            store.dispatch(setSelectedConstructionIndex(null));
+            store.dispatch(setSelectedConstructionId(null));
         })
         // On click, store the selected row in state.
         .selectAll('tbody tr')
             .on('mouseover', function () {
-                store.dispatch(setSelectedConstructionIndex(this.dataset.constructionindex));
+                store.dispatch(setSelectedConstructionId(this.dataset.localId));
             });
 }

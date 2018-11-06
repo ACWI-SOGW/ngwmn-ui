@@ -7,11 +7,11 @@ const VISIBLE_CONSTRUCTION_ITEMS_SET = `${MOUNT_POINT}/VISIBLE_CONSTRUCTION_ITEM
  * Action creator to set the selected construction item index
  * @param {Date} date   Date of cursor
  */
-export const setSelectedConstructionIndex = function (selectedConstructionIndex) {
+export const setSelectedConstructionId = function (selectedConstructionId) {
     return {
         type: SELECTED_CONSTRUCTION_ITEM_SET,
         payload: {
-            selectedConstructionIndex
+            selectedConstructionId
         }
     };
 };
@@ -20,11 +20,11 @@ export const setSelectedConstructionIndex = function (selectedConstructionIndex)
  * Action creator to set the visible construction item index list
  * @param {Date} date   Date of cursor
  */
-export const setVisibleConstructionIndices = function (visibleConstructionIndices) {
+export const setVisibleConstructionIds = function (visibleConstructionIds) {
     return {
         type: VISIBLE_CONSTRUCTION_ITEMS_SET,
         payload: {
-            visibleConstructionIndices
+            visibleConstructionIds
         }
     };
 };
@@ -32,15 +32,15 @@ export const setVisibleConstructionIndices = function (visibleConstructionIndice
 /**
  * Gets the index of the selected construction item.
  */
-export const getSelectedConstructionIndex = function (state) {
-    return state[MOUNT_POINT].selectedConstructionIndex;
+export const getSelectedConstructionId = function (state) {
+    return state[MOUNT_POINT].selectedConstructionId;
 };
 
 /**
- * Gets the visible indices, if set. Otherwise return all indices.
+ * Gets the visible IDs, if set. Otherwise return all IDs.
  */
-export const getVisibleConstructionIndices = function (state) {
-    return state[MOUNT_POINT].visibleConstructionIndices;
+export const getVisibleConstructionIds = function (state) {
+    return state[MOUNT_POINT].visibleConstructionIds;
 };
 
 /**
@@ -54,12 +54,12 @@ export const reducer = function (state = {}, action) {
         case SELECTED_CONSTRUCTION_ITEM_SET:
             return {
                 ...state,
-                selectedConstructionIndex: action.payload.selectedConstructionIndex
+                selectedConstructionId: action.payload.selectedConstructionId
             };
         case VISIBLE_CONSTRUCTION_ITEMS_SET:
             return {
                 ...state,
-                visibleConstructionIndices: action.payload.visibleConstructionIndices
+                visibleConstructionIds: action.payload.visibleConstructionIds
             };
         default:
             return state;

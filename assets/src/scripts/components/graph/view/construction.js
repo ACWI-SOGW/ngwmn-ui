@@ -1,13 +1,13 @@
 import { callIf } from 'ngwmn/lib/utils';
 
-import { setSelectedConstructionIndex } from 'ngwmn/components/well-log/state';
+import { setSelectedConstructionId } from 'ngwmn/components/well-log/state';
 
 
-const drawElement = function (store, elem, element, index, isSelected) {
+const drawElement = function (store, elem, element, index) {
     elem.append('g')
         .attr('id', `${element.type}-${index}`)
         .classed(element.type, true)
-        .classed('selected', isSelected)
+        .classed('selected', element.isSelected)
         .call(elem => {
             elem.append('rect')
                 .attr('x', element.left.x)
@@ -32,8 +32,8 @@ const drawElement = function (store, elem, element, index, isSelected) {
                 .attr('y2', element.right.y2)
                 .attr('stroke-width', element.thickness);
         })
-        .on('mouseenter', () => {
-            store.dispatch(setSelectedConstructionIndex(index));
+        .on('mouseenter', function () {
+            store.dispatch(setSelectedConstructionId(element.id));
         });
 };
 
@@ -97,7 +97,7 @@ const drawPatterns = function (elem) {
         });
 };
 
-export default function (elem, {elements, cursorWaterLevel, selectedIndex}, store, container) {
+export default function (elem, {elements, cursorWaterLevel}, store, container) {
     // Get/create container for construction elements
     container = container || elem
         .call(drawPatterns)
@@ -112,7 +112,7 @@ export default function (elem, {elements, cursorWaterLevel, selectedIndex}, stor
 
     // Draw each construction element
     elements.forEach((element, index) => {
-        drawElement(store, container, element, index, index == selectedIndex);
+        drawElement(store, container, element, index);
     });
 
     return container;

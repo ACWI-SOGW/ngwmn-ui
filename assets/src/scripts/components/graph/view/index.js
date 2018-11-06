@@ -2,7 +2,6 @@ import { mouse } from 'd3-selection';
 import { createStructuredSelector } from 'reselect';
 import ResizeObserver from 'resize-observer-polyfill';
 
-import { getSelectedConstructionIndex } from 'ngwmn/components/well-log/state';
 import { link } from 'ngwmn/lib/d3-redux';
 import { callIf } from 'ngwmn/lib/utils';
 
@@ -65,8 +64,7 @@ const drawChart = function (elem, store, chartType) {
                 }))))
                 .call(callIf(chartType === 'construction', link(store, drawConstruction, createStructuredSelector({
                     elements: getConstructionElements(chartType),
-                    cursorWaterLevel: getWellWaterLevel(chartType),
-                    selectedIndex: getSelectedConstructionIndex
+                    cursorWaterLevel: getWellWaterLevel(chartType)
                 }), store)))
                 // Draw the actual lines/circles for the current water level data set.
                 .call(callIf(chartType !== 'construction', link(store, drawWaterLevels, createStructuredSelector({
