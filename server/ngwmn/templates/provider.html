@@ -3,4 +3,32 @@
 
 {% block title %}{{ agency_metadata.agency_nm }} ({{ agency_metadata.agency_cd }}){% endblock %}
 
-{% block content %}{{ provider_content | safe }}{% endblock %}
+{% block content %}
+    {{ provider_content | safe }}
+    <div class="usa-accordion">
+        <h3 class="usa-accordion-heading">
+            <button class="usa-accordion-button" aria-expanded="false" aria-controls="site-selection-container">
+                Site Selection and Classification
+            </button>
+        </h3>
+        <div id="site-selection-container" class="usa-accordion-content">{{ site_selection | safe }}</div>
+        <h3 class="usa-accordion-heading">
+            <button class="usa-accordion-button" aria-expanded="false" aria-controls="data-collection-container">
+                Data Collection Techniques
+            </button>
+        </h3>
+        <div id="data-collection-container" class="usa-accordion-content">{{ data_collection | safe }}</div>
+        <h3 class="usa-accordion-heading">
+            <button class="usa-accordion-button" aria-expanded="false" aria-controls="data-management-container">
+                Data Management
+            </button>
+        </h3>
+        <div id="data-management-container" class="usa-accordion-content">{{ data_management | safe }}</div>
+        <h3 class="usa-accordion-heading">
+            <button class="usa-accordion-button" aria-expanded="false" aria-controls="other-agency-info-container">
+                Other Agency Information
+            </button>
+        </h3>
+        <div id="other-agency-info-container" class="usa-accordion-content">{{ other_agency_info | safe }}</div>
+    </div>
+{% endblock %}

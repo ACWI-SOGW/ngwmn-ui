@@ -10,7 +10,9 @@ from flask import abort, jsonify, render_template
 from . import __version__, app
 from .services.ngwmn import get_features, get_water_quality, get_well_log, get_statistics, get_providers
 from .services.sifta import get_cooperators
-from .utils import pull_feed
+from .utils import (
+    pull_feed, confluence_url, MAIN_CONTENT, SITE_SELECTION_CONTENT, DATA_COLLECTION_CONTENT, DATA_MANAGEMENT_CONTENT,
+    OTHER_AGENCY_INFO_CONTENT)
 
 
 @app.route('/')
@@ -68,9 +70,13 @@ def provider(agency_cd):
         'main'
     )
     return render_template('provider.html',
-        agency_metadata=providers_by_agency_cd.get(agency_cd),
-        provider_content=pull_feed(url)
-    )
+                           agency_metadata=providers_by_agency_cd.get(agency_cd),
+                           provider_content=pull_feed(confluence_url(agency_cd, MAIN_CONTENT)),
+                           site_selection=pull_feed(confluence_url(agency_cd, SITE_SELECTION_CONTENT)),
+                           data_collection=pull_feed(confluence_url(agency_cd, DATA_COLLECTION_CONTENT)),
+                           data_management=pull_feed(confluence_url(agency_cd, DATA_MANAGEMENT_CONTENT)),
+                           other_agency_info=pull_feed(confluence_url(agency_cd, OTHER_AGENCY_INFO_CONTENT))
+                           )
 
 
 @app.route('/site-location/<agency_cd>/<location_id>/', methods=['GET'])

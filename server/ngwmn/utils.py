@@ -35,3 +35,23 @@ def pull_feed(feed_url):
 
     return post
 
+
+MAIN_CONTENT = 'main'
+SITE_SELECTION_CONTENT = 'siteselect'
+DATA_COLLECTION_CONTENT = 'datacollection'
+DATA_MANAGEMENT_CONTENT = 'datamanagement'
+OTHER_AGENCY_INFO_CONTENT = 'otherinfo'
+
+def confluence_url(agency_cd, content_type):
+    """
+    Return confluence url containing information for the agency and content type
+    :param str agency_cd:
+    :param str content_type:
+    :rtype str
+    """
+    return '{0}createrssfeed.action?types=page&spaces=GWDataPortal&title=X&labelString=ngwmn_provider_{1}_{2}&amp;excludedSpaceKeys%3D&sort=modified&maxResults=10&timeSpan=3600&showContent=true&confirm=Create+RSS+Feed'.format(
+        app.config['CONFLUENCE_URL'],
+        agency_cd,
+        content_type
+    )
+
