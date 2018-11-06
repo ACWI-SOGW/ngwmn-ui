@@ -98,6 +98,29 @@ class TestProvidersView(TestCase):
         self.assertIn(b'Agency B', response.data)
 
 
+@mock.patch('ngwmn.views.get_providers')
+@mock.patch('ngwmn.views.pull_feed')
+class TestProviderView(TestCase):
+
+    def setUp(self):
+        self.app_client = app.test_client()
+
+    def test_bad_agency_cd(self, m_pull_feed, m_get_providers):
+        m_pull_feed.return_value = '<div>My Content</div>'
+        m_get_providers.return_value = [{'agency_cd': 'A', 'agency_nm': 'Agency A'}, {'agency_cd': 'B', 'agency_nm': 'Agency B'}]
+        response = self.app_client.get('/provider/C/')
+
+        self.assertEqual(response.status_code, 404)
+
+    def test_good_agency_cd(self, m_pull_feed, m_get_providers):
+        m_pull_feed.return_value = '<div>My Content</div>'
+        m_get_providers.return_value = [{'agency_cd': 'A', 'agency_nm': 'Agency A'},
+                                        {'agency_cd': 'B', 'agency_nm': 'Agency B'}]
+        response = self.app_client.get('/provider/A/')
+        self.assertIn(b'Agency A', response.data)
+        self.assertIn(b'<div>My Content</div>', response.data)
+
+
 TEST_SUMMARY_JSON = """{
     "bbox": [
         -89.3928,
