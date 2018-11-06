@@ -80,3 +80,13 @@
         </table>
     </div>
 {%- endmacro %}
+
+{% macro WaterLevelTable(agency_code, site_no) -%}
+<li class="ngwmn-component" data-component="water-level-table" data-siteId="{{ site_no }}" data-agencyCd="{{ agency_code }}">
+    <button class="usa-accordion-button" aria-expanded="false" aria-controls="water-levels-div">
+        Water Levels
+    </button>
+    <div id="water-levels-div" class="usa-accordion-content">
+    </div>
+</li>
+{%- endmacro %}

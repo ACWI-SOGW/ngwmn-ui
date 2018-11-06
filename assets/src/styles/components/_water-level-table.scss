@@ -1,0 +1,23 @@
+.pagination {
+  li {
+    display: inline-block;
+    margin-left: 0.6rem;
+    padding: .8rem;
+    @include u-border('solid');
+    @include u-border(1px);
+    @include u-radius('md');
+    a {
+      text-decoration: none;
+    }
+  }
+  .active {
+    background-color: $color-gray-lighter;
+  }
+
+  .disabled {
+    border: none;
+    a {
+      cursor: not-allowed;
+    }
+  }
+}
