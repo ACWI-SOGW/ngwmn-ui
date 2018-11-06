@@ -36,9 +36,11 @@
 {% macro WellLog(well_log) -%}
     <div class="ngwmn-component" data-component="well-log">
         <h3>Well Construction</h3>
-        <input type="checkbox" id="screens" checked>
+        <input type="radio" name="construction-type" value="all" id="all" checked>
+        <label for="all">All</label>
+        <input type="radio" name="construction-type" value="screens" id="screens">
         <label for="screens">Screens</label>
-        <input type="checkbox" id="casings" checked>
+        <input type="radio" name="construction-type" value="casings" id="casings">
         <label for="casings">Casings</label>
         <table class="usa-table-borderless">
             <thead>

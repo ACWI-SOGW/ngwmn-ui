@@ -25,6 +25,8 @@ table {
     text-align: left;
 }
 
+#all:checked ~ table .screen,
+#all:checked ~ table .casing,
 #screens:checked ~ table .screen,
 #casings:checked ~ table .casing {
     display: table-row;
