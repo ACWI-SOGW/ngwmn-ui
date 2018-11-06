@@ -22,6 +22,8 @@ import 'ngwmn/components/graph/view/legend.spec.js';
 import 'ngwmn/components/graph/view/lithology.spec.js';
 import 'ngwmn/components/graph/view/water-levels.spec.js';
 import 'ngwmn/components/svg-pattern/index.spec.js';
+import 'ngwmn/components/well-log/index.spec.js';
+import 'ngwmn/components/well-log/state.spec.js';
 import 'ngwmn/lib/ajax.spec';
 import 'ngwmn/lib/d3-redux.spec';
 import 'ngwmn/lib/utils.spec';
