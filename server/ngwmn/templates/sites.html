@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% set page_title = 'NGWMN sites for ' + sites[0].agency_nm + ' (' + sites[0].agency_cd + ')' %}
+
+{% block content %}
+    <h1>{{ page_title }}</h1>
+    <ul class="usa-list"></ul>
+        {% for site in sites %}
+            <li><a href="{{ url_for('site_page', agency_cd=site.agency_cd, location_id=site.site_no) }}">{{ site.site_name }}</a></li>
+        {% endfor %}
+    </ul>
+{% endblock %}

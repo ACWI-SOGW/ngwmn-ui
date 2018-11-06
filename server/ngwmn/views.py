@@ -8,7 +8,7 @@ from functools import reduce
 from flask import abort, jsonify, render_template
 
 from . import __version__, app
-from .services.ngwmn import get_features, get_water_quality, get_well_log, get_statistics, get_providers
+from .services.ngwmn import get_features, get_water_quality, get_well_log, get_statistics, get_providers, get_sites
 from .services.sifta import get_cooperators
 from .confluence_utils import (
     pull_feed, confluence_url, MAIN_CONTENT, SITE_SELECTION_CONTENT, DATA_COLLECTION_CONTENT, DATA_MANAGEMENT_CONTENT,
@@ -77,6 +77,18 @@ def provider(agency_cd):
                            data_management=pull_feed(confluence_url(agency_cd, DATA_MANAGEMENT_CONTENT)),
                            other_agency_info=pull_feed(confluence_url(agency_cd, OTHER_AGENCY_INFO_CONTENT))
                            )
+
+@app.route('/provider/<agency_cd>/site/', methods=['GET'])
+def sites(agency_cd):
+    """
+    A list of NGWMN sites for an agency_cd
+    :param str agency_cd:
+    """
+    sites = get_sites(agency_cd)
+    if not sites:
+        return '{0} is not a valid agency code'.format(agency_cd), 404
+    return render_template('sites.html',
+                           sites=sites)
 
 
 @app.route('/site-location/<agency_cd>/<location_id>/', methods=['GET'])

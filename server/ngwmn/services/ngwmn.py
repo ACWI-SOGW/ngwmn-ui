@@ -56,7 +56,7 @@ def _find(parent, tag, default=None):
     if node is None:
         return default
 
-    if node.text == 'unknown':
+    if not node.text or node.text == 'unknown':
         return default
 
     return node.text
@@ -215,7 +215,7 @@ def get_well_log(agency_cd, location_id):
                 'ui': (lambda words: {
                     'colors': get_colors(words),
                     'materials': classify_material(words)
-                })(re.findall(r'\w+', _find(unit, 'gml:description', '').lower())),
+                })(re.findall(r'\w+', _find(unit, 'gml:description', default='').lower())),
                 'purpose': _find(unit, 'gsml:purpose'),
                 'composition': (lambda part: {
                     'role': _find(part, 'gsml:role'),
@@ -311,6 +311,23 @@ def get_features(latitude, longitude, service_root=SERVICE_ROOT):
         raise ServiceException()
 
     return response.json()
+
+
+def get_sites(agency_cd, service_root=SERVICE_ROOT):
+    params = {'request': 'GetFeature'}
+    data = {
+        'SERVICE': 'WFS',
+        'VERSION': '1.1.0',
+        'srsName': 'EPSG:4326',
+        'outputFormat': 'json',
+        'typeName': 'ngwmn:VW_GWDP_GEOSERVER',
+        'CQL_FILTER': "(AGENCY_CD='{0}')".format(agency_cd)
+    }
+    target = urljoin(service_root, 'ngwmn/geoserver/wfs')
+    response = r.post(target, params=params, data=data)
+
+    features = response.json().get('features')
+    return list(map(lambda x: convert_keys_and_booleans(x.get('properties', {})), features))
 
 
 def get_statistic(agency_cd, site_no, stat_type, service_root=SERVICE_ROOT_CACHE):
@@ -416,7 +433,7 @@ def get_providers(service_root=SERVICE_ROOT):
         app.logger.error('Service request error for {0}'.format(target))
         raise ServiceException()
 
-    return list(map(convert_keys_and_booleans,response.json()))
+    return list(map(convert_keys_and_booleans, response.json()))
 
 
 def convert_keys_and_booleans(dictionary):
@@ -454,16 +471,16 @@ def get_statistics(agency_cd, site_no):
     }
 
     overall = get_statistic(agency_cd, site_no, 'wl-overall')
-    if overall['is_fetched']:
+    if overall.get('is_fetched'):
         stats['overall'] = overall
         site_info = get_statistic(agency_cd, site_no, 'site-info')
         alt_datum_cd = ''
-        if site_info['is_fetched']:
+        if site_info.get('is_fetched'):
             alt_datum_cd = site_info['altdatumcd']
 
-        if overall['is_ranked']:
+        if overall.get('is_ranked'):
             monthly = get_statistic(agency_cd, site_no, 'wl-monthly')
-            if monthly['is_fetched']:
+            if monthly.get('is_fetched'):
                 stats['monthly'] = []
                 month_num = 0
                 for month_abbr in calendar.month_abbr[1:]:
@@ -473,7 +490,7 @@ def get_statistics(agency_cd, site_no):
                         month_stats['month'] = month_abbr
                         stats['monthly'].append(month_stats)
 
-        if overall['mediation'] == 'BelowLand':
+        if overall.get('mediation', '') == 'BelowLand':
             stats['overall']['alt_datum'] = 'Depth to water, feet below land surface'
         else:
             stats['overall']['alt_datum'] = 'Water level in feet relative to ' + alt_datum_cd

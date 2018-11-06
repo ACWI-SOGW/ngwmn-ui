@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 
-{% block title %}{{ agency_metadata.agency_nm }} ({{ agency_metadata.agency_cd }}){% endblock %}
+{% set page_title = agency_metadata.agency_nm + ' (' + agency_metadata.agency_cd + ')' %}
 
 {% block content %}
     {{ provider_content | safe }}

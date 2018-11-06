@@ -128,7 +128,7 @@ class TestGetStatistics(TestCase):
         if "NOT_RANKED" in site_no and "month" in stat_type:
             raise ServiceException()
         data = self.test_stats[agency_cd][site_no][stat_type]
-        return mock_ngwmn.convert_keys_and_Booleans(data)
+        return mock_ngwmn.convert_keys_and_booleans(data)
 
     def test_get_statistics__below(self):
         mock_ngwmn.get_statistic = self.mock_stat
