@@ -4,6 +4,7 @@ import capitalize from 'lodash/capitalize';
 import { createSelector } from 'reselect';
 
 import { getWellLogs } from 'ngwmn/services/state/index';
+import { getVisibleConstructionIndices } from 'ngwmn/components/well-log/state';
 import { getCursorDatum } from './cursor';
 import { getChartPosition } from './layout';
 import { getCurrentSiteID } from './options';
@@ -83,9 +84,13 @@ export const getLithology = memoize(chartType => createSelector(
 
 const getDrawableElements = createSelector(
     getCurrentWellLog,
-    (wellLog) => {
+    getVisibleConstructionIndices,
+    (wellLog, visibleIndices) => {
         return (wellLog.construction || [])
-            .filter(element => element.position && element.position.coordinates);
+            .filter((element, index) => {
+                return element.position && element.position.coordinates &&
+                       visibleIndices && visibleIndices.indexOf(index) !== -1;
+            });
     }
 );
 

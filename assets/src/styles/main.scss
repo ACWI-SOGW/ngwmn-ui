@@ -23,6 +23,9 @@ $site-max-width: 100%;
     &[data-component='graph'] {
         @import './components/graph';
     }
+    &[data-component='well-log'] {
+        @import './components/well-log';
+    }
 }
 
 body {
@@ -37,6 +40,6 @@ body {
         max-width: $site-max-width;
     }
     &#site-location {
-        @import './pages/site_location';
+        @import './pages/site-location';
     }
 }

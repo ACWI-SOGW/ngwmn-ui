@@ -2,6 +2,7 @@ import { mouse } from 'd3-selection';
 import { createStructuredSelector } from 'reselect';
 import ResizeObserver from 'resize-observer-polyfill';
 
+import { getSelectedConstructionIndex } from 'ngwmn/components/well-log/state';
 import { link } from 'ngwmn/lib/d3-redux';
 import { callIf } from 'ngwmn/lib/utils';
 
@@ -64,8 +65,9 @@ const drawChart = function (elem, store, chartType) {
                 }))))
                 .call(callIf(chartType === 'construction', link(store, drawConstruction, createStructuredSelector({
                     elements: getConstructionElements(chartType),
-                    cursorWaterLevel: getWellWaterLevel(chartType)
-                }))))
+                    cursorWaterLevel: getWellWaterLevel(chartType),
+                    selectedIndex: getSelectedConstructionIndex
+                }), store)))
                 // Draw the actual lines/circles for the current water level data set.
                 .call(callIf(chartType !== 'construction', link(store, drawWaterLevels, createStructuredSelector({
                     lineSegments: getLineSegments,
@@ -116,7 +118,7 @@ const drawChart = function (elem, store, chartType) {
                 .on('mouseout', () => {
                     store.dispatch(setCursor(null));
                 })
-                // Set the cursor on mousemove and mouseover
+                // Set the cursor on mouseenter
                 .call(link(store, (rect, xScale) => {
                     rect.on('mouseover', () => {
                         const selectedTime = xScale.invert(mouse(rect.node())[0]);

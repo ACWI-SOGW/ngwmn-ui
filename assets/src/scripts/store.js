@@ -2,6 +2,7 @@ import { applyMiddleware, combineReducers, compose, createStore } from 'redux';
 import { default as thunk } from 'redux-thunk';
 
 import graphReducers from './components/graph/state';
+import wellLogReducers from './components/well-log/state';
 import serviceReducers from './services/state';
 
 
@@ -9,6 +10,7 @@ const MIDDLEWARES = [thunk];
 
 const REDUCERS = {
     ...graphReducers,
+    ...wellLogReducers,
     ...serviceReducers
 };
 

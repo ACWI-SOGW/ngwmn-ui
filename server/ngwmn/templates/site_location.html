@@ -19,7 +19,15 @@
     <h1>{{ feature.SITE_NAME }}</h1>
     {% if organization %}<h2 class="usa-font-lead">{{ organization }}</h2>{% endif %}
     <div class="usa-grid">
-        {{ components.Graph(feature.AGENCY_CD, feature.SITE_NO, lithology_ids) }}
+        {{ components.LithologyPatterns(lithology_ids) }}
+        <div class="grid-row">
+            <div class="tablet-lg:grid-col-6 desktop:grid-col-8">
+                {{ components.Graph(feature.AGENCY_CD, feature.SITE_NO) }}
+            </div>
+            <div class="tablet-lg:grid-col-6 desktop:grid-col-4">
+                {{ components.WellLog(well_log) }}
+            </div>
+        </div>
         <ul class="usa-accordion">
             <li>
                 <button class="usa-accordion-button" aria-expanded="false" aria-controls="ts-a1">
@@ -183,44 +191,6 @@
                                     <td>{{ _(entry.unit.description) }}</td>
                                 </tr>
                             {% endfor %}
-                        </tbody>
-                    </table>
-                    <table class="usa-table-borderless">
-                        <caption>Casing Details</caption>
-                        <thead>
-                            <th scope="col">Depth from</th>
-                            <th scope="col">Depth to</th>
-                            <th scope="col">Diameter</th>
-                            <th scope="col">Material</th>
-                        </thead>
-                        <tbody>
-                            {% for casing in well_log.construction %}{% if casing.type == 'casing' %}
-                                <tr>
-                                    <td>{{ casing.position.coordinates.start }} {{ casing.position.unit }}</td>
-                                    <td>{{ casing.position.coordinates.end }} {{ casing.position.unit }}</td>
-                                    <td>{% if casing.diameter.value %}{{ casing.diameter.value }} {{ casing.diameter.unit }}{% endif %}</td>
-                                    <td>{{ _(casing.material) }}</td>
-                                </tr>
-                            {% endif %}{% endfor %}
-                        </tbody>
-                    </table>
-                    <table class="usa-table-borderless">
-                        <caption>Screen Details</caption>
-                        <thead>
-                            <th scope="col">Depth from</th>
-                            <th scope="col">Depth to</th>
-                            <th scope="col">Diameter</th>
-                            <th scope="col">Material</th>
-                        </thead>
-                        <tbody>
-                            {% for screen in well_log.construction %}{% if screen.type == 'screen' %}
-                                <tr>
-                                    <td>{{ screen.position.coordinates.start }} {{ screen.position.unit }}</td>
-                                    <td>{{ screen.position.coordinates.end }} {{ screen.position.unit }}</td>
-                                    <td>{% if screen.diameter.value %}{{ screen.diameter.value }} {{ screen.diameter.unit }}{% endif %}</td>
-                                    <td>{{ _(screen.material) }}</td>
-                                </tr>
-                            {% endif %}{% endfor %}
                         </tbody>
                     </table>
                 </div>
