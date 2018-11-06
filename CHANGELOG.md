@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 ### Added
+- Added basic description text
+
+## [0.1.0]
+### Added
 - Added view for a site location
 - Added cooperator logos to site location view
 - Added summary table to location view
@@ -21,8 +25,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added well log tables
 - Added well construction drawing (screens, casings)
 - Fill lithology layers with FGDC Digital Cartographic Standard patterns
-- Added statistics section
-- Added simple location description text
+- Added water level data table
+- Added Statistics Section
+
 ### Changed
 - Removed duplicate service call to retrieve well log data
 - Using headless Firefox to run tests for CI
+- Using node 10.13.0
+
+[Unreleased]: https://github.com/ACWI-SOGW/ngwmn-ui-0.1.0...master
+[0.1.0]: https://github.com/ACWI-SOGW/ngwmn-ui/tree/ngwmn-ui-0.1.0

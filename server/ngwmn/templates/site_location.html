@@ -236,6 +236,9 @@
                     </table>
                 </div>
             </li>
+
+            {{ components.WaterLevelTable(feature.AGENCY_CD, feature.SITE_NO) }}
+
             <li>
                 <button class="usa-accordion-button" aria-expanded="false" aria-controls="ts-a4">
                     Water Level Statistics
@@ -243,9 +246,7 @@
                 <div id="ts-a4" class="usa-accordion-content">
 
                     <table id="overall-stats" class="usa-table-borderless water-stats-table">
-                        <caption>
-                            <h5>Overall Water Level Statistics ({{ stats.overall.alt_datum }})</h5>
-                        </caption>
+                        <caption>Overall Water Level Statistics ({{ stats.overall.alt_datum }})</caption>
                         <thead>
                             <tr class="light">
                                 <th>Highest Water Level</th>
@@ -280,9 +281,7 @@
                     </table>
                     {% if stats.monthly|length > 0 %}
                     <table id="monthly-stats" class="usa-table-borderless water-stats-table">
-                        <caption>
-                            <h5>Monthly Water Level Statistics ({{ stats.overall.alt_datum }})</h5>
-                        </caption>
+                        <caption>Monthly Water Level Statistics ({{ stats.overall.alt_datum }})</caption>
                         <thead>
                             <tr class="light">
                                 <th>Month</th>
