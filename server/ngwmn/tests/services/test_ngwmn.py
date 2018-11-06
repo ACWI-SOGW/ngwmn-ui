@@ -34,13 +34,19 @@ class TestGetStatistics(TestCase):
         self.test_agency_cd = 'TEST'
         self.test_site_no = 'TS-42'
         self.test_site_no_not_ranked = '-'.join([self.test_site_no, 'NOT_RANKED'])
+        self.test_site_no_no_ranked = '-'.join([self.test_site_no, 'NO_RANKED'])
         self.test_site_no_below = '-'.join([self.test_site_no, 'BELOW'])
         self.test_site_no_above = '-'.join([self.test_site_no, 'ABOVE'])
 
         self.overall_not_ranked = copy.copy(MOCK_OVERALL_STATS)
         self.overall_not_ranked['IS_RANKED'] = 'N'
+
+        self.overall_no_ranked = copy.copy(MOCK_OVERALL_STATS)
+        del self.overall_no_ranked['IS_RANKED']
+
         self.overall_ranked_below = copy.copy(MOCK_OVERALL_STATS)
         self.overall_ranked_below['IS_RANKED'] = 'Y'
+
         self.overall_ranked_above = copy.copy(MOCK_OVERALL_STATS)
         self.overall_ranked_above['IS_RANKED'] = 'Y'
         self.overall_ranked_above['MEDIATION'] = 'AboveDatum'
@@ -48,6 +54,16 @@ class TestGetStatistics(TestCase):
         self.test_stats = {self.test_agency_cd: {
             self.test_site_no_not_ranked: {
                 'wl-overall': self.overall_not_ranked,
+                'site-info': {
+                    'is_fetched': True,
+                    'altDatumCd': 'NGW1701A'
+                },
+                'wl-monthly': {
+                    'N/A': 'not called'
+                }
+            },
+            self.test_site_no_no_ranked: {
+                'wl-overall': self.overall_no_ranked,
                 'site-info': {
                     'is_fetched': True,
                     'altDatumCd': 'NGW1701A'
@@ -130,7 +146,7 @@ class TestGetStatistics(TestCase):
         data = self.test_stats[agency_cd][site_no][stat_type]
         return mock_ngwmn.convert_keys_and_booleans(data)
 
-    def test_get_statistics__below(self):
+    def test_get_statistics_below(self):
         mock_ngwmn.get_statistic = self.mock_stat
         stats = mock_ngwmn.get_statistics(self.test_agency_cd, self.test_site_no_below)
         self.assertEqual('Depth to water, feet below land surface', stats['overall']['alt_datum'],
@@ -151,15 +167,35 @@ class TestGetStatistics(TestCase):
         self.assertEqual(jan['SAMPLE_COUNT'], stats['monthly'][0]['sample_count'], 'Expect the sample count value.')
         self.assertEqual(jan['RECORD_YEARS'], stats['monthly'][0]['record_years'], 'Expect the record years value.')
 
-    def test_get_statistics__above(self):
+    def test_get_statistics_above(self):
         mock_ngwmn.get_statistic = self.mock_stat
         stats = mock_ngwmn.get_statistics(self.test_agency_cd, self.test_site_no_above)
         self.assertEqual('Water level in feet relative to NGW1701C', stats['overall']['alt_datum'],
                          'When MEDIATION is AboveDatum then alt_datum is displayed.')
 
-    def test_get_statistics__not_ranked(self):
+    def test_get_statistics_not_ranked(self):
         mock_ngwmn.get_statistic = self.mock_stat
         stats = mock_ngwmn.get_statistics(self.test_agency_cd, self.test_site_no_not_ranked)
+        self.assertEqual('Depth to water, feet below land surface', stats['overall']['alt_datum'],
+                         'When MEDIATION is BelowLand then alt_datum is not displayed.')
+        self.assertEqual(0, len(stats['monthly']),
+                         'With the site is not ranked there should be no monthly data and no mock exception thrown.')
+
+        overall = self.test_stats[self.test_agency_cd][self.test_site_no_below]['wl-overall']
+        self.assertEqual(overall['CALC_DATE'], stats['overall']['calc_date'], 'Expect the calculated date.')
+        self.assertEqual(overall['MIN_VALUE'], stats['overall']['min_value'], 'Expect the minimum value.')
+        self.assertEqual(overall['MEDIAN_VALUE'], stats['overall']['median_value'], 'Expect the median value.')
+        self.assertEqual(overall['MAX_VALUE'], stats['overall']['max_value'], 'Expect the maximum value.')
+        self.assertEqual(overall['MIN_DATE'], stats['overall']['min_date'], 'Expect the minimum date value.')
+        self.assertEqual(overall['MAX_DATE'], stats['overall']['max_date'], 'Expect the maximum date value.')
+        self.assertEqual(overall['SAMPLE_COUNT'], stats['overall']['sample_count'], 'Expect the sample count value.')
+        self.assertEqual(overall['RECORD_YEARS'], stats['overall']['record_years'], 'Expect the record years value.')
+        self.assertEqual(overall['LATEST_VALUE'], stats['overall']['latest_value'], 'Expect the latest value.')
+        self.assertEqual(overall['LATEST_PCTILE'], stats['overall']['latest_pctile'], 'Expect the latest percentile.')
+
+    def test_get_statistics_no_ranked(self):
+        mock_ngwmn.get_statistic = self.mock_stat
+        stats = mock_ngwmn.get_statistics(self.test_agency_cd, self.test_site_no_no_ranked)
         self.assertEqual('Depth to water, feet below land surface', stats['overall']['alt_datum'],
                          'When MEDIATION is BelowLand then alt_datum is not displayed.')
         self.assertEqual(0, len(stats['monthly']),

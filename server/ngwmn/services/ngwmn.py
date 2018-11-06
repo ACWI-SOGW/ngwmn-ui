@@ -306,6 +306,7 @@ def get_features(latitude, longitude, service_root=SERVICE_ROOT):
     params = {'request': 'GetFeature'}
     target = urljoin(service_root, 'ngwmn/geoserver/wfs')
     response = r.post(target, params=params, data=data)
+    app.logger.debug('Got %s response from %s', response.status_code, response.url)
 
     if response.status_code != 200:
         raise ServiceException()
@@ -325,6 +326,8 @@ def get_sites(agency_cd, service_root=SERVICE_ROOT):
     }
     target = urljoin(service_root, 'ngwmn/geoserver/wfs')
     response = r.post(target, params=params, data=data)
+    app.logger.debug('Got %s response from %s', response.status_code, response.url)
+
 
     features = response.json().get('features')
     return list(map(lambda x: convert_keys_and_booleans(x.get('properties', {})), features))
@@ -397,6 +400,7 @@ def get_statistic(agency_cd, site_no, stat_type, service_root=SERVICE_ROOT_CACHE
     """
     url = '/'.join([service_root, 'ngwmn_cache', 'direct', 'json', stat_type, agency_cd, site_no])
     resp = r.get(url)
+    app.logger.debug('Got %s response from %s', resp.status_code, resp.url)
 
     statistics = {
             'is_ranked': False,
@@ -429,6 +433,8 @@ def get_providers(service_root=SERVICE_ROOT):
     """
     target = urljoin(service_root, 'ngwmn/metadata/agencies')
     response = r.get(target)
+    app.logger.debug('Got %s response from %s', response.status_code, response.url)
+
     if response.status_code != 200:
         app.logger.error('Service request error for {0}'.format(target))
         raise ServiceException()
