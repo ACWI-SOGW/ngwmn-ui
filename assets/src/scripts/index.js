@@ -7,13 +7,15 @@ import 'uswds';
 import SVGPattern from 'ngwmn/components/svg-pattern/index';
 import GraphComponent from 'ngwmn/components/graph/index';
 import WaterLevelTableComponent from 'ngwmn/components/water-level-table/index';
+import WellLog from 'ngwmn/components/well-log/index';
 import configureStore from 'ngwmn/store';
 
 
 const COMPONENTS = {
     graph: GraphComponent,
     'svg-pattern': SVGPattern,
-    'water-level-table': WaterLevelTableComponent
+    'water-level-table': WaterLevelTableComponent,
+    'well-log': WellLog
 };
 
 const main = function () {

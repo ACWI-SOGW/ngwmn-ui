@@ -579,6 +579,7 @@ class TestWellLogResults(TestCase):
                     }
                 }],
                 'construction': [{
+                    'id': 'casing-0',
                     'type': 'casing',
                     'position': {
                         'coordinates': {
@@ -593,6 +594,7 @@ class TestWellLogResults(TestCase):
                         'unit': 'in'
                     }
                 }, {
+                    'id': 'screen-0',
                     'type': 'screen',
                     'diameter': {
                         'value': None,
@@ -607,6 +609,7 @@ class TestWellLogResults(TestCase):
                         'unit': 'ft'
                     }
                 }, {
+                    'id': 'screen-1',
                     'type': 'screen',
                     'diameter': {
                         'value': None,

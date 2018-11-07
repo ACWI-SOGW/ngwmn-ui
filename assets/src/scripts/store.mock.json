@@ -1,17 +1,15 @@
 {
-    "components/graph/cursor": {
-        "date": null
-    },
+    "components/graph/cursor": {},
     "components/graph/layout": {
         "axisYBBox": {
-            "height": 479.7520446777344,
+            "height": 373.9346618652344,
             "width": 26.171875,
             "x": -25.671875,
             "y": 0.5
         },
         "graphSize": {
-            "height": 582,
-            "width": 1042
+            "height": 450.03125,
+            "width": 819.765625
         },
         "viewport": [
             -2145852000000,
@@ -21,6 +19,21 @@
     "components/graph/options": {
         "agencycode": "USGS",
         "siteid": "423532088254601"
+    },
+    "components/well-log": {
+        "selectedConstructionId": null,
+        "visibleConstructionIds": [
+            "casing-0",
+            "casing-1",
+            "casing-2",
+            "screen-0",
+            "screen-1",
+            "screen-2",
+            "screen-3",
+            "screen-4",
+            "screen-5",
+            "screen-6"
+        ]
     },
     "services/waterLevels": {
         "USGS:423532088254601": {
@@ -7975,6 +7988,7 @@
                         "unit": "in",
                         "value": 10
                     },
+                    "id": "casing-0",
                     "material": "Steel",
                     "position": {
                         "coordinates": {
@@ -7990,6 +8004,7 @@
                         "unit": "in",
                         "value": 12
                     },
+                    "id": "casing-1",
                     "material": "Steel",
                     "position": {
                         "coordinates": {
@@ -8005,6 +8020,7 @@
                         "unit": "in",
                         "value": 8
                     },
+                    "id": "casing-2",
                     "material": "Steel",
                     "position": {
                         "coordinates": {
@@ -8020,6 +8036,7 @@
                         "unit": "in",
                         "value": 12
                     },
+                    "id": "screen-0",
                     "material": "Screen, Type Not Known",
                     "position": {
                         "coordinates": {
@@ -8035,6 +8052,7 @@
                         "unit": "in",
                         "value": 12
                     },
+                    "id": "screen-1",
                     "material": "Screen, Type Not Known",
                     "position": {
                         "coordinates": {
@@ -8050,6 +8068,7 @@
                         "unit": "in",
                         "value": 10
                     },
+                    "id": "screen-2",
                     "material": "Screen, Type Not Known",
                     "position": {
                         "coordinates": {
@@ -8065,6 +8084,7 @@
                         "unit": "in",
                         "value": 10
                     },
+                    "id": "screen-3",
                     "material": "Screen, Type Not Known",
                     "position": {
                         "coordinates": {
@@ -8080,6 +8100,7 @@
                         "unit": "in",
                         "value": 8
                     },
+                    "id": "screen-4",
                     "material": "Screen, Type Not Known",
                     "position": {
                         "coordinates": {
@@ -8095,6 +8116,7 @@
                         "unit": "in",
                         "value": 8
                     },
+                    "id": "screen-5",
                     "material": "Screen, Type Not Known",
                     "position": {
                         "coordinates": {
@@ -8110,6 +8132,7 @@
                         "unit": "in",
                         "value": 6
                     },
+                    "id": "screen-6",
                     "material": "Screen, Type Not Known",
                     "position": {
                         "coordinates": {

@@ -193,6 +193,7 @@ describe('graph component well log state', () => {
 
     describe('getConstructionElements', () => {
         const elements = [{
+            id: 'screen-0',
             type: 'screen',
             position: {
                 coordinates: {
@@ -205,6 +206,7 @@ describe('graph component well log state', () => {
                 unit: 'in'
             }
         }, {
+            id: 'screen-1',
             type: 'screen',
             position: {
                 coordinates: {
@@ -217,6 +219,7 @@ describe('graph component well log state', () => {
                 unit: 'in'
             }
         }, {
+            id: 'screen-2',
             type: 'screen',
             position: {
                 coordinates: {
@@ -234,8 +237,11 @@ describe('graph component well log state', () => {
             expect(getConstructionElements('main').resultFunc(
                 elements,
                 scaleLinear(),
-                scaleLinear()
+                scaleLinear(),
+                'screen-0'
             )).toEqual([{
+                id: 'screen-0',
+                isSelected: true,
                 type: 'screen',
                 radius: 5,
                 title: 'Screen, 10 in diameter, 100 - 200 undefined depth',
@@ -251,6 +257,8 @@ describe('graph component well log state', () => {
                     y2: 200
                 }
             }, {
+                id: 'screen-1',
+                isSelected: false,
                 type: 'screen',
                 radius: 6,
                 title: 'Screen, 12 in diameter, 10 - 100 undefined depth',
@@ -266,6 +274,8 @@ describe('graph component well log state', () => {
                     y2: 100
                 }
             }, {
+                id: 'screen-2',
+                isSelected: false,
                 type: 'screen',
                 radius: 5,
                 title: 'Screen, 10 in diameter, 10 - 100 undefined depth',

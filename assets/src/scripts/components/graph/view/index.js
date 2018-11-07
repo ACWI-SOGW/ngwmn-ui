@@ -65,7 +65,7 @@ const drawChart = function (elem, store, chartType) {
                 .call(callIf(chartType === 'construction', link(store, drawConstruction, createStructuredSelector({
                     elements: getConstructionElements(chartType),
                     cursorWaterLevel: getWellWaterLevel(chartType)
-                }))))
+                }), store)))
                 // Draw the actual lines/circles for the current water level data set.
                 .call(callIf(chartType !== 'construction', link(store, drawWaterLevels, createStructuredSelector({
                     lineSegments: getLineSegments,
@@ -116,7 +116,7 @@ const drawChart = function (elem, store, chartType) {
                 .on('mouseout', () => {
                     store.dispatch(setCursor(null));
                 })
-                // Set the cursor on mousemove and mouseover
+                // Set the cursor on mouseenter
                 .call(link(store, (rect, xScale) => {
                     rect.on('mouseover', () => {
                         const selectedTime = xScale.invert(mouse(rect.node())[0]);

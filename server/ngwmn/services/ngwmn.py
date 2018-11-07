@@ -240,6 +240,7 @@ def get_well_log(agency_cd, location_id):
             })(entry.find('gsml:shape/gml:LineString', xml.nsmap)),
         } for entry in water_well.findall('gwml:logElement/gsml:MappedInterval', xml.nsmap)],
         'construction': [{
+            'id': f'casing-{index}',
             'type': 'casing',
             'position': (lambda line: {
                 'unit': _default(_find(line, 'gml:uom'), 'ft'),
@@ -250,7 +251,8 @@ def get_well_log(agency_cd, location_id):
                 'value': _cast(float, dimension.text),
                 'unit': _default(dimension.get('uom'), 'in')
             })(elem.find('gwml:nominalPipeDimension/gsml:CGI_NumericValue/gsml:principalValue', xml.nsmap))
-        } for elem in water_well.findall('gwml:construction/gwml:WellCasing/gwml:wellCasingElement/gwml:WellCasingComponent', xml.nsmap)] + [{
+        } for index, elem in enumerate(water_well.findall('gwml:construction/gwml:WellCasing/gwml:wellCasingElement/gwml:WellCasingComponent', xml.nsmap))] + [{
+            'id': f'screen-{index}',
             'type': 'screen',
             'position': (lambda line: {
                 'unit': _default(_find(line, 'gml:uom'), 'ft'),
@@ -261,7 +263,7 @@ def get_well_log(agency_cd, location_id):
                 'value': _cast(float, dimension.text),
                 'unit': _default(dimension.get('uom'), 'in')
             })(elem.find('gwml:nomicalScreenDiameter/gsml:CGI_NumericValue/gsml:principalValue', xml.nsmap))
-        } for elem in water_well.findall('gwml:construction/gwml:Screen/gwml:screenElement/gwml:ScreenComponent', xml.nsmap)]
+        } for index, elem in enumerate(water_well.findall('gwml:construction/gwml:Screen/gwml:screenElement/gwml:ScreenComponent', xml.nsmap))]
     }
 
 
@@ -403,9 +405,9 @@ def get_statistic(agency_cd, site_no, stat_type, service_root=SERVICE_ROOT_CACHE
     app.logger.debug('Got %s response from %s', resp.status_code, resp.url)
 
     statistics = {
-            'is_ranked': False,
-            'is_fetched': False
-        }
+        'is_ranked': False,
+        'is_fetched': False
+    }
     if resp.status_code == 404:
         return statistics
 
@@ -443,20 +445,20 @@ def get_providers(service_root=SERVICE_ROOT):
 
 
 def convert_keys_and_booleans(dictionary):
-        """
-        Local recursive helper method to convert 'all caps' keys to lowercase
-        :param dictionary: the dict for whom's keys need lowercase
-        :return: the new dictionary with lowercase keys
-        """
-        lower_case = {}
-        for key in dictionary:
-            value = dictionary[key]
-            if isinstance(value, dict):
-                value = convert_keys_and_booleans(value)
-            elif value in ['N', 'Y']:
-                value = (value == 'Y')
-            lower_case[key.lower()] = value
-        return lower_case
+    """
+    Local recursive helper method to convert 'all caps' keys to lowercase
+    :param dictionary: the dict for whom's keys need lowercase
+    :return: the new dictionary with lowercase keys
+    """
+    lower_case = {}
+    for key in dictionary:
+        value = dictionary[key]
+        if isinstance(value, dict):
+            value = convert_keys_and_booleans(value)
+        elif value in ['N', 'Y']:
+            value = (value == 'Y')
+        lower_case[key.lower()] = value
+    return lower_case
 
 
 def get_statistics(agency_cd, site_no):
