@@ -267,7 +267,7 @@ MOCK_WELL_LOG_RESPONSE = b"""<?xml version="1.0" encoding="UTF-8"?>
           </gsml:observationMethod>
           <gsml:specification>
             <gwml:HydrostratigraphicUnit gml:id="USGS.430427089284901.3.">
-              <gml:description>Sandstone</gml:description>
+              <gml:description/>
               <gsml:purpose>instance</gsml:purpose>
               <gsml:composition>
                 <gsml:CompositionPart>

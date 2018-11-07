@@ -547,10 +547,10 @@ class TestWellLogResults(TestCase):
                 }, {
                     'method': 'borehole',
                     'unit': {
-                        'description': 'Sandstone',
+                        'description': None,
                         'ui': {
                             'colors': [],
-                            'materials': [608, 609, 611, 612, 613]
+                            'materials': []
                         },
                         'purpose': 'instance',
                         'composition': {
