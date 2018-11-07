@@ -121,6 +121,34 @@ class TestProviderView(TestCase):
         self.assertIn(b'<div>My Content</div>', response.data)
 
 
+@mock.patch('ngwmn.views.get_sites')
+class TestSitesView(TestCase):
+
+    def setUp(self):
+        self.app_client = app.test_client()
+
+    def test_bad_agency_cd(self, m_get_sites):
+        m_get_sites.return_value = []
+        response = self.app_client.get('/provider/CODWR/site/')
+
+        self.assertEqual(response.status_code, 404)
+
+    def test_good_agency_cd(self, m_get_sites):
+        m_get_sites.return_value = [
+            {'agency_cd': 'CODWR', 'agency_nm': 'CO Water Resources', 'site_no': 'AAAA', 'site_name': 'Site A'},
+            {'agency_cd': 'CODWR', 'agency_nm': 'CO Water Resources', 'site_no': 'BBBB', 'site_name': 'Site B'}
+        ]
+        response = self.app_client.get('/provider/CODWR/site/')
+
+        self.assertEqual(m_get_sites.call_args[0][0], 'CODWR')
+        self.assertIn(b'CODWR', response.data)
+        self.assertIn(b'CO Water Resources', response.data)
+        self.assertIn(b'Site A', response.data)
+        self.assertIn(b'Site B', response.data)
+        self.assertIn(b'AAAA', response.data)
+        self.assertIn(b'BBBB', response.data)
+
+
 TEST_SUMMARY_JSON = """{
     "bbox": [
         -89.3928,

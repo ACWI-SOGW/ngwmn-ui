@@ -261,6 +261,13 @@ class TestGetSites(TestCase):
             self.assertIn('1127', siteIds)
             self.assertIn('1128', siteIds)
 
+    def test_success_with_no_sites(self):
+        with requests_mock.mock() as m:
+            m.post('https://fake.gov/ngwmn/geoserver/wfs', text='{"type": "FeatureCollection","totalFeatures": 0, "features": []}')
+            result = get_sites('CODWR', service_root=self.test_service_root)
+
+            self.assertEqual(result, [])
+
     def test_bad_request(self):
         with requests_mock.mock() as m:
             m.post('https://fake.gov/ngwmn/geoserver/wfs', status_code=500)
