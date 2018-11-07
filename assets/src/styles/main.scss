@@ -25,6 +25,7 @@ $site-max-width: 100%;
     }
     &[data-component='well-log'] {
         @import './components/well-log';
+    }
     &[data-component='water-level-table']{
         @import './components/water-level-table';
     }
