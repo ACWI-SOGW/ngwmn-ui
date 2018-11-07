@@ -317,6 +317,12 @@ def get_features(latitude, longitude, service_root=SERVICE_ROOT):
 
 
 def get_sites(agency_cd, service_root=SERVICE_ROOT):
+    """
+    Return the list of sites with there metadata for agency_cd
+    :param str agency_cd:
+    :param str service_root:
+    :return: list of dictionaries of sites
+    """
     params = {'request': 'GetFeature'}
     data = {
         'SERVICE': 'WFS',
@@ -330,6 +336,8 @@ def get_sites(agency_cd, service_root=SERVICE_ROOT):
     response = r.post(target, params=params, data=data)
     app.logger.debug('Got %s response from %s', response.status_code, response.url)
 
+    if response.status_code != 200:
+        raise ServiceException()
 
     features = response.json().get('features')
     return list(map(lambda x: convert_keys_and_booleans(x.get('properties', {})), features))

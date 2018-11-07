@@ -4,6 +4,7 @@ Unit tests for data fetch utility functions
 
 import copy
 from unittest import TestCase, mock
+import urllib.parse
 
 import requests as r
 import requests_mock
@@ -11,9 +12,10 @@ import ngwmn.services.ngwmn as mock_ngwmn
 
 from ngwmn.services import ServiceException
 from ngwmn.services.ngwmn import (
-    generate_bounding_box_values, get_iddata, get_water_quality, get_well_log, get_statistic, get_providers)
+    generate_bounding_box_values, get_iddata, get_water_quality, get_well_log, get_statistic, get_providers, get_sites)
 from .mock_data import (
-    MOCK_WELL_LOG_RESPONSE, MOCK_WQ_RESPONSE, MOCK_OVERALL_STATS, MOCK_MONTHLY_STATS, MOCK_PROVIDERS_RESPONSE)
+    MOCK_WELL_LOG_RESPONSE, MOCK_WQ_RESPONSE, MOCK_OVERALL_STATS, MOCK_MONTHLY_STATS, MOCK_PROVIDERS_RESPONSE,
+    MOCK_SITES_RESPONSE)
 
 
 class TestGetStatistics(TestCase):
@@ -242,6 +244,28 @@ class TestGetProviders(TestCase):
             m.get('https://fake.gov/ngwmn/metadata/agencies', status_code=500)
             with self.assertRaises(ServiceException):
                 get_providers(service_root=self.test_service_root)
+
+class TestGetSites(TestCase):
+
+    def setUp(self):
+        self.test_service_root = 'https://fake.gov'
+
+    def test_success_good_data(self):
+        with requests_mock.mock() as m:
+            m.post('https://fake.gov/ngwmn/geoserver/wfs', text=MOCK_SITES_RESPONSE)
+            result = get_sites('CODWR', service_root=self.test_service_root)
+
+            self.assertIn("CQL_FILTER=(AGENCY_CD='CODWR')", urllib.parse.unquote(m.request_history[0].text))
+            self.assertEqual(len(result), 2)
+            siteIds = list(map(lambda x: x.get('site_no'), result))
+            self.assertIn('1127', siteIds)
+            self.assertIn('1128', siteIds)
+
+    def test_bad_request(self):
+        with requests_mock.mock() as m:
+            m.post('https://fake.gov/ngwmn/geoserver/wfs', status_code=500)
+            with self.assertRaises(ServiceException):
+                get_sites('CODWR', service_root=self.test_service_root)
 
 
 class TestGetWellData(TestCase):
