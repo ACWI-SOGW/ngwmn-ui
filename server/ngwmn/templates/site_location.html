@@ -26,6 +26,17 @@
                     Summary
                 </button>
                 <div id="ts-a1" class="usa-accordion-content">
+                    <div>
+                        <h4>Description</h4>
+                        <p>
+                            This site is a {{ feature.SITE_TYPE }}. It is named "{{ feature.SITE_NAME }}"
+                            and has the identifier {{ feature.AGENCY_CD }}-{{ feature.SITE_NO }}.<br/>
+                            This site information was provided by {{ feature.AGENCY_NM }}.
+                            This site is associated with <br/>
+                            the {{ feature.NAT_AQFR_DESC }} National Principal Aquifer and
+                            is located in {{ feature.COUNTY_NM }}, {{ feature.STATE_NM }}.
+                        </p>
+                    </div>
                     <table class="usa-table-borderless">
                         <tbody>
                             <tr>

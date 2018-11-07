@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- Added basic description text
 
 ## [0.1.0]
 ### Added
@@ -24,6 +26,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added well construction drawing (screens, casings)
 - Fill lithology layers with FGDC Digital Cartographic Standard patterns
 - Added water level data table
+- Added Statistics Section
 
 ### Changed
 - Removed duplicate service call to retrieve well log data
