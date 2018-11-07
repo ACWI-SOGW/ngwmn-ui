@@ -1,0 +1,49 @@
+& {
+    padding: 1rem;
+    text-align: center;
+    max-height: 55rem;
+    overflow: scroll;
+}
+
+h3 {
+    margin: 1rem 0;
+}
+
+label,
+input {
+    display: inline-block;
+    margin: 1rem 0;
+}
+
+label {
+    padding-right: 2rem;
+}
+
+table {
+    width: 100%;
+    margin: 0;
+    text-align: left;
+}
+
+#all:checked ~ table .screen,
+#all:checked ~ table .casing,
+#screens:checked ~ table .screen,
+#casings:checked ~ table .casing {
+    display: table-row;
+}
+
+.screen,
+.casing {
+    display: none;
+}
+
+tr {
+    &.screen {
+    }
+    &.selected {
+        td {
+            background-color: lightgray;
+            transition: background-color .25s;
+        }
+    }
+}

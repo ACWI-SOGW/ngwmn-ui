@@ -28,7 +28,7 @@ describe('graph component construction', () => {
 
         it('draws screen and casing representations', () => {
             const state = store.getState();
-            drawConstruction(svg, selector(state));
+            drawConstruction(svg, selector(state), store);
             expect(svg.select('.screen').size()).not.toBe(0);
             expect(svg.select('.casing').size()).not.toBe(0);
         });

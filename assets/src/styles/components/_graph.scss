@@ -146,7 +146,9 @@ $provisional-color: color(accent-warm, dark);
                         rect {
                             fill: white;
                             fill-opacity: 0.25;
-                            &:hover {
+                        }
+                        &.selected {
+                            rect {
                                 fill: yellow;
                             }
                         }
@@ -158,7 +160,13 @@ $provisional-color: color(accent-warm, dark);
                         }
                         rect {
                             fill-opacity: 1;
-                            &:hover {
+                            .selected {
+                                fill: yellow;
+                                fill-opacity: 0.75;
+                            }
+                        }
+                        &.selected {
+                            rect {
                                 fill: yellow;
                                 fill-opacity: 0.75;
                             }

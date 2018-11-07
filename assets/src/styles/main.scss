@@ -23,6 +23,9 @@ $site-max-width: 100%;
     &[data-component='graph'] {
         @import './components/graph';
     }
+    &[data-component='well-log'] {
+        @import './components/well-log';
+    }
     &[data-component='water-level-table']{
         @import './components/water-level-table';
     }
@@ -40,6 +43,6 @@ body {
         max-width: $site-max-width;
     }
     &#site-location {
-        @import './pages/site_location';
+        @import './pages/site-location';
     }
 }
