@@ -3,7 +3,7 @@ from unittest import TestCase, mock
 
 import feedparser
 
-from ..confluence_utils import pull_feed, confluence_url
+from server.ngwmn.services.confluence import pull_feed, confluence_url
 
 class TestPullFeed(TestCase):
 

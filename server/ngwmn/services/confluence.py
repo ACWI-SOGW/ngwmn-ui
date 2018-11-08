@@ -2,7 +2,7 @@
 from bs4 import BeautifulSoup
 import feedparser
 
-from . import app
+from server.ngwmn import app
 
 def pull_feed(feed_url):
     """

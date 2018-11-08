@@ -5,30 +5,13 @@
 
 {% block content %}
     {{ provider_content | safe }}
-    <div class="usa-accordion">
-        <h3 class="usa-accordion-heading">
-            <button class="usa-accordion-button" aria-expanded="false" aria-controls="site-selection-container">
-                Site Selection and Classification
-            </button>
-        </h3>
-        <div id="site-selection-container" class="usa-accordion-content">{{ site_selection | safe }}</div>
-        <h3 class="usa-accordion-heading">
-            <button class="usa-accordion-button" aria-expanded="false" aria-controls="data-collection-container">
-                Data Collection Techniques
-            </button>
-        </h3>
-        <div id="data-collection-container" class="usa-accordion-content">{{ data_collection | safe }}</div>
-        <h3 class="usa-accordion-heading">
-            <button class="usa-accordion-button" aria-expanded="false" aria-controls="data-management-container">
-                Data Management
-            </button>
-        </h3>
-        <div id="data-management-container" class="usa-accordion-content">{{ data_management | safe }}</div>
-        <h3 class="usa-accordion-heading">
-            <button class="usa-accordion-button" aria-expanded="false" aria-controls="other-agency-info-container">
-                Other Agency Information
-            </button>
-        </h3>
-        <div id="other-agency-info-container" class="usa-accordion-content">{{ other_agency_info | safe }}</div>
+        <h3>Site Selection and Classification</h3>
+        {{ site_selection | safe }}
+        <h3>Data Collection Techniques</h3>
+        {{ data_collection | safe }}
+        <h3>Data Management</h3>
+        {{ data_management | safe }}
+        <h3>Other Agency Information</h3>
+        {{ other_agency_info | safe }}
     </div>
 {% endblock %}
