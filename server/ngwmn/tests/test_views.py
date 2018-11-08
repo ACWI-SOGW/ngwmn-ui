@@ -47,10 +47,10 @@ class TestWellPageView(TestCase):
         mocker.get(self.wq_url, content=MOCK_WQ_RESPONSE, status_code=200)
         mocker.get(self.sifta_url, text=MOCK_SIFTA_RESPONSE, status_code=200)
         mocker.get(self.site_info_url, text=self.mock_site_info_json, status_code=200)
-        mocker.get(self.stats_overall_url, text=self.stats_overall_url, status_code=200)
-        mocker.get(self.stats_monthly_url, text=self.stats_monthly_url, status_code=200)
+        mocker.get(self.stats_overall_url, text=self.mock_overall_json, status_code=200)
+        mocker.get(self.stats_monthly_url, text=self.mock_monthly_json, status_code=200)
 
-        response = self.app_client.get()
+        response = self.app_client.get(self.site_loc_url)
         self.assertEqual(response.status_code, 200)
 
     @requests_mock.Mocker()
@@ -60,8 +60,8 @@ class TestWellPageView(TestCase):
         mocker.get(self.wq_url, content=MOCK_WQ_RESPONSE, status_code=200)
         mocker.get(self.sifta_url, text=MOCK_SIFTA_RESPONSE, status_code=200)
         mocker.get(self.site_info_url, text=self.mock_site_info_json, status_code=200)
-        mocker.get(self.stats_overall_url, text=self.stats_overall_url, status_code=200)
-        mocker.get(self.stats_monthly_url, text=self.stats_monthly_url, status_code=200)
+        mocker.get(self.stats_overall_url, text=self.mock_overall_json, status_code=200)
+        mocker.get(self.stats_monthly_url, text=self.mock_monthly_json, status_code=200)
 
         response = self.app_client.get(self.site_loc_url)
         self.assertEqual(response.status_code, 503)
@@ -73,8 +73,8 @@ class TestWellPageView(TestCase):
         mocker.get(self.wq_url, content=MOCK_WQ_RESPONSE, status_code=200)
         mocker.get(self.sifta_url, text=MOCK_SIFTA_RESPONSE, status_code=200)
         mocker.get(self.site_info_url, text=self.mock_site_info_json, status_code=200)
-        mocker.get(self.stats_overall_url, text=self.stats_overall_url, status_code=200)
-        mocker.get(self.stats_monthly_url, text=self.stats_monthly_url, status_code=200)
+        mocker.get(self.stats_overall_url, text=self.mock_monthly_json, status_code=200)
+        mocker.get(self.stats_monthly_url, text=self.mock_monthly_json, status_code=200)
 
         response = self.app_client.get(self.site_loc_url)
         self.assertEqual(response.status_code, 503)
