@@ -2,7 +2,7 @@
 from bs4 import BeautifulSoup
 import feedparser
 
-from . import app
+from ngwmn import app
 
 def pull_feed(feed_url):
     """
@@ -33,6 +33,8 @@ def pull_feed(feed_url):
             link['href'] = link['href'].replace(base, '')
         post = str(soup)
 
+    elif feed.get('bozo_exception'):
+        app.logger.error('Error retrieving feed for {0} with error '.format(feed_url, str(feed.get('bozo_exception'))))
     return post
 
 
