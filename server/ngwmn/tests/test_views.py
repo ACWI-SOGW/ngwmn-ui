@@ -30,7 +30,7 @@ class TestWellPageView(TestCase):
         self.well_log_url = urljoin(SERVICE_ROOT, _iddata_url.format('well_log', _agency_cd, _location_id))
         self.wq_url = urljoin(SERVICE_ROOT, _iddata_url.format('water_quality', _agency_cd, _location_id))
         self.sifta_url = COOP_SERVICE_PATTERN.format(site_no=_location_id)
-        self.site_loc_url = '/site-location/{}/{}/'.format(_agency_cd, _location_id)
+        self.site_loc_url = '/provider/{0}/site/{1}/'.format(_agency_cd, _location_id)
 
         _stats_url = '/'.join(['ngwmn_cache', 'direct', 'json'])
         self.site_info_url = '/'.join([SERVICE_ROOT_CACHE, _stats_url, 'site-info', _agency_cd, _location_id])
