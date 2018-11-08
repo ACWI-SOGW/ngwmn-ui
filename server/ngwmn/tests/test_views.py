@@ -131,7 +131,7 @@ class TestSitesView(TestCase):
         m_get_sites.return_value = []
         response = self.app_client.get('/provider/CODWR/site/')
 
-        self.assertEqual(response.status_code, 404)
+        self.assertEqual(404, response.status_code)
 
     def test_good_agency_cd(self, m_get_sites):
         m_get_sites.return_value = [

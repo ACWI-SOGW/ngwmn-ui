@@ -3,14 +3,14 @@ from unittest import TestCase, mock
 
 import feedparser
 
-from server.ngwmn.services.confluence import pull_feed, confluence_url
+from ngwmn.services.confluence import pull_feed, confluence_url
 
 class TestPullFeed(TestCase):
 
     def test_bad_url(self):
         self.assertEqual(pull_feed('http:fakeserver.com'), '')
 
-    @mock.patch('ngwmn.confluence_utils.feedparser.parse')
+    @mock.patch('ngwmn.services.confluence.feedparser.parse')
     def test_good_feed(self, m_parse):
         m_parse.return_value = MOCK_FEED
         result = pull_feed('http:fakeserver.com')

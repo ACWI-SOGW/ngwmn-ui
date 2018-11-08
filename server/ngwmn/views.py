@@ -10,7 +10,7 @@ from flask import abort, jsonify, render_template
 from . import __version__, app
 from .services.ngwmn import get_features, get_water_quality, get_well_log, get_statistics, get_providers, get_sites
 from .services.sifta import get_cooperators
-from server.ngwmn.services.confluence import (
+from .services.confluence import (
     pull_feed, confluence_url, MAIN_CONTENT, SITE_SELECTION_CONTENT, DATA_COLLECTION_CONTENT, DATA_MANAGEMENT_CONTENT,
     OTHER_AGENCY_INFO_CONTENT)
 
