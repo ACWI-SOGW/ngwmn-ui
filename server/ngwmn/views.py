@@ -8,8 +8,11 @@ from functools import reduce
 from flask import abort, jsonify, render_template
 
 from . import __version__, app
-from .services.ngwmn import get_features, get_water_quality, get_well_log, get_statistics
+from .services.ngwmn import get_features, get_water_quality, get_well_log, get_statistics, get_providers, get_sites
 from .services.sifta import get_cooperators
+from .services.confluence import (
+    pull_feed, confluence_url, MAIN_CONTENT, SITE_SELECTION_CONTENT, DATA_COLLECTION_CONTENT, DATA_MANAGEMENT_CONTENT,
+    OTHER_AGENCY_INFO_CONTENT)
 
 
 @app.route('/')
@@ -42,8 +45,53 @@ def version():
         'version': __version__
     })
 
+@app.route('/provider/', methods=['GET'])
+def providers():
+    """
+    NGWMN available providers view
 
-@app.route('/site-location/<agency_cd>/<location_id>/', methods=['GET'])
+    """
+    return render_template('providers.html', providers=get_providers())
+
+
+@app.route('/provider/<agency_cd>/', methods=['GET'])
+def provider(agency_cd):
+    """
+    NGWMN provider information view
+    """
+    providers = get_providers()
+    providers_by_agency_cd = dict(map(lambda x: (x['agency_cd'], x), providers))
+    if agency_cd not in providers_by_agency_cd:
+        return '{0} is not a valid agency code'.format(agency_cd), 404
+
+    url = '{0}createrssfeed.action?types=page&spaces=GWDataPortal&title=X&labelString=ngwmn_provider_{1}_{2}&amp;excludedSpaceKeys%3D&sort=modified&maxResults=10&timeSpan=3600&showContent=true&confirm=Create+RSS+Feed'.format(
+        app.config['CONFLUENCE_URL'],
+        agency_cd,
+        'main'
+    )
+    return render_template('provider.html',
+                           agency_metadata=providers_by_agency_cd.get(agency_cd),
+                           provider_content=pull_feed(confluence_url(agency_cd, MAIN_CONTENT)),
+                           site_selection=pull_feed(confluence_url(agency_cd, SITE_SELECTION_CONTENT)),
+                           data_collection=pull_feed(confluence_url(agency_cd, DATA_COLLECTION_CONTENT)),
+                           data_management=pull_feed(confluence_url(agency_cd, DATA_MANAGEMENT_CONTENT)),
+                           other_agency_info=pull_feed(confluence_url(agency_cd, OTHER_AGENCY_INFO_CONTENT))
+                           )
+
+@app.route('/provider/<agency_cd>/site/', methods=['GET'])
+def sites(agency_cd):
+    """
+    A list of NGWMN sites for an agency_cd
+    :param str agency_cd:
+    """
+    sites = get_sites(agency_cd)
+    if not sites:
+        return '{0} is not a valid agency code'.format(agency_cd), 404
+    return render_template('sites.html',
+                           sites=sites)
+
+
+@app.route('/provider/<agency_cd>/site/<location_id>/', methods=['GET'])
 def site_page(agency_cd, location_id):
     """
     Site location view.

@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>National Ground Water Monitoring Network Providers</h1>
+    <ul class="usa-list">
+        {% for provider in providers %}
+            <li><a href="{{ url_for('provider', agency_cd=provider.agency_cd) }}">{{ provider.agency_nm }}</a></li>
+        {% endfor %}
+    </ul>
+{% endblock %}

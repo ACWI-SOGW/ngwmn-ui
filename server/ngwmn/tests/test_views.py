@@ -5,7 +5,7 @@ Unit tests for NGWMN views
 # pylint: disable=C0103
 
 import json
-from unittest import TestCase
+from unittest import TestCase, mock
 from urllib.parse import urljoin
 
 import requests_mock
@@ -30,7 +30,7 @@ class TestWellPageView(TestCase):
         self.well_log_url = urljoin(SERVICE_ROOT, _iddata_url.format('well_log', _agency_cd, _location_id))
         self.wq_url = urljoin(SERVICE_ROOT, _iddata_url.format('water_quality', _agency_cd, _location_id))
         self.sifta_url = COOP_SERVICE_PATTERN.format(site_no=_location_id)
-        self.site_loc_url = '/site-location/{}/{}/'.format(_agency_cd, _location_id)
+        self.site_loc_url = '/provider/{0}/site/{1}/'.format(_agency_cd, _location_id)
 
         _stats_url = '/'.join(['ngwmn_cache', 'direct', 'json'])
         self.site_info_url = '/'.join([SERVICE_ROOT_CACHE, _stats_url, 'site-info', _agency_cd, _location_id])
@@ -47,10 +47,10 @@ class TestWellPageView(TestCase):
         mocker.get(self.wq_url, content=MOCK_WQ_RESPONSE, status_code=200)
         mocker.get(self.sifta_url, text=MOCK_SIFTA_RESPONSE, status_code=200)
         mocker.get(self.site_info_url, text=self.mock_site_info_json, status_code=200)
-        mocker.get(self.stats_overall_url, text=self.stats_overall_url, status_code=200)
-        mocker.get(self.stats_monthly_url, text=self.stats_monthly_url, status_code=200)
+        mocker.get(self.stats_overall_url, text=self.mock_overall_json, status_code=200)
+        mocker.get(self.stats_monthly_url, text=self.mock_monthly_json, status_code=200)
 
-        response = self.app_client.get()
+        response = self.app_client.get(self.site_loc_url)
         self.assertEqual(response.status_code, 200)
 
     @requests_mock.Mocker()
@@ -60,8 +60,8 @@ class TestWellPageView(TestCase):
         mocker.get(self.wq_url, content=MOCK_WQ_RESPONSE, status_code=200)
         mocker.get(self.sifta_url, text=MOCK_SIFTA_RESPONSE, status_code=200)
         mocker.get(self.site_info_url, text=self.mock_site_info_json, status_code=200)
-        mocker.get(self.stats_overall_url, text=self.stats_overall_url, status_code=200)
-        mocker.get(self.stats_monthly_url, text=self.stats_monthly_url, status_code=200)
+        mocker.get(self.stats_overall_url, text=self.mock_overall_json, status_code=200)
+        mocker.get(self.stats_monthly_url, text=self.mock_monthly_json, status_code=200)
 
         response = self.app_client.get(self.site_loc_url)
         self.assertEqual(response.status_code, 503)
@@ -73,8 +73,8 @@ class TestWellPageView(TestCase):
         mocker.get(self.wq_url, content=MOCK_WQ_RESPONSE, status_code=200)
         mocker.get(self.sifta_url, text=MOCK_SIFTA_RESPONSE, status_code=200)
         mocker.get(self.site_info_url, text=self.mock_site_info_json, status_code=200)
-        mocker.get(self.stats_overall_url, text=self.stats_overall_url, status_code=200)
-        mocker.get(self.stats_monthly_url, text=self.stats_monthly_url, status_code=200)
+        mocker.get(self.stats_overall_url, text=self.mock_monthly_json, status_code=200)
+        mocker.get(self.stats_monthly_url, text=self.mock_monthly_json, status_code=200)
 
         response = self.app_client.get(self.site_loc_url)
         self.assertEqual(response.status_code, 503)
@@ -84,6 +84,69 @@ class TestWellPageView(TestCase):
         mocker.get(requests_mock.ANY, status_code=404)
         response = self.app_client.get(self.site_loc_url)
         self.assertEqual(response.status_code, 404)
+
+@mock.patch('ngwmn.views.get_providers')
+class TestProvidersView(TestCase):
+
+    def setUp(self):
+        self.app_client = app.test_client()
+
+    def test_view(self, m):
+        m.return_value = [{'agency_cd': 'A', 'agency_nm': 'Agency A'}, {'agency_cd': 'B', 'agency_nm': 'Agency B'}]
+        response = self.app_client.get('/provider/')
+        self.assertIn(b'Agency A', response.data)
+        self.assertIn(b'Agency B', response.data)
+
+
+@mock.patch('ngwmn.views.get_providers')
+@mock.patch('ngwmn.views.pull_feed')
+class TestProviderView(TestCase):
+
+    def setUp(self):
+        self.app_client = app.test_client()
+
+    def test_bad_agency_cd(self, m_pull_feed, m_get_providers):
+        m_pull_feed.return_value = '<div>My Content</div>'
+        m_get_providers.return_value = [{'agency_cd': 'A', 'agency_nm': 'Agency A'}, {'agency_cd': 'B', 'agency_nm': 'Agency B'}]
+        response = self.app_client.get('/provider/C/')
+
+        self.assertEqual(response.status_code, 404)
+
+    def test_good_agency_cd(self, m_pull_feed, m_get_providers):
+        m_pull_feed.return_value = '<div>My Content</div>'
+        m_get_providers.return_value = [{'agency_cd': 'A', 'agency_nm': 'Agency A'},
+                                        {'agency_cd': 'B', 'agency_nm': 'Agency B'}]
+        response = self.app_client.get('/provider/A/')
+        self.assertIn(b'Agency A', response.data)
+        self.assertIn(b'<div>My Content</div>', response.data)
+
+
+@mock.patch('ngwmn.views.get_sites')
+class TestSitesView(TestCase):
+
+    def setUp(self):
+        self.app_client = app.test_client()
+
+    def test_bad_agency_cd(self, m_get_sites):
+        m_get_sites.return_value = []
+        response = self.app_client.get('/provider/CODWR/site/')
+
+        self.assertEqual(404, response.status_code)
+
+    def test_good_agency_cd(self, m_get_sites):
+        m_get_sites.return_value = [
+            {'agency_cd': 'CODWR', 'agency_nm': 'CO Water Resources', 'site_no': 'AAAA', 'site_name': 'Site A'},
+            {'agency_cd': 'CODWR', 'agency_nm': 'CO Water Resources', 'site_no': 'BBBB', 'site_name': 'Site B'}
+        ]
+        response = self.app_client.get('/provider/CODWR/site/')
+
+        self.assertEqual(m_get_sites.call_args[0][0], 'CODWR')
+        self.assertIn(b'CODWR', response.data)
+        self.assertIn(b'CO Water Resources', response.data)
+        self.assertIn(b'Site A', response.data)
+        self.assertIn(b'Site B', response.data)
+        self.assertIn(b'AAAA', response.data)
+        self.assertIn(b'BBBB', response.data)
 
 
 TEST_SUMMARY_JSON = """{

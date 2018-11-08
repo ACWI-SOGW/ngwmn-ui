@@ -267,7 +267,7 @@ MOCK_WELL_LOG_RESPONSE = b"""<?xml version="1.0" encoding="UTF-8"?>
           </gsml:observationMethod>
           <gsml:specification>
             <gwml:HydrostratigraphicUnit gml:id="USGS.430427089284901.3.">
-              <gml:description>Sandstone</gml:description>
+              <gml:description/>
               <gsml:purpose>instance</gsml:purpose>
               <gsml:composition>
                 <gsml:CompositionPart>
@@ -518,3 +518,192 @@ MOCK_MONTHLY_STATS = {
         "P50": "25.915416"
     },
 }
+
+MOCK_PROVIDERS_RESPONSE = '[{"AGENCY_CD":"AKDNR","AGENCY_NM":"Alaska Department of Natural Resources","AGENCY_LINK":"http://dnr.alaska.gov/","COUNT":15},{"AGENCY_CD":"ADWR","AGENCY_NM":"Arizona Department of Water Resources","AGENCY_LINK":"http://www.azwater.gov/azdwr/","COUNT":5}]'
+
+MOCK_SITES_RESPONSE = '''
+{
+   "type": "FeatureCollection",
+   "totalFeatures": 2,
+   "features": [
+      {
+         "type": "Feature",
+         "id": "VW_GWDP_GEOSERVER.fid-356a3035_166ef30d32a_41bc",
+         "geometry": {
+            "type": "Point",
+            "coordinates": [
+               -102.182846,
+               37.665543
+            ]
+         },
+         "geometry_name": "GEOM",
+         "properties": {
+            "MY_SITEID": "CODWR:1127",
+            "FID": "CODWR.1127",
+            "AGENCY_CD": "CODWR",
+            "AGENCY_NM": "Colorado Division of Water Resources",
+            "AGENCY_MED": "Colorado Division of Water Resources",
+            "SITE_NO": "1127",
+            "SITE_NAME": "SHP-03",
+            "DISPLAY_FLAG": "1",
+            "DEC_LAT_VA": 37.665543,
+            "DEC_LONG_VA": -102.182846,
+            "HORZ_DATUM": "NAD83",
+            "HORZ_METHOD": "GPS",
+            "HORZ_ACY": "10 m",
+            "ALT_VA": 3827.08,
+            "ALT_UNITS": 1,
+            "ALT_UNITS_NM": "Feet",
+            "ALT_DATUM_CD": "NAVD88",
+            "ALT_METHOD": "USGS NED 10-meter DEM",
+            "ALT_ACY": "1 m",
+            "WELL_DEPTH": 208,
+            "WELL_DEPTH_UNITS": 1,
+            "WELL_DEPTH_UNITS_NM": "Feet",
+            "NAT_AQUIFER_CD": "N100HGHPLN",
+            "NAT_AQFR_DESC": "High Plains aquifer",
+            "COUNTRY_CD": "US",
+            "COUNTRY_NM": "United States of America",
+            "STATE_CD": "08",
+            "STATE_NM": "Colorado",
+            "COUNTY_CD": "099",
+            "COUNTY_NM": "Prowers County",
+            "LOCAL_AQUIFER_CD": "TO",
+            "LOCAL_AQUIFER_NAME": "Ogallala aquifer",
+            "SITE_TYPE": "WELL",
+            "AQFR_CHAR": "UNCONFINED",
+            "QW_SYS_NAME": null,
+            "QW_SN_FLAG": "0",
+            "QW_SN_DESC": "No",
+            "QW_BASELINE_FLAG": null,
+            "QW_BASELINE_DESC": null,
+            "QW_WELL_CHARS": null,
+            "QW_WELL_CHARS_DESC": null,
+            "QW_WELL_TYPE": null,
+            "QW_WELL_TYPE_DESC": null,
+            "QW_WELL_PURPOSE": null,
+            "QW_WELL_PURPOSE_DESC": null,
+            "QW_WELL_PURPOSE_NOTES": null,
+            "WL_SYS_NAME": "CO DWR HydroBase",
+            "WL_SN_FLAG": "1",
+            "WL_SN_DESC": "Yes",
+            "WL_BASELINE_FLAG": "1",
+            "WL_BASELINE_DESC": "Yes",
+            "WL_WELL_CHARS": "3",
+            "WL_WELL_CHARS_DESC": "Known Changes",
+            "WL_WELL_TYPE": "1",
+            "WL_WELL_TYPE_DESC": "Surveillance",
+            "WL_WELL_PURPOSE": "2",
+            "WL_WELL_PURPOSE_DESC": "Other",
+            "WL_WELL_PURPOSE_NOTES": "Currently in use",
+            "INSERT_DATE": "2018-07-02Z",
+            "UPDATE_DATE": null,
+            "DATA_PROVIDER": null,
+            "WL_DATA_PROVIDER": null,
+            "QW_DATA_PROVIDER": null,
+            "LITH_DATA_PROVIDER": "CODWR",
+            "CONST_DATA_PROVIDER": "CODWR",
+            "WL_DATA_FLAG": 1,
+            "QW_DATA_FLAG": 0,
+            "LOG_DATA_FLAG": 1,
+            "LINK": "https://dnrweb.state.co.us/cdss/GroundWater/WaterLevels/Details/1127",
+            "bbox": [
+               -102.182846,
+               37.665543,
+               -102.182846,
+               37.665543
+            ]
+         }
+      },
+      {
+         "type": "Feature",
+         "id": "VW_GWDP_GEOSERVER.fid-356a3035_166ef30d32a_41bd",
+         "geometry": {
+            "type": "Point",
+            "coordinates": [
+               -102.25595,
+               37.638363
+            ]
+         },
+         "geometry_name": "GEOM",
+         "properties": {
+            "MY_SITEID": "CODWR:1128",
+            "FID": "CODWR.1128",
+            "AGENCY_CD": "CODWR",
+            "AGENCY_NM": "Colorado Division of Water Resources",
+            "AGENCY_MED": "Colorado Division of Water Resources",
+            "SITE_NO": "1128",
+            "SITE_NAME": "SHP-04",
+            "DISPLAY_FLAG": "1",
+            "DEC_LAT_VA": 37.638363,
+            "DEC_LONG_VA": -102.25595,
+            "HORZ_DATUM": "NAD83",
+            "HORZ_METHOD": "GPS",
+            "HORZ_ACY": "10 m",
+            "ALT_VA": 3919.65,
+            "ALT_UNITS": 1,
+            "ALT_UNITS_NM": "Feet",
+            "ALT_DATUM_CD": "NAVD88",
+            "ALT_METHOD": "USGS NED 10-meter DEM",
+            "ALT_ACY": "1 m",
+            "WELL_DEPTH": 610,
+            "WELL_DEPTH_UNITS": 1,
+            "WELL_DEPTH_UNITS_NM": "Feet",
+            "NAT_AQUIFER_CD": "N100HGHPLN",
+            "NAT_AQFR_DESC": "High Plains aquifer",
+            "COUNTRY_CD": "US",
+            "COUNTRY_NM": "United States of America",
+            "STATE_CD": "08",
+            "STATE_NM": "Colorado",
+            "COUNTY_CD": "009",
+            "COUNTY_NM": "Baca County",
+            "LOCAL_AQUIFER_CD": "TO",
+            "LOCAL_AQUIFER_NAME": "Ogallala aquifer",
+            "SITE_TYPE": "WELL",
+            "AQFR_CHAR": "UNCONFINED",
+            "QW_SYS_NAME": null,
+            "QW_SN_FLAG": "0",
+            "QW_SN_DESC": "No",
+            "QW_BASELINE_FLAG": null,
+            "QW_BASELINE_DESC": null,
+            "QW_WELL_CHARS": null,
+            "QW_WELL_CHARS_DESC": null,
+            "QW_WELL_TYPE": null,
+            "QW_WELL_TYPE_DESC": null,
+            "QW_WELL_PURPOSE": null,
+            "QW_WELL_PURPOSE_DESC": null,
+            "QW_WELL_PURPOSE_NOTES": null,
+            "WL_SYS_NAME": "CO DWR HydroBase",
+            "WL_SN_FLAG": "1",
+            "WL_SN_DESC": "Yes",
+            "WL_BASELINE_FLAG": "0",
+            "WL_BASELINE_DESC": "No",
+            "WL_WELL_CHARS": "3",
+            "WL_WELL_CHARS_DESC": "Known Changes",
+            "WL_WELL_TYPE": "1",
+            "WL_WELL_TYPE_DESC": "Surveillance",
+            "WL_WELL_PURPOSE": "2",
+            "WL_WELL_PURPOSE_DESC": "Other",
+            "WL_WELL_PURPOSE_NOTES": "Currently in use",
+            "INSERT_DATE": "2018-07-02Z",
+            "UPDATE_DATE": "2018-08-29Z",
+            "DATA_PROVIDER": null,
+            "WL_DATA_PROVIDER": null,
+            "QW_DATA_PROVIDER": null,
+            "LITH_DATA_PROVIDER": "CODWR",
+            "CONST_DATA_PROVIDER": "CODWR",
+            "WL_DATA_FLAG": 1,
+            "QW_DATA_FLAG": 0,
+            "LOG_DATA_FLAG": 1,
+            "LINK": "https://dnrweb.state.co.us/cdss/GroundWater/WaterLevels/Details/1128",
+            "bbox": [
+               -102.25595,
+               37.638363,
+               -102.25595,
+               37.638363
+            ]
+         }
+      }
+    ]
+}
+'''

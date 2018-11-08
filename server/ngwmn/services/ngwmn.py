@@ -56,7 +56,7 @@ def _find(parent, tag, default=None):
     if node is None:
         return default
 
-    if node.text == 'unknown':
+    if not node.text or node.text == 'unknown':
         return default
 
     return node.text
@@ -215,7 +215,7 @@ def get_well_log(agency_cd, location_id):
                 'ui': (lambda words: {
                     'colors': get_colors(words),
                     'materials': classify_material(words)
-                })(re.findall(r'\w+', _find(unit, 'gml:description', '').lower())),
+                })(re.findall(r'\w+', _find(unit, 'gml:description', default='').lower())),
                 'purpose': _find(unit, 'gsml:purpose'),
                 'composition': (lambda part: {
                     'role': _find(part, 'gsml:role'),
@@ -308,11 +308,39 @@ def get_features(latitude, longitude, service_root=SERVICE_ROOT):
     params = {'request': 'GetFeature'}
     target = urljoin(service_root, 'ngwmn/geoserver/wfs')
     response = r.post(target, params=params, data=data)
+    app.logger.debug('Got %s response from %s', response.status_code, response.url)
 
     if response.status_code != 200:
         raise ServiceException()
 
     return response.json()
+
+
+def get_sites(agency_cd, service_root=SERVICE_ROOT):
+    """
+    Return the list of sites with there metadata for agency_cd
+    :param str agency_cd:
+    :param str service_root:
+    :return: list of dictionaries of sites
+    """
+    params = {'request': 'GetFeature'}
+    data = {
+        'SERVICE': 'WFS',
+        'VERSION': '1.1.0',
+        'srsName': 'EPSG:4326',
+        'outputFormat': 'json',
+        'typeName': 'ngwmn:VW_GWDP_GEOSERVER',
+        'CQL_FILTER': "(AGENCY_CD='{0}')".format(agency_cd)
+    }
+    target = urljoin(service_root, 'ngwmn/geoserver/wfs')
+    response = r.post(target, params=params, data=data)
+    app.logger.debug('Got %s response from %s', response.status_code, response.url)
+
+    if response.status_code != 200:
+        raise ServiceException()
+
+    features = response.json().get('features')
+    return list(map(lambda x: convert_keys_and_booleans(x.get('properties', {})), features))
 
 
 def get_statistic(agency_cd, site_no, stat_type, service_root=SERVICE_ROOT_CACHE):
@@ -382,6 +410,7 @@ def get_statistic(agency_cd, site_no, stat_type, service_root=SERVICE_ROOT_CACHE
     """
     url = '/'.join([service_root, 'ngwmn_cache', 'direct', 'json', stat_type, agency_cd, site_no])
     resp = r.get(url)
+    app.logger.debug('Got %s response from %s', resp.status_code, resp.url)
 
     statistics = {
         'is_ranked': False,
@@ -399,13 +428,31 @@ def get_statistic(agency_cd, site_no, stat_type, service_root=SERVICE_ROOT_CACHE
     stats = json.loads(json_txt)
     stats['is_fetched'] = True
 
-    statistics = convert_keys_and_Booleans(stats)
+    statistics = convert_keys_and_booleans(stats)
     app.logger.debug(statistics)
 
     return statistics
 
 
-def convert_keys_and_Booleans(dictionary):
+def get_providers(service_root=SERVICE_ROOT):
+    """
+    Retrieves the list of providers
+    :param service_root: root url of service which serves provider metadata
+    :return: a list of dictionaries containing the list of providers. Note that
+    the JSON that is returned from the service will have it's keys changed to lowercase
+    """
+    target = urljoin(service_root, 'ngwmn/metadata/agencies')
+    response = r.get(target)
+    app.logger.debug('Got %s response from %s', response.status_code, response.url)
+
+    if response.status_code != 200:
+        app.logger.error('Service request error for {0}'.format(target))
+        raise ServiceException()
+
+    return list(map(convert_keys_and_booleans, response.json()))
+
+
+def convert_keys_and_booleans(dictionary):
     """
     Local recursive helper method to convert 'all caps' keys to lowercase
     :param dictionary: the dict for whom's keys need lowercase
@@ -415,7 +462,7 @@ def convert_keys_and_Booleans(dictionary):
     for key in dictionary:
         value = dictionary[key]
         if isinstance(value, dict):
-            value = convert_keys_and_Booleans(value)
+            value = convert_keys_and_booleans(value)
         elif value in ['N', 'Y']:
             value = (value == 'Y')
         lower_case[key.lower()] = value
@@ -440,16 +487,16 @@ def get_statistics(agency_cd, site_no):
     }
 
     overall = get_statistic(agency_cd, site_no, 'wl-overall')
-    if overall['is_fetched']:
+    if overall.get('is_fetched'):
         stats['overall'] = overall
         site_info = get_statistic(agency_cd, site_no, 'site-info')
         alt_datum_cd = ''
-        if site_info['is_fetched']:
+        if site_info.get('is_fetched'):
             alt_datum_cd = site_info['altdatumcd']
 
-        if overall['is_ranked']:
+        if overall.get('is_ranked'):
             monthly = get_statistic(agency_cd, site_no, 'wl-monthly')
-            if monthly['is_fetched']:
+            if monthly.get('is_fetched'):
                 stats['monthly'] = []
                 month_num = 0
                 for month_abbr in calendar.month_abbr[1:]:
@@ -459,7 +506,7 @@ def get_statistics(agency_cd, site_no):
                         month_stats['month'] = month_abbr
                         stats['monthly'].append(month_stats)
 
-        if overall['mediation'] == 'BelowLand':
+        if overall.get('mediation', '') == 'BelowLand':
             stats['overall']['alt_datum'] = 'Depth to water, feet below land surface'
         else:
             stats['overall']['alt_datum'] = 'Water level in feet relative to ' + alt_datum_cd

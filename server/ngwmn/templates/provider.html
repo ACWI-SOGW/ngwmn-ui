@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+
+{% set page_title = agency_metadata.agency_nm + ' (' + agency_metadata.agency_cd + ')' %}
+
+{% block content %}
+    {{ provider_content | safe }}
+        <h3>Site Selection and Classification</h3>
+        {{ site_selection | safe }}
+        <h3>Data Collection Techniques</h3>
+        {{ data_collection | safe }}
+        <h3>Data Management</h3>
+        {{ data_management | safe }}
+        <h3>Other Agency Information</h3>
+        {{ other_agency_info | safe }}
+    </div>
+{% endblock %}

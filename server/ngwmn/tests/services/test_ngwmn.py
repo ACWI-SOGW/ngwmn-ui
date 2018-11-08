@@ -4,6 +4,7 @@ Unit tests for data fetch utility functions
 
 import copy
 from unittest import TestCase, mock
+import urllib.parse
 
 import requests as r
 import requests_mock
@@ -11,8 +12,10 @@ import ngwmn.services.ngwmn as mock_ngwmn
 
 from ngwmn.services import ServiceException
 from ngwmn.services.ngwmn import (
-    generate_bounding_box_values, get_iddata, get_water_quality, get_well_log, get_statistic)
-from .mock_data import MOCK_WELL_LOG_RESPONSE, MOCK_WQ_RESPONSE, MOCK_OVERALL_STATS, MOCK_MONTHLY_STATS
+    generate_bounding_box_values, get_iddata, get_water_quality, get_well_log, get_statistic, get_providers, get_sites)
+from .mock_data import (
+    MOCK_WELL_LOG_RESPONSE, MOCK_WQ_RESPONSE, MOCK_OVERALL_STATS, MOCK_MONTHLY_STATS, MOCK_PROVIDERS_RESPONSE,
+    MOCK_SITES_RESPONSE)
 
 
 class TestGetStatistics(TestCase):
@@ -33,13 +36,19 @@ class TestGetStatistics(TestCase):
         self.test_agency_cd = 'TEST'
         self.test_site_no = 'TS-42'
         self.test_site_no_not_ranked = '-'.join([self.test_site_no, 'NOT_RANKED'])
+        self.test_site_no_no_ranked = '-'.join([self.test_site_no, 'NO_RANKED'])
         self.test_site_no_below = '-'.join([self.test_site_no, 'BELOW'])
         self.test_site_no_above = '-'.join([self.test_site_no, 'ABOVE'])
 
         self.overall_not_ranked = copy.copy(MOCK_OVERALL_STATS)
         self.overall_not_ranked['IS_RANKED'] = 'N'
+
+        self.overall_no_ranked = copy.copy(MOCK_OVERALL_STATS)
+        del self.overall_no_ranked['IS_RANKED']
+
         self.overall_ranked_below = copy.copy(MOCK_OVERALL_STATS)
         self.overall_ranked_below['IS_RANKED'] = 'Y'
+
         self.overall_ranked_above = copy.copy(MOCK_OVERALL_STATS)
         self.overall_ranked_above['IS_RANKED'] = 'Y'
         self.overall_ranked_above['MEDIATION'] = 'AboveDatum'
@@ -47,6 +56,16 @@ class TestGetStatistics(TestCase):
         self.test_stats = {self.test_agency_cd: {
             self.test_site_no_not_ranked: {
                 'wl-overall': self.overall_not_ranked,
+                'site-info': {
+                    'is_fetched': True,
+                    'altDatumCd': 'NGW1701A'
+                },
+                'wl-monthly': {
+                    'N/A': 'not called'
+                }
+            },
+            self.test_site_no_no_ranked: {
+                'wl-overall': self.overall_no_ranked,
                 'site-info': {
                     'is_fetched': True,
                     'altDatumCd': 'NGW1701A'
@@ -127,9 +146,9 @@ class TestGetStatistics(TestCase):
         if "NOT_RANKED" in site_no and "month" in stat_type:
             raise ServiceException()
         data = self.test_stats[agency_cd][site_no][stat_type]
-        return mock_ngwmn.convert_keys_and_Booleans(data)
+        return mock_ngwmn.convert_keys_and_booleans(data)
 
-    def test_get_statistics__below(self):
+    def test_get_statistics_below(self):
         mock_ngwmn.get_statistic = self.mock_stat
         stats = mock_ngwmn.get_statistics(self.test_agency_cd, self.test_site_no_below)
         self.assertEqual('Depth to water, feet below land surface', stats['overall']['alt_datum'],
@@ -150,13 +169,13 @@ class TestGetStatistics(TestCase):
         self.assertEqual(jan['SAMPLE_COUNT'], stats['monthly'][0]['sample_count'], 'Expect the sample count value.')
         self.assertEqual(jan['RECORD_YEARS'], stats['monthly'][0]['record_years'], 'Expect the record years value.')
 
-    def test_get_statistics__above(self):
+    def test_get_statistics_above(self):
         mock_ngwmn.get_statistic = self.mock_stat
         stats = mock_ngwmn.get_statistics(self.test_agency_cd, self.test_site_no_above)
         self.assertEqual('Water level in feet relative to NGW1701C', stats['overall']['alt_datum'],
                          'When MEDIATION is AboveDatum then alt_datum is displayed.')
 
-    def test_get_statistics__not_ranked(self):
+    def test_get_statistics_not_ranked(self):
         mock_ngwmn.get_statistic = self.mock_stat
         stats = mock_ngwmn.get_statistics(self.test_agency_cd, self.test_site_no_not_ranked)
         self.assertEqual('Depth to water, feet below land surface', stats['overall']['alt_datum'],
@@ -175,6 +194,85 @@ class TestGetStatistics(TestCase):
         self.assertEqual(overall['RECORD_YEARS'], stats['overall']['record_years'], 'Expect the record years value.')
         self.assertEqual(overall['LATEST_VALUE'], stats['overall']['latest_value'], 'Expect the latest value.')
         self.assertEqual(overall['LATEST_PCTILE'], stats['overall']['latest_pctile'], 'Expect the latest percentile.')
+
+    def test_get_statistics_no_ranked(self):
+        mock_ngwmn.get_statistic = self.mock_stat
+        stats = mock_ngwmn.get_statistics(self.test_agency_cd, self.test_site_no_no_ranked)
+        self.assertEqual('Depth to water, feet below land surface', stats['overall']['alt_datum'],
+                         'When MEDIATION is BelowLand then alt_datum is not displayed.')
+        self.assertEqual(0, len(stats['monthly']),
+                         'With the site is not ranked there should be no monthly data and no mock exception thrown.')
+
+        overall = self.test_stats[self.test_agency_cd][self.test_site_no_below]['wl-overall']
+        self.assertEqual(overall['CALC_DATE'], stats['overall']['calc_date'], 'Expect the calculated date.')
+        self.assertEqual(overall['MIN_VALUE'], stats['overall']['min_value'], 'Expect the minimum value.')
+        self.assertEqual(overall['MEDIAN_VALUE'], stats['overall']['median_value'], 'Expect the median value.')
+        self.assertEqual(overall['MAX_VALUE'], stats['overall']['max_value'], 'Expect the maximum value.')
+        self.assertEqual(overall['MIN_DATE'], stats['overall']['min_date'], 'Expect the minimum date value.')
+        self.assertEqual(overall['MAX_DATE'], stats['overall']['max_date'], 'Expect the maximum date value.')
+        self.assertEqual(overall['SAMPLE_COUNT'], stats['overall']['sample_count'], 'Expect the sample count value.')
+        self.assertEqual(overall['RECORD_YEARS'], stats['overall']['record_years'], 'Expect the record years value.')
+        self.assertEqual(overall['LATEST_VALUE'], stats['overall']['latest_value'], 'Expect the latest value.')
+        self.assertEqual(overall['LATEST_PCTILE'], stats['overall']['latest_pctile'], 'Expect the latest percentile.')
+
+
+class TestGetProviders(TestCase):
+
+    def setUp(self):
+        self.test_service_root = 'https://fake.gov'
+
+    def test_success_good_data(self):
+        with requests_mock.mock() as m:
+            m.get('https://fake.gov/ngwmn/metadata/agencies', text=MOCK_PROVIDERS_RESPONSE)
+            result = get_providers(service_root=self.test_service_root)
+
+            self.assertEqual(len(result), 2)
+            self.assertEqual(result, [{
+                'agency_cd': 'AKDNR',
+                'agency_nm': 'Alaska Department of Natural Resources',
+                'agency_link': 'http://dnr.alaska.gov/',
+                'count': 15
+            }, {
+                'agency_cd': 'ADWR',
+                'agency_nm': 'Arizona Department of Water Resources',
+                'agency_link': 'http://www.azwater.gov/azdwr/',
+                'count': 5
+            }])
+
+    def test_bad_request(self):
+        with requests_mock.mock() as m:
+            m.get('https://fake.gov/ngwmn/metadata/agencies', status_code=500)
+            with self.assertRaises(ServiceException):
+                get_providers(service_root=self.test_service_root)
+
+class TestGetSites(TestCase):
+
+    def setUp(self):
+        self.test_service_root = 'https://fake.gov'
+
+    def test_success_good_data(self):
+        with requests_mock.mock() as m:
+            m.post('https://fake.gov/ngwmn/geoserver/wfs', text=MOCK_SITES_RESPONSE)
+            result = get_sites('CODWR', service_root=self.test_service_root)
+
+            self.assertIn("CQL_FILTER=(AGENCY_CD='CODWR')", urllib.parse.unquote(m.request_history[0].text))
+            self.assertEqual(len(result), 2)
+            siteIds = list(map(lambda x: x.get('site_no'), result))
+            self.assertIn('1127', siteIds)
+            self.assertIn('1128', siteIds)
+
+    def test_success_with_no_sites(self):
+        with requests_mock.mock() as m:
+            m.post('https://fake.gov/ngwmn/geoserver/wfs', text='{"type": "FeatureCollection","totalFeatures": 0, "features": []}')
+            result = get_sites('CODWR', service_root=self.test_service_root)
+
+            self.assertEqual(result, [])
+
+    def test_bad_request(self):
+        with requests_mock.mock() as m:
+            m.post('https://fake.gov/ngwmn/geoserver/wfs', status_code=500)
+            with self.assertRaises(ServiceException):
+                get_sites('CODWR', service_root=self.test_service_root)
 
 
 class TestGetWellData(TestCase):
@@ -480,10 +578,10 @@ class TestWellLogResults(TestCase):
                 }, {
                     'method': 'borehole',
                     'unit': {
-                        'description': 'Sandstone',
+                        'description': None,
                         'ui': {
                             'colors': [],
-                            'materials': [608, 609, 611, 612, 613]
+                            'materials': []
                         },
                         'purpose': 'instance',
                         'composition': {
