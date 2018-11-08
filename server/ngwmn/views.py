@@ -91,7 +91,7 @@ def sites(agency_cd):
                            sites=sites)
 
 
-@app.route('/site-location/<agency_cd>/<location_id>/', methods=['GET'])
+@app.route('/provider/<agency_cd>/site/<location_id>/', methods=['GET'])
 def site_page(agency_cd, location_id):
     """
     Site location view.
