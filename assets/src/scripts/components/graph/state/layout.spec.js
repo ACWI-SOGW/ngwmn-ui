@@ -25,8 +25,8 @@ describe('graph component layout state', () => {
             new Date('2010-10-10'),
             new Date('2012-10-10')
         ];
-        expect(getViewport.resultFunc(null, domain)).toEqual(domain);
-        expect(getViewport.resultFunc(domain, null)).toEqual(domain);
+        expect(getViewport(null).resultFunc(null, domain)).toEqual(domain);
+        expect(getViewport(null).resultFunc(domain, null)).toEqual(domain);
     });
 
     it('setViewport and resetViewport works with mock store', () => {

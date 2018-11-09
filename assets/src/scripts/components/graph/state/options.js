@@ -1,3 +1,4 @@
+import memoize from 'fast-memoize';
 import { createSelector } from 'reselect';
 
 import { getSiteID } from 'ngwmn/services/state/index';
@@ -10,10 +11,11 @@ const GRAPH_OPTIONS_SET = `${MOUNT_POINT}/GRAPH_OPTIONS_SET`;
  * Action creator to set current options for the graph.
  * @param {Object} options Graph options object
  */
-export const setGraphOptions = function ({agencycode, siteid}) {
+export const setGraphOptions = function (id, {agencycode, siteid}) {
     return {
         type: GRAPH_OPTIONS_SET,
         payload: {
+            id,
             options: {agencycode, siteid}
         }
     };
@@ -24,19 +26,19 @@ export const setGraphOptions = function ({agencycode, siteid}) {
  * @param  {Object} state Redux state
  * @return {Object}       Graph options object
  */
-export const getGraphOptions = state => state[MOUNT_POINT];
+export const getGraphOptions = memoize(id => state => state[MOUNT_POINT][id] || {});
 
 /**
  * Returns the store's site ID for this graph.
  * @param  {Object} state Redux state
  * @return {String} Site ID
  */
-export const getCurrentSiteID = createSelector(
-    getGraphOptions,
+export const getCurrentSiteID = memoize(id => createSelector(
+    getGraphOptions(id),
     (options) => {
         return getSiteID(options.agencycode, options.siteid);
     }
-);
+));
 
 /**
  * Graph options reducer
@@ -49,7 +51,9 @@ const reducer = function (state = {}, action) {
         case GRAPH_OPTIONS_SET:
             return {
                 ...state,
-                ...action.payload.options
+                [action.payload.id]: {
+                    ...action.payload.options
+                }
             };
         default:
             return state;

@@ -25,18 +25,18 @@ describe('graph component cursor state', () => {
     it('setCursor and getCursor works', () => {
         const cursorDate = new Date('2015-10-10');
         store.dispatch(setCursor(cursorDate));
-        expect(getCursor(store.getState())).toBe(cursorDate);
+        expect(getCursor(null)(store.getState())).toBe(cursorDate);
     });
 
     it('getCursor returns viewport end date on null cursor', () => {
         const viewport = [new Date('2010-10-09'), new Date('2010-10-10')];
-        const cursorDate = getCursor.resultFunc(null, viewport);
+        const cursorDate = getCursor(null).resultFunc(null, viewport);
         expect(cursorDate).toEqual(viewport[1]);
     });
 
     it('getCursor returns right extent on null cursor and viewport', () => {
         const domainX = [new Date('2010-10-10'), new Date('2010-12-10')];
-        const cursorDate = getCursor.resultFunc(null, null, domainX);
+        const cursorDate = getCursor(null).resultFunc(null, null, domainX);
         expect(cursorDate).toEqual(domainX[1]);
     });
 
@@ -45,20 +45,20 @@ describe('graph component cursor state', () => {
         // so just confirm we get an expected date back.
         const cursorDate = new Date('2010-12-01');
         const twoPoints = [new Date('2010-10-10'), new Date('2010-12-10')];
-        const result = getCursorDatum.resultFunc(cursorDate, twoPoints);
+        const result = getCursorDatum(null).resultFunc(cursorDate, twoPoints);
         expect(result instanceof Date).toBe(true);
     });
 
     it('getCursorDatum returns null on null cursor', () => {
-        const date = getCursorDatum.resultFunc(null, []);
+        const date = getCursorDatum(null).resultFunc(null, []);
         expect(date).toBe(null);
     });
 
     it('works with mock state', () => {
         const store = getMockStore();
-        expect(getCursor(store.getState())).not.toBe(null);
+        expect(getCursor(null)(store.getState())).not.toBe(null);
         const cursorDate = new Date('2015-10-10');
         store.dispatch(setCursor(cursorDate));
-        expect(getCursor(store.getState())).toBe(cursorDate);
+        expect(getCursor(null)(store.getState())).toBe(cursorDate);
     });
 });

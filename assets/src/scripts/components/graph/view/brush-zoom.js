@@ -8,7 +8,7 @@ import { getChartPosition, getScaleX, getViewport, resetViewport, setViewport
 } from '../state';
 
 
-export default function (elem, store, mainChart, brushChart) {
+export default function (elem, store, id, mainChart, brushChart) {
     const brush = brushX()
         .handleSize(6);
     const gBrush = brushChart
@@ -41,7 +41,7 @@ export default function (elem, store, mainChart, brushChart) {
         if (event.sourceEvent && event.sourceEvent.type === 'brush') {
             return;
         }
-        const xScaleBrush = getScaleX('brush')(store.getState());
+        const xScaleBrush = getScaleX(id, 'brush')(store.getState());
         const newDomain = event.transform.rescaleX(xScaleBrush).domain();
         if (newDomain.every(isFinite)) {
             store.dispatch(setViewport(newDomain));
@@ -58,8 +58,8 @@ export default function (elem, store, mainChart, brushChart) {
 
     // Update zoom transforms in response to viewport changes.
     listen(store, createStructuredSelector({
-        xScaleBrush: getScaleX('brush'),
-        viewport: getViewport,
+        xScaleBrush: getScaleX(id, 'brush'),
+        viewport: getViewport(id),
         chartPosMain: getChartPosition('main')
     }), function ({xScaleBrush, viewport, chartPosMain}) {
         mainChart
@@ -74,7 +74,7 @@ export default function (elem, store, mainChart, brushChart) {
     brush
         .on('brush end', function () {
             const state = store.getState();
-            const xScaleBrush = getScaleX('brush')(state);
+            const xScaleBrush = getScaleX(id, 'brush')(state);
             const chartPosMain = getChartPosition('main')(state);
             // Ignore brush-by-zoom
             if (event.sourceEvent && event.sourceEvent.type === 'zoom') {

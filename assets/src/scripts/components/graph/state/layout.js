@@ -41,16 +41,16 @@ export const resetViewport = function () {
  * Returns the current viewport, or the complete range if none is selection.
  * @type {Object}
  */
-export const getViewport = createSelector(
+export const getViewport = memoize(id => createSelector(
     state => state[MOUNT_POINT].viewport,
-    getExtentX,
+    getExtentX(id),
     (viewport, extentX) => {
         return viewport || [
             extentX[0],
             extentX[1]
         ];
     }
-);
+));
 
 /**
  * Action creator to set the graph size to a given (width, height)

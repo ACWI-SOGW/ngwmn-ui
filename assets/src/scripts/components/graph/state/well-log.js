@@ -18,33 +18,33 @@ import { getScaleX, getScaleY } from './scales';
  * @param  {Object} state       Redux state
  * @return {Object}             Well log object
  */
-export const getCurrentWellLog = createSelector(
+export const getCurrentWellLog = memoize(id => createSelector(
     getWellLogs,
-    getCurrentSiteID,
+    getCurrentSiteID(id),
     (wellLogs, siteID) => {
         return wellLogs[siteID] || {};
     }
-);
+));
 
 /**
  * Returns the well log entries for the current site.
  * @param  {Object} state       Redux state
  * @return {Array}              List of well log entries
  */
-export const getWellLogEntries = createSelector(
-    getCurrentWellLog,
+export const getWellLogEntries = memoize(id => createSelector(
+    getCurrentWellLog(id),
     (wellLog) => {
         return wellLog.log_entries || [];
     }
-);
+));
 
 /**
  * Returns the depth extent for the well log entries.
  * @param  {Object} state       Redux state
  * @return {Array}              y-extent [min, max]
  */
-export const getWellLogEntriesExtentY = createSelector(
-    getWellLogEntries,
+export const getWellLogEntriesExtentY = memoize(id => createSelector(
+    getWellLogEntries(id),
     (wellLogEntries) => {
         if (wellLogEntries.length === 0) {
             return [0, 0];
@@ -54,17 +54,17 @@ export const getWellLogEntriesExtentY = createSelector(
             Math.max(...wellLogEntries.map(entry => entry.shape.coordinates.end))
         ];
     }
-);
+));
 
 /**
  * Produces a list of lithology rectangles for a given chart type.
  * @param  {String} chartType            Kind of chart
  * @return {Array}                       Array of rectangles {x, y, width, height}
  */
-export const getLithology = memoize(chartType => createSelector(
-    getWellLogEntries,
+export const getLithology = memoize((id, chartType) => createSelector(
+    getWellLogEntries(id),
     getChartPosition(chartType),
-    getScaleY(chartType),
+    getScaleY(id, chartType),
     (wellLogEntries, layout, yScale) => {
         return wellLogEntries.map(entry => {
             const loc = entry.shape.coordinates;
@@ -84,8 +84,8 @@ export const getLithology = memoize(chartType => createSelector(
     }
 ));
 
-const getDrawableElements = createSelector(
-    getCurrentWellLog,
+const getDrawableElements = memoize(id => createSelector(
+    getCurrentWellLog(id),
     getVisibleConstructionIds,
     (wellLog, visibleIds) => {
         return (wellLog.construction || [])
@@ -94,44 +94,44 @@ const getDrawableElements = createSelector(
                        visibleIds && visibleIds.indexOf(element.id) !== -1;
             });
     }
-);
+));
 
-export const getConstructionExtentY = createSelector(
-    getDrawableElements,
+export const getConstructionExtentY = memoize(id => createSelector(
+    getDrawableElements(id),
     (elements) => {
         return [
             Math.min(...elements.map(elem => elem.position.coordinates.start)),
             Math.max(...elements.map(elem => elem.position.coordinates.end))
         ];
     }
-);
+));
 
 /**
  * Returns the depth extent for the current well log.
  * @param  {Object} state       Redux state
  * @return {Array}              y-extent [min, max]
  */
-export const getWellLogExtentY = createSelector(
-    getWellLogEntriesExtentY,
-    getConstructionExtentY,
+export const getWellLogExtentY = memoize(id => createSelector(
+    getWellLogEntriesExtentY(id),
+    getConstructionExtentY(id),
     (extentA, extentB) => {
         return [
             Math.min(extentA[0], extentB[0]),
             Math.max(extentA[1], extentB[1])
         ];
     }
-);
+));
 
 /**
  * Returns extent of the water level for the cursor location.
  * @param  {Object} state       Redux state
  * @return {Array}              Water level rectangle
  */
-export const getWellWaterLevel = memoize(chartType => createSelector(
-    getScaleX(chartType),
-    getScaleY(chartType),
-    getCursorDatum,
-    getConstructionExtentY,
+export const getWellWaterLevel = memoize((id, chartType) => createSelector(
+    getScaleX(id, chartType),
+    getScaleY(id, chartType),
+    getCursorDatum(id),
+    getConstructionExtentY(id),
     (xScale, yScale, cursorDatum, extentY) => {
         if (!cursorDatum) {
             return null;
@@ -148,8 +148,8 @@ export const getWellWaterLevel = memoize(chartType => createSelector(
     }
 ));
 
-const getWellRadius = createSelector(
-    getDrawableElements,
+const getWellRadius = memoize(id => createSelector(
+    getDrawableElements(id),
     (elements) => {
         const values = elements
             .map(part => part.diameter.value)
@@ -162,7 +162,7 @@ const getWellRadius = createSelector(
 
         return Math.max(...values) / 2;
     }
-);
+));
 
 /**
  * Returns an xScale corresponding over the range of [-radius, radius] for the
@@ -170,8 +170,8 @@ const getWellRadius = createSelector(
  * @param  {Object} state       Redux state
  * @return {Array}              D3 linear scale
  */
-const getRadiusScale = memoize(chartType => createSelector(
-    getWellRadius,
+const getRadiusScale = memoize((id, chartType) => createSelector(
+    getWellRadius(id),
     getChartPosition(chartType),
     (wellRadius, chartPos) => {
         return scaleLinear()
@@ -185,10 +185,10 @@ const getRadiusScale = memoize(chartType => createSelector(
  * @param  {Object} state       Redux state
  * @return {Array}              Array of elements
  */
-export const getConstructionElements = memoize(chartType => createSelector(
-    getDrawableElements,
-    getRadiusScale(chartType),
-    getScaleY(chartType),
+export const getConstructionElements = memoize((id, chartType) => createSelector(
+    getDrawableElements(id),
+    getRadiusScale(id, chartType),
+    getScaleY(id, chartType),
     getSelectedConstructionId,
     (elements, xScale, yScale, selectedId) => {
         const parts = elements.map(element => {

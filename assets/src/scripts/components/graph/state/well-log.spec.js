@@ -15,15 +15,15 @@ describe('graph component well log state', () => {
         };
 
         it('works with valid ID', () => {
-            expect(getCurrentWellLog.resultFunc(wellLogs, 'log1')).toEqual('well log 1');
+            expect(getCurrentWellLog().resultFunc(wellLogs, 'log1')).toEqual('well log 1');
         });
 
         it('returns empty log with invalid ID', () => {
-            expect(getCurrentWellLog.resultFunc(wellLogs, 'log2')).toEqual({});
+            expect(getCurrentWellLog().resultFunc(wellLogs, 'log2')).toEqual({});
         });
 
         it('works with mock state', () => {
-            expect(getCurrentWellLog(getMockStore().getState())).not.toBe(null);
+            expect(getCurrentWellLog(23)(getMockStore().getState())).not.toBe(null);
         });
     });
 
@@ -34,15 +34,15 @@ describe('graph component well log state', () => {
         };
 
         it('works', () => {
-            expect(getWellLogEntries.resultFunc(wellLog)).toEqual(logEntries);
+            expect(getWellLogEntries().resultFunc(wellLog)).toEqual(logEntries);
         });
 
         it('works with empty log', () => {
-            expect(getWellLogEntries.resultFunc({})).toEqual([]);
+            expect(getWellLogEntries().resultFunc({})).toEqual([]);
         });
 
         it('works with mock state', () => {
-            expect(getWellLogEntries(getMockStore().getState())).not.toBe(null);
+            expect(getWellLogEntries(23)(getMockStore().getState())).not.toBe(null);
         });
     });
 
@@ -64,25 +64,25 @@ describe('graph component well log state', () => {
         }];
 
         it('works', () => {
-            expect(getWellLogEntriesExtentY.resultFunc(logEntries)).toEqual([1, 3]);
+            expect(getWellLogEntriesExtentY().resultFunc(logEntries)).toEqual([1, 3]);
         });
 
         it('works with empty log', () => {
-            expect(getWellLogEntriesExtentY.resultFunc([])).toEqual([0, 0]);
+            expect(getWellLogEntriesExtentY().resultFunc([])).toEqual([0, 0]);
         });
 
         it('works with mock state', () => {
-            expect(getWellLogEntriesExtentY(getMockStore().getState())).not.toBe(null);
+            expect(getWellLogEntriesExtentY(23)(getMockStore().getState())).not.toBe(null);
         });
     });
 
     describe('getWellLogExtentY', () => {
         it('works', () => {
-            expect(getWellLogExtentY.resultFunc([0, 3], [1, 4])).toEqual([0, 4]);
+            expect(getWellLogExtentY().resultFunc([0, 3], [1, 4])).toEqual([0, 4]);
         });
 
         it('works with mock state', () => {
-            expect(getWellLogExtentY(getMockStore().getState())).not.toBe(null);
+            expect(getWellLogExtentY(23)(getMockStore().getState())).not.toBe(null);
         });
     });
 
@@ -104,11 +104,11 @@ describe('graph component well log state', () => {
         }];
 
         it('works', () => {
-            expect(getConstructionExtentY.resultFunc(elements)).toEqual([1, 3]);
+            expect(getConstructionExtentY().resultFunc(elements)).toEqual([1, 3]);
         });
 
         it('works with mock state', () => {
-            expect(getConstructionExtentY(getMockStore().getState())).not.toBe(null);
+            expect(getConstructionExtentY(23)(getMockStore().getState())).not.toBe(null);
         });
     });
 
@@ -163,7 +163,7 @@ describe('graph component well log state', () => {
         const scale = scaleLinear();
 
         it('works', () => {
-            expect(getLithology('main').resultFunc(logEntries, chartPos, scale)).toEqual([{
+            expect(getLithology().resultFunc(logEntries, chartPos, scale)).toEqual([{
                 x: 10,
                 y: 1,
                 width: 100,
@@ -183,11 +183,11 @@ describe('graph component well log state', () => {
         });
 
         it('works with empty log', () => {
-            expect(getLithology('main').resultFunc([])).toEqual([]);
+            expect(getLithology(23, 'main').resultFunc([])).toEqual([]);
         });
 
         it('works with mock state', () => {
-            expect(getLithology('main')(getMockStore().getState())).not.toBe(null);
+            expect(getLithology(23, 'main')(getMockStore().getState())).not.toBe(null);
         });
     });
 
@@ -234,7 +234,7 @@ describe('graph component well log state', () => {
         }];
 
         it('returns correct data properly sorted', () => {
-            expect(getConstructionElements('main').resultFunc(
+            expect(getConstructionElements().resultFunc(
                 elements,
                 scaleLinear(),
                 scaleLinear(),
@@ -294,11 +294,11 @@ describe('graph component well log state', () => {
         });
 
         it('works with no elements', () => {
-            expect(getConstructionElements('main').resultFunc([])).toEqual([]);
+            expect(getConstructionElements().resultFunc([])).toEqual([]);
         });
 
         it('works with mock state', () => {
-            expect(getConstructionElements('main')(
+            expect(getConstructionElements(23, 'main')(
                 getMockStore().getState())
             ).not.toBe(null);
         });
@@ -306,7 +306,7 @@ describe('graph component well log state', () => {
 
     describe('getWellWaterLevel', () => {
         it('works', () => {
-            expect(getWellWaterLevel('main').resultFunc(
+            expect(getWellWaterLevel().resultFunc(
                 scaleLinear().range([0, 100]).domain([0, 100]),
                 scaleLinear().range([0, 100]).domain([new Date('2009-10-10'),
                                                       new Date('2011-10-10')]),
@@ -321,7 +321,7 @@ describe('graph component well log state', () => {
         });
 
         it('works with mock state', () => {
-            expect(getWellWaterLevel('main')(getMockStore().getState())).not.toBe(null);
+            expect(getWellWaterLevel(23, 'main')(getMockStore().getState())).not.toBe(null);
         });
     });
 });

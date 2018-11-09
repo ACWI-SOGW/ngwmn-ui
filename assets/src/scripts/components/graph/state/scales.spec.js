@@ -21,7 +21,7 @@ describe('graph component scales state', () => {
 
         it('works with mock state', () => {
             const store = getMockStore();
-            expect(getScaleX(store.getState())).not.toBe(null);
+            expect(getScaleX(23, 'main')(store.getState())).not.toBe(null);
         });
     });
 
@@ -42,7 +42,7 @@ describe('graph component scales state', () => {
 
         it('works with mock state', () => {
             const store = getMockStore();
-            expect(getScaleY(store.getState())).not.toBe(null);
+            expect(getScaleY(23, 'main')(store.getState())).not.toBe(null);
         });
     });
 });

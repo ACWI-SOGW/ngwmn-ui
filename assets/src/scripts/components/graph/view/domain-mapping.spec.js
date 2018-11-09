@@ -22,10 +22,10 @@ describe('graph component domain mapping', () => {
     });
 
     const selector = createStructuredSelector({
-        xScaleFrom: getScaleX('main'),
-        yScaleFrom: getScaleY('main'),
-        xScaleTo: getScaleX('lithology'),
-        yScaleTo: getScaleY('lithology')
+        xScaleFrom: getScaleX(23, 'main'),
+        yScaleFrom: getScaleY(23, 'main'),
+        xScaleTo: getScaleX(23, 'lithology'),
+        yScaleTo: getScaleY(23, 'lithology')
     });
 
     it('renders two paths', () => {

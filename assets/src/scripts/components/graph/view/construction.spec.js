@@ -22,8 +22,8 @@ describe('graph component construction', () => {
 
     describe('drawConstruction function', () => {
         const selector = createStructuredSelector({
-            elements: getConstructionElements('construction'),
-            cursorWaterLevel: getWellWaterLevel('construction')
+            elements: getConstructionElements(23, 'construction'),
+            cursorWaterLevel: getWellWaterLevel(23, 'construction')
         });
 
         it('draws screen and casing representations', () => {

@@ -1,15 +1,17 @@
 {
-    "components/graph/cursor": {},
+    "components/graph/cursor": {
+        "date": null
+    },
     "components/graph/layout": {
         "axisYBBox": {
-            "height": 373.9346618652344,
+            "height": 386.64837646484375,
             "width": 26.171875,
             "x": -25.671875,
             "y": 0.5
         },
         "graphSize": {
-            "height": 450.03125,
-            "width": 819.765625
+            "height": 434.328125,
+            "width": 758.75
         },
         "viewport": [
             -2145852000000,
@@ -17,11 +19,14 @@
         ]
     },
     "components/graph/options": {
-        "agencycode": "USGS",
-        "siteid": "423532088254601"
+        "23": {
+            "agencycode": "USGS",
+            "siteid": "423532088254601"
+        }
     },
+    "components/water-level-table": {},
     "components/well-log": {
-        "selectedConstructionId": null,
+        "selectedConstructionId": "screen-4",
         "visibleConstructionIds": [
             "casing-0",
             "casing-1",

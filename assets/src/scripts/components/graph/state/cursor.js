@@ -1,3 +1,4 @@
+import memoize from 'fast-memoize';
 import { createSelector } from 'reselect';
 
 import { getNearestTime } from 'ngwmn/lib/utils';
@@ -27,30 +28,30 @@ export const setCursor = function (date) {
  * none is selected.
  * @type {Object}
  */
-export const getCursor = createSelector(
+export const getCursor = memoize(id => createSelector(
     state => state[MOUNT_POINT].date,
-    getViewport,
-    getDomainX('main'),
+    getViewport(id),
+    getDomainX(id, 'main'),
     (cursor, viewport, domain) => {
         return cursor || (viewport ? viewport[1] : domain[1]);
     }
-);
+));
 
 /*
  * Returns the closest point to the current cursor location.
  * @param {Object} state - Redux store
  * @return {Object}
  */
-export const getCursorDatum = createSelector(
-    getCursor,
-    getChartPoints,
+export const getCursorDatum = memoize(id => createSelector(
+    getCursor(id),
+    getChartPoints(id),
     (cursor, points) => {
         if (!cursor) {
             return null;
         }
         return getNearestTime(points, cursor).datum;
     }
-);
+));
 
 /**
  * Cursor reducer

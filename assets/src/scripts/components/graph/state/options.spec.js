@@ -15,13 +15,13 @@ describe('graph component options state', () => {
 
     it('setGraphOptions works', () => {
         const options = {agencycode: 'agency', siteid: 'siteid', ignored: 'ignore'};
-        store.dispatch(setGraphOptions(options));
-        expect(getGraphOptions(store.getState())).toEqual({agencycode: 'agency', siteid: 'siteid'});
+        store.dispatch(setGraphOptions(23, options));
+        expect(getGraphOptions(23)(store.getState())).toEqual({agencycode: 'agency', siteid: 'siteid'});
     });
 
     it('getCurrentSiteID returns expected ID', () => {
-        store.dispatch(setGraphOptions({agencycode: 'agency', siteid: 'siteid'}));
-        const id = getCurrentSiteID(store.getState());
+        store.dispatch(setGraphOptions(23, {agencycode: 'agency', siteid: 'siteid'}));
+        const id = getCurrentSiteID(23)(store.getState());
         expect(id).toBe('agency:siteid');
     });
 

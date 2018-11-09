@@ -32,8 +32,9 @@ export const drawMessage = function (elem, message) {
  * @param  {Object} store   Redux store
  * @param  {Object} node    DOM node to draw graph into
  * @param  {Object} options {agencycode, siteid} of site to draw
+ * @param  {Object} id      Unique component ID for this component
  */
-export default function (store, node, options = {}) {
+export default function (store, node, options, id) {
     const { agencycode, siteid } = options;
 
     if (!siteid || !agencycode) {
@@ -41,7 +42,7 @@ export default function (store, node, options = {}) {
         return;
     }
 
-    store.dispatch(setGraphOptions(options));
+    store.dispatch(setGraphOptions(id, options));
     store.dispatch(setWellLog(agencycode, siteid, window.wellLog));
     store.dispatch(retrieveWaterLevels(agencycode, siteid));
 
@@ -49,6 +50,6 @@ export default function (store, node, options = {}) {
         .call(link(store, (elem, waterLevels) => {
             elem.classed('loading', !waterLevels || !waterLevels.samples)
                 .classed('has-error', waterLevels && waterLevels.error);
-        }, getCurrentWaterLevels))
-        .call(drawGraph, store);
+        }, getCurrentWaterLevels(id)))
+        .call(drawGraph(id), store);
 }
