@@ -152,7 +152,7 @@ const getWellRadius = createSelector(
     getDrawableElements,
     (elements) => {
         const values = elements
-            .map(part => part.diameter.value)
+            .map(part => part.diameter ? part.diameter.value : null)
             .filter(part => part !== null);
 
         // If we lack data, default to a radius of 1.
@@ -194,7 +194,7 @@ export const getConstructionElements = memoize(chartType => createSelector(
         const parts = elements.map(element => {
             const loc = element.position.coordinates;
             const unit = element.position.unit;
-            const radius = element.diameter.value / 2;
+            const radius = element.diameter ? element.diameter.value / 2 : null;
             const diamStr = radius ? `${element.diameter.value} ${element.diameter.unit}` : 'unknown';
             const locString = `${loc.start} - ${loc.end} ${unit}`;
             return {

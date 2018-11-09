@@ -226,10 +226,6 @@ describe('graph component well log state', () => {
                     start: 10,
                     end: 100
                 }
-            },
-            diameter: {
-                value: 10,
-                unit: 'in'
             }
         }];
 
@@ -277,16 +273,16 @@ describe('graph component well log state', () => {
                 id: 'screen-2',
                 isSelected: false,
                 type: 'screen',
-                radius: 5,
-                title: 'Screen, 10 in diameter, 10 - 100 undefined depth',
+                radius: null,
+                title: 'Screen, unknown diameter, 10 - 100 undefined depth',
                 thickness: 0.5,
                 left: {
-                    x: -5,
+                    x: -6,
                     y1: 10,
                     y2: 100
                 },
                 right: {
-                    x: 5,
+                    x: 6,
                     y1: 10,
                     y2: 100
                 }

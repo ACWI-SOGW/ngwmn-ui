@@ -14,7 +14,7 @@
 
 .provider-logo {
   img {
-    width: auto;
+    @include u-width('card');
     height: auto;
   }
 }
