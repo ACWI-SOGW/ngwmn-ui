@@ -653,7 +653,7 @@ class TestWellLogResults(TestCase):
                 req.get(requests_mock.ANY, content=MOCK_WELL_LOG_RESPONSE2)
                 well_log = get_well_log('CODWR', '22')
                 self.assertEqual(well_log, {
-                    'name': '',
+                    'name': None,
                     'location': {
                         'latitude': '39.987243',
                         'longitude': '-108.545897'
@@ -663,7 +663,6 @@ class TestWellLogResults(TestCase):
                         'unit': 'Feet',
                         'value': 7042.2
                     },
-                    'name': None,
                     'water_use': None,
                     'well_depth': {
                         'unit': 'Feet',

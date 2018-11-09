@@ -212,7 +212,7 @@ def get_well_log(agency_cd, location_id):
             'unit': _default(depth.get('uom'), 'ft')
         }
 
-    result['water_use'] = _find(water_well, 'gwml:wellType/gsml:CGI_TermValue/gsml:value');
+    result['water_use'] = _find(water_well, 'gwml:wellType/gsml:CGI_TermValue/gsml:value')
 
     link = water_well.find('gwml:onlineResource', xml.nsmap)
     if link is not None:
