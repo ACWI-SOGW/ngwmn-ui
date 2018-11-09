@@ -14,8 +14,8 @@ from ngwmn.services import ServiceException
 from ngwmn.services.ngwmn import (
     generate_bounding_box_values, get_iddata, get_water_quality, get_well_log, get_statistic, get_providers, get_sites)
 from .mock_data import (
-    MOCK_WELL_LOG_RESPONSE, MOCK_WQ_RESPONSE, MOCK_OVERALL_STATS, MOCK_MONTHLY_STATS, MOCK_PROVIDERS_RESPONSE,
-    MOCK_SITES_RESPONSE)
+    MOCK_WELL_LOG_RESPONSE, MOCK_WELL_LOG_RESPONSE2, MOCK_WQ_RESPONSE, MOCK_OVERALL_STATS, MOCK_MONTHLY_STATS,
+    MOCK_PROVIDERS_RESPONSE, MOCK_SITES_RESPONSE)
 
 
 class TestGetStatistics(TestCase):
@@ -627,10 +627,6 @@ class TestWellLogResults(TestCase):
                 }, {
                     'id': 'screen-0',
                     'type': 'screen',
-                    'diameter': {
-                        'value': None,
-                        'unit': 'in',
-                    },
                     'material': 'PVC',
                     'position': {
                         'coordinates': {
@@ -642,10 +638,6 @@ class TestWellLogResults(TestCase):
                 }, {
                     'id': 'screen-1',
                     'type': 'screen',
-                    'diameter': {
-                        'value': None,
-                        'unit': 'in'
-                    },
                     'material': 'PVC',
                     'position': {
                         'coordinates': {
@@ -656,3 +648,26 @@ class TestWellLogResults(TestCase):
                     }
                 }]
             })
+
+            with requests_mock.mock() as req:
+                req.get(requests_mock.ANY, content=MOCK_WELL_LOG_RESPONSE2)
+                well_log = get_well_log('CODWR', '22')
+                self.assertEqual(well_log, {
+                    'name': '',
+                    'location': {
+                        'latitude': '39.987243',
+                        'longitude': '-108.545897'
+                    },
+                    'elevation': {
+                        'scheme': 'NAVD88',
+                        'unit': 'Feet',
+                        'value': 7042.2
+                    },
+                    'name': None,
+                    'water_use': None,
+                    'well_depth': {
+                        'unit': 'Feet',
+                        'value': 1516.0
+                    },
+                    'construction': []
+                })

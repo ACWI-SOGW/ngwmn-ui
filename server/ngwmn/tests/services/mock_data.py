@@ -375,6 +375,36 @@ MOCK_WELL_LOG_RESPONSE = b"""<?xml version="1.0" encoding="UTF-8"?>
   </gml:featureMember>
 </wfs:FeatureCollection>"""
 
+MOCK_WELL_LOG_RESPONSE2 = b"""<?xml version="1.0" encoding="UTF-8"?>
+<wfs:FeatureCollection xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mnobwell="http://mapserver.gis.umn.edu/mapserver" xmlns:gsml="urn:cgi:xmlns:CGI:GeoSciML:2.0" xmlns:om="http://www.opengis.net/om/1.0" xmlns:sa="http://www.opengis.net/sampling/1.0" xmlns:wfs="http://www.opengis.net/wfs" xmlns:gwml="http://www.nrcan.gc.ca/xml/gwml/1" xmlns:lookup="http://lookup" xmlns:gml="http://www.opengis.net/gml" xmlns:h="http://apache.org/cocoon/request/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:sql="http://apache.org/cocoon/SQL/2.0" xmlns:ngwmn="gov.usgs.cida.ngwmn" xmlns:fn="http://www.w3.org/2005/xpath-functions">
+<gml:featureMember>
+<gwml:WaterWell gml:id="CODWR.22">
+<gml:boundedBy>
+<gml:envelope srsName="EPSG:26915">
+<gml:pos srsDimension="2">39.987243,-108.545897</gml:pos>
+</gml:envelope>
+</gml:boundedBy>
+<sa:position>
+<gml:Point srsName="EPSG:26915">
+<gml:pos>39.987243,-108.5458977042.2</gml:pos>
+</gml:Point>
+</sa:position>
+<gwml:referenceElevation uom="Feet">7042.2</gwml:referenceElevation>
+<gwml:wellDepth>
+<gsml:CGI_NumericValue>
+<gsml:principalValue uom="Feet">1516</gsml:principalValue>
+</gsml:CGI_NumericValue>
+</gwml:wellDepth>
+<gwml:wellStatus>
+<gsml:CGI_TermValue>
+<gsml:value codeSpace="urn:gov.usgs.nwis.alt_datum_cd">NAVD88</gsml:value>
+</gsml:CGI_TermValue>
+</gwml:wellStatus>
+</gwml:WaterWell>
+</gml:featureMember>
+</wfs:FeatureCollection>
+"""
+
 MOCK_SITE_INFO = {
     'altDatumCd': 'NGW1701B'
 }
