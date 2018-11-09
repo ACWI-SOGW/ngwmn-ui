@@ -628,6 +628,10 @@ class TestWellLogResults(TestCase):
                     'id': 'screen-0',
                     'type': 'screen',
                     'material': 'PVC',
+                    'diameter': {
+                        'value': None,
+                        'unit': 'in'
+                    },
                     'position': {
                         'coordinates': {
                             'start': 80.8,
@@ -639,6 +643,10 @@ class TestWellLogResults(TestCase):
                     'id': 'screen-1',
                     'type': 'screen',
                     'material': 'PVC',
+                    'diameter': {
+                        'value': None,
+                        'unit': 'in'
+                    },
                     'position': {
                         'coordinates': {
                             'end': 212.8,

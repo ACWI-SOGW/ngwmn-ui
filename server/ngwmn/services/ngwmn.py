@@ -313,14 +313,14 @@ def get_well_log(agency_cd, location_id):
         }
 
         line = elem.find('gwml:position/gml:LineString', xml.nsmap)
-        if line:
+        if line is not None:
             screen['position'] = {
                 'unit': _default(_find(line, 'gml:uom'), 'ft'),
                 'coordinates': _coordinates(_find(line, 'gml:coordinates'))
             }
 
         dimension = elem.find('gwml:nomicalScreenDiameter/gsml:CGI_NumericValue/gsml:principalValue', xml.nsmap)
-        if dimension:
+        if dimension is not None:
             screen['diameter'] = {
                 'value': _cast(float, dimension.text),
                 'unit': _default(dimension.get('uom'), 'in')
