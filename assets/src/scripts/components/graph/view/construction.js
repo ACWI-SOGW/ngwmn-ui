@@ -1,9 +1,17 @@
 import { callIf } from 'ngwmn/lib/utils';
 
-import { setSelectedConstructionId } from 'ngwmn/components/well-log/state';
+import { setSelectedConstructionId } from 'ngwmn/components/well-log/state/index';
 
 
-const drawElement = function (store, elem, element, index) {
+/**
+ * Draws a construction element on the graph.
+ * @param  {Object} store   Redux store
+ * @param  {Object} elem    D3 selector
+ * @param  {Object} id      Current component ID
+ * @param  {Object} element Element data to render
+ * @param  {Number} index   Index of this element
+ */
+const drawElement = function (store, elem, opts, element, index) {
     elem.append('g')
         .attr('id', `${element.type}-${index}`)
         .classed(element.type, true)
@@ -33,7 +41,7 @@ const drawElement = function (store, elem, element, index) {
                 .attr('stroke-width', element.thickness);
         })
         .on('mouseenter', function () {
-            store.dispatch(setSelectedConstructionId(element.id));
+            store.dispatch(setSelectedConstructionId(opts.siteKey, element.id));
         });
 };
 
@@ -97,7 +105,7 @@ const drawPatterns = function (elem) {
         });
 };
 
-export default function (elem, {elements, cursorWaterLevel}, store, container) {
+export default function (elem, {elements, cursorWaterLevel}, store, opts, container) {
     // Get/create container for construction elements
     container = container || elem
         .call(drawPatterns)
@@ -112,7 +120,7 @@ export default function (elem, {elements, cursorWaterLevel}, store, container) {
 
     // Draw each construction element
     elements.forEach((element, index) => {
-        drawElement(store, container, element, index);
+        drawElement(store, container, opts, element, index);
     });
 
     return container;

@@ -1,44 +1,48 @@
 {
     "components/graph/cursor": {
-        "date": null
+        "USGS:423532088254601": null
     },
     "components/graph/layout": {
         "axisYBBox": {
-            "height": 386.64837646484375,
+            "height": 341.2304382324219,
             "width": 26.171875,
             "x": -25.671875,
             "y": 0.5
         },
         "graphSize": {
-            "height": 434.328125,
-            "width": 758.75
+            "height": 409.296875,
+            "width": 751.875
         },
         "viewport": [
             -2145852000000,
             1527685980000
         ]
     },
-    "components/graph/options": {
-        "23": {
-            "agencycode": "USGS",
-            "siteid": "423532088254601"
+    "components/water-level-table": {},
+    "components/well-log/construction": {
+        "selectedConstructionIds": {
+            "USGS:423532088254601": null
+        },
+        "visibleConstructionIds": {
+            "USGS:423532088254601": [
+                "casing-0",
+                "casing-1",
+                "casing-2",
+                "screen-0",
+                "screen-1",
+                "screen-2",
+                "screen-3",
+                "screen-4",
+                "screen-5",
+                "screen-6"
+            ]
         }
     },
-    "components/water-level-table": {},
-    "components/well-log": {
-        "selectedConstructionId": "screen-4",
-        "visibleConstructionIds": [
-            "casing-0",
-            "casing-1",
-            "casing-2",
-            "screen-0",
-            "screen-1",
-            "screen-2",
-            "screen-3",
-            "screen-4",
-            "screen-5",
-            "screen-6"
-        ]
+    "components/well-log/options": {
+        "24": {
+            "agencyCode": "USGS",
+            "siteId": "423532088254601"
+        }
     },
     "services/waterLevels": {
         "USGS:423532088254601": {
@@ -8149,11 +8153,7 @@
                     "type": "screen"
                 }
             ],
-            "elevation": {
-                "scheme": "NAVD88",
-                "unit": "ft",
-                "value": 858.6
-            },
+            "elevation": null,
             "link": {
                 "title": "U.S. Geological Survey",
                 "url": "http://waterdata.usgs.gov/nwis/inventory?search_site_no=423532088254601&search_site_no_match_type=exact&sort_key=site_no&group_key=NONE&sitefile_output_format=html_table&column_name=agency_cd&column_name=site_no&column_name=station_nm&format=station_manuscript&list_of_search_criteria=search_site_no"

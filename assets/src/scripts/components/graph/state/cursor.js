@@ -5,19 +5,20 @@ import { getNearestTime } from 'ngwmn/lib/utils';
 import { getViewport } from './layout';
 import { getChartPoints, getDomainX } from './points';
 
-
 const MOUNT_POINT = 'components/graph/cursor';
 const CURSOR_SET = `${MOUNT_POINT}/CURSOR_SET`;
 
 
 /**
- * Action creator to set the current cursor date (x-axis)
+ * Action creator to set the current cursor date (x-axis) of a given graph.
+ * Dates are keyed on the site level.
  * @param {Date} date   Date of cursor
  */
-export const setCursor = function (date) {
+export const setCursor = (siteKey, date) => {
     return {
         type: CURSOR_SET,
         payload: {
+            siteKey,
             date
         }
     };
@@ -28,12 +29,12 @@ export const setCursor = function (date) {
  * none is selected.
  * @type {Object}
  */
-export const getCursor = memoize(id => createSelector(
-    state => state[MOUNT_POINT].date,
-    getViewport(id),
-    getDomainX(id, 'main'),
-    (cursor, viewport, domain) => {
-        return cursor || (viewport ? viewport[1] : domain[1]);
+export const getCursor = memoize(opts => createSelector(
+    state => state[MOUNT_POINT] || {},
+    getViewport(opts),
+    getDomainX(opts, 'main'),
+    (cursors, viewport, domain) => {
+        return cursors[opts.siteKey] || (viewport ? viewport[1] : domain[1]);
     }
 ));
 
@@ -42,9 +43,9 @@ export const getCursor = memoize(id => createSelector(
  * @param {Object} state - Redux store
  * @return {Object}
  */
-export const getCursorDatum = memoize(id => createSelector(
-    getCursor(id),
-    getChartPoints(id),
+export const getCursorDatum = memoize(opts => createSelector(
+    getCursor(opts),
+    getChartPoints(opts),
     (cursor, points) => {
         if (!cursor) {
             return null;
@@ -64,7 +65,7 @@ export const reducer = function (state = {}, action) {
         case CURSOR_SET:
             return {
                 ...state,
-                date: action.payload.date
+                [action.payload.siteKey]: action.payload.date
             };
         default:
             return state;

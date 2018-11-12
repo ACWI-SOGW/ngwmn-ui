@@ -26,12 +26,12 @@ const main = function () {
     try {
         let nodes = document.getElementsByClassName('ngwmn-component');
         let store = configureStore();
-        for (let i = 0; i < nodes.length; i++) {
-            const node = nodes[i];
+        for (let id = 0; id < nodes.length; id++) {
+            const node = nodes[id];
             // If options is specified on the node, expect it to be a JSON string.
             // Otherwise, use the dataset attributes as the component options.
             const options = node.dataset.options ? JSON.parse(node.dataset.options) : node.dataset;
-            COMPONENTS[node.dataset.component](store, node, options, i);
+            COMPONENTS[node.dataset.component](store, node, {id, ...options});
         }
 
     } catch (err) {

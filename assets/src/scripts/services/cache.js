@@ -7,11 +7,11 @@ const WL_URL = `${config.SERVICE_ROOT}/ngwmn_cache/direct/flatXML/waterlevel`;
 /**
  * Makes service call to the NGWMN cache for a site's historical water levels.
  * @param  {String} agencyCode Site agency code
- * @param  {String} siteID     Site identifier
+ * @param  {String} siteId     Site identifier
  * @return {Object}            Parsed XML with server response
  */
-export const retrieveWaterLevels = function (agencyCode, siteID) {
-    return get(`${WL_URL}/${agencyCode}/${siteID}`, 'responseXML').then(xml => {
+export const retrieveWaterLevels = function (agencyCode, siteId) {
+    return get(`${WL_URL}/${agencyCode}/${siteId}`, 'responseXML').then(xml => {
         const elev = xml.documentElement.getElementsByTagName('elevation-reference')[0];
         const samples = xml.documentElement.getElementsByTagName('samples')[0];
         return {

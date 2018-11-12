@@ -9,21 +9,28 @@ import {
 
 
 describe('graph component well log state', () => {
+    const mockOpts = {
+        agencyCode: 'USGS',
+        id: 23,
+        siteId: '423532088254601',
+        siteKey: 'USGS:423532088254601'
+    };
+
     describe('getCurrentWellLog', () => {
         const wellLogs = {
             'log1': 'well log 1'
         };
 
         it('works with valid ID', () => {
-            expect(getCurrentWellLog().resultFunc(wellLogs, 'log1')).toEqual('well log 1');
+            expect(getCurrentWellLog({siteKey: 'log1'}).resultFunc(wellLogs)).toEqual('well log 1');
         });
 
         it('returns empty log with invalid ID', () => {
-            expect(getCurrentWellLog().resultFunc(wellLogs, 'log2')).toEqual({});
+            expect(getCurrentWellLog({siteKey: 'log2'}).resultFunc(wellLogs)).toEqual({});
         });
 
         it('works with mock state', () => {
-            expect(getCurrentWellLog(23)(getMockStore().getState())).not.toBe(null);
+            expect(getCurrentWellLog(mockOpts)(getMockStore().getState())).not.toBe(null);
         });
     });
 
@@ -34,15 +41,15 @@ describe('graph component well log state', () => {
         };
 
         it('works', () => {
-            expect(getWellLogEntries().resultFunc(wellLog)).toEqual(logEntries);
+            expect(getWellLogEntries({}).resultFunc(wellLog)).toEqual(logEntries);
         });
 
         it('works with empty log', () => {
-            expect(getWellLogEntries().resultFunc({})).toEqual([]);
+            expect(getWellLogEntries({}).resultFunc({})).toEqual([]);
         });
 
         it('works with mock state', () => {
-            expect(getWellLogEntries(23)(getMockStore().getState())).not.toBe(null);
+            expect(getWellLogEntries(mockOpts)(getMockStore().getState())).not.toBe(null);
         });
     });
 
@@ -64,25 +71,25 @@ describe('graph component well log state', () => {
         }];
 
         it('works', () => {
-            expect(getWellLogEntriesExtentY().resultFunc(logEntries)).toEqual([1, 3]);
+            expect(getWellLogEntriesExtentY({}).resultFunc(logEntries)).toEqual([1, 3]);
         });
 
         it('works with empty log', () => {
-            expect(getWellLogEntriesExtentY().resultFunc([])).toEqual([0, 0]);
+            expect(getWellLogEntriesExtentY({}).resultFunc([])).toEqual([0, 0]);
         });
 
         it('works with mock state', () => {
-            expect(getWellLogEntriesExtentY(23)(getMockStore().getState())).not.toBe(null);
+            expect(getWellLogEntriesExtentY(mockOpts)(getMockStore().getState())).not.toBe(null);
         });
     });
 
     describe('getWellLogExtentY', () => {
         it('works', () => {
-            expect(getWellLogExtentY().resultFunc([0, 3], [1, 4])).toEqual([0, 4]);
+            expect(getWellLogExtentY({}).resultFunc([0, 3], [1, 4])).toEqual([0, 4]);
         });
 
         it('works with mock state', () => {
-            expect(getWellLogExtentY(23)(getMockStore().getState())).not.toBe(null);
+            expect(getWellLogExtentY(mockOpts)(getMockStore().getState())).not.toBe(null);
         });
     });
 
@@ -104,11 +111,11 @@ describe('graph component well log state', () => {
         }];
 
         it('works', () => {
-            expect(getConstructionExtentY().resultFunc(elements)).toEqual([1, 3]);
+            expect(getConstructionExtentY(mockOpts).resultFunc(elements)).toEqual([1, 3]);
         });
 
         it('works with mock state', () => {
-            expect(getConstructionExtentY(23)(getMockStore().getState())).not.toBe(null);
+            expect(getConstructionExtentY(mockOpts)(getMockStore().getState())).not.toBe(null);
         });
     });
 
@@ -163,7 +170,7 @@ describe('graph component well log state', () => {
         const scale = scaleLinear();
 
         it('works', () => {
-            expect(getLithology().resultFunc(logEntries, chartPos, scale)).toEqual([{
+            expect(getLithology({}, 'main').resultFunc(logEntries, chartPos, scale)).toEqual([{
                 x: 10,
                 y: 1,
                 width: 100,
@@ -183,11 +190,11 @@ describe('graph component well log state', () => {
         });
 
         it('works with empty log', () => {
-            expect(getLithology(23, 'main').resultFunc([])).toEqual([]);
+            expect(getLithology(mockOpts, 'main').resultFunc([])).toEqual([]);
         });
 
         it('works with mock state', () => {
-            expect(getLithology(23, 'main')(getMockStore().getState())).not.toBe(null);
+            expect(getLithology(mockOpts, 'main')(getMockStore().getState())).not.toBe(null);
         });
     });
 
@@ -234,7 +241,7 @@ describe('graph component well log state', () => {
         }];
 
         it('returns correct data properly sorted', () => {
-            expect(getConstructionElements().resultFunc(
+            expect(getConstructionElements({}, 'main').resultFunc(
                 elements,
                 scaleLinear(),
                 scaleLinear(),
@@ -294,11 +301,11 @@ describe('graph component well log state', () => {
         });
 
         it('works with no elements', () => {
-            expect(getConstructionElements().resultFunc([])).toEqual([]);
+            expect(getConstructionElements({}, 'main').resultFunc([])).toEqual([]);
         });
 
         it('works with mock state', () => {
-            expect(getConstructionElements(23, 'main')(
+            expect(getConstructionElements(mockOpts, 'main')(
                 getMockStore().getState())
             ).not.toBe(null);
         });
@@ -306,7 +313,7 @@ describe('graph component well log state', () => {
 
     describe('getWellWaterLevel', () => {
         it('works', () => {
-            expect(getWellWaterLevel().resultFunc(
+            expect(getWellWaterLevel(mockOpts, 'main').resultFunc(
                 scaleLinear().range([0, 100]).domain([0, 100]),
                 scaleLinear().range([0, 100]).domain([new Date('2009-10-10'),
                                                       new Date('2011-10-10')]),
@@ -321,7 +328,7 @@ describe('graph component well log state', () => {
         });
 
         it('works with mock state', () => {
-            expect(getWellWaterLevel(23, 'main')(getMockStore().getState())).not.toBe(null);
+            expect(getWellWaterLevel(mockOpts, 'main')(getMockStore().getState())).not.toBe(null);
         });
     });
 });

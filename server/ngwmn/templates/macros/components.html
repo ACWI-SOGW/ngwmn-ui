@@ -12,7 +12,7 @@
 
 {% macro Graph(agency_code, site_no) -%}
     <div class="has-script">
-        <div class="ngwmn-component loading" data-component="graph" data-siteID="{{ site_no }}" data-agencyCode="{{ agency_code }}">
+        <div class="ngwmn-component loading" data-component="graph" data-site-id="{{ site_no }}" data-agency-code="{{ agency_code }}">
             <div class="indicators">
                 <i class="loading-indicator fas fa-5x fa-spin fa-spinner"></i>
                 <i class="error-indicator fas fa-5x fa-exclamation-circle"></i>
@@ -33,8 +33,8 @@
     {{ value if value is not none else default }}
 {%- endmacro %}
 
-{% macro WellLog(well_log) -%}
-    <div class="ngwmn-component" data-component="well-log">
+{% macro WellLog(agency_code, site_no, well_log) -%}
+    <div class="ngwmn-component" data-component="well-log" data-site-id="{{ site_no }}" data-agency-code="{{ agency_code }}">
         <h3>Well Construction</h3>
         <input type="radio" name="construction-type" value="all" id="all" checked>
         <label for="all">All</label>
@@ -82,7 +82,7 @@
 {%- endmacro %}
 
 {% macro WaterLevelTable(agency_code, site_no) -%}
-<li class="ngwmn-component" data-component="water-level-table" data-siteId="{{ site_no }}" data-agencyCd="{{ agency_code }}">
+<li class="ngwmn-component" data-component="water-level-table" data-site-id="{{ site_no }}" data-agency-code="{{ agency_code }}">
     <button class="usa-accordion-button" aria-expanded="false" aria-controls="water-levels-div">
         Water Levels
     </button>

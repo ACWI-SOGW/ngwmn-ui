@@ -6,10 +6,9 @@ import { createSelector } from 'reselect';
 import { getWellLogs } from 'ngwmn/services/state/index';
 import {
     getSelectedConstructionId, getVisibleConstructionIds
-} from 'ngwmn/components/well-log/state';
+} from 'ngwmn/components/well-log/state/index';
 import { getCursorDatum } from './cursor';
 import { getChartPosition } from './layout';
-import { getCurrentSiteID } from './options';
 import { getScaleX, getScaleY } from './scales';
 
 
@@ -18,11 +17,10 @@ import { getScaleX, getScaleY } from './scales';
  * @param  {Object} state       Redux state
  * @return {Object}             Well log object
  */
-export const getCurrentWellLog = memoize(id => createSelector(
+export const getCurrentWellLog = memoize(opts => createSelector(
     getWellLogs,
-    getCurrentSiteID(id),
-    (wellLogs, siteID) => {
-        return wellLogs[siteID] || {};
+    (wellLogs) => {
+        return wellLogs[opts.siteKey] || {};
     }
 ));
 
@@ -31,8 +29,8 @@ export const getCurrentWellLog = memoize(id => createSelector(
  * @param  {Object} state       Redux state
  * @return {Array}              List of well log entries
  */
-export const getWellLogEntries = memoize(id => createSelector(
-    getCurrentWellLog(id),
+export const getWellLogEntries = memoize(opts => createSelector(
+    getCurrentWellLog(opts),
     (wellLog) => {
         return wellLog.log_entries || [];
     }
@@ -43,8 +41,8 @@ export const getWellLogEntries = memoize(id => createSelector(
  * @param  {Object} state       Redux state
  * @return {Array}              y-extent [min, max]
  */
-export const getWellLogEntriesExtentY = memoize(id => createSelector(
-    getWellLogEntries(id),
+export const getWellLogEntriesExtentY = memoize(opts => createSelector(
+    getWellLogEntries(opts),
     (wellLogEntries) => {
         if (wellLogEntries.length === 0) {
             return [0, 0];
@@ -61,10 +59,10 @@ export const getWellLogEntriesExtentY = memoize(id => createSelector(
  * @param  {String} chartType            Kind of chart
  * @return {Array}                       Array of rectangles {x, y, width, height}
  */
-export const getLithology = memoize((id, chartType) => createSelector(
-    getWellLogEntries(id),
+export const getLithology = memoize((opts, chartType) => createSelector(
+    getWellLogEntries(opts),
     getChartPosition(chartType),
-    getScaleY(id, chartType),
+    getScaleY(opts, chartType),
     (wellLogEntries, layout, yScale) => {
         return wellLogEntries.map(entry => {
             const loc = entry.shape.coordinates;
@@ -84,9 +82,9 @@ export const getLithology = memoize((id, chartType) => createSelector(
     }
 ));
 
-const getDrawableElements = memoize(id => createSelector(
-    getCurrentWellLog(id),
-    getVisibleConstructionIds,
+const getDrawableElements = memoize(opts => createSelector(
+    getCurrentWellLog(opts),
+    getVisibleConstructionIds(opts.siteKey),
     (wellLog, visibleIds) => {
         return (wellLog.construction || [])
             .filter(element => {
@@ -96,8 +94,8 @@ const getDrawableElements = memoize(id => createSelector(
     }
 ));
 
-export const getConstructionExtentY = memoize(id => createSelector(
-    getDrawableElements(id),
+export const getConstructionExtentY = memoize((opts) => createSelector(
+    getDrawableElements(opts),
     (elements) => {
         return [
             Math.min(...elements.map(elem => elem.position.coordinates.start)),
@@ -111,9 +109,9 @@ export const getConstructionExtentY = memoize(id => createSelector(
  * @param  {Object} state       Redux state
  * @return {Array}              y-extent [min, max]
  */
-export const getWellLogExtentY = memoize(id => createSelector(
-    getWellLogEntriesExtentY(id),
-    getConstructionExtentY(id),
+export const getWellLogExtentY = memoize((opts) => createSelector(
+    getWellLogEntriesExtentY(opts),
+    getConstructionExtentY(opts),
     (extentA, extentB) => {
         return [
             Math.min(extentA[0], extentB[0]),
@@ -127,11 +125,11 @@ export const getWellLogExtentY = memoize(id => createSelector(
  * @param  {Object} state       Redux state
  * @return {Array}              Water level rectangle
  */
-export const getWellWaterLevel = memoize((id, chartType) => createSelector(
-    getScaleX(id, chartType),
-    getScaleY(id, chartType),
-    getCursorDatum(id),
-    getConstructionExtentY(id),
+export const getWellWaterLevel = memoize((opts, chartType) => createSelector(
+    getScaleX(opts, chartType),
+    getScaleY(opts, chartType),
+    getCursorDatum(opts),
+    getConstructionExtentY(opts),
     (xScale, yScale, cursorDatum, extentY) => {
         if (!cursorDatum) {
             return null;
@@ -148,8 +146,8 @@ export const getWellWaterLevel = memoize((id, chartType) => createSelector(
     }
 ));
 
-const getWellRadius = memoize(id => createSelector(
-    getDrawableElements(id),
+const getWellRadius = memoize((opts) => createSelector(
+    getDrawableElements(opts),
     (elements) => {
         const values = elements
             .map(part => part.diameter.value)
@@ -170,8 +168,8 @@ const getWellRadius = memoize(id => createSelector(
  * @param  {Object} state       Redux state
  * @return {Array}              D3 linear scale
  */
-const getRadiusScale = memoize((id, chartType) => createSelector(
-    getWellRadius(id),
+const getRadiusScale = memoize((opts, chartType) => createSelector(
+    getWellRadius(opts),
     getChartPosition(chartType),
     (wellRadius, chartPos) => {
         return scaleLinear()
@@ -185,11 +183,11 @@ const getRadiusScale = memoize((id, chartType) => createSelector(
  * @param  {Object} state       Redux state
  * @return {Array}              Array of elements
  */
-export const getConstructionElements = memoize((id, chartType) => createSelector(
-    getDrawableElements(id),
-    getRadiusScale(id, chartType),
-    getScaleY(id, chartType),
-    getSelectedConstructionId,
+export const getConstructionElements = memoize((opts, chartType) => createSelector(
+    getDrawableElements(opts),
+    getRadiusScale(opts, chartType),
+    getScaleY(opts, chartType),
+    getSelectedConstructionId(opts.siteKey),
     (elements, xScale, yScale, selectedId) => {
         const parts = elements.map(element => {
             const loc = element.position.coordinates;

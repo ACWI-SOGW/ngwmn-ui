@@ -39,8 +39,8 @@ describe('graph component', () => {
             jasmine.Ajax.install();
             store = configureStore();
             attachToNode(store, div.node(), {
-                agencycode: 'USGS',
-                siteid: '430406089232901'
+                agencyCode: 'USGS',
+                siteId: '430406089232901'
             }, 23);
         });
 
@@ -57,7 +57,7 @@ describe('graph component', () => {
             expect(div.selectAll('.line-segment').size()).toBe(0);
         });
 
-        fit('renders chart after service data returned', (done) => {
+        it('renders chart after service data returned', (done) => {
             jasmine.Ajax.requests.mostRecent().respondWith({
                 status: 200,
                 responseText: MOCK_WATER_LEVEL_RESPONSE,

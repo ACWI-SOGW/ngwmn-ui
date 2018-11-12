@@ -4,8 +4,15 @@ import { getScaleX, getScaleY } from './scales';
 
 
 describe('graph component scales state', () => {
+    const mockOpts = {
+        agencyCode: 'USGS',
+        id: 23,
+        siteId: '423532088254601',
+        siteKey: 'USGS:423532088254601'
+    };
+
     describe('getScaleX', () => {
-        let scale = getScaleX().resultFunc([0, 100], {x: 0, width: 50});
+        let scale = getScaleX(mockOpts, 'main').resultFunc([0, 100], {x: 0, width: 50});
 
         it('scale created', () => {
             expect(scale).toEqual(jasmine.any(Function));
@@ -21,12 +28,12 @@ describe('graph component scales state', () => {
 
         it('works with mock state', () => {
             const store = getMockStore();
-            expect(getScaleX(23, 'main')(store.getState())).not.toBe(null);
+            expect(getScaleX(mockOpts, 'main')(store.getState())).not.toBe(null);
         });
     });
 
     describe('getScaleY', () => {
-        let scale = getScaleY().resultFunc([0, 100], {y: 0, height: 50});
+        let scale = getScaleY(mockOpts, 'main').resultFunc([0, 100], {y: 0, height: 50});
 
         it('scale created', () => {
             expect(scale).toEqual(jasmine.any(Function));
@@ -42,7 +49,7 @@ describe('graph component scales state', () => {
 
         it('works with mock state', () => {
             const store = getMockStore();
-            expect(getScaleY(23, 'main')(store.getState())).not.toBe(null);
+            expect(getScaleY(mockOpts, 'main')(store.getState())).not.toBe(null);
         });
     });
 });

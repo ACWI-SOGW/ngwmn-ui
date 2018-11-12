@@ -1,9 +1,9 @@
 import { select } from 'd3-selection';
 
 import { link } from 'ngwmn/lib/d3-redux';
-import { setWellLog, retrieveWaterLevels } from 'ngwmn/services/state/index';
+import { getSiteKey, setWellLog, retrieveWaterLevels } from 'ngwmn/services/state/index';
 
-import { getCurrentWaterLevels, setGraphOptions } from './state';
+import { getCurrentWaterLevels } from './state';
 import drawGraph from './view';
 
 
@@ -31,25 +31,28 @@ export const drawMessage = function (elem, message) {
  * Draws a water-levels graph.
  * @param  {Object} store   Redux store
  * @param  {Object} node    DOM node to draw graph into
- * @param  {Object} options {agencycode, siteid} of site to draw
- * @param  {Object} id      Unique component ID for this component
+ * @param  {Object} options {agencyCode, siteId} of site to draw
  */
-export default function (store, node, options, id) {
-    const { agencycode, siteid } = options;
+export default function (store, node, options) {
+    const { agencyCode, siteId } = options;
 
-    if (!siteid || !agencycode) {
+    if (!siteId || !agencyCode) {
         select(node).call(drawMessage, 'Invalid arguments.');
         return;
     }
 
-    store.dispatch(setGraphOptions(id, options));
-    store.dispatch(setWellLog(agencycode, siteid, window.wellLog));
-    store.dispatch(retrieveWaterLevels(agencycode, siteid));
+    store.dispatch(setWellLog(agencyCode, siteId, window.wellLog));
+    store.dispatch(retrieveWaterLevels(agencyCode, siteId));
+
+    const opts = {
+        siteKey: getSiteKey(options.agencyCode, options.siteId),
+        ...options
+    };
 
     select(node)
         .call(link(store, (elem, waterLevels) => {
             elem.classed('loading', !waterLevels || !waterLevels.samples)
                 .classed('has-error', waterLevels && waterLevels.error);
-        }, getCurrentWaterLevels(id)))
-        .call(drawGraph(id), store);
+        }, getCurrentWaterLevels(opts)))
+        .call(drawGraph(opts), store);
 }

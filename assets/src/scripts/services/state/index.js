@@ -11,9 +11,9 @@ export default {
 /**
  * Gets the unique id for a given site.
  * @param  {String} agencyCode Agency code of site
- * @param  {String} siteID     Agency's site ID for site
+ * @param  {String} siteId     Agency's site ID for site
  * @return {String}            Unique site ID
  */
-export const getSiteID = function (agencyCode, siteID) {
-    return `${agencyCode}:${siteID}`;
+export const getSiteKey = function (agencyCode, siteId) {
+    return `${agencyCode}:${siteId}`;
 };

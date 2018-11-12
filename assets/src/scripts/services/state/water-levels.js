@@ -2,7 +2,7 @@ import memoize from 'fast-memoize';
 import { createSelector } from 'reselect';
 
 import * as cache from '../cache';
-import { getSiteID } from './index';
+import { getSiteKey } from './index';
 
 
 export const MOUNT_POINT = 'services/waterLevels';
@@ -12,16 +12,16 @@ export const WATER_LEVELS_SET = `${MOUNT_POINT}/WATER_LEVELS_SET`;
  * Action creator:
  * Store the specified water levels for a given site in the store.
  * @param  {String} agencyCode  Agency code
- * @param  {String} siteID      Site ID
+ * @param  {String} siteId      Site ID
  * @param {Object} waterLevels Water level details to set
  * @return {Object}             WATER_LEVELS_SET action
  */
-export const setWaterLevels = function (agencyCode, siteID, waterLevels) {
+export const setWaterLevels = function (agencyCode, siteId, waterLevels) {
     return {
         type: WATER_LEVELS_SET,
         payload: {
             agencyCode,
-            siteID,
+            siteId,
             waterLevels
         }
     };
@@ -32,12 +32,12 @@ export const setWaterLevels = function (agencyCode, siteID, waterLevels) {
  * Action that returns a thunk that calls the getWaterLevels action and then
  * dispatches actions to update the state.
  * @param  {String} agencyCode Agency code
- * @param  {String} siteID)    Site ID
+ * @param  {String} siteId)    Site ID
  * @return {Function}          Thunk
  */
-export const retrieveWaterLevels = (agencyCode, siteID) => (dispatch) => {
-    return cache.retrieveWaterLevels(agencyCode, siteID).then(waterLevels => {
-        dispatch(setWaterLevels(agencyCode, siteID, waterLevels));
+export const retrieveWaterLevels = (agencyCode, siteId) => (dispatch) => {
+    return cache.retrieveWaterLevels(agencyCode, siteId).then(waterLevels => {
+        dispatch(setWaterLevels(agencyCode, siteId, waterLevels));
     });
 };
 
@@ -51,13 +51,13 @@ export const getWaterLevels = state => state[MOUNT_POINT];
 /**
  * Return water level data for the site or the empty object if no data available
  * @param {String} agencyCode
- * @param {String} siteID
+ * @param {String} siteId
  * @return {Function} selector to return water level data for the site. Returns empty object if no data available.
  */
-export const getSiteWaterLevels = memoize((agencyCode, siteID) =>  createSelector(
+export const getSiteWaterLevels = memoize((agencyCode, siteId) =>  createSelector(
     getWaterLevels,
     (waterLevels) => {
-        const id = getSiteID(agencyCode, siteID);
+        const id = getSiteKey(agencyCode, siteId);
         return waterLevels[id] || {};
     }
 ));
@@ -73,7 +73,7 @@ const reducer = function (state = {}, action) {
         case WATER_LEVELS_SET:
             return {
                 ...state,
-                [getSiteID(action.payload.agencyCode, action.payload.siteID)]: action.payload.waterLevels
+                [getSiteKey(action.payload.agencyCode, action.payload.siteId)]: action.payload.waterLevels
             };
         default:
             return state;
