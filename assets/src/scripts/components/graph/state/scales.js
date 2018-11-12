@@ -13,7 +13,7 @@ import { getDomainX, getDomainY } from './points';
  */
 export const getScaleX = memoize((opts, chartType) => createSelector(
     getDomainX(opts, chartType),
-    getChartPosition(chartType),
+    getChartPosition(opts, chartType),
     (domainX, size) => {
         return scaleLinear()
             .domain(domainX)
@@ -28,7 +28,7 @@ export const getScaleX = memoize((opts, chartType) => createSelector(
  */
 export const getScaleY = memoize((opts, chartType) => createSelector(
     getDomainY(opts, chartType),
-    getChartPosition(chartType),
+    getChartPosition(opts, chartType),
     (domainY, size) => {
         return scaleLinear()
             .domain(domainY)

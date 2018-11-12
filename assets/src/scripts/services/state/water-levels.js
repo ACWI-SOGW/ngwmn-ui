@@ -5,7 +5,7 @@ import * as cache from '../cache';
 import { getSiteKey } from './index';
 
 
-export const MOUNT_POINT = 'services/waterLevels';
+export const MOUNT_POINT = 'services/water-levels';
 export const WATER_LEVELS_SET = `${MOUNT_POINT}/WATER_LEVELS_SET`;
 
 /**

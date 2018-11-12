@@ -1,7 +1,7 @@
 import { getSiteKey } from './index';
 
 
-const MOUNT_POINT = 'services/wellLog';
+const MOUNT_POINT = 'services/well-log';
 const WELL_LOG_SET = `${MOUNT_POINT}/WELL_LOG_SET`;
 
 /**

@@ -28,7 +28,7 @@ import drawWaterLevels from './water-levels';
  * @param  {Object} store     Redux store
  * @param  {String} chartType Kind of chart
  */
-const drawClipPath = function (elem, store, chartType) {
+const drawClipPath = function (elem, store, opts, chartType) {
     elem.append('defs')
         .append('clipPath')
             .attr('id', `${chartType}-clip-path`)
@@ -38,7 +38,7 @@ const drawClipPath = function (elem, store, chartType) {
                         .attr('y', chartPosition.y)
                         .attr('width', chartPosition.width)
                         .attr('height', chartPosition.height);
-                }, getChartPosition(chartType)));
+                }, getChartPosition(opts, chartType)));
 };
 
 /**
@@ -54,7 +54,7 @@ const drawChart = function (elem, store, opts, chartType) {
         .classed(chartType, true)
         // Draw a clipPath on the chart to enable cropping of content to the
         // current domain.
-        .call(drawClipPath, store, chartType)
+        .call(drawClipPath, store, opts, chartType)
         .call(elem => {
             elem.append('g')
                 .attr('clip-path', `url(#${chartType}-clip-path)`)
@@ -89,15 +89,15 @@ const drawChart = function (elem, store, opts, chartType) {
         // Draw the y-axis, only for the main chart.
         .call(callIf(chartType === 'main', link(store, drawAxisY, createStructuredSelector({
             yScale: getScaleY(opts, chartType),
-            layout: getChartPosition(chartType)
+            layout: getChartPosition(opts, chartType)
         }), (bBox) => {
             // When the bounding box has changed, update the state with it.
-            store.dispatch(setAxisYBBox(bBox));
+            store.dispatch(setAxisYBBox(opts.id, bBox));
         })))
         // Draw the x-axis, only for the main chart.
         .call(callIf(chartType === 'main', link(store, drawAxisX, createStructuredSelector({
             xScale: getScaleX(opts, chartType),
-            layout: getChartPosition(chartType)
+            layout: getChartPosition(opts, chartType)
         }))))
         // To capture mouse events, draw an overlay rect and attach event
         // handlers to it.
@@ -111,7 +111,7 @@ const drawChart = function (elem, store, opts, chartType) {
                         .attr('y', layout.y)
                         .attr('width', layout.width)
                         .attr('height', layout.height);
-                }, getChartPosition(chartType)))
+                }, getChartPosition(opts, chartType)))
                 // Set the cursor on mouseenter and clear on mouseout
                 .call(link(store, (rect, xScale) => {
                     rect.on('mouseover', () => {
@@ -163,7 +163,7 @@ export default (opts) => (elem, store) => {
                     .attr('xmlns', 'http://www.w3.org/2000/svg')
                     .call(link(store, (svg, viewBox) => {
                         svg.attr('viewBox', `${viewBox.left} ${viewBox.top} ${viewBox.right - viewBox.left} ${viewBox.bottom - viewBox.top}`);
-                    }, getViewBox))
+                    }, getViewBox(opts)))
                     .call(svg => {
                         // Draw the charts
                         const brush = drawChart(svg, store, opts, 'brush');
@@ -197,7 +197,7 @@ export default (opts) => (elem, store) => {
                     };
                     if (size.width !== newSize.width || size.height !== newSize.height) {
                         size = newSize;
-                        store.dispatch(setContainerSize(size));
+                        store.dispatch(setContainerSize(opts.id, size));
                     }
                 });
                 observer.observe(node);

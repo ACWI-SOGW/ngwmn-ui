@@ -61,7 +61,7 @@ export const getWellLogEntriesExtentY = memoize(opts => createSelector(
  */
 export const getLithology = memoize((opts, chartType) => createSelector(
     getWellLogEntries(opts),
-    getChartPosition(chartType),
+    getChartPosition(opts, chartType),
     getScaleY(opts, chartType),
     (wellLogEntries, layout, yScale) => {
         return wellLogEntries.map(entry => {
@@ -170,7 +170,7 @@ const getWellRadius = memoize((opts) => createSelector(
  */
 const getRadiusScale = memoize((opts, chartType) => createSelector(
     getWellRadius(opts),
-    getChartPosition(chartType),
+    getChartPosition(opts, chartType),
     (wellRadius, chartPos) => {
         return scaleLinear()
             .domain([-wellRadius, wellRadius])

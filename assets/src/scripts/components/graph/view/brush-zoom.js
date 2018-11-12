@@ -22,14 +22,14 @@ export default function (elem, store, opts, mainChart, brushChart) {
     // Apply the zoom handlers to the main chart
     mainChart.call(zoom);
 
-    listen(store, getChartPosition('main'), function (chartPosMain) {
+    listen(store, getChartPosition(opts, 'main'), function (chartPosMain) {
         const extent = [[chartPosMain.x, chartPosMain.y], [chartPosMain.width, chartPosMain.height]];
         zoom.translateExtent(extent)
             .extent(extent);
     });
 
     // Update the brush extents in response to changes in the graph size.
-    listen(store, getChartPosition('brush'), function (chartPosBrush) {
+    listen(store, getChartPosition(opts, 'brush'), function (chartPosBrush) {
         brush.extent([[chartPosBrush.x, chartPosBrush.y],
                      [chartPosBrush.x + chartPosBrush.width, chartPosBrush.y + chartPosBrush.height]]);
         // Apply the brush to the DOM
@@ -44,7 +44,7 @@ export default function (elem, store, opts, mainChart, brushChart) {
         const xScaleBrush = getScaleX(opts, 'brush')(store.getState());
         const newDomain = event.transform.rescaleX(xScaleBrush).domain();
         if (newDomain.every(isFinite)) {
-            store.dispatch(setViewport(newDomain));
+            store.dispatch(setViewport(opts.id, newDomain));
 
             // Update the brush with this new viewport location
             // We need to do this here, rather in response to viewport change,
@@ -60,7 +60,7 @@ export default function (elem, store, opts, mainChart, brushChart) {
     listen(store, createStructuredSelector({
         xScaleBrush: getScaleX(opts, 'brush'),
         viewport: getViewport(opts),
-        chartPosMain: getChartPosition('main')
+        chartPosMain: getChartPosition(opts, 'main')
     }), function ({xScaleBrush, viewport, chartPosMain}) {
         mainChart
             .call(zoom.transform, zoomIdentity
@@ -75,7 +75,7 @@ export default function (elem, store, opts, mainChart, brushChart) {
         .on('brush end', function () {
             const state = store.getState();
             const xScaleBrush = getScaleX(opts, 'brush')(state);
-            const chartPosMain = getChartPosition('main')(state);
+            const chartPosMain = getChartPosition(opts, 'main')(state);
             // Ignore brush-by-zoom
             if (event.sourceEvent && event.sourceEvent.type === 'zoom') {
                 return;
@@ -86,13 +86,13 @@ export default function (elem, store, opts, mainChart, brushChart) {
                     xScaleBrush.invert(selection[0]),
                     xScaleBrush.invert(selection[1])
                 ] : [];
-                store.dispatch(setViewport(selectionDomain));
+                store.dispatch(setViewport(opts.id, selectionDomain));
                 mainChart
                     .call(zoom.transform, zoomIdentity
                     .scale(chartPosMain.width / (selection[1] - selection[0]))
                     .translate(-selection[0], 0));
             } else {
-                store.dispatch(resetViewport());
+                store.dispatch(resetViewport(opts.id));
             }
         });
 }

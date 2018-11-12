@@ -17,13 +17,13 @@ const VIEWPORT_SET = `${MOUNT_POINT}/VIEWPORT_SET`;
  * @param {Date} startDate  Start date of viewport
  * @param {Date} endDate    End date of viewport
  */
-export const setViewport = function ([startDate, endDate]) {
+export const setViewport = function (id, [startDate, endDate]) {
     return {
         type: VIEWPORT_SET,
-        payload: [
-            startDate,
-            endDate
-        ]
+        payload: {
+            id,
+            viewport: [startDate, endDate]
+        }
     };
 };
 
@@ -31,9 +31,12 @@ export const setViewport = function ([startDate, endDate]) {
  * Action creator to reset the viewport to the default, 100% view.
  * @return {Object} VIEWPORT_RESET action
  */
-export const resetViewport = function () {
+export const resetViewport = function (id) {
     return {
-        type: VIEWPORT_RESET
+        type: VIEWPORT_RESET,
+        payload: {
+            id
+        }
     };
 };
 
@@ -42,10 +45,10 @@ export const resetViewport = function () {
  * @type {Object}
  */
 export const getViewport = memoize(opts => createSelector(
-    state => state[MOUNT_POINT].viewport,
+    state => state[MOUNT_POINT].viewports || {},
     getExtentX(opts),
-    (viewport, extentX) => {
-        return viewport || [
+    (viewports, extentX) => {
+        return viewports[opts.id] || [
             extentX[0],
             extentX[1]
         ];
@@ -57,12 +60,12 @@ export const getViewport = memoize(opts => createSelector(
  * @param {Number} options.width  Width of graph container
  * @param {Number} options.height Height of graph container
  */
-export const setContainerSize = function ({width, height}) {
+export const setContainerSize = function (id, {width, height}) {
     return {
         type: GRAPH_SIZE_SET,
         payload: {
-            width,
-            height
+            id,
+            size: {width, height}
         }
     };
 };
@@ -72,10 +75,15 @@ export const setContainerSize = function ({width, height}) {
  * @param  {Object} state Redux state
  * @return {Object}       Layout
  */
-export const getContainerSize = state => state[MOUNT_POINT].graphSize || {
-    width: 0,
-    height: 0
-};
+export const getContainerSize = memoize(opts => createSelector(
+    state => state[MOUNT_POINT].graphSizes || {},
+    (graphSizes) => {
+        return graphSizes[opts.id] || {
+            width: 0,
+            height: 0
+        };
+    }
+));
 
 /**
  * Action creator to set the bounding box of the y-axis in the main chart.
@@ -84,14 +92,17 @@ export const getContainerSize = state => state[MOUNT_POINT].graphSize || {
  * @param {Number} options.width  width of y-axis bounding box
  * @param {Number} options.height height of y-axis bounding box
  */
-export const setAxisYBBox = function ({x, y, width, height}) {
+export const setAxisYBBox = function (id, {x, y, width, height}) {
     return {
         type: AXIS_Y_BBOX_SET,
         payload: {
-            x,
-            y,
-            width,
-            height
+            id,
+            axisYBBox: {
+                x,
+                y,
+                width,
+                height
+            }
         }
     };
 };
@@ -101,12 +112,17 @@ export const setAxisYBBox = function ({x, y, width, height}) {
  * @param  {Object} state Redux state
  * @return {Object}       Layout
  */
-export const getAxisYBBox = state => state[MOUNT_POINT].axisYBBox || {
-    x: 0,
-    y: 0,
-    width: 0,
-    height: 0
-};
+export const getAxisYBBox = memoize(opts => createSelector(
+    state => state[MOUNT_POINT].axisYBBoxes || {},
+    (axisYBBoxes) => {
+        return axisYBBoxes[opts.id] || {
+            x: 0,
+            y: 0,
+            width: 0,
+            height: 0
+        };
+    }
+));
 
 /**
  * Returns the viewBox of the chart's SVG node, taking into account the size of
@@ -114,9 +130,9 @@ export const getAxisYBBox = state => state[MOUNT_POINT].axisYBBox || {
  * @param  {Object} state   Redux state
  * @return {Object}         {x, y, width, height} of viewBox
  */
-export const getViewBox = createSelector(
-    getContainerSize,
-    getAxisYBBox,
+export const getViewBox = memoize(opts => createSelector(
+    getContainerSize(opts),
+    getAxisYBBox(opts),
     (containerSize, axisYBBox) => {
         const aspectRatio = containerSize.height / containerSize.width || 0;
         const width = containerSize.width + axisYBBox.width + FOCUS_CIRCLE_RADIUS;
@@ -128,15 +144,15 @@ export const getViewBox = createSelector(
             bottom: height
         };
     }
-);
+));
 
 /**
  * Returns the position of a chart type within the graph container.
  * @param  {String} graph Chart type identifier
  * @return {Function}     Selector for chart position
  */
-export const getChartPosition = memoize(chartType => createSelector(
-    getViewBox,
+export const getChartPosition = memoize((opts, chartType) => createSelector(
+    getViewBox(opts),
     (viewBox) => {
         const height = viewBox.bottom - viewBox.top;
         const width = viewBox.right;
@@ -187,39 +203,44 @@ export const reducer = function (state = {}, action) {
         case GRAPH_SIZE_SET:
             return {
                 ...state,
-                graphSize: {
-                    width: action.payload.width,
-                    height: action.payload.height
+                graphSizes: {
+                    ...state.graphSizes,
+                    ...{[action.payload.id]: action.payload.size}
                 }
             };
         case AXIS_Y_BBOX_SET:
             return {
                 ...state,
-                axisYBBox: {
-                    x: action.payload.x,
-                    y: action.payload.y,
-                    width: action.payload.width,
-                    height: action.payload.height
+                axisYBBoxes: {
+                    ...state.axisYBBoxes,
+                    ...{[action.payload.id]: action.payload.axisYBBox}
                 }
             };
         case VIEWPORT_SET:
             // Don't update if values are not valid
-            if (!action.payload.every(isFinite)) {
+            if (!action.payload.viewport.every(isFinite)) {
                 return state;
             }
             // Don't update if new values are the same as last viewport
-            if (state.viewport && state.viewport[0] === action.payload[0] &&
-                    state.viewport[1] === action.payload[1]) {
+            if (state.viewports && state.viewports[action.payload.id] &&
+                    state.viewports[action.payload.id][0] === action.payload.viewport[0] &&
+                    state.viewports[action.payload.id][1] === action.payload.viewport[1]) {
                 return state;
             }
             return {
                 ...state,
-                viewport: action.payload
+                viewports: {
+                    ...state.viewports,
+                    ...{[action.payload.id]: action.payload.viewport}
+                }
             };
         case VIEWPORT_RESET:
             return {
                 ...state,
-                viewport: null
+                viewports: {
+                    ...state.viewports,
+                    ...{[action.payload.id]: null}
+                }
             };
         default:
             return state;
