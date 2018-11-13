@@ -5,7 +5,6 @@ import { createSelector } from 'reselect';
 import { getWaterLevels } from 'ngwmn/services/state/index';
 
 import { getViewport } from './layout';
-import { getCurrentSiteID } from './options';
 import { getWellLogExtentY } from './well-log';
 
 
@@ -17,16 +16,15 @@ export const MAX_LINE_POINT_GAP =
 const PADDING_RATIO = 0.2;
 
 
-export const getCurrentWaterLevels = createSelector(
+export const getCurrentWaterLevels = memoize(opts => createSelector(
     getWaterLevels,
-    getCurrentSiteID,
-    (waterLevels, waterLevelID) => {
-        return waterLevels[waterLevelID] || {};
+    (waterLevels) => {
+        return waterLevels[opts.siteKey] || {};
     }
-);
+));
 
-export const getCurrentWaterLevelUnit = createSelector(
-    getCurrentWaterLevels,
+export const getCurrentWaterLevelUnit = memoize(opts => createSelector(
+    getCurrentWaterLevels(opts),
     (waterLevels) => {
         if (waterLevels.samples && waterLevels.samples.length) {
             return waterLevels.samples[0].unit;
@@ -34,14 +32,14 @@ export const getCurrentWaterLevelUnit = createSelector(
             return null;
         }
     }
-);
+));
 
 /**
  * Selector to return points visible on the current chart view.
  * @type {Array} List of visible points
  */
-export const getChartPoints = createSelector(
-    getCurrentWaterLevels,
+export const getChartPoints = memoize(opts => createSelector(
+    getCurrentWaterLevels(opts),
     (waterLevels) => {
         const samples = waterLevels.samples || [];
         return samples.map(datum => {
@@ -57,18 +55,18 @@ export const getChartPoints = createSelector(
             return a.dateTime.getTime() - b.dateTime.getTime();
         });
     }
-);
+));
 
-export const getExtentX = createSelector(
-    getChartPoints,
+export const getExtentX = memoize(opts => createSelector(
+    getChartPoints(opts),
     (chartPoints) => {
         return extent(chartPoints, pt => pt.dateTime);
     }
-);
+));
 
-export const getDomainX = memoize(chartType => createSelector(
-    getExtentX,
-    getViewport,
+export const getDomainX = memoize((opts, chartType) => createSelector(
+    getExtentX(opts),
+    getViewport(opts),
     (extentX, viewport) => {
         if (chartType === 'main' && viewport) {
             return viewport;
@@ -77,9 +75,9 @@ export const getDomainX = memoize(chartType => createSelector(
     }
 ));
 
-export const getDomainY = memoize(chartType => createSelector(
-    getChartPoints,
-    getWellLogExtentY,
+export const getDomainY = memoize((opts, chartType) => createSelector(
+    getChartPoints(opts),
+    getWellLogExtentY(opts),
     (chartPoints, wellLogExtentY) => {
         const values = chartPoints.map(pt => pt.value);
         if (values.length === 0) {
@@ -123,8 +121,8 @@ export const getDomainY = memoize(chartType => createSelector(
  * @param  {Object} state     Redux store
  * @return {Array} List of lines segments
  */
-export const getLineSegments = createSelector(
-    getChartPoints,
+export const getLineSegments = memoize(opts => createSelector(
+    getChartPoints(opts),
     (points) => {
         let lines = [];
 
@@ -161,14 +159,14 @@ export const getLineSegments = createSelector(
         }
         return lines;
     }
-);
+));
 
-export const getActiveClasses = createSelector(
-    getChartPoints,
+export const getActiveClasses = memoize(opts => createSelector(
+    getChartPoints(opts),
     (chartPoints) => {
         return {
             approved: chartPoints.some(pt => pt.class === 'approved'),
             provisional: chartPoints.some(pt => pt.class === 'provisional')
         };
     }
-);
+));

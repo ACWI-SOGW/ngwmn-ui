@@ -7,9 +7,9 @@ import { callIf } from 'ngwmn/lib/utils';
 
 import {
     getActiveClasses, getChartPoints, getChartPosition, getConstructionElements,
-    getCurrentWaterLevelUnit, getCursor, getCursorDatum,
-    getLineSegments, getLithology, getScaleX, getScaleY, getViewBox,
-    getWellWaterLevel, setAxisYBBox, setCursor, setContainerSize
+    getCurrentWaterLevelUnit, getCursor, getCursorDatum, getLineSegments,
+    getLithology, getScaleX, getScaleY, getViewBox, getWellWaterLevel,
+    setAxisYBBox, setCursor, setContainerSize
 } from '../state';
 import { drawAxisX, drawAxisY, drawAxisYLabel } from './axes';
 import addBrushZoomBehavior from './brush-zoom';
@@ -28,7 +28,7 @@ import drawWaterLevels from './water-levels';
  * @param  {Object} store     Redux store
  * @param  {String} chartType Kind of chart
  */
-const drawClipPath = function (elem, store, chartType) {
+const drawClipPath = function (elem, store, opts, chartType) {
     elem.append('defs')
         .append('clipPath')
             .attr('id', `${chartType}-clip-path`)
@@ -38,66 +38,66 @@ const drawClipPath = function (elem, store, chartType) {
                         .attr('y', chartPosition.y)
                         .attr('width', chartPosition.width)
                         .attr('height', chartPosition.height);
-                }, getChartPosition(chartType)));
+                }, getChartPosition(opts, chartType)));
 };
 
 /**
  * Draws a water-levels graph.
  * @param  {Object} store   Redux store
  * @param  {Object} node    DOM node to draw graph into
- * @param  {Object} options {agencycode, siteid} of site to draw
+ * @param  {Object} options {agencyCode, siteId} of site to draw
  */
-const drawChart = function (elem, store, chartType) {
+const drawChart = function (elem, store, opts, chartType) {
     // Each chart gets its own group container, classed .chart
     return elem.append('g')
         .classed('chart', true)
         .classed(chartType, true)
         // Draw a clipPath on the chart to enable cropping of content to the
         // current domain.
-        .call(drawClipPath, store, chartType)
+        .call(drawClipPath, store, opts, chartType)
         .call(elem => {
             elem.append('g')
                 .attr('clip-path', `url(#${chartType}-clip-path)`)
                 // Draw well log lithology background
                 .call(callIf(chartType !== 'construction', link(store, drawLithology, createStructuredSelector({
-                    lithology: getLithology(chartType)
+                    lithology: getLithology(opts, chartType)
                 }))))
                 .call(callIf(chartType === 'construction', link(store, drawConstruction, createStructuredSelector({
-                    elements: getConstructionElements(chartType),
-                    cursorWaterLevel: getWellWaterLevel(chartType)
-                }), store)))
+                    elements: getConstructionElements(opts, chartType),
+                    cursorWaterLevel: getWellWaterLevel(opts, chartType)
+                }), store, opts)))
                 // Draw the actual lines/circles for the current water level data set.
                 .call(callIf(chartType !== 'construction', link(store, drawWaterLevels, createStructuredSelector({
-                    lineSegments: getLineSegments,
-                    chartPoints: getChartPoints,
-                    xScale: getScaleX(chartType),
-                    yScale: getScaleY(chartType)
+                    lineSegments: getLineSegments(opts),
+                    chartPoints: getChartPoints(opts),
+                    xScale: getScaleX(opts, chartType),
+                    yScale: getScaleY(opts, chartType)
                 }), chartType)))
                 // Draw a vertical focus line representing the current cursor location.
                 .call(callIf(chartType !== 'construction', link(store, drawFocusLine, createStructuredSelector({
-                    cursor: getCursor,
-                    xScale: getScaleX(chartType),
-                    yScale: getScaleY(chartType)
+                    cursor: getCursor(opts),
+                    xScale: getScaleX(opts, chartType),
+                    yScale: getScaleY(opts, chartType)
                 }))))
                 // Draw a circle around the point nearest the current cursor location.
                 .call(callIf(chartType === 'main', link(store, drawFocusCircle, createStructuredSelector({
-                    cursorPoint: getCursorDatum,
-                    xScale: getScaleX(chartType),
-                    yScale: getScaleY(chartType)
+                    cursorPoint: getCursorDatum(opts),
+                    xScale: getScaleX(opts, chartType),
+                    yScale: getScaleY(opts, chartType)
                 }))));
         })
         // Draw the y-axis, only for the main chart.
         .call(callIf(chartType === 'main', link(store, drawAxisY, createStructuredSelector({
-            yScale: getScaleY(chartType),
-            layout: getChartPosition(chartType)
+            yScale: getScaleY(opts, chartType),
+            layout: getChartPosition(opts, chartType)
         }), (bBox) => {
             // When the bounding box has changed, update the state with it.
-            store.dispatch(setAxisYBBox(bBox));
+            store.dispatch(setAxisYBBox(opts.id, bBox));
         })))
         // Draw the x-axis, only for the main chart.
         .call(callIf(chartType === 'main', link(store, drawAxisX, createStructuredSelector({
-            xScale: getScaleX(chartType),
-            layout: getChartPosition(chartType)
+            xScale: getScaleX(opts, chartType),
+            layout: getChartPosition(opts, chartType)
         }))))
         // To capture mouse events, draw an overlay rect and attach event
         // handlers to it.
@@ -111,22 +111,21 @@ const drawChart = function (elem, store, chartType) {
                         .attr('y', layout.y)
                         .attr('width', layout.width)
                         .attr('height', layout.height);
-                }, getChartPosition(chartType)))
-                // Clear the cursor on mouseout
-                .on('mouseout', () => {
-                    store.dispatch(setCursor(null));
-                })
-                // Set the cursor on mouseenter
+                }, getChartPosition(opts, chartType)))
+                // Set the cursor on mouseenter and clear on mouseout
                 .call(link(store, (rect, xScale) => {
                     rect.on('mouseover', () => {
                         const selectedTime = xScale.invert(mouse(rect.node())[0]);
-                        store.dispatch(setCursor(selectedTime));
+                        store.dispatch(setCursor(opts.siteKey, selectedTime));
                     });
                     rect.on('mousemove', () => {
                         const selectedTime = xScale.invert(mouse(rect.node())[0]);
-                        store.dispatch(setCursor(selectedTime));
+                        store.dispatch(setCursor(opts.siteKey, selectedTime));
                     });
-                }, getScaleX(chartType)));
+                    rect.on('mouseout', () => {
+                        store.dispatch(setCursor(opts.siteKey, null));
+                    });
+                }, getScaleX(opts, chartType)));
         }));
 };
 
@@ -136,7 +135,7 @@ const drawChart = function (elem, store, chartType) {
  * @param  {Object} store Redux store
  * @return {Object}       SVG node of rendered graph
  */
-export default function (elem, store) {
+export default (opts) => (elem, store) => {
     // Append a container for the graph.
     // .graph-container is used to scope all the CSS styles.
     const graphContainer = elem
@@ -148,15 +147,15 @@ export default function (elem, store) {
         // Draw a tooltip container. This is rendered to the upper-right and
         // shows details of the point closest to the current cursor location.
         .call(link(store, drawTooltip, createStructuredSelector({
-            cursorPoint: getCursorDatum,
-            unit: getCurrentWaterLevelUnit
+            cursorPoint: getCursorDatum(opts),
+            unit: getCurrentWaterLevelUnit(opts)
         })))
         .append('div')
             .classed('chart-container', true)
             // Draw the y-axis label on the left of the chart.
             // See the SASS for the flexbox rules driving the layout.
             .call(link(store, drawAxisYLabel, createStructuredSelector({
-                unit: getCurrentWaterLevelUnit
+                unit: getCurrentWaterLevelUnit(opts)
             })))
             .call(elem => {
                 // Append an SVG container that we will draw to
@@ -164,25 +163,25 @@ export default function (elem, store) {
                     .attr('xmlns', 'http://www.w3.org/2000/svg')
                     .call(link(store, (svg, viewBox) => {
                         svg.attr('viewBox', `${viewBox.left} ${viewBox.top} ${viewBox.right - viewBox.left} ${viewBox.bottom - viewBox.top}`);
-                    }, getViewBox))
+                    }, getViewBox(opts)))
                     .call(svg => {
                         // Draw the charts
-                        const brush = drawChart(svg, store, 'brush');
-                        const main = drawChart(svg, store, 'main');
-                        drawChart(svg, store, 'lithology');
-                        drawChart(svg, store, 'construction');
+                        const brush = drawChart(svg, store, opts, 'brush');
+                        const main = drawChart(svg, store, opts, 'main');
+                        drawChart(svg, store, opts, 'lithology');
+                        drawChart(svg, store, opts, 'construction');
 
                         // Draw a key mapping the domain on the main chart to the
                         // lithology chart.
                         svg.call(link(store, drawDomainMapping, createStructuredSelector({
-                            xScaleFrom: getScaleX('main'),
-                            yScaleFrom: getScaleY('main'),
-                            xScaleTo: getScaleX('lithology'),
-                            yScaleTo: getScaleY('lithology')
+                            xScaleFrom: getScaleX(opts, 'main'),
+                            yScaleFrom: getScaleY(opts, 'main'),
+                            xScaleTo: getScaleX(opts, 'lithology'),
+                            yScaleTo: getScaleY(opts, 'lithology')
                         })));
 
                         // Add interactive brush and zoom behavior over the charts
-                        svg.call(addBrushZoomBehavior, store, main, brush);
+                        svg.call(addBrushZoomBehavior, store, opts, main, brush);
                     });
             })
             .call(div => {
@@ -198,7 +197,7 @@ export default function (elem, store) {
                     };
                     if (size.width !== newSize.width || size.height !== newSize.height) {
                         size = newSize;
-                        store.dispatch(setContainerSize(size));
+                        store.dispatch(setContainerSize(opts.id, size));
                     }
                 });
                 observer.observe(node);
@@ -206,5 +205,5 @@ export default function (elem, store) {
 
     // Append the legend
     graphContainer
-        .call(link(store, drawLegend, getActiveClasses));
-}
+        .call(link(store, drawLegend, getActiveClasses(opts)));
+};

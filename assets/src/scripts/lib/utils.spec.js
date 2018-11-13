@@ -83,7 +83,7 @@ describe('Utils module', () => {
 
             // Check each date against an offset from itself.
             expectOffset(0, 'left');
-            expectOffset(1, 'left');
+            expectOffset(23, 'left');
             expectOffset(hour / 2 - 1, 'left');
             expectOffset(hour / 2, 'left');
             expectOffset(hour / 2 + 1, 'right');

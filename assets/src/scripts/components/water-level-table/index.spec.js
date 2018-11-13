@@ -31,8 +31,8 @@ describe('water level table component', () => {
 
         it('water level table is not rendered when store state is not rendered', () => {
             attachToNode(store, div.node(), {
-                agencycd: 'USGS',
-                siteid: '423532088254601'
+                agencyCode: 'USGS',
+                siteId: '423532088254601'
             });
 
             expect(div.selectAll('tbody tr').size()).toBe(0);
@@ -41,8 +41,8 @@ describe('water level table component', () => {
         it('If the button is clicked store is updated', () => {
             spyOn(store, 'dispatch').and.callThrough();
             attachToNode(store, div.node(), {
-                agencycd: 'USGS',
-                siteid: '423532088254601'
+                agencyCode: 'USGS',
+                siteId: '423532088254601'
             });
             div.select('button').dispatch('click');
 
@@ -53,8 +53,8 @@ describe('water level table component', () => {
         it('The table should be rendered if the table rendered state is true in the store', () => {
             store.dispatch(renderTable());
             attachToNode(store, div.node(), {
-                agencycd: 'USGS',
-                siteid: '423532088254601'
+                agencyCode: 'USGS',
+                siteId: '423532088254601'
             });
 
             expect(div.selectAll('tbody tr').size()).not.toBe(0);

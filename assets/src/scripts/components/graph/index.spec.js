@@ -39,8 +39,9 @@ describe('graph component', () => {
             jasmine.Ajax.install();
             store = configureStore();
             attachToNode(store, div.node(), {
-                agencycode: 'USGS',
-                siteid: '430406089232901'
+                agencyCode: 'USGS',
+                siteId: '430406089232901',
+                id: 23
             });
         });
 

@@ -1,41 +1,45 @@
 {
     "components/graph/cursor": {},
     "components/graph/layout": {
-        "axisYBBox": {
-            "height": 373.9346618652344,
-            "width": 26.171875,
-            "x": -25.671875,
-            "y": 0.5
+        "axisYBBoxes": {
+            "23": {
+                "height": 341.2304382324219,
+                "width": 26.171875,
+                "x": -25.671875,
+                "y": 0.5
+            }
         },
-        "graphSize": {
-            "height": 450.03125,
-            "width": 819.765625
+        "graphSizes": {
+            "23": {
+                "height": 409.296875,
+                "width": 751.875
+            }
         },
-        "viewport": [
-            -2145852000000,
-            1527685980000
-        ]
+        "viewports": {
+            "23": [
+                -2145852000000,
+                1527685980000
+            ]
+        }
     },
-    "components/graph/options": {
-        "agencycode": "USGS",
-        "siteid": "423532088254601"
+    "components/water-level-table": {},
+    "components/well-log/construction": {
+        "visibleConstructionIds": {
+            "USGS:423532088254601": [
+                "casing-0",
+                "casing-1",
+                "casing-2",
+                "screen-0",
+                "screen-1",
+                "screen-2",
+                "screen-3",
+                "screen-4",
+                "screen-5",
+                "screen-6"
+            ]
+        }
     },
-    "components/well-log": {
-        "selectedConstructionId": null,
-        "visibleConstructionIds": [
-            "casing-0",
-            "casing-1",
-            "casing-2",
-            "screen-0",
-            "screen-1",
-            "screen-2",
-            "screen-3",
-            "screen-4",
-            "screen-5",
-            "screen-6"
-        ]
-    },
-    "services/waterLevels": {
+    "services/water-levels": {
         "USGS:423532088254601": {
             "elevationReference": {
                 "siteElevation": "858.6",
@@ -7980,7 +7984,7 @@
             ]
         }
     },
-    "services/wellLog": {
+    "services/well-log": {
         "USGS:423532088254601": {
             "construction": [
                 {

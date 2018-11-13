@@ -1,23 +1,23 @@
-import { getSiteID } from './index';
+import { getSiteKey } from './index';
 
 
-export const MOUNT_POINT = 'services/wellLog';
-export const WELL_LOG_SET = `${MOUNT_POINT}/WELL_LOG_SET`;
+const MOUNT_POINT = 'services/well-log';
+const WELL_LOG_SET = `${MOUNT_POINT}/WELL_LOG_SET`;
 
 /**
  * Action creator:
  * Store the specified well log for a given site in the store.
  * @param  {String} agencyCode  Agency code
- * @param  {String} siteID      Site ID
+ * @param  {String} siteId      Site ID
  * @params {Object} wellLog     Well log to set
  * @return {Object}             WELL_LOG_SET action
  */
-export const setWellLog = function (agencyCode, siteID, wellLog) {
+export const setWellLog = function (agencyCode, siteId, wellLog) {
     return {
         type: WELL_LOG_SET,
         payload: {
             agencyCode,
-            siteID,
+            siteId,
             wellLog
         }
     };
@@ -41,7 +41,7 @@ const reducer = function (state = {}, action) {
         case WELL_LOG_SET:
             return {
                 ...state,
-                [getSiteID(action.payload.agencyCode, action.payload.siteID)]: action.payload.wellLog
+                [getSiteKey(action.payload.agencyCode, action.payload.siteId)]: action.payload.wellLog
             };
         default:
             return state;

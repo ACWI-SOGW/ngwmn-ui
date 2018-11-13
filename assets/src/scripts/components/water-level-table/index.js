@@ -48,11 +48,13 @@ const drawTableBody = function(table, waterLevels, tbody) {
 };
 /*
  * Renders the water level table
- * @param  {Object} store   Redux store
- * @param  {Object} node    DOM node to draw graph into
- * @param  {Object} options {agencycode, siteid} of site to draw
+ * @param  {Object} store               Redux store
+ * @param  {Object} node                DOM node to draw graph into
+ * @param  {Object} options.agencyCode  Agency of site to draw
+ * @param  {Object} options.siteId      ID of site to draw
+ * @param  {String} options.id          Unique ID for this component
  */
-export default function(store, node, {agencycd, siteid}) {
+export default function(store, node, {agencyCode, siteId}) {
     const component = select(node);
     component.select('button').on('click', () => {
         store.dispatch(renderTable());
@@ -80,6 +82,6 @@ export default function(store, node, {agencycd, siteid}) {
         }
     }, createStructuredSelector({
         isRendered: isTableRendered,
-        waterLevels: getSiteWaterLevels(agencycd, siteid)
+        waterLevels: getSiteWaterLevels(agencyCode, siteId)
     })));
 }

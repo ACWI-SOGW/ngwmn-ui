@@ -27,7 +27,7 @@
                 {{ components.Graph(feature.AGENCY_CD, feature.SITE_NO) }}
             </div>
             <div class="tablet-lg:grid-col-6 desktop:grid-col-4">
-                {{ components.WellLog(well_log) }}
+                {{ components.WellLog(feature.AGENCY_CD, feature.SITE_NO, well_log) }}
             </div>
         </div>
         <ul class="usa-accordion">

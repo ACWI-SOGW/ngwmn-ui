@@ -6,12 +6,13 @@ import { get } from 'ngwmn/lib/ajax';
 /**
  * Takes an external SVG and appends it into the document as a pattern with the
  * provided ID.
- * @param  {Object} store       Redux store (unused)
- * @param  {Object} node        DOM node to append pattern into
- * @param  {String} options.url URL of SVG document
- * @param  {String} options.id  ID to give to SVG pattern definition
+ * @param  {Object} store           Redux store (unused)
+ * @param  {Object} node            DOM node to append pattern into
+ * @param  {String} options.url     URL of SVG document
+ * @param  {String} options.domId   ID to give to SVG pattern definition
+ * @param  {String} options.id      Unique ID for this component
  */
-export default function (store, node, {url, id, multiplier = 2}) {
+export default function (store, node, {url, domId, multiplier = 2}) {
     get(url, 'responseXML').then(function (document) {
         const svgElem = document.documentElement;
         const width = parseFloat(svgElem.getAttribute('width')) * multiplier;
@@ -26,7 +27,7 @@ export default function (store, node, {url, id, multiplier = 2}) {
                 .attr('style', 'display: block')
                 .append('defs')
                     .append('pattern')
-                        .attr('id', id)
+                        .attr('id', domId)
                         .attr('style', 'display: block')
                         .attr('patternUnits', 'userSpaceOnUse')
                         .attr('x', 0)

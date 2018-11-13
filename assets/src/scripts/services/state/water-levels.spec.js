@@ -79,7 +79,7 @@ describe('water levels service state', () => {
                     type: WATER_LEVELS_SET,
                     payload: {
                         agencyCode: 'USGS',
-                        siteID: '430406089232901',
+                        siteId: '430406089232901',
                         waterLevels: MOCK_WATER_LEVEL_DATA
                     }
                 });
