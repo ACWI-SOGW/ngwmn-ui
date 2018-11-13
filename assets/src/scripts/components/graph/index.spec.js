@@ -40,8 +40,9 @@ describe('graph component', () => {
             store = configureStore();
             attachToNode(store, div.node(), {
                 agencyCode: 'USGS',
-                siteId: '430406089232901'
-            }, 23);
+                siteId: '430406089232901',
+                id: 23
+            });
         });
 
         afterEach(() => {
