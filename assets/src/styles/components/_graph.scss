@@ -10,11 +10,14 @@ $provisional-color: color('accent-warm-dark');
     justify-content: center;
     margin-bottom: 1em;
 
-    // Maintain a 5:3 aspect ratio on this element
     & {
         box-sizing: border-box;
         position: relative;
-        padding-top: 60%;  // (3 / 5)
+        // To maintain a fixed aspect ratio, this method may be used.
+        // 5:3 aspect ratio on this element (3 / 5)
+        //  padding-top: 60%;
+        // Set a fixed height
+        height: 30rem;
         & > * {
             position: absolute;
             top: 0;

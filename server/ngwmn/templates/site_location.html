@@ -20,14 +20,16 @@
 {% block content %}
     <h1>{{ feature.SITE_NAME }}</h1>
     {% if organization %}<h2 class="usa-font-lead">{{ organization }}</h2>{% endif %}
-    <div class="usa-grid">
+    <div>
         {{ components.LithologyPatterns(lithology_ids) }}
-        <div class="grid-row">
-            <div class="tablet-lg:grid-col-6">
+        <div class="grid-row grid-gap-1">
+            <div class="desktop:grid-col-6">
                 {{ components.Graph('water-levels', feature.AGENCY_CD, feature.SITE_NO) }}
             </div>
-            <div class="tablet-lg:grid-col-6">
+            <div class="grid-col-2 desktop:grid-col-1">
                 {{ components.Graph('construction', feature.AGENCY_CD, feature.SITE_NO) }}
+            </div>
+            <div class="grid-col-10 desktop:grid-col-5">
                 {{ components.WellLog(feature.AGENCY_CD, feature.SITE_NO, well_log) }}
             </div>
         </div>
