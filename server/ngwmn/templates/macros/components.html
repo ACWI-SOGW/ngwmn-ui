@@ -36,13 +36,13 @@
 {% macro WellLog(agency_code, site_no, well_log) -%}
     <div class="ngwmn-component" data-component="well-log" data-site-id="{{ site_no }}" data-agency-code="{{ agency_code }}">
         <h3>Well Construction</h3>
-        <input type="radio" name="construction-type" value="all" id="all" checked>
-        <label for="all">All</label>
-        <input type="radio" name="construction-type" value="screens" id="screens">
-        <label for="screens">Screens</label>
-        <input type="radio" name="construction-type" value="casings" id="casings">
-        <label for="casings">Casings</label>
-        <table class="usa-table-borderless">
+        <input class="usa-radio-input" type="radio" name="construction-type" value="all" id="all" checked>
+        <label class="usa-radio-label" for="all">All</label>
+        <input class="usa-radio-input" type="radio" name="construction-type" value="screens" id="screens">
+        <label class="usa-radio-label" for="screens">Screens</label>
+        <input class="usa-radio-input" type="radio" name="construction-type" value="casings" id="casings">
+        <label class="usa-radio-label" for="casings">Casings</label>
+        <table class="usa-table usa-table-borderless">
             <thead>
                 <tr>
                     <th scope="col"></th>

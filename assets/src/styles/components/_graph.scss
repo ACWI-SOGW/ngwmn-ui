@@ -1,6 +1,6 @@
-$default-color: color(primary, dark);
-$approved-color: color(primary, vivid);
-$provisional-color: color(accent-warm, dark);
+$default-color: color('primary-dark');
+$approved-color: color('primary-vivid');
+$provisional-color: color('accent-warm-dark');
 
 & {
     width: 100%;
@@ -48,7 +48,7 @@ $provisional-color: color(accent-warm, dark);
                     display: block;
                     width: auto;
                     text-align: center;
-                    color: color(primary, light);
+                    color: color('primary-light');
                 }
             }
         }
@@ -59,7 +59,7 @@ $provisional-color: color(accent-warm, dark);
                     display: block;
                     width: auto;
                     text-align: center;
-                    color: $error;
+                    color: color('error');
                 }
             }
         }
@@ -125,7 +125,7 @@ $provisional-color: color(accent-warm, dark);
                         pointer-events: all;
                     }
                     circle.focus {
-                        fill: $accent-warm;
+                        fill: color('accent-warm');
                         opacity: .9;
                     }
                     .focus {
@@ -185,7 +185,7 @@ $provisional-color: color(accent-warm, dark);
             }
             path.domain-mapping {
                 fill: none;
-                stroke: $secondary;
+                stroke: color('secondary');
             }
         }
         .legend {

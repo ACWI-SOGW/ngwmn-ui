@@ -1,8 +1,8 @@
 header {
-    border-bottom: solid 10px color(primary, vivid);
+    border-bottom: solid 10px color('primary-vivid');
     .banner-container {
         a {
-            color: $primary-lighter;
+            color: color('primary-lighter');
             text-decoration: none;
         }
         .logo {
@@ -11,14 +11,14 @@ header {
                 vertical-align: bottom;
                 height: 44px;
                 margin: .5em;
-                @include media($small-screen) {
+                @include at-media('mobile-lg') {
                     height: 51px;
                     margin: 1em;
                 }
-                @include media($medium-screen) {
+                @include at-media('tablet') {
                     height: 58px;
                 }
-                @include media($large-screen) {
+                @include at-media('desktop-lg') {
                     height: 65px;
                 }
             }
