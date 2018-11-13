@@ -11,3 +11,10 @@
 .water-stats-table td {
     text-align: center;
 }
+
+.provider-logo {
+  img {
+    @include u-width('card');
+    height: auto;
+  }
+}

@@ -188,83 +188,147 @@ def get_well_log(agency_cd, location_id):
     if water_well is None:
         return {}
 
-    return {
+    result = {
         'name': _find(water_well, 'gml:name'),
         'location': (lambda pos: {
             'latitude': pos[0],
             'longitude': pos[1]
-        })(_find(water_well, 'gml:boundedBy/gml:envelope/gml:pos').split(' ')),
-        'elevation': (lambda elev: {
+        })(re.split(' |,', _find(water_well, 'gml:boundedBy/gml:envelope/gml:pos')))
+    }
+
+    elev = water_well.find('gwml:referenceElevation', xml.nsmap)
+    if elev is not None:
+        result['elevation'] = {
             'value': _cast(float, elev.text),
             'unit': _default(elev.get('uom'), 'ft'),
-            'scheme': _find(water_well, 'gwml:wellStatus/gsml:CGI_TermValue/gsml:value[@codeSpace="urn:gov.usgs.nwis.alt_datum_cd"]')
-        })(water_well.find('gwml:referenceElevation', xml.nsmap)),
-        'well_depth': (lambda depth: {
+            'scheme': _find(water_well,
+                            'gwml:wellStatus/gsml:CGI_TermValue/gsml:value[@codeSpace="urn:gov.usgs.nwis.alt_datum_cd"]')
+        }
+
+    depth = water_well.find('gwml:wellDepth/gsml:CGI_NumericValue/gsml:principalValue', xml.nsmap)
+    if depth is not None:
+        result['well_depth'] = {
             'value': _cast(float, depth.text),
             'unit': _default(depth.get('uom'), 'ft')
-        })(water_well.find('gwml:wellDepth/gsml:CGI_NumericValue/gsml:principalValue', xml.nsmap)),
-        'water_use': _find(water_well, 'gwml:wellType/gsml:CGI_TermValue/gsml:value'),
-        'link': (lambda link: {
+        }
+
+    result['water_use'] = _find(water_well, 'gwml:wellType/gsml:CGI_TermValue/gsml:value')
+
+    link = water_well.find('gwml:onlineResource', xml.nsmap)
+    if link is not None:
+        result['link'] = {
             'url': link.get('{http://www.w3.org/1999/xlink}href'),
             'title': link.get('{http://www.w3.org/1999/xlink}title')
-        })(water_well.find('gwml:onlineResource', xml.nsmap)),
-        'log_entries': [{
-            'method': _find(entry, 'gsml:observationMethod/gsml:CGI_TermValue/gsml:value'),
-            'unit': (lambda unit: {
-                'description': _find(unit, 'gml:description'),
-                'ui': (lambda words: {
-                    'colors': get_colors(words),
-                    'materials': classify_material(words)
-                })(re.findall(r'\w+', _find(unit, 'gml:description', default='').lower())),
-                'purpose': _find(unit, 'gsml:purpose'),
-                'composition': (lambda part: {
-                    'role': _find(part, 'gsml:role'),
-                    'lithology': (lambda lith: {
-                        'scheme': lith.get('codeSpace'),
-                        'value': lith.text
-                    })(part.find('gsml:lithology/gsml:ControlledConcept/gml:name', xml.nsmap)),
-                    'material': (lambda material: {
-                        'name': _find(material, 'gml:name'),
-                        'purpose': _find(material, 'gsml:purpose')
-                    })(part.find('gsml:material/gsml:UnconsolidatedMaterial', xml.nsmap)),
-                    'proportion': (lambda proportion: {
-                        'scheme': proportion.get('codeSpace'),
-                        'value': proportion.text
-                    })(part.find('gsml:proportion/gsml:CGI_TermValue/gsml:value', xml.nsmap)),
-                })(unit.find('gsml:composition/gsml:CompositionPart', xml.nsmap))
-            })(entry.find('gsml:specification/gwml:HydrostratigraphicUnit', xml.nsmap)),
-            'shape': (lambda shape: {
-                'dimension': shape.get('srsDimension'),
-                'unit': _default(shape.get('uom'), 'ft'),
-                'coordinates': _coordinates(_find(shape, 'gml:coordinates'))
-            })(entry.find('gsml:shape/gml:LineString', xml.nsmap)),
-        } for entry in water_well.findall('gwml:logElement/gsml:MappedInterval', xml.nsmap)],
-        'construction': [{
+        }
+
+    entries = water_well.findall('gwml:logElement/gsml:MappedInterval', xml.nsmap)
+    if entries:
+        result['log_entries'] = []
+        for entry in entries:
+            log_entry = {
+                'method': _find(entry, 'gsml:observationMethod/gsml:CGI_TermValue/gsml:value')
+            }
+
+            unit = entry.find('gsml:specification/gwml:HydrostratigraphicUnit', xml.nsmap)
+            if unit is not None:
+                log_entry['unit'] = {
+                    'description': _find(unit, 'gml:description'),
+                    'ui': (lambda words: {
+                        'colors': get_colors(words),
+                        'materials': classify_material(words)
+                    })(re.findall(r'\w+', _find(unit, 'gml:description', default='').lower())),
+                    'purpose': _find(unit, 'gsml:purpose')
+                }
+
+                part = unit.find('gsml:composition/gsml:CompositionPart', xml.nsmap)
+                if part is not None:
+                    log_entry_unit_composition = {
+                        'role': _find(part, 'gsml:role')
+                    }
+
+                    lith = part.find('gsml:lithology/gsml:ControlledConcept/gml:name', xml.nsmap)
+                    if lith is not None:
+                        log_entry_unit_composition['lithology'] = {
+                            'scheme': lith.get('codeSpace'),
+                            'value': lith.text
+                        }
+
+                    material = part.find('gsml:material/gsml:UnconsolidatedMaterial', xml.nsmap)
+                    if material is not None:
+                        log_entry_unit_composition['material'] = {
+                            'name': _find(material, 'gml:name'),
+                            'purpose': _find(material, 'gsml:purpose')
+                        }
+
+                    proportion = part.find('gsml:proportion/gsml:CGI_TermValue/gsml:value', xml.nsmap)
+                    if proportion is not None:
+                        log_entry_unit_composition['proportion'] = {
+                            'scheme': proportion.get('codeSpace'),
+                            'value': proportion.text
+                        }
+
+                    log_entry['unit']['composition'] = log_entry_unit_composition
+
+            shape = entry.find('gsml:shape/gml:LineString', xml.nsmap)
+            if shape is not None:
+                log_entry['shape'] = {
+                    'dimension': shape.get('srsDimension'),
+                    'unit': _default(shape.get('uom'), 'ft'),
+                    'coordinates': _coordinates(_find(shape, 'gml:coordinates'))
+                }
+
+            result['log_entries'].append(log_entry)
+
+    construction = []
+
+    casings = water_well.findall('gwml:construction/gwml:WellCasing/gwml:wellCasingElement/gwml:WellCasingComponent', xml.nsmap)
+    for index, elem in enumerate(casings):
+        casing = {
             'id': f'casing-{index}',
             'type': 'casing',
-            'position': (lambda line: {
+            'material': _find(elem, 'gwml:material/gsml:CGI_TermValue/gsml:value')
+        }
+
+        line = elem.find('gwml:position/gml:LineString', xml.nsmap)
+        if line is not None:
+            casing['position'] = {
                 'unit': _default(_find(line, 'gml:uom'), 'ft'),
                 'coordinates': _coordinates(_find(line, 'gml:coordinates'))
-            })(elem.find('gwml:position/gml:LineString', xml.nsmap)),
-            'material': _find(elem, 'gwml:material/gsml:CGI_TermValue/gsml:value'),
-            'diameter': (lambda dimension: {
+            }
+
+        dimension = elem.find('gwml:nominalPipeDimension/gsml:CGI_NumericValue/gsml:principalValue', xml.nsmap)
+        if dimension is not None:
+            casing['diameter'] = {
                 'value': _cast(float, dimension.text),
                 'unit': _default(dimension.get('uom'), 'in')
-            })(elem.find('gwml:nominalPipeDimension/gsml:CGI_NumericValue/gsml:principalValue', xml.nsmap))
-        } for index, elem in enumerate(water_well.findall('gwml:construction/gwml:WellCasing/gwml:wellCasingElement/gwml:WellCasingComponent', xml.nsmap))] + [{
+            }
+        construction.append(casing)
+
+    screens = water_well.findall('gwml:construction/gwml:Screen/gwml:screenElement/gwml:ScreenComponent', xml.nsmap)
+    for index, elem in enumerate(screens):
+        screen = {
             'id': f'screen-{index}',
             'type': 'screen',
-            'position': (lambda line: {
+            'material': _find(elem, 'gwml:material/gsml:CGI_TermValue/gsml:value')
+        }
+
+        line = elem.find('gwml:position/gml:LineString', xml.nsmap)
+        if line is not None:
+            screen['position'] = {
                 'unit': _default(_find(line, 'gml:uom'), 'ft'),
                 'coordinates': _coordinates(_find(line, 'gml:coordinates'))
-            })(elem.find('gwml:position/gml:LineString', xml.nsmap)),
-            'material': _find(elem, 'gwml:material/gsml:CGI_TermValue/gsml:value'),
-            'diameter': (lambda dimension: {
+            }
+
+        dimension = elem.find('gwml:nomicalScreenDiameter/gsml:CGI_NumericValue/gsml:principalValue', xml.nsmap)
+        if dimension is not None:
+            screen['diameter'] = {
                 'value': _cast(float, dimension.text),
                 'unit': _default(dimension.get('uom'), 'in')
-            })(elem.find('gwml:nomicalScreenDiameter/gsml:CGI_NumericValue/gsml:principalValue', xml.nsmap))
-        } for index, elem in enumerate(water_well.findall('gwml:construction/gwml:Screen/gwml:screenElement/gwml:ScreenComponent', xml.nsmap))]
-    }
+            }
+        construction.append(screen)
+    result['construction'] = construction
+
+    return result
 
 
 def generate_bounding_box_values(latitude, longitude, delta=0.01):

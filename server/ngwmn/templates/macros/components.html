@@ -66,7 +66,7 @@
                         </td>
                         <td>{{ item.position.coordinates.start }}-{{ item.position.coordinates.end }} {{ item.position.unit }}</td>
                         <td>
-                            {% if item.diameter.value %}
+                            {% if item.diameter and item.diameter.value %}
                                 {{ item.diameter.value }} {{ item.diameter.unit }} diameter
                             {% endif %}
                             {% if item.material != 'Screen, Type Not Known' %}

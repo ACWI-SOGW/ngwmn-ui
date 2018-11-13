@@ -7,6 +7,8 @@
 {% else %}
     {% set page_title = feature.SITE_NAME %}
 {% endif %}
+
+{% set logo_agency_id = 'img/provider_logos/' + feature.AGENCY_CD | lower + '_logo.png' %}
 {% set body_id = 'site-location' %}
 
 {% block page_script %}<script>window.wellLog = {{ well_log | tojson | safe }}</script>{% endblock %}
@@ -294,17 +296,11 @@
             </li>
         </ul>
     </div>
-    {% if cooperators %}
-        <div>
-            <p>Data provided by:</p>
-            {% for cooperator in cooperators | sort(attribute='Name') %}
-                <figure class="cooperator_logo">
-                    <a href="{{ cooperators.URL }}">
-                        <img src="{{ cooperator.IconURL }}" alt="logo for {{ cooperator.Name }}  }}" height = "50" >
-                    </a>
-                    <figcaption><a href="{{ cooperator.URL }}">{{ cooperator.Name }}</a></figcaption>
-                </figure>
-            {% endfor %}
-        </div>
-    {% endif %}
+    <div>
+        <h4>Data Provider</h4>
+        <figure class="provider-logo">
+            <img src="{{ logo_agency_id | asset_url }}" alt="logo for {{ feature.AGENCY_NM }}" height="50">
+            <figcaption>{{ feature.AGENCY_NM }}</a></figcaption>
+        </figure>
+    </div>
 {% endblock %}
