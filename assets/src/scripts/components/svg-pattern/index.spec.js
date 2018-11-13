@@ -33,7 +33,7 @@ describe('svg pattern component', () => {
     });
 
     it('renders SVG pattern definition with correct width and height', () => {
-        attachToNode(null, div.node(), {url: 'http://test.com/my.svg', id: 'my-id'});
+        attachToNode(null, div.node(), {url: 'http://test.com/my.svg', domId: 'my-id'});
         jasmine.Ajax.requests.mostRecent().respondWith({
             status: 200,
             responseText: MOCK_SVG,

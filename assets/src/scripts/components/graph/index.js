@@ -29,9 +29,11 @@ export const drawMessage = function (elem, message) {
 
 /**
  * Draws a water-levels graph.
- * @param  {Object} store   Redux store
- * @param  {Object} node    DOM node to draw graph into
- * @param  {Object} options {agencyCode, siteId} of site to draw
+ * @param  {Object} store               Redux store
+ * @param  {Object} node                DOM node to draw graph into
+ * @param  {Object} options.agencyCode  Agency of site to draw
+ * @param  {Object} options.siteId      ID of site to draw
+ * @param  {String} options.id          Unique ID for this component
  */
 export default function (store, node, options) {
     const { agencyCode, siteId } = options;

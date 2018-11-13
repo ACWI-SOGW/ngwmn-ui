@@ -1,6 +1,6 @@
 {# This component will request a remote resource and then insert it as a child into the DOM #}
 {% macro SVGPattern(url, id) %}
-    <div class="ngwmn-component" data-component="svg-pattern" data-url="{{ url }}" data-id="{{ id }}"></div>
+    <div class="ngwmn-component" data-component="svg-pattern" data-url="{{ url }}" data-dom-id="{{ id }}"></div>
 {%- endmacro %}
 
 {% macro LithologyPatterns(lithology_ids) -%}

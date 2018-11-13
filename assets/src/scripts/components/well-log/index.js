@@ -20,8 +20,11 @@ const updateVisibleIds = function (store, elem, siteKey) {
 /**
  * Component that adds interactivity to a table of well construction
  * information.
- * @param  {Object} store Redux store
- * @param  {Object} node  DOM node to attach to
+ * @param  {Object} store               Redux store
+ * @param  {Object} node                DOM node to attach to
+ * @param  {Object} options.agencyCode  Agency of site to draw
+ * @param  {Object} options.siteId      ID of site to draw
+ * @param  {String} options.id          Unique ID for this component
  */
 export default function (store, node, options) {
     const siteKey = getSiteKey(options.agencyCode, options.siteId);
