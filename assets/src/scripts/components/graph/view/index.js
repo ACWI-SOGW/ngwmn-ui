@@ -15,7 +15,6 @@ import { drawAxisX, drawAxisY, drawAxisYLabel } from './axes';
 import addBrushZoomBehavior from './brush-zoom';
 import drawConstruction from './construction';
 import { drawFocusCircle, drawFocusLine, drawTooltip } from './cursor';
-import drawDomainMapping from './domain-mapping';
 import drawLegend from './legend';
 import drawLithology from './lithology';
 import drawWaterLevels from './water-levels';
@@ -39,6 +38,25 @@ const drawClipPath = function (elem, store, opts, chartType) {
                         .attr('width', chartPosition.width)
                         .attr('height', chartPosition.height);
                 }, getChartPosition(opts, chartType)));
+};
+
+const observeSize = function (elem, opts, store) {
+    // Create an observer on the .chart-container node.
+    // Here, we use a ResizeObserver polyfill to trigger redraws when
+    // the CSS-driven size of our container changes.
+    const node = elem.node();
+    let size = {};
+    const observer = new ResizeObserver(function (entries) {
+        const newSize = {
+            width: parseFloat(entries[0].contentRect.width),
+            height: parseFloat(entries[0].contentRect.height)
+        };
+        if (size.width !== newSize.width || size.height !== newSize.height) {
+            size = newSize;
+            store.dispatch(setContainerSize(opts.id, size));
+        }
+    });
+    observer.observe(node);
 };
 
 /**
@@ -130,20 +148,40 @@ const drawChart = function (elem, store, opts, chartType) {
 };
 
 /**
+ * Attaches a well construction graph to a given DOM node.
+ * @param  {Object} elem  D3 selector to render graph to
+ * @param  {Object} store Redux store
+ * @return {Object}       SVG node of rendered graph
+ */
+const drawConstructionGraph = (opts) => (elem, store) => {
+    // Append the chart and axis labels, scoped to .chart-container
+    elem.append('div')
+        .classed('chart-container', true)
+        .call(elem => {
+            // Append an SVG container that we will draw to
+            elem.append('svg')
+                .attr('xmlns', 'http://www.w3.org/2000/svg')
+                .call(link(store, (svg, viewBox) => {
+                    svg.attr('viewBox', `${viewBox.left} ${viewBox.top} ${viewBox.right - viewBox.left} ${viewBox.bottom - viewBox.top}`);
+                }, getViewBox(opts)))
+                .call(svg => {
+                    // Draw the charts
+                    drawChart(svg, store, opts, 'lithology');
+                    drawChart(svg, store, opts, 'construction');
+                });
+        })
+        .call(observeSize, opts, store);
+};
+
+/**
  * Attaches a water level graph to a given DOM node.
  * @param  {Object} elem  D3 selector to render graph to
  * @param  {Object} store Redux store
  * @return {Object}       SVG node of rendered graph
  */
-export default (opts) => (elem, store) => {
-    // Append a container for the graph.
-    // .graph-container is used to scope all the CSS styles.
-    const graphContainer = elem
-        .append('div')
-            .classed('graph-container', true);
-
+const drawWaterLevelsGraph = (opts) => (elem, store) => {
     // Append the chart and axis labels, scoped to .chart-container
-    graphContainer
+    elem
         // Draw a tooltip container. This is rendered to the upper-right and
         // shows details of the point closest to the current cursor location.
         .call(link(store, drawTooltip, createStructuredSelector({
@@ -168,42 +206,27 @@ export default (opts) => (elem, store) => {
                         // Draw the charts
                         const brush = drawChart(svg, store, opts, 'brush');
                         const main = drawChart(svg, store, opts, 'main');
-                        drawChart(svg, store, opts, 'lithology');
-                        drawChart(svg, store, opts, 'construction');
-
-                        // Draw a key mapping the domain on the main chart to the
-                        // lithology chart.
-                        svg.call(link(store, drawDomainMapping, createStructuredSelector({
-                            xScaleFrom: getScaleX(opts, 'main'),
-                            yScaleFrom: getScaleY(opts, 'main'),
-                            xScaleTo: getScaleX(opts, 'lithology'),
-                            yScaleTo: getScaleY(opts, 'lithology')
-                        })));
 
                         // Add interactive brush and zoom behavior over the charts
                         svg.call(addBrushZoomBehavior, store, opts, main, brush);
                     });
             })
-            .call(div => {
-                // Create an observer on the .chart-container node.
-                // Here, we use a ResizeObserver polyfill to trigger redraws when
-                // the CSS-driven size of our container changes.
-                const node = div.node();
-                let size = {};
-                const observer = new ResizeObserver(function (entries) {
-                    const newSize = {
-                        width: parseFloat(entries[0].contentRect.width),
-                        height: parseFloat(entries[0].contentRect.height)
-                    };
-                    if (size.width !== newSize.width || size.height !== newSize.height) {
-                        size = newSize;
-                        store.dispatch(setContainerSize(opts.id, size));
-                    }
-                });
-                observer.observe(node);
-            });
+            .call(observeSize, opts, store);
 
     // Append the legend
-    graphContainer
-        .call(link(store, drawLegend, getActiveClasses(opts)));
+    elem.call(link(store, drawLegend, getActiveClasses(opts)));
+};
+
+export default (opts) => (elem, store) => {
+    // Append a container for the graph.
+    // .graph-container is used to scope all the CSS styles.
+    const graphContainer = elem
+        .append('div')
+            .classed('graph-container', true);
+
+    if (opts.graphType === 'water-levels') {
+        drawWaterLevelsGraph(opts)(graphContainer, store);
+    } else if (opts.graphType === 'construction') {
+        drawConstructionGraph(opts)(graphContainer, store);
+    }
 };

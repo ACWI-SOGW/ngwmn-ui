@@ -23,10 +23,11 @@
     <div class="usa-grid">
         {{ components.LithologyPatterns(lithology_ids) }}
         <div class="grid-row">
-            <div class="tablet-lg:grid-col-6 desktop:grid-col-8">
-                {{ components.Graph(feature.AGENCY_CD, feature.SITE_NO) }}
+            <div class="tablet-lg:grid-col-6">
+                {{ components.Graph('water-levels', feature.AGENCY_CD, feature.SITE_NO) }}
             </div>
-            <div class="tablet-lg:grid-col-6 desktop:grid-col-4">
+            <div class="tablet-lg:grid-col-6">
+                {{ components.Graph('construction', feature.AGENCY_CD, feature.SITE_NO) }}
                 {{ components.WellLog(feature.AGENCY_CD, feature.SITE_NO, well_log) }}
             </div>
         </div>

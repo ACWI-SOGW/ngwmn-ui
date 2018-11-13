@@ -10,9 +10,9 @@
     {% endfor %}
 {%- endmacro %}
 
-{% macro Graph(agency_code, site_no) -%}
+{% macro Graph(graph_type, agency_code, site_no) -%}
     <div class="has-script">
-        <div class="ngwmn-component loading" data-component="graph" data-site-id="{{ site_no }}" data-agency-code="{{ agency_code }}">
+        <div class="ngwmn-component loading" data-component="graph" data-site-id="{{ site_no }}" data-agency-code="{{ agency_code }}" data-graph-type="{{ graph_type }}">
             <div class="indicators">
                 <i class="loading-indicator fas fa-5x fa-spin fa-spinner"></i>
                 <i class="error-indicator fas fa-5x fa-exclamation-circle"></i>
