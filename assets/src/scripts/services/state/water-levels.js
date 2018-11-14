@@ -35,7 +35,7 @@ export const setWaterLevels = function (agencyCode, siteId, waterLevels) {
  * @param {String} siteId     Site ID
  * @param {String} status     Status string of service call for specified site
  */
-const setWaterLevelStatus = function (agencyCode, siteId, status) {
+export const setWaterLevelStatus = function (agencyCode, siteId, status) {
     return {
         type: WATER_LEVELS_CALL_STATUS,
         payload: {
@@ -47,7 +47,7 @@ const setWaterLevelStatus = function (agencyCode, siteId, status) {
 };
 
 export const getWaterLevelStatus = memoize((agencyCode, siteId) => createSelector(
-    state => state[MOUNT_POINT].requestStatus || {},
+    state => (state[MOUNT_POINT] || {}).requestStatus || {},
     (status) => {
         return status[getSiteKey(agencyCode, siteId)];
     }

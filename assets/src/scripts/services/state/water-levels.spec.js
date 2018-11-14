@@ -3,8 +3,9 @@ import configureStore from 'redux-mock-store';
 import { default as thunk } from 'redux-thunk';
 
 import {
-    default as waterLevels, getWaterLevels, getSiteWaterLevels, retrieveWaterLevels, setWaterLevels,
-    WATER_LEVELS_SET, WATER_LEVELS_CALL_STATUS, MOUNT_POINT
+    default as waterLevels, getSiteWaterLevels, getWaterLevels,
+    getWaterLevelStatus, retrieveWaterLevels, setWaterLevels,
+    setWaterLevelStatus, WATER_LEVELS_SET, WATER_LEVELS_CALL_STATUS, MOUNT_POINT
 } from './water-levels';
 import { MOCK_WATER_LEVEL_RESPONSE, MOCK_WATER_LEVEL_DATA } from '../cache.spec';
 
@@ -104,6 +105,22 @@ describe('water levels service state', () => {
                 });
                 done();
             });
+        });
+    });
+
+    describe('waterLevelStatus', () => {
+        let store;
+
+        beforeEach(() => {
+            store = createStore(combineReducers({
+                ...waterLevels
+            }), {});
+        });
+
+        it('works', () => {
+            expect(getWaterLevelStatus('USGS', '430406089232901')(store.getState())).toEqual(undefined);
+            store.dispatch(setWaterLevelStatus('USGS', '430406089232901', 'DONE'));
+            expect(getWaterLevelStatus('USGS', '430406089232901')(store.getState())).toEqual('DONE');
         });
     });
 });
