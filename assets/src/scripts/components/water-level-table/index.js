@@ -5,7 +5,9 @@ import { createStructuredSelector } from 'reselect';
 import List from 'list.js';
 
 import { link } from 'ngwmn/lib/d3-redux';
-import { getSiteWaterLevels} from 'ngwmn/services/state/index';
+import {
+    getSiteWaterLevels, getWaterLevelStatus, retrieveWaterLevels
+} from 'ngwmn/services/state/index';
 
 import { isTableRendered, renderTable } from './state';
 
@@ -55,6 +57,12 @@ const drawTableBody = function(table, waterLevels, tbody) {
  * @param  {String} options.id          Unique ID for this component
  */
 export default function(store, node, {agencyCode, siteId}) {
+    // If a request for this site hasn't been made yet, make the water levels
+    // service call.
+    if (!getWaterLevelStatus(agencyCode, siteId)(store.getState())) {
+        store.dispatch(retrieveWaterLevels(agencyCode, siteId));
+    }
+
     const component = select(node);
     component.select('button').on('click', () => {
         store.dispatch(renderTable());
