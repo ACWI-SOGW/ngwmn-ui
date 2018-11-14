@@ -22,7 +22,7 @@
     {% if organization %}<h2 class="usa-font-lead">{{ organization }}</h2>{% endif %}
     <div>
         {{ components.LithologyPatterns(lithology_ids) }}
-        <div class="grid-row grid-gap-1">
+        <div class="grid-row grid-gap-2">
             <div class="desktop:grid-col-6">
                 {{ components.Graph('water-levels', feature.AGENCY_CD, feature.SITE_NO) }}
             </div>

@@ -78,18 +78,21 @@ export const initAndUpdate = function (initFunc, updateFunc) {
  * @param  {Object} store       Redux store
  * @param  {Function} selector  Redux selector
  * @param  {Function} func      Callback function
- * @param  {Function} immediate If true, call function before subscribing
+ * @param  {Function} raf       If true, throttle callback with requestAnimationFrame
  * @return {Function}           Unsubscribe function
  */
-export const listen = function (store, selector, func) {
+export const listen = function (store, selector, func, raf = true) {
     let current = selector(store.getState());
-    const callback = function () {
+    let callback = function () {
         let newData = selector(store.getState());
         if (current !== newData) {
             current = newData;
             func(current);
         }
     };
+    if (raf) {
+        callback = throttle(callback);
+    }
     func(current);
     return store.subscribe(callback);
 };
