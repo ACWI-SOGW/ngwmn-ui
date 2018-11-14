@@ -30,9 +30,10 @@ export const drawMessage = function (elem, message) {
 };
 
 /**
- * Draws a water-levels graph.
+ * Draws a water-levels or well log graph.
  * @param  {Object} store               Redux store
  * @param  {Object} node                DOM node to draw graph into
+ * @param  {Object} options.graphType   'water-levels' or 'well-log'
  * @param  {Object} options.agencyCode  Agency of site to draw
  * @param  {Object} options.siteId      ID of site to draw
  * @param  {String} options.id          Unique ID for this component
