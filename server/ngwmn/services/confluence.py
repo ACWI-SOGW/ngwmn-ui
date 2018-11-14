@@ -1,3 +1,6 @@
+"""
+Functions for accessing information from a confluence RSS feed
+"""
 
 from bs4 import BeautifulSoup
 import feedparser
