@@ -220,7 +220,7 @@
                 </button>
                 <div id="ts-a4" class="usa-accordion-content">
 
-                    <table id="overall-stats" class="usa-table-borderless water-stats-table">
+                    <table id="overall-stats" class="usa-table usa-table-borderless water-stats-table">
                         <caption>Overall Water Level Statistics ({{ stats.overall.alt_datum }})</caption>
                         <thead>
                             <tr class="light">
@@ -255,7 +255,7 @@
                         </tfoot>
                     </table>
                     {% if stats.monthly|length > 0 %}
-                    <table id="monthly-stats" class="usa-table-borderless water-stats-table">
+                    <table id="monthly-stats" class="usa-table usa-table-borderless water-stats-table">
                         <caption>Monthly Water Level Statistics ({{ stats.overall.alt_datum }})</caption>
                         <thead>
                             <tr class="light">
