@@ -85,6 +85,6 @@
     "redux-thunk": "^2.3.0",
     "reselect": "^4.0.0",
     "resize-observer-polyfill": "^1.5.0",
-    "uswds": "2.0.0-alpha"
+    "uswds": "^2.0.0-beta.3"
   }
 }

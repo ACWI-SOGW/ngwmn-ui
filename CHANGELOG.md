@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 ### Added
 - Added basic description text
-- Added keys and interactivity to well construction table, moved next to  drawing.
+- Added keys and interactivity to well construction table with a responsive layout
 - Added providers view which provides a list of available providers
 - Added provider view which shows information about an individual provider
 - Added sites view which provides a list of sites for a provider

@@ -39,6 +39,7 @@ describe('graph component', () => {
             jasmine.Ajax.install();
             store = configureStore();
             attachToNode(store, div.node(), {
+                graphType: 'water-levels',
                 agencyCode: 'USGS',
                 siteId: '430406089232901',
                 id: 23
@@ -52,7 +53,7 @@ describe('graph component', () => {
         it('renders initial chart with appropriate content', () => {
             expect(div.classed('loading')).toBe(true);
             expect(div.classed('has-error')).toBe(false);
-            expect(div.selectAll('.chart').size()).toEqual(4);
+            expect(div.selectAll('.chart').size()).toEqual(2);
             expect(div.selectAll('.tooltip-text').size()).toEqual(0);
             expect(div.selectAll('circle.focus').size()).toBe(0);
             expect(div.selectAll('.line-segment').size()).toBe(0);
@@ -70,7 +71,7 @@ describe('graph component', () => {
                     expect(div.classed('has-error')).toBe(false);
                     expect(div.selectAll('.tooltip-text').size()).toEqual(1);
                     expect(div.selectAll('circle.focus').size()).toBe(1);
-                    expect(div.selectAll('.line-segment').size()).toBe(4);
+                    expect(div.selectAll('.line-segment').size()).toBe(3);
                     done();
                 });
             });

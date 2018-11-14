@@ -162,29 +162,29 @@ export const getChartPosition = memoize((opts, chartType) => createSelector(
                 return {
                     x: 0,
                     y: 0,
-                    width: Math.max(width * 0.9 - FOCUS_CIRCLE_RADIUS - PADDING, FOCUS_CIRCLE_RADIUS),
+                    width: Math.max(width - FOCUS_CIRCLE_RADIUS - PADDING, FOCUS_CIRCLE_RADIUS),
                     height: height * 0.8
                 };
             case 'brush':
                 return {
                     x: 0,
                     y: height * 0.8,
-                    width: Math.max(width * 0.9 - FOCUS_CIRCLE_RADIUS - PADDING, FOCUS_CIRCLE_RADIUS),
+                    width: Math.max(width - FOCUS_CIRCLE_RADIUS - PADDING, FOCUS_CIRCLE_RADIUS),
                     height: height * 0.2
                 };
             case 'lithology':
                 return {
-                    x: viewBox.right * 0.9,
+                    x: 0,
                     y: 0,
-                    width: Math.max(width * 0.1, 0),
-                    height: height * 0.8
+                    width: width,
+                    height: height
                 };
             case 'construction':
                 return {
-                    x: viewBox.right * 0.92,
+                    x: viewBox.right * 0.2,
                     y: 0,
-                    width: Math.max(width * 0.06, 0),
-                    height: height * 0.8
+                    width: width * 0.6,
+                    height: height
                 };
             default:
                 return null;

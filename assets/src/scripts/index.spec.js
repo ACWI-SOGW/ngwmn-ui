@@ -16,7 +16,6 @@ import 'ngwmn/components/graph/state/well-log.spec.js';
 import 'ngwmn/components/graph/view/axes.spec.js';
 import 'ngwmn/components/graph/view/construction.spec.js';
 import 'ngwmn/components/graph/view/cursor.spec.js';
-import 'ngwmn/components/graph/view/domain-mapping.spec.js';
 import 'ngwmn/components/graph/view/legend.spec.js';
 import 'ngwmn/components/graph/view/lithology.spec.js';
 import 'ngwmn/components/graph/view/water-levels.spec.js';
