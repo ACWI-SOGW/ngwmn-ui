@@ -47,6 +47,7 @@ DATA_COLLECTION_CONTENT = 'datacollection'
 DATA_MANAGEMENT_CONTENT = 'datamanagement'
 OTHER_AGENCY_INFO_CONTENT = 'otherinfo'
 
+
 def confluence_url(agency_cd, content_type):
     """
     Return confluence url containing information for the agency and content type

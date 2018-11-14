@@ -263,7 +263,8 @@ class TestGetSites(TestCase):
 
     def test_success_with_no_sites(self):
         with requests_mock.mock() as m:
-            m.post('https://fake.gov/ngwmn/geoserver/wfs', text='{"type": "FeatureCollection","totalFeatures": 0, "features": []}')
+            m.post('https://fake.gov/ngwmn/geoserver/wfs',
+                   text='{"type": "FeatureCollection","totalFeatures": 0, "features": []}')
             result = get_sites('CODWR', service_root=self.test_service_root)
 
             self.assertEqual(result, [])
@@ -298,7 +299,7 @@ class TestGetWellData(TestCase):
         )
 
     @mock.patch('ngwmn.services.ngwmn.r.get')
-    def test_get_iddata__service_failure(self, r_mock):
+    def test_get_iddata_service_failure(self, r_mock):
         m_resp = mock.Mock(r.Response)
         m_resp.status_code = 500
         m_resp.url = 'http://url'
