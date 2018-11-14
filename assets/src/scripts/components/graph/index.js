@@ -1,7 +1,9 @@
 import { select } from 'd3-selection';
 
 import { link } from 'ngwmn/lib/d3-redux';
-import { getSiteKey, setWellLog, retrieveWaterLevels } from 'ngwmn/services/state/index';
+import {
+    getSiteKey, getWaterLevelStatus, setWellLog, retrieveWaterLevels
+} from 'ngwmn/services/state/index';
 
 import { getCurrentWaterLevels } from './state';
 import drawGraph from './view';
@@ -44,7 +46,12 @@ export default function (store, node, options) {
     }
 
     store.dispatch(setWellLog(agencyCode, siteId, window.wellLog));
-    store.dispatch(retrieveWaterLevels(agencyCode, siteId));
+
+    // If a request for this site hasn't been made yet, make the water levels
+    // service call.
+    if (!getWaterLevelStatus(agencyCode, siteId)(store.getState())) {
+        store.dispatch(retrieveWaterLevels(agencyCode, siteId));
+    }
 
     const opts = {
         siteKey: getSiteKey(options.agencyCode, options.siteId),

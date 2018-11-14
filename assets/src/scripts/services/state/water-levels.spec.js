@@ -4,7 +4,7 @@ import { default as thunk } from 'redux-thunk';
 
 import {
     default as waterLevels, getWaterLevels, getSiteWaterLevels, retrieveWaterLevels, setWaterLevels,
-    WATER_LEVELS_SET, MOUNT_POINT
+    WATER_LEVELS_SET, WATER_LEVELS_CALL_STATUS, MOUNT_POINT
 } from './water-levels';
 import { MOCK_WATER_LEVEL_RESPONSE, MOCK_WATER_LEVEL_DATA } from '../cache.spec';
 
@@ -14,23 +14,26 @@ describe('water levels service state', () => {
     describe('getSiteWaterLevels works', () => {
         let mockStoreData = {};
         mockStoreData[MOUNT_POINT] = {
-            'USGS:12345678': {
-                elevationReference: {
-                    siteElevation: '111.3'
-                },
-                samples: [
-                    {'value': 1},
-                    {'value': 2}
-                ]
+            data: {
+                'USGS:12345678': {
+                    elevationReference: {
+                        siteElevation: '111.3'
+                    },
+                    samples: [
+                        {'value': 1},
+                        {'value': 2}
+                    ]
+                }
             }
         };
 
-        it('Returns  empty object if agency:site is not in the water levels data', () => {
+        it('Returns empty object if agency:site is not in the water levels data', () => {
             expect(getSiteWaterLevels('USSS', '12345678')(mockStoreData)).toEqual({});
         });
 
         it('Returns the expected data if agency:site is in the water levels data', () => {
-            expect(getSiteWaterLevels('USGS', '12345678')(mockStoreData)).toEqual(mockStoreData[MOUNT_POINT]['USGS:12345678']);
+            const levels = getSiteWaterLevels('USGS', '12345678')(mockStoreData);
+            expect(levels).toEqual(mockStoreData[MOUNT_POINT]['data']['USGS:12345678']);
         });
     });
 
@@ -74,13 +77,29 @@ describe('water levels service state', () => {
             });
             promise.then(() => {
                 const actions = store.getActions();
-                expect(actions.length).toBe(1);
+                expect(actions.length).toBe(3);
                 expect(actions[0]).toEqual({
+                    type: WATER_LEVELS_CALL_STATUS,
+                    payload: {
+                        agencyCode: 'USGS',
+                        siteId: '430406089232901',
+                        status: 'STARTED'
+                    }
+                });
+                expect(actions[1]).toEqual({
                     type: WATER_LEVELS_SET,
                     payload: {
                         agencyCode: 'USGS',
                         siteId: '430406089232901',
                         waterLevels: MOCK_WATER_LEVEL_DATA
+                    }
+                });
+                expect(actions[2]).toEqual({
+                    type: WATER_LEVELS_CALL_STATUS,
+                    payload: {
+                        agencyCode: 'USGS',
+                        siteId: '430406089232901',
+                        status: 'DONE'
                     }
                 });
                 done();
