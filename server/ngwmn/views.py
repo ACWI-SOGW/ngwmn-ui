@@ -81,7 +81,7 @@ def sites(agency_cd):
     :param str agency_cd:
     """
     site_list = get_sites(agency_cd)
-    if not sites:
+    if not site_list:
         return '{0} is not a valid agency code'.format(agency_cd), 404
     return render_template('sites.html',
                            sites=site_list)
