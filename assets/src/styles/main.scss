@@ -1,6 +1,3 @@
-// Override default of 4rem
-//$h1-font-size: 3.25rem !default;
-
 $fa-font-path: './fonts' !default;
 @import '../../node_modules/@fortawesome/fontawesome-free/scss/fontawesome.scss';
 //@import '../../node_modules/@fortawesome/fontawesome-free/scss/brands.scss';
@@ -11,7 +8,6 @@ $fa-font-path: './fonts' !default;
 $theme-font-path: './fonts';
 $theme-image-path: './img';
 $theme-grid-container-max-width: 100%;
-//@import './theme-palette-onondaga';
 @import 'uswds';
 
 @import './partials/footer';
