@@ -59,4 +59,3 @@ def confluence_url(agency_cd, content_type):
         agency_cd,
         content_type
     )
-
