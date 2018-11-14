@@ -36,11 +36,6 @@ body {
         margin-bottom: 1em;
         padding: 0 1em;
     }
-    .content-container {
-        margin-left: auto;
-        margin-right: auto;
-        max-width: $theme-grid-container-max-width;
-    }
     &#site-location {
         @import './pages/site-location';
     }
