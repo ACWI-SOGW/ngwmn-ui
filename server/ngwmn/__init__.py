@@ -17,5 +17,7 @@ except FileNotFoundError:
 
 # pylint: disable=C0413
 from . import views
+# pylint: disable=C0413
 from . import filters
+# pylint: disable=C0413
 from . import services
