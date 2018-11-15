@@ -281,7 +281,8 @@ def get_well_log(agency_cd, location_id):
 
     construction = []
 
-    casings = water_well.findall('gwml:construction/gwml:WellCasing/gwml:wellCasingElement/gwml:WellCasingComponent', xml.nsmap)
+    casings = water_well.findall('gwml:construction/gwml:WellCasing/gwml:wellCasingElement/gwml:WellCasingComponent',
+                                 xml.nsmap)
     for index, elem in enumerate(casings):
         casing = {
             'id': f'casing-{index}',

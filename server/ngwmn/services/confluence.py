@@ -1,3 +1,6 @@
+"""
+Functions for accessing information from a confluence RSS feed
+"""
 
 from bs4 import BeautifulSoup
 import feedparser
@@ -34,7 +37,8 @@ def pull_feed(feed_url):
         post = str(soup)
 
     elif feed.get('bozo_exception'):
-        app.logger.error('Error retrieving feed for {0} with error '.format(feed_url, str(feed.get('bozo_exception'))))
+        app.logger.error('Error retrieving feed for % with error %'.format(feed_url,
+                                                                           str(feed.get('bozo_exception'))))
     return post
 
 
@@ -43,6 +47,7 @@ SITE_SELECTION_CONTENT = 'siteselect'
 DATA_COLLECTION_CONTENT = 'datacollection'
 DATA_MANAGEMENT_CONTENT = 'datamanagement'
 OTHER_AGENCY_INFO_CONTENT = 'otherinfo'
+
 
 def confluence_url(agency_cd, content_type):
     """
@@ -56,4 +61,3 @@ def confluence_url(agency_cd, content_type):
         agency_cd,
         content_type
     )
-

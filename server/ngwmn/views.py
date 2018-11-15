@@ -42,6 +42,7 @@ def version():
         'version': __version__
     })
 
+
 @app.route('/provider/', methods=['GET'])
 def providers():
     """
@@ -61,11 +62,6 @@ def provider(agency_cd):
     if agency_cd not in providers_by_agency_cd:
         return '{0} is not a valid agency code'.format(agency_cd), 404
 
-    url = '{0}createrssfeed.action?types=page&spaces=GWDataPortal&title=X&labelString=ngwmn_provider_{1}_{2}&amp;excludedSpaceKeys%3D&sort=modified&maxResults=10&timeSpan=3600&showContent=true&confirm=Create+RSS+Feed'.format(
-        app.config['CONFLUENCE_URL'],
-        agency_cd,
-        'main'
-    )
     return render_template('provider.html',
                            agency_metadata=providers_by_agency_cd.get(agency_cd),
                            provider_content=pull_feed(confluence_url(agency_cd, MAIN_CONTENT)),
@@ -73,7 +69,8 @@ def provider(agency_cd):
                            data_collection=pull_feed(confluence_url(agency_cd, DATA_COLLECTION_CONTENT)),
                            data_management=pull_feed(confluence_url(agency_cd, DATA_MANAGEMENT_CONTENT)),
                            other_agency_info=pull_feed(confluence_url(agency_cd, OTHER_AGENCY_INFO_CONTENT))
-                           )
+                          )
+
 
 @app.route('/provider/<agency_cd>/site/', methods=['GET'])
 def sites(agency_cd):
@@ -81,11 +78,11 @@ def sites(agency_cd):
     A list of NGWMN sites for an agency_cd
     :param str agency_cd:
     """
-    sites = get_sites(agency_cd)
-    if not sites:
+    site_list = get_sites(agency_cd)
+    if not site_list:
         return '{0} is not a valid agency code'.format(agency_cd), 404
     return render_template('sites.html',
-                           sites=sites)
+                           sites=site_list)
 
 
 @app.route('/provider/<agency_cd>/site/<location_id>/', methods=['GET'])

@@ -1,9 +1,13 @@
+"""
+Unit tests for services.confluence module
+"""
 
 from unittest import TestCase, mock
 
 import feedparser
 
 from ngwmn.services.confluence import pull_feed, confluence_url
+
 
 class TestPullFeed(TestCase):
 

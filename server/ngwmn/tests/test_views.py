@@ -85,6 +85,7 @@ class TestWellPageView(TestCase):
         response = self.app_client.get(self.site_loc_url)
         self.assertEqual(response.status_code, 404)
 
+
 @mock.patch('ngwmn.views.get_providers')
 class TestProvidersView(TestCase):
 
