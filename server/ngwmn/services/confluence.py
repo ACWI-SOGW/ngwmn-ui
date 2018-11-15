@@ -37,7 +37,8 @@ def pull_feed(feed_url):
         post = str(soup)
 
     elif feed.get('bozo_exception'):
-        app.logger.error('Error retrieving feed for {0} with error {1}'.format(feed_url, str(feed.get('bozo_exception'))))
+        app.logger.error('Error retrieving feed for % with error %'.format(feed_url,
+                                                                           str(feed.get('bozo_exception'))))
     return post
 
 
