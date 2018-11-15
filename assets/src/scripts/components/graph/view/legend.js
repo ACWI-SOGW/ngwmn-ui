@@ -21,6 +21,9 @@ const appendKey = function (elem, className) {
 };
 
 export default function (elem, activeClasses) {
+    elem.select('.legend')
+        .remove();
+
     return elem.append('div')
         .classed('legend', true)
         .call(callIf(activeClasses.approved, legend => {

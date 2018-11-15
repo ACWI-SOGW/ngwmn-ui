@@ -27,7 +27,7 @@ describe('well-log construction state', () => {
 
         it('works with mock state', () => {
             const store = getMockStore();
-            expect(getSelectedConstructionId(siteKey)(store.getState())).toEqual(undefined);
+            expect(getSelectedConstructionId(siteKey)(store.getState())).toEqual(null);
             store.dispatch(setSelectedConstructionId(siteKey, 'screen-5'));
             expect(getSelectedConstructionId(siteKey)(store.getState())).toEqual('screen-5');
         });

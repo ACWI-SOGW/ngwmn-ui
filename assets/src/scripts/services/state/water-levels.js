@@ -7,6 +7,7 @@ import { getSiteKey } from './index';
 
 export const MOUNT_POINT = 'services/water-levels';
 export const WATER_LEVELS_SET = `${MOUNT_POINT}/WATER_LEVELS_SET`;
+export const WATER_LEVELS_CALL_STATUS = `${MOUNT_POINT}/WATER_LEVELS_CALL_STATUS`;
 
 /**
  * Action creator:
@@ -28,6 +29,31 @@ export const setWaterLevels = function (agencyCode, siteId, waterLevels) {
 };
 
 /**
+ * Action creator:
+ * Set the status of the water levels service call
+ * @param {String} agencyCode Agency code
+ * @param {String} siteId     Site ID
+ * @param {String} status     Status string of service call for specified site
+ */
+export const setWaterLevelStatus = function (agencyCode, siteId, status) {
+    return {
+        type: WATER_LEVELS_CALL_STATUS,
+        payload: {
+            agencyCode,
+            siteId,
+            status
+        }
+    };
+};
+
+export const getWaterLevelStatus = memoize((agencyCode, siteId) => createSelector(
+    state => (state[MOUNT_POINT] || {}).requestStatus || {},
+    (status) => {
+        return status[getSiteKey(agencyCode, siteId)];
+    }
+));
+
+/**
  * Thunk action:
  * Action that returns a thunk that calls the getWaterLevels action and then
  * dispatches actions to update the state.
@@ -36,9 +62,12 @@ export const setWaterLevels = function (agencyCode, siteId, waterLevels) {
  * @return {Function}          Thunk
  */
 export const retrieveWaterLevels = (agencyCode, siteId) => (dispatch) => {
-    return cache.retrieveWaterLevels(agencyCode, siteId).then(waterLevels => {
-        dispatch(setWaterLevels(agencyCode, siteId, waterLevels));
-    });
+    dispatch(setWaterLevelStatus(agencyCode, siteId, 'STARTED'));
+    return cache.retrieveWaterLevels(agencyCode, siteId)
+        .then(waterLevels => {
+            dispatch(setWaterLevels(agencyCode, siteId, waterLevels));
+            dispatch(setWaterLevelStatus(agencyCode, siteId, 'DONE'));
+        });
 };
 
 /**
@@ -46,7 +75,7 @@ export const retrieveWaterLevels = (agencyCode, siteId) => (dispatch) => {
  * @param  {Object} state Redux state
  * @return {Object}       Water levels keyed on ID
  */
-export const getWaterLevels = state => state[MOUNT_POINT];
+export const getWaterLevels = state => state[MOUNT_POINT]['data'] || {};
 
 /**
  * Return water level data for the site or the empty object if no data available
@@ -73,7 +102,19 @@ const reducer = function (state = {}, action) {
         case WATER_LEVELS_SET:
             return {
                 ...state,
-                [getSiteKey(action.payload.agencyCode, action.payload.siteId)]: action.payload.waterLevels
+                data: {
+                    ...state.data,
+                    ...{[getSiteKey(action.payload.agencyCode, action.payload.siteId)]: action.payload.waterLevels}
+                }
+
+            };
+        case WATER_LEVELS_CALL_STATUS:
+            return {
+                ...state,
+                requestStatus: {
+                    ...state.requestStatus,
+                    ...{[getSiteKey(action.payload.agencyCode, action.payload.siteId)]: action.payload.status}
+                }
             };
         default:
             return state;

@@ -12,7 +12,7 @@ const MOCK_COMPONENT = `<div class="ngwmn-component" data-component="well-log">
     <label for="screens">Screens</label>
     <input type="radio" name="construction-type" value="casings" id="casings">
     <label for="casings">Casings</label>
-    <table class="usa-table-borderless">
+    <table class="usa-table usa-table-borderless">
         <thead>
             <tr>
                 <th scope="col"></th>

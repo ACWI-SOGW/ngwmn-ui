@@ -10,9 +10,9 @@
     {% endfor %}
 {%- endmacro %}
 
-{% macro Graph(agency_code, site_no) -%}
+{% macro Graph(graph_type, agency_code, site_no) -%}
     <div class="has-script">
-        <div class="ngwmn-component loading" data-component="graph" data-site-id="{{ site_no }}" data-agency-code="{{ agency_code }}">
+        <div class="ngwmn-component loading" data-component="graph" data-site-id="{{ site_no }}" data-agency-code="{{ agency_code }}" data-graph-type="{{ graph_type }}">
             <div class="indicators">
                 <i class="loading-indicator fas fa-5x fa-spin fa-spinner"></i>
                 <i class="error-indicator fas fa-5x fa-exclamation-circle"></i>
@@ -36,13 +36,13 @@
 {% macro WellLog(agency_code, site_no, well_log) -%}
     <div class="ngwmn-component" data-component="well-log" data-site-id="{{ site_no }}" data-agency-code="{{ agency_code }}">
         <h3>Well Construction</h3>
-        <input type="radio" name="construction-type" value="all" id="all" checked>
-        <label for="all">All</label>
-        <input type="radio" name="construction-type" value="screens" id="screens">
-        <label for="screens">Screens</label>
-        <input type="radio" name="construction-type" value="casings" id="casings">
-        <label for="casings">Casings</label>
-        <table class="usa-table-borderless">
+        <input class="usa-radio-input" type="radio" name="construction-type" value="all" id="all" checked>
+        <label class="usa-radio-label" for="all">All</label>
+        <input class="usa-radio-input" type="radio" name="construction-type" value="screens" id="screens">
+        <label class="usa-radio-label" for="screens">Screens</label>
+        <input class="usa-radio-input" type="radio" name="construction-type" value="casings" id="casings">
+        <label class="usa-radio-label" for="casings">Casings</label>
+        <table class="usa-table usa-table-borderless">
             <thead>
                 <tr>
                     <th scope="col"></th>

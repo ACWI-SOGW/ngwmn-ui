@@ -19,7 +19,7 @@ describe('d3-redux', () => {
             const state1 = 'state1';
             const state2 = 'state2';
             const spy = jasmine.createSpy('listener');
-            listen(store, selector, spy);
+            listen(store, selector, spy, false);
             expect(spy.calls.count()).toEqual(1);
             store.dispatch({type: 'a', payload: state1});
             expect(spy.calls.count()).toEqual(2);
@@ -34,6 +34,18 @@ describe('d3-redux', () => {
             store.dispatch({type: 'a', payload: state});
             listen(store, selector, function (value) {
                 expect(value).toBe(state);
+                done();
+            });
+        });
+
+        it('calls listener at next animation frame when raf parameter specified', (done) => {
+            const state1 = 'state1';
+            const spy = jasmine.createSpy('listener');
+            listen(store, selector, spy, true);
+            expect(spy.calls.count()).toEqual(1);
+            store.dispatch({type: 'a', payload: state1});
+            window.requestAnimationFrame(() => {
+                expect(spy.calls.count()).toEqual(2);
                 done();
             });
         });
