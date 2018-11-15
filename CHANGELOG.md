@@ -41,6 +41,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Using headless Firefox to run tests for CI
 - Using node 10.13.0
 
-[Unreleased]: https://github.com/ACWI-SOGW/ngwmn-ui-0.1.0...master
-[0.2.0]: https://github.com/ACWI-SOGW/ngwmn-ui/tree/ngwmn-ui-0.2.0
+[Unreleased]: https://github.com/ACWI-SOGW/ngwmn-ui-0.2.0...master
+[0.2.0]: https://github.com/ACWI-SOGW/ngwmn-ui-0.1.0...ngwmn-ui-0.2.0
 [0.1.0]: https://github.com/ACWI-SOGW/ngwmn-ui/tree/ngwmn-ui-0.1.0
