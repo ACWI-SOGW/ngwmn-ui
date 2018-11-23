@@ -5,8 +5,6 @@ Application configuration settings
 DEBUG = False
 
 SERVICE_ROOT = 'https://cida.usgs.gov'
-# ngwmn_cache service root happens to be the same as the ngwmn root, but does not have to be
-SERVICE_ROOT_CACHE = SERVICE_ROOT
 
 CONFLUENCE_URL = 'https://my.usgs.gov/confluence/'
 

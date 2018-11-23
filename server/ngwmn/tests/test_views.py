@@ -15,7 +15,6 @@ from .services.mock_data import MOCK_SIFTA_RESPONSE, MOCK_WELL_LOG_RESPONSE, MOC
     MOCK_OVERALL_STATS, MOCK_MONTHLY_STATS, MOCK_SITE_INFO
 
 SERVICE_ROOT = app.config.get('SERVICE_ROOT')
-SERVICE_ROOT_CACHE = app.config.get('SERVICE_ROOT_CACHE')
 COOP_SERVICE_PATTERN = app.config['COOPERATOR_SERVICE_PATTERN']
 
 
@@ -33,9 +32,9 @@ class TestWellPageView(TestCase):
         self.site_loc_url = '/provider/{0}/site/{1}/'.format(_agency_cd, _location_id)
 
         _stats_url = '/'.join(['ngwmn_cache', 'direct', 'json'])
-        self.site_info_url = '/'.join([SERVICE_ROOT_CACHE, _stats_url, 'site-info', _agency_cd, _location_id])
-        self.stats_overall_url = '/'.join([SERVICE_ROOT_CACHE, _stats_url, 'wl-overall', _agency_cd, _location_id])
-        self.stats_monthly_url = '/'.join([SERVICE_ROOT_CACHE, _stats_url, 'wl-monthly', _agency_cd, _location_id])
+        self.site_info_url = '/'.join([SERVICE_ROOT, _stats_url, 'site-info', _agency_cd, _location_id])
+        self.stats_overall_url = '/'.join([SERVICE_ROOT, _stats_url, 'wl-overall', _agency_cd, _location_id])
+        self.stats_monthly_url = '/'.join([SERVICE_ROOT, _stats_url, 'wl-monthly', _agency_cd, _location_id])
         self.mock_site_info_json = json.dumps(MOCK_SITE_INFO)
         self.mock_overall_json = json.dumps(MOCK_OVERALL_STATS)
         self.mock_monthly_json = json.dumps(MOCK_MONTHLY_STATS)

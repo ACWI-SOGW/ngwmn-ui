@@ -14,7 +14,6 @@ from ngwmn.services.lithology_parser import classify_material, get_colors
 from ngwmn.xml_utils import parse_xml
 
 SERVICE_ROOT = app.config.get('SERVICE_ROOT')
-SERVICE_ROOT_CACHE = app.config.get('SERVICE_ROOT_CACHE')
 
 
 def get_iddata(request, agency_cd, location_id, service_root=SERVICE_ROOT):
@@ -408,7 +407,7 @@ def get_sites(agency_cd, service_root=SERVICE_ROOT):
     return list(map(lambda x: convert_keys_and_booleans(x.get('properties', {})), features))
 
 
-def get_statistic(agency_cd, site_no, stat_type, service_root=SERVICE_ROOT_CACHE):
+def get_statistic(agency_cd, site_no, stat_type, service_root=SERVICE_ROOT):
     """
     fetches the statistics from the ngwmn cache
 
