@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="usa-width-one-whole">
+        <h1>{{ error.message | title }}</h1>
+        <h2>{{ error.status_code_str }} ({{ error.status_code }})</h2>
+    </div>
+{% endblock content %}
