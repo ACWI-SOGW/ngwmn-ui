@@ -2,7 +2,7 @@
 
 {% block content %}
     <div class="usa-width-one-whole">
-        <h1>{{ error.message | title }}</h1>
-        <h2>{{ error.status_code_str }} ({{ error.status_code }})</h2>
+        <h1>{{ error.status_code_str | title }} ({{ error.status_code }})</h1>
+        <h2>{{ error.message }}</h2>
     </div>
 {% endblock content %}
