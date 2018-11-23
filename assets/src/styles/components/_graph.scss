@@ -66,6 +66,18 @@ $provisional-color: color('accent-warm-dark');
                 }
             }
         }
+        .overlay {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            color: color('primary-light');
+            font-size: 1em;
+            padding: 2.75em;
+            @include at-media('mobile-lg') {
+                font-size: 1.25em;
+            }
+        }
     }
 
     // container for everything drawn by the graph component

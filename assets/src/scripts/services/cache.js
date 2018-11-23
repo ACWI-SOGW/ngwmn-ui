@@ -12,6 +12,15 @@ const WL_URL = `${config.SERVICE_ROOT}/ngwmn_cache/direct/flatXML/waterlevel`;
  */
 export const retrieveWaterLevels = function (agencyCode, siteId) {
     return get(`${WL_URL}/${agencyCode}/${siteId}`, 'responseXML').then(xml => {
+        // Handle null responses from the service
+        if (xml === null) {
+            return {
+                message: 'No water level data available',
+                elevationReference: {},
+                samples: []
+            };
+        }
+
         const elev = xml.documentElement.getElementsByTagName('elevation-reference')[0];
         const samples = xml.documentElement.getElementsByTagName('samples')[0];
         return {
@@ -40,7 +49,8 @@ export const retrieveWaterLevels = function (agencyCode, siteId) {
     }).catch(reason => {
         console.error(reason);
         return {
-            error: reason.message,
+            error: true,
+            message: reason.message,
             elevationReference: {},
             samples: []
         };
