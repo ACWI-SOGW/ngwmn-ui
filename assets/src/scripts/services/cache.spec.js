@@ -105,7 +105,8 @@ describe('cache service module', () => {
             });
             promise.then(resp => {
                 expect(resp).toEqual({
-                    error: 'Failed with status 500: oops my bad',
+                    error: true,
+                    message: 'Failed with status 500: oops my bad',
                     elevationReference: {},
                     samples: []
                 });
@@ -120,6 +121,19 @@ describe('cache service module', () => {
             });
             promise.then(waterLevels => {
                 expect(waterLevels).toEqual(MOCK_WATER_LEVEL_DATA);
+            });
+        });
+
+        it('sets a status message on null response', () => {
+            request.respondWith({
+                status: 200
+            });
+            promise.then(waterLevels => {
+                expect(waterLevels).toEqual({
+                    message: 'No water level data available',
+                    elevationReference: {},
+                    samples: []
+                });
             });
         });
     });

@@ -60,9 +60,18 @@ export default function (store, node, options) {
     };
 
     select(node)
-        .call(link(store, (elem, waterLevels) => {
+        .call(link(store, (elem, waterLevels, overlay) => {
             elem.classed('loading', !waterLevels || !waterLevels.samples)
                 .classed('has-error', waterLevels && waterLevels.error);
+
+            if (options.graphType === 'water-levels') {
+                overlay = overlay || elem
+                    .append('div')
+                        .classed('overlay', true);
+                overlay.text(waterLevels.message || '');
+            }
+
+            return overlay;
         }, getCurrentWaterLevels(opts)))
         .call(drawGraph(opts), store);
 }
