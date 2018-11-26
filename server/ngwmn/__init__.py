@@ -1,6 +1,8 @@
 """
 Initialize the NGWMN UI application
 """
+import json
+
 from flask import Flask, render_template
 
 
@@ -14,6 +16,13 @@ try:
     app.config.from_pyfile('config.py')
 except FileNotFoundError:
     pass
+
+# Load static assets manifest file, which maps source file names to the
+# corresponding versioned/hashed file name.
+manifest_path = app.config.get('ASSET_MANIFEST_PATH')
+if manifest_path:
+    with open(manifest_path, 'r') as f:
+        app.config['ASSET_MANIFEST'] = json.loads(f.read())
 
 
 @app.errorhandler(404)
