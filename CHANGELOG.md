@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added providers view which provides a list of available providers
 - Added provider view which shows information about an individual provider
 - Added sites view which provides a list of sites for a provider
+- Added error template for backing service calls, 404s, and 500s
 
 ### Changed
 - The site page route was changed
