@@ -2,7 +2,7 @@ bumpversion==0.5.3
 coverage==4.5.2
 coveralls==1.5.1
 pylint==2.2.0
-pytest==3.10.1
+pytest==4.0.1
 pytest-flask==0.14.0
 pytest-mock==1.10.0
 requests-cache==0.4.13
