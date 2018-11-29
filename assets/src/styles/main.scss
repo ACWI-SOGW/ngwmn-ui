@@ -36,3 +36,19 @@ body {
         @import './pages/site-location';
     }
 }
+
+#ccsa-area {
+    float: right;
+    margin-top: 43px;
+    margin-right: 10px;
+    font-family: calibri,tahoma,arial,verdana,sans-serif;
+    font-size: xx-large;
+    text-decoration: none;
+
+    a {
+        color: #233f8f !important;
+    }
+    .ngwmn-highlight {
+        color: #d1544a;
+    }
+}
