@@ -30,38 +30,7 @@
         </div>
 
         <div class="grid-col-10 desktop:grid-col-5">
-        <p>{{ monitoring_location_description }}</p>
-            <p>
-                {% if feature.SITE_TYPE or feature.NAT_AQFR_DESC %}
-
-                    {% if feature.STATE_NM %}
-                        Located in {{ feature.COUNTY_NM }}, {{ feature.STATE_NM }}, this
-                    {% elif feature.SITE_TYPE or feature.NAT_AQFR_DESC %}
-                        This
-                    {% endif %}
-
-                    {% if feature.SITE_TYPE %}
-                        {% if feature.SITE_TYPE %}
-                            groundwater monitoring location is associated with a
-                            {% if feature.SITE_TYPE == 'WELL'%} water {% endif %}{{ feature.SITE_TYPE | lower() }}
-                        {% else %}
-                            .
-                        {% endif %}
-                        {% if feature.NAT_AQFR_DESC %}
-                            in the {{ feature.NAT_AQFR_DESC }}.
-                        {%- else %}
-                            .
-                        {% endif %}
-                    {% elif feature.NAT_AQFR_DESC %}
-                        groundwater monitoring location is in the {{ feature.NAT_AQFR_DESC }}.
-                    {%- else %}
-                        .
-                    {% endif %}
-
-                {% elif feature.STATE_NM %}
-                    This groundwater monitoring located in {{ feature.COUNTY_NM }}, {{ feature.STATE_NM }}
-                {% endif %}
-            </p>
+            <p>{{ monitoring_location_description }}</p>
         </div>
     </div>
 

@@ -10,7 +10,7 @@ from .services.ngwmn import get_features, get_water_quality, get_well_log, get_s
 from .services.confluence import (
     pull_feed, confluence_url, MAIN_CONTENT, SITE_SELECTION_CONTENT, DATA_COLLECTION_CONTENT, DATA_MANAGEMENT_CONTENT,
     OTHER_AGENCY_INFO_CONTENT)
-
+from .string_utils import generate_subtitle
 
 @app.route('/')
 def home():
@@ -112,23 +112,8 @@ def site_page(agency_cd, location_id):
     else:
         organization = feature.get('AGENCY_NM')
 
-    site_type = feature.get('SITE_TYPE')
-    aquifer_description = feature.get('NAT_AQFR_DESC')
-    county = feature.get('COUNTY_NM')
-    state = feature.get('STATE_NM')
-
-
-
-
-
-
-
-
-
-
-
-    monitoring_location_description = 'test'
-
+    # run the logic to create web page subtitle also known as the 'monitoring location description'
+    monitoring_location_description = generate_subtitle(feature)
 
     # Get the unique list of best-choice lithology IDs in the well log
     lithology_ids = set()
