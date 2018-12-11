@@ -112,6 +112,24 @@ def site_page(agency_cd, location_id):
     else:
         organization = feature.get('AGENCY_NM')
 
+    site_type = feature.get('SITE_TYPE')
+    aquifer_description = feature.get('NAT_AQFR_DESC')
+    county = feature.get('COUNTY_NM')
+    state = feature.get('STATE_NM')
+
+
+
+
+
+
+
+
+
+
+
+    monitoring_location_description = 'test'
+
+
     # Get the unique list of best-choice lithology IDs in the well log
     lithology_ids = set()
     for entry in well_log.get('log_entries', []):
@@ -126,5 +144,6 @@ def site_page(agency_cd, location_id):
         water_quality_activities=water_quality.get('activities') or [],
         well_log=well_log,
         lithology_ids=lithology_ids,
-        stats=get_statistics(agency_cd, location_id)
+        stats=get_statistics(agency_cd, location_id),
+        monitoring_location_description=monitoring_location_description
     ), 200
