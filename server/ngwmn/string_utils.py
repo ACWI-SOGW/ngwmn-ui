@@ -19,14 +19,17 @@ def generate_subtitle(features):
 
     if site_type or aquifer_description:
         if state:
-            subtitle = 'Located in ' + county + ', ' + state + ', this '
+            if county:
+                subtitle = 'Located in ' + county + ', ' + state + ', this '
+            else:
+                subtitle = 'Located in ' + state + ', this '
         else:
             subtitle = 'This '
 
         if site_type:
             subtitle = subtitle + 'groundwater monitoring location is associated with a '
             if site_type == 'WELL':
-                subtitle = subtitle + ' water ' + site_type.lower()
+                subtitle = subtitle + 'water ' + site_type.lower()
             else:
                 subtitle = subtitle + site_type.lower()
 
