@@ -15,38 +15,74 @@ def generate_subtitle(features):
     county = features.get('COUNTY_NM')
     state = features.get('STATE_NM')
 
-    subtitle = ''
+    state_clause = ''
+    site_type_clause = ''
+    closing_period = ''
 
     if site_type or aquifer_description:
+        only_state_in_features = False
+
         if state:
-            if county:
-                subtitle = 'Located in ' + county + ', ' + state + ', this '
-            else:
-                subtitle = 'Located in ' + state + ', this '
-        else:
-            subtitle = 'This '
-
-        if site_type:
-            subtitle = subtitle + 'groundwater monitoring location is associated with a '
-            if site_type == 'WELL':
-                subtitle = subtitle + 'water ' + site_type.lower()
-            else:
-                subtitle = subtitle + site_type.lower()
-
-            if aquifer_description:
-                subtitle = subtitle + ' in the ' + aquifer_description
-
-        elif aquifer_description:
-            subtitle = subtitle + 'groundwater monitoring location is in the ' + aquifer_description
-
-        subtitle = subtitle + '.'
+            state_clause = generate_state_clause(state, county, only_state_in_features)
+        site_type_clause = generate_site_type_clause(state, site_type, aquifer_description)
 
     elif state:
-        subtitle = 'This groundwater monitoring location is in '
-        if county:
-            subtitle = subtitle + county + ', ' + state
-        else:
-            subtitle = subtitle + state
+        only_state_in_features = True
+        state_clause = generate_state_clause(state, county, only_state_in_features)
 
-        subtitle = subtitle + '.'
+    if site_type or aquifer_description or state:
+        closing_period = '.'
+
+    subtitle = '{0}{1}{2}'.format(state_clause, site_type_clause, closing_period)
     return subtitle
+
+
+def generate_state_clause(state, county, only_state_in_features):
+    """
+    Creates the section of the monitoring location description that denotes the state and possibly county
+    :param state: string, name of the state where the monitoring location is found
+    :param county: string, name of the county if available
+    :param only_state_in_features: boolean, if the name of state
+    :return state_clause: string, section of the monitoring location description that lists the state and possibly
+            county names
+    """
+    if only_state_in_features:
+        clause_start = 'This groundwater monitoring location is in '
+        clause_end = county + ', ' + state if county else state
+
+    else:
+        clause_start = 'Located in ' + county + ', ' + state if county else 'Located in ' + state
+        clause_end = ', this '
+
+    state_clause = '{0}{1}'.format(clause_start, clause_end)
+
+    return state_clause
+
+
+def generate_site_type_clause(state, site_type, aquifer_description):
+    """
+    Creates the section of the monitoring location description denoting the site type and aquifer
+    :param state: string, name of the state where the monitoring location is found
+    :param site_type: string, type of location, usually a well or spring
+    :param aquifer_description: string, the name of the aquifer in which the monitoring location is found
+    :return site_type_clause: string, the section of the monitoring location description denoting
+            the site type and aquifer
+    """
+    site_type_clause = ''
+
+    if not state:
+        site_type_clause = 'This '
+
+    if site_type:
+        site_type_clause = '{0}groundwater monitoring location is associated with a '.format(site_type_clause)
+        site_type_clause = '{0}water {1}'.format(site_type_clause,
+                                                 site_type.lower()) if site_type == 'WELL' else '{0}{1}'.format(
+            site_type_clause, site_type.lower())
+
+        if aquifer_description:
+            site_type_clause = '{0} in the {1}'.format(site_type_clause, aquifer_description)
+
+    elif aquifer_description:
+        site_type_clause = '{0}groundwater monitoring location is in the {1}'.format(site_type_clause,
+                                                                                     aquifer_description)
+    return site_type_clause

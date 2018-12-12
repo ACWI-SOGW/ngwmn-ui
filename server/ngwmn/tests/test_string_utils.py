@@ -10,17 +10,17 @@ from ..string_utils import generate_subtitle
 class TestGenerateSubtitle(TestCase):
     def setUp(self):
         self.features_none = {}
-        self.features_county = {'COUNTY_NM': 'Dane'}
+        self.features_county = {'COUNTY_NM': 'Dane County'}
         self.features_state = {'STATE_NM': 'Wisconsin'}
         self.features_aquifer = {'NAT_AQFR_DESC': 'cambrian ordovician aquifer system'}
         self.features_site_type_well = {'SITE_TYPE': 'WELL'}
         self.features_site_type_not_well = {'SITE_TYPE': 'something not a well'}
         self.features_state_n_site = {'STATE_NM': 'Wisconsin', 'SITE_TYPE': 'WELL'}
-        self.features_state_county_n_site = {'STATE_NM': 'Wisconsin', 'COUNTY_NM':'Dane', 'SITE_TYPE': 'WELL'}
-        self.features_state_county_site_n_aquifer = {'STATE_NM': 'Wisconsin', 'COUNTY_NM':'Dane', 'SITE_TYPE': 'WELL',
-                                                      'NAT_AQFR_DESC': 'cambrian ordovician aquifer system'}
-        self.features_state_county_n_aquifer = {'STATE_NM': 'Wisconsin', 'COUNTY_NM':'Dane',
-                                                      'NAT_AQFR_DESC': 'cambrian ordovician aquifer system'}
+        self.features_state_county_n_site = {'STATE_NM': 'Wisconsin', 'COUNTY_NM': 'Dane County', 'SITE_TYPE': 'WELL'}
+        self.features_state_county_site_n_aquifer = {'STATE_NM': 'Wisconsin', 'COUNTY_NM': 'Dane County', 'SITE_TYPE': 'WELL',
+                                                     'NAT_AQFR_DESC': 'cambrian ordovician aquifer system'}
+        self.features_state_county_n_aquifer = {'STATE_NM': 'Wisconsin', 'COUNTY_NM': 'Dane County',
+                                                'NAT_AQFR_DESC': 'cambrian ordovician aquifer system'}
         self.features_site_n_aquifer = {'SITE_TYPE': 'WELL', 'NAT_AQFR_DESC': 'cambrian ordovician aquifer system'}
 
     def test_no_features(self):
@@ -58,19 +58,19 @@ class TestGenerateSubtitle(TestCase):
 
     def test_site_state_n_county(self):
         result = generate_subtitle(self.features_state_county_n_site)
-        self.assertEqual('Located in Dane, Wisconsin, this groundwater monitoring location is associated'
+        self.assertEqual('Located in Dane County, Wisconsin, this groundwater monitoring location is associated'
                          ' with a water well.',
                          result, 'Result not as expected when site, state, and county are in features.')
 
     def test_state_county_site_n_aquifer(self):
         result = generate_subtitle(self.features_state_county_site_n_aquifer)
-        self.assertEqual('Located in Dane, Wisconsin, this groundwater monitoring location is associated with '
+        self.assertEqual('Located in Dane County, Wisconsin, this groundwater monitoring location is associated with '
                          'a water well in the cambrian ordovician aquifer system.',
                          result, 'Result not as expected when site, state, county, and aquifer are in features.')
 
     def test_state_county_n_aquifer(self):
         result = generate_subtitle(self.features_state_county_n_aquifer)
-        self.assertEqual('Located in Dane, Wisconsin, this groundwater monitoring location is in the '
+        self.assertEqual('Located in Dane County, Wisconsin, this groundwater monitoring location is in the '
                          'cambrian ordovician aquifer system.',
                          result, 'Result not as expected when site, state, and aquifer are in features.')
 
