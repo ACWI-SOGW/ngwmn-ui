@@ -69,7 +69,7 @@ class TestGenerateSubtitle(TestCase):
                          result, 'Result not as expected when site, state, county, and aquifer are in features.')
 
     def test_state_county_n_aquifer(self):
-        result = generate_subtitle(self.features_state_county_n_aquifer)
+        result = generate_subtitle(self.features_state_county_aquifer)
         self.assertEqual('Located in Dane County, Wisconsin, this groundwater monitoring location is in the '
                          'cambrian ordovician aquifer system.',
                          result, 'Result not as expected when site, state, and aquifer are in features.')
