@@ -15,29 +15,29 @@ def generate_subtitle(features):
     county = features.get('COUNTY_NM')
     state = features.get('STATE_NM')
 
-    state_clause = ''
-    site_type_clause = ''
+    intro_clause = ''
+    main_clause = ''
     closing_period = ''
 
     if site_type or aquifer_description:
         only_state_in_features = False
 
         if state:
-            state_clause = generate_state_clause(state, county, only_state_in_features)
-        site_type_clause = generate_site_type_clause(state, site_type, aquifer_description)
+            intro_clause = generate_intro_clause(state, county, only_state_in_features)
+        main_clause = generate_main_clause(state, site_type, aquifer_description)
 
     elif state:
         only_state_in_features = True
-        state_clause = generate_state_clause(state, county, only_state_in_features)
+        intro_clause = generate_intro_clause(state, county, only_state_in_features)
 
     if site_type or aquifer_description or state:
         closing_period = '.'
 
-    subtitle = '{0}{1}{2}'.format(state_clause, site_type_clause, closing_period)
+    subtitle = '{0}{1}{2}'.format(intro_clause, main_clause, closing_period)
     return subtitle
 
 
-def generate_state_clause(state, county, only_state_in_features):
+def generate_intro_clause(state, county, only_state_in_features):
     """
     Creates the section of the monitoring location description that denotes the state and possibly county
     :param state: string, name of the state where the monitoring location is found
@@ -59,10 +59,10 @@ def generate_state_clause(state, county, only_state_in_features):
     return state_clause
 
 
-def generate_site_type_clause(state, site_type, aquifer_description):
+def generate_main_clause(state, site_type, aquifer_description):
     """
     Creates the section of the monitoring location description denoting the site type and aquifer
-    :param state: string, name of the state where the monitoring location is found
+    :param state: string, name of the state where the monitoring location is found, used as a boolean test
     :param site_type: string, type of location, usually a well or spring
     :param aquifer_description: string, the name of the aquifer in which the monitoring location is found
     :return site_type_clause: string, the section of the monitoring location description denoting
@@ -75,9 +75,9 @@ def generate_site_type_clause(state, site_type, aquifer_description):
 
     if site_type:
         site_type_clause = '{0}groundwater monitoring location is associated with a '.format(site_type_clause)
-        site_type_clause = '{0}water {1}'.format(site_type_clause,
-                                                 site_type.lower()) if site_type == 'WELL' else '{0}{1}'.format(
-            site_type_clause, site_type.lower())
+        site_type_clause = \
+            '{0}water {1}'.format(site_type_clause, site_type.lower()) if site_type == 'WELL' else '{0}{1}'\
+            .format(site_type_clause, site_type.lower())
 
         if aquifer_description:
             site_type_clause = '{0} in the {1}'.format(site_type_clause, aquifer_description)
