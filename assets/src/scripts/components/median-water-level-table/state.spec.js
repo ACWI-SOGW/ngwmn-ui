@@ -4,7 +4,7 @@ import reducer from './state';
 
 import { renderTable, isTableRendered } from './state';
 
-describe('water-level-table component state', () => {
+describe('median-water-level-table component state', () => {
     let store;
 
     beforeEach(() => {

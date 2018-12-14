@@ -285,7 +285,7 @@ def get_well_log(agency_cd, location_id):
                                  xml.nsmap)
     for index, elem in enumerate(casings):
         casing = {
-            'id': f'casing-{index}',
+            'id': 'casing-{index}',
             'type': 'casing',
             'material': _find(elem, 'gwml:material/gsml:CGI_TermValue/gsml:value')
         }
@@ -308,7 +308,7 @@ def get_well_log(agency_cd, location_id):
     screens = water_well.findall('gwml:construction/gwml:Screen/gwml:screenElement/gwml:ScreenComponent', xml.nsmap)
     for index, elem in enumerate(screens):
         screen = {
-            'id': f'screen-{index}',
+            'id': 'screen-{index}',
             'type': 'screen',
             'material': _find(elem, 'gwml:material/gsml:CGI_TermValue/gsml:value')
         }
