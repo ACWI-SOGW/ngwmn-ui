@@ -193,25 +193,6 @@
                             </tr>
                         </tbody>
                     </table>
-                    <table class="usa-table usa-table-borderless">
-                        <caption>Detailed Lithology</caption>
-                        <thead>
-                            <th scope="col">Depth from</th>
-                            <th scope="col">Depth to</th>
-                            <th scope="col">Lithology</th>
-                            <th scope="col">Description</th>
-                        </thead>
-                        <tbody>
-                            {% for entry in well_log.log_entries %}
-                                <tr>
-                                    <td>{{ entry.shape.coordinates.start }} {{ entry.shape.unit }}</td>
-                                    <td>{{ entry.shape.coordinates.end }} {{ entry.shape.unit }}</td>
-                                    <td>{{ _(entry.unit.composition.lithology.value) }}</td>
-                                    <td>{{ _(entry.unit.description) }}</td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
                 </div>
             </li>
 

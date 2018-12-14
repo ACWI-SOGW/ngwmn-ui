@@ -1,5 +1,5 @@
 & {
-    text-align: center;
+    text-align: left;
     max-height: 30rem;
     overflow: scroll;
 }
@@ -41,8 +41,50 @@ tr {
     }
     &.selected {
         td {
-            background-color: lightgray;
+            background-color: #ffffe6;
             transition: background-color .25s;
+        }
+    }
+}
+
+/** added this section to test tabs **/
+@media screen and (min-width: 360px) {
+
+    .usa-tabs {
+        background-color: #205493;
+        width: auto;
+        border-bottom: 4px solid black;
+        li {
+            display:inline;
+            width: auto;
+            background-color: transparent;
+            margin-right: 0rem;
+        }
+        .usa-accordion-button {
+            color: white;
+            position: relative;
+            top: 2px;
+            width: auto;
+            display:inline-block;
+            clear:both;
+            background-image: none;
+            padding-right: 2rem;
+            border: 2px solid black;
+            border-bottom: white;
+            &[aria-expanded="true"] {
+            background-color: white;
+        }
+    }
+        .usa-accordion-content {
+            float:left;
+            clear:both;
+            width: 100%;
+            border-top: 2px solid black;
+            border-left: 2px solid black;
+            &[aria-hidden="false"] {
+                background-color: #fff;
+                margin-top: -2px;
+            }
         }
     }
 }
