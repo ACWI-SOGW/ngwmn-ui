@@ -18,3 +18,30 @@
     height: auto;
   }
 }
+
+#banner-title {
+    float: right;
+    font-family: calibri,tahoma,arial,verdana,sans-serif;
+    font-size: 1.7em;
+    text-decoration: none;
+
+    a {
+        color: #233f8f !important;
+    }
+    .ngwmn-highlight {
+        color: #d1544a;
+    }
+}
+@media only screen 
+    and (min-width:701px)
+    and (max-width:800px) {
+    #banner-title {
+        font-size: 23px;
+    }
+}
+@media only screen 
+    and (max-width:700px) {
+    #banner-title {
+        font-size: 18px;
+    }
+}
