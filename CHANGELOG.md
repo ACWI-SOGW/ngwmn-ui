@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - The site page route was changed
 - Replaced the SIFTA service with hard coded provider logos.
 - Support sites that lack water level data.
+- Changed location and wording of monitoring location summary
 
 ## [0.1.0]
 ### Added

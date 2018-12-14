@@ -19,3 +19,5 @@ server/ngwmn_ui.egg-info
 .idea
 .DS_Store
 assets/.DS_Store
+
+venv/

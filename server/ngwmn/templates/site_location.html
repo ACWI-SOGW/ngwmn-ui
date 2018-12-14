@@ -18,8 +18,22 @@
 {%- endmacro %}
 
 {% block content %}
-    <h1>{{ feature.SITE_NAME }}</h1>
-    {% if organization %}<h2 class="usa-font-lead">{{ organization }}</h2>{% endif %}
+    <div class="grid-row grid-gap-2">
+        <div class="desktop:grid-col-6">
+
+            <h1>{{ feature.SITE_NAME }}</h1>
+            {% if organization %}<h2 class="usa-font-lead">{{ organization }}</h2>{% endif %}
+        </div>
+
+        <div class="grid-col-0 desktop:grid-col-1">
+            <!-- empty div to hold space for well construction diagram at 'desktop' screen resolutions -->
+        </div>
+
+        <div class="grid-col-10 desktop:grid-col-5">
+            <p>{{ monitoring_location_description }}</p>
+        </div>
+    </div>
+
     <div>
         {{ components.LithologyPatterns(lithology_ids) }}
         <div class="grid-row grid-gap-2">
@@ -39,17 +53,6 @@
                     Summary
                 </button>
                 <div id="ts-a1" class="usa-accordion-content">
-                    <div>
-                        <h4>Description</h4>
-                        <p>
-                            This site is a {{ feature.SITE_TYPE }}. It is named "{{ feature.SITE_NAME }}"
-                            and has the identifier {{ feature.AGENCY_CD }}-{{ feature.SITE_NO }}.<br/>
-                            This site information was provided by {{ feature.AGENCY_NM }}.
-                            This site is associated with <br/>
-                            the {{ feature.NAT_AQFR_DESC }} National Principal Aquifer and
-                            is located in {{ feature.COUNTY_NM }}, {{ feature.STATE_NM }}.
-                        </p>
-                    </div>
                     <table class="usa-table usa-table-borderless">
                         <tbody>
                             <tr>
