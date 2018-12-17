@@ -48,43 +48,59 @@ tr {
 }
 
 /** added this section to test tabs **/
-@media screen and (min-width: 360px) {
+.tabs {
+	display: flex;
+	flex-wrap: wrap;
+	max-width: 700px;
+	background: #205493;
+    border-top: solid black 2px;
+    border-left: solid black 2px;
+}
+.input {
+	position: absolute;
+	opacity: 0;
+}
 
-    .usa-tabs {
-        background-color: #205493;
-        width: auto;
-        border-bottom: 4px solid black;
-        li {
-            display:inline;
-            width: auto;
-            background-color: transparent;
-            margin-right: 0rem;
-        }
-        .usa-accordion-button {
-            color: white;
-            position: relative;
-            top: 2px;
-            width: auto;
-            display:inline-block;
-            clear:both;
-            background-image: none;
-            padding-right: 2rem;
-            border: 2px solid black;
-            border-bottom: white;
-            &[aria-expanded="true"] {
-            background-color: white;
-        }
-    }
-        .usa-accordion-content {
-            float:left;
-            clear:both;
-            width: 100%;
-            border-top: 2px solid black;
-            border-left: 2px solid black;
-            &[aria-hidden="false"] {
-                background-color: #fff;
-                margin-top: -2px;
-            }
-        }
-    }
+.label {
+	width: 100%;
+	padding: 20px 30px;
+	background: #205493;
+	cursor: pointer;
+	font-weight: bold;
+	font-size: 18px;
+	color: white;
+	transition: background 0.1s, color 0.1s;
+    margin: 0px;
+}
+
+.label:active {
+	background: white;
+}
+
+.input:checked + .label {
+	background: white;
+    border-right: 2px;
+	color: black;
+}
+
+@media (min-width: 600px) {
+	.label {
+		width: auto;
+	}
+}
+
+.panel {
+	display: none;
+	padding: 30px 30px 30px;
+	background: #fff;
+}
+
+@media (min-width: 600px) {
+	.panel {
+		order: 99;
+	}
+}
+
+.input:checked + .label + .panel {
+	display: block;
 }
