@@ -51,56 +51,71 @@ tr {
 .tabs {
 	display: flex;
 	flex-wrap: wrap;
-	max-width: 700px;
 	background: #205493;
     border-top: solid black 2px;
     border-left: solid black 2px;
-}
-.input {
-	position: absolute;
-	opacity: 0;
+
+    .inputRadioButtonTab {
+        position: absolute;
+        opacity: 0;
+    }
+
+    .labelRadioButtonTab {
+        width: 100%;
+        padding: 20px 30px;
+        background: #205493;
+        cursor: pointer;
+        font-weight: bold;
+        font-size: 18px;
+        color: white;
+        transition: background 0.1s, color 0.1s;
+        margin: 0px;
+    }
+
+    .labelRadioButtonTab:active {
+        background: white;
+    }
+
+    .inputRadioButtonTab:checked + .labelRadioButtonTab {
+        background: white;
+        border-right: 2px;
+        color: black;
+    }
+
+    @media (min-width: 600px) {
+        .labelRadioButtonTab {
+            width: auto;
+        }
+    }
+
+    .panel {
+        display: none;
+        padding: 30px 30px 30px;
+        background: #fff;
+    }
+
+    @media (min-width: 600px) {
+        .panel {
+            order: 99;
+        }
+    }
+
+    .inputRadioButtonTab:checked + .labelRadioButtonTab + .panel {
+        display: block;
+    }
+
+    .inputRadioButtonTab:focus + .barSelect {
+        box-shadow: inset 0px 0px 0px 3px #2aa1c0;
+	    z-index: 1;
+    }
+
+.inputRadioButtonTab {
+    flex-basis: auto;
 }
 
-.label {
-	width: 100%;
-	padding: 20px 30px;
-	background: #205493;
-	cursor: pointer;
-	font-weight: bold;
-	font-size: 18px;
-	color: white;
-	transition: background 0.1s, color 0.1s;
-    margin: 0px;
+    .barSelect {
+        padding: 8px 10px;
+        background: #205493;
+    }
 }
 
-.label:active {
-	background: white;
-}
-
-.input:checked + .label {
-	background: white;
-    border-right: 2px;
-	color: black;
-}
-
-@media (min-width: 600px) {
-	.label {
-		width: auto;
-	}
-}
-
-.panel {
-	display: none;
-	padding: 30px 30px 30px;
-	background: #fff;
-}
-
-@media (min-width: 600px) {
-	.panel {
-		order: 99;
-	}
-}
-
-.input:checked + .label + .panel {
-	display: block;
-}
