@@ -26,5 +26,34 @@ header {
                 }
             }
         }
+        .banner-title {
+            font-family: calibri,tahoma,arial,verdana,sans-serif;
+            font-size: 1em;
+            text-decoration: none;
+            text-align: right;
+            display: inline-block;
+        
+            a {
+                color: #233f8f !important;
+            }
+            .ngwmn-highlight {
+                color: #d1544a;
+            }
+        }
+        @include at-media('mobile-lg') {
+            .banner-title {
+                font-size: 1.25em;
+            }
+        }    
+        @include at-media('tablet') {
+            .banner-title {
+                font-size: 1.5em;
+            }
+        }
+        @include at-media('desktop-lg') {
+            .banner-title {
+                font-size: 2em;
+            }
+        }
     }
 }
