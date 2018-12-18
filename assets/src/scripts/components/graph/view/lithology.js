@@ -18,7 +18,7 @@ export const rgbFromHex = function (hexString) {
     ];
 };
 
-export default function (elem, {lithology}, container) {
+export default function (elem, {lithology, visible}, container) {
     container = container || elem
         .append('g')
             .classed('lithology', true);
@@ -26,6 +26,12 @@ export default function (elem, {lithology}, container) {
     // Remove any previously drawn children
     container.selectAll('*').remove();
 
+    // If we're not visible, return before adding lithology layers
+    if (!visible) {
+        return container;
+    }
+
+    // Draw each lithology layer as a rect with a filter applied
     for (let i = 0; i < lithology.length; i++) {
         const layer = lithology[i];
         const color = layer.colors.length ? layer.colors[0] : LITHOLOGY_COLORS[i % LITHOLOGY_COLORS.length];

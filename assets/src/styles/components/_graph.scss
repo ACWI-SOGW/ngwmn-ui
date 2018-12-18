@@ -208,6 +208,11 @@ $provisional-color: color('accent-warm-dark');
             text-align: center;
             span {
                 padding: 0 1em 0 .5em;
+                &.show-lithology {
+                    input {
+                        margin-right: .25em;
+                    }
+                }
             }
             .line-segment {
                 stroke-width: 2px;
