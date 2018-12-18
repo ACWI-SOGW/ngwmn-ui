@@ -7,10 +7,10 @@ import { callIf } from 'ngwmn/lib/utils';
 import { getSiteKey } from 'ngwmn/services/state/index';
 
 import {
-    getActiveClasses, getChartPoints, getChartPosition, getConstructionElements,
+    getChartPoints, getChartPosition, getConstructionElements,
     getCurrentWaterLevelUnit, getCursor, getCursorDatum, getLineSegments,
-    getLithology, getScaleX, getScaleY, getViewBox, getWellWaterLevel,
-    setAxisYBBox, setCursor, setContainerSize
+    getLithology, getLithologyVisibility, getScaleX, getScaleY, getViewBox,
+    getWellWaterLevel, setAxisYBBox, setCursor, setContainerSize
 } from '../state';
 import { drawAxisX, drawAxisY, drawAxisYLabel } from './axes';
 import addBrushZoomBehavior from './brush-zoom';
@@ -80,6 +80,7 @@ const drawChart = function (elem, store, opts, chartType) {
                 .attr('clip-path', `url(#${chartType}-clip-path)`)
                 // Draw well log lithology background
                 .call(callIf(chartType !== 'construction', link(store, drawLithology, createStructuredSelector({
+                    visible: getLithologyVisibility(opts),
                     lithology: getLithology(opts, chartType),
                     selectedLithologyId: getSelectedLithologyId(getSiteKey(opts.agencyCode, opts.siteId))
                 }), store, getSiteKey(opts.agencyCode, opts.siteId))))
@@ -217,7 +218,7 @@ const drawWaterLevelsGraph = (opts) => (elem, store) => {
             .call(observeSize, opts, store);
 
     // Append the legend
-    elem.call(link(store, drawLegend, getActiveClasses(opts)));
+    drawLegend(elem, store, opts);
 };
 
 export default (opts) => (elem, store) => {

@@ -71,7 +71,6 @@ export default function (store, node, options) {
             // On click, store the selected row in state.
             .selectAll('tbody tr')
                 .on('mouseover', function () {
-                    console.log("this is id " + this.dataset.localId);
                     store.dispatch(setSelectedLithologyId(siteKey, this.dataset.localId));
                 });
 }

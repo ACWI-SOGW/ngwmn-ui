@@ -91,7 +91,6 @@ tr {
 
     .panel {
         display: none;
-
         background-color: #fff;
     }
 
@@ -143,6 +142,7 @@ tr {
     tr:nth-child(odd) {
         border-top: solid black 2px;
         border-bottom: solid black 2px;
+        margin: 0;
     }
 
 		td {

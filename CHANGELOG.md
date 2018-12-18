@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+### Added
+- Checkbox to water levels chart legend to toggle lithology layers visibility
+
 ## [0.2.0]
 ### Added
 - Added basic description text
@@ -12,6 +16,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added provider view which shows information about an individual provider
 - Added sites view which provides a list of sites for a provider
 - Added error template for backing service calls, 404s, and 500s
+- Added hyperlink back to NGMWN Portal UI
 
 ### Changed
 - The site page route was changed
