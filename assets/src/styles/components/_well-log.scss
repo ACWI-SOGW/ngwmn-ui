@@ -47,11 +47,11 @@ tr {
     }
 }
 
-/** added this section to test tabs **/
+/** Formats tabs for the construction and lithology tables **/
 .tabs {
 	display: flex;
 	flex-wrap: wrap;
-	background: #205493;
+	background-color: #205493;
     border-top: solid black 2px;
     border-left: solid black 2px;
     width: 100%;
@@ -64,21 +64,21 @@ tr {
     .labelRadioButtonTab {
         width: 100%;
         padding: 20px 30px;
-        background: #205493;
+        background-color: #205493;
         cursor: pointer;
         font-weight: bold;
         font-size: 18px;
         color: white;
         transition: background 0.1s, color 0.1s;
-        margin: 0px;
+        margin: 0;
     }
 
     .labelRadioButtonTab:active {
-        background: white;
+        background-color: white;
     }
 
     .inputRadioButtonTab:checked + .labelRadioButtonTab {
-        background: white;
+        background-color: white;
         border-right: 2px;
         color: black;
     }
@@ -92,7 +92,7 @@ tr {
     .panel {
         display: none;
         padding: 30px 30px 30px;
-        background: #fff;
+        background-color: #fff;
     }
 
     @media (min-width: 600px) {
@@ -107,17 +107,18 @@ tr {
     }
 
     .inputRadioButtonTab:focus + .barSelect {
-        box-shadow: inset 0px 0px 0px 3px #2aa1c0;
+        box-shadow: inset 0 0 0 3px #2aa1c0;
 	    z-index: 1;
     }
 
     .barSelect {
         padding: 8px 10px;
+        margin-bottom: 3px;
     }
 }
 
 
-/** added to test other table format **/
+/** added to make table data easy to read on narrow viewports format **/
 	@media
 	  only screen
     and (max-width: 760px), (min-device-width: 768px)
@@ -136,11 +137,12 @@ tr {
 		}
 
     tr {
-      margin: 0 0 1rem 0;
+        margin: 0 0 1rem 0;
     }
 
     tr:nth-child(odd) {
-      background: red;
+        border-top: solid black 2px;
+        border-bottom: solid black 2px;
     }
 
 		td {
