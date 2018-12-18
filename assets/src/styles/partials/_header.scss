@@ -50,7 +50,7 @@ header {
                 font-size: 1.5em;
             }
         }
-        @include at-media('desktop-lg') {
+         @include at-media('desktop') {
             .banner-title {
                 font-size: 2em;
             }
