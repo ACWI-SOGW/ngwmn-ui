@@ -21,7 +21,7 @@ const MOCK_LITHOLOGY = [{
     title: '2 - 3 ft, Siltstone'
 }];
 
-describe('lithology ', () => {
+describe('lithology', () => {
     let svg;
 
     beforeEach(() => {
@@ -35,11 +35,20 @@ describe('lithology ', () => {
     });
 
     describe('draws', () => {
-        it('a rect per layer', () => {
+        it('a rect per layer when visible', () => {
             drawLithology(svg, {
-                lithology: MOCK_LITHOLOGY
+                lithology: MOCK_LITHOLOGY,
+                visible: true
             });
             expect(svg.selectAll('rect').size()).toBe(MOCK_LITHOLOGY.length);
+        });
+
+        it('not rects when not visible', () => {
+            drawLithology(svg, {
+                lithology: MOCK_LITHOLOGY,
+                visible: false
+            });
+            expect(svg.selectAll('rect').size()).toBe(0);
         });
     });
 

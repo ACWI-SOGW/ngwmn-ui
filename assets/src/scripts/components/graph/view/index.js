@@ -6,10 +6,10 @@ import { link } from 'ngwmn/lib/d3-redux';
 import { callIf } from 'ngwmn/lib/utils';
 
 import {
-    getActiveClasses, getChartPoints, getChartPosition, getConstructionElements,
+    getChartPoints, getChartPosition, getConstructionElements,
     getCurrentWaterLevelUnit, getCursor, getCursorDatum, getLineSegments,
-    getLithology, getScaleX, getScaleY, getViewBox, getWellWaterLevel,
-    setAxisYBBox, setCursor, setContainerSize
+    getLithology, getLithologyVisibility, getScaleX, getScaleY, getViewBox,
+    getWellWaterLevel, setAxisYBBox, setCursor, setContainerSize
 } from '../state';
 import { drawAxisX, drawAxisY, drawAxisYLabel } from './axes';
 import addBrushZoomBehavior from './brush-zoom';
@@ -78,7 +78,8 @@ const drawChart = function (elem, store, opts, chartType) {
                 .attr('clip-path', `url(#${chartType}-clip-path)`)
                 // Draw well log lithology background
                 .call(callIf(chartType !== 'construction', link(store, drawLithology, createStructuredSelector({
-                    lithology: getLithology(opts, chartType)
+                    lithology: getLithology(opts, chartType),
+                    visible: getLithologyVisibility(opts)
                 }))))
                 .call(callIf(chartType === 'construction', link(store, drawConstruction, createStructuredSelector({
                     elements: getConstructionElements(opts, chartType),
@@ -214,7 +215,7 @@ const drawWaterLevelsGraph = (opts) => (elem, store) => {
             .call(observeSize, opts, store);
 
     // Append the legend
-    elem.call(link(store, drawLegend, getActiveClasses(opts)));
+    drawLegend(elem, store, opts);
 };
 
 export default (opts) => (elem, store) => {

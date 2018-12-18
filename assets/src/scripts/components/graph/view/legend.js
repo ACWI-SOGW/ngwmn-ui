@@ -1,4 +1,9 @@
-import { callIf } from 'ngwmn/lib/utils';
+import { link } from 'ngwmn/lib/d3-redux';
+
+import {
+    getActiveClasses, getLithologyVisibility, setLithologyVisibility
+} from '../state';
+
 
 const KEY_SIZE = {
     width: 20,
@@ -20,24 +25,50 @@ const appendKey = function (elem, className) {
             .attr('x2', KEY_SIZE.width);
 };
 
-export default function (elem, activeClasses) {
-    elem.select('.legend')
-        .remove();
+export const drawActiveClasses = (classes, activeClasses) => {
+    // Remove any previously drawn legend items
+    classes.selectAll('*').remove();
 
+    if (activeClasses.approved) {
+        classes
+            .call(appendKey, 'approved')
+            .append('span')
+                .classed('approved', true)
+                .text('Approved');
+    }
+    if (activeClasses.provisional) {
+        classes
+            .call(appendKey, 'provisional')
+            .append('span')
+                .classed('provisional', true)
+                .text('Provisional');
+    }
+};
+
+export default function (elem, store, opts) {
     return elem.append('div')
         .classed('legend', true)
-        .call(callIf(activeClasses.approved, legend => {
-            legend
-                .call(appendKey, 'approved')
-                .append('span')
-                    .classed('approved', true)
-                    .text('Approved');
-        }))
-        .call(callIf(activeClasses.provisional, legend => {
-            legend
-                .call(appendKey, 'provisional')
-                .append('span')
-                    .classed('provisional', true)
-                    .text('Provisional');
-        }));
+        .call(legend => {
+            legend.append('span')
+                .classed('active-classes', true)
+                .call(link(store, drawActiveClasses, getActiveClasses(opts)));
+        })
+        .append('span')
+            .classed('show-lithology', true)
+            .call(span => {
+                span.append('input')
+                    .attr('id', `show-lithology-${opts.id}`)
+                    .attr('type', 'checkbox')
+                    .classed('usa-checkbox-input', true)
+                    .call(link(store, (input, visibility) => {
+                        input.property('checked', visibility);
+                    }, getLithologyVisibility(opts.id)))
+                    .on('change', function () {
+                        store.dispatch(setLithologyVisibility(opts.id, this.checked));
+                    });
+                span.append('label')
+                    .classed('usa-checkbox-label', true)
+                    .attr('for', `show-lithology-${opts.id}`)
+                    .text('Show lithology');
+            });
 }
