@@ -22,7 +22,7 @@ describe('graph component options state', () => {
         expect(getLithologyVisibility({
             graphType: 'water-levels',
             id: 'ignored'
-        })(store.getState())).toBe(true);
+        })(store.getState())).toBe(false);
         expect(getLithologyVisibility({
             graphType: 'construction',
             id: 'ignored'
@@ -30,16 +30,16 @@ describe('graph component options state', () => {
     });
 
     it('setLithologyVisibility works for water level charts', () => {
-        store.dispatch(setLithologyVisibility(1, false));
-        expect(getLithologyVisibility({
-            graphType: 'water-levels',
-            id: 1
-        })(store.getState())).toBe(false);
         store.dispatch(setLithologyVisibility(1, true));
         expect(getLithologyVisibility({
             graphType: 'water-levels',
             id: 1
         })(store.getState())).toBe(true);
+        store.dispatch(setLithologyVisibility(1, false));
+        expect(getLithologyVisibility({
+            graphType: 'water-levels',
+            id: 1
+        })(store.getState())).toBe(false);
     });
 
     it('setLithologyVisibility value is ignored for construction charts', () => {

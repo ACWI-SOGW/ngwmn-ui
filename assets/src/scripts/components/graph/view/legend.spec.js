@@ -76,7 +76,7 @@ describe('graph component legend', () => {
                 type: 'components/graph/options/LITHOLOGY_VISIBILITY_SET',
                 payload: {
                     id: 1,
-                    lithologyVisibility: true
+                    lithologyVisibility: false
                 }
             });
         });

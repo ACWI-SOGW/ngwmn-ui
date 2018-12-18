@@ -209,9 +209,8 @@ $provisional-color: color('accent-warm-dark');
             span {
                 padding: 0 1em 0 .5em;
                 &.show-lithology {
-                    input {
-                        margin-right: .25em;
-                    }
+                    display: inline-block;
+                    padding: .25em 0;
                 }
             }
             .line-segment {

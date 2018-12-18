@@ -49,7 +49,7 @@ export default function (elem, store, opts) {
     return elem.append('div')
         .classed('legend', true)
         .call(legend => {
-            legend.append('active-classes')
+            legend.append('span')
                 .classed('active-classes', true)
                 .call(link(store, drawActiveClasses, getActiveClasses(opts)));
         })
@@ -59,6 +59,7 @@ export default function (elem, store, opts) {
                 span.append('input')
                     .attr('id', `show-lithology-${opts.id}`)
                     .attr('type', 'checkbox')
+                    .classed('usa-checkbox-input', true)
                     .call(link(store, (input, visibility) => {
                         input.property('checked', visibility);
                     }, getLithologyVisibility(opts.id)))
@@ -66,6 +67,7 @@ export default function (elem, store, opts) {
                         store.dispatch(setLithologyVisibility(opts.id, this.checked));
                     });
                 span.append('label')
+                    .classed('usa-checkbox-label', true)
                     .attr('for', `show-lithology-${opts.id}`)
                     .text('Show lithology');
             });

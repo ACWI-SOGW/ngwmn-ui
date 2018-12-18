@@ -4,7 +4,7 @@ import { createSelector } from 'reselect';
 const MOUNT_POINT = 'components/graph/options';
 const LITHOLOGY_VISIBILITY_SET = `${MOUNT_POINT}/LITHOLOGY_VISIBILITY_SET`;
 
-const DEFAULT_LITHOLOGY_VISIBILITY = true;
+const DEFAULT_LITHOLOGY_VISIBILITY = false;
 
 
 /**
