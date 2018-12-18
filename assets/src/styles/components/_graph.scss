@@ -190,7 +190,7 @@ $provisional-color: color('accent-warm-dark');
                 }
                 g.lithology {
                     rect {
-                        &:hover {
+                        &.selected {
                             stroke: yellow;
                             stroke-opacity: 0.5;
                             stroke-width: 4px;

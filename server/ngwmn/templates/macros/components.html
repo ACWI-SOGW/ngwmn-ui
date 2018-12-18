@@ -48,7 +48,7 @@
                     <label class="labelRadioButtonTab barSelect" for="screens">Screens</label>
                     <input class="inputRadioButtonTab" type="radio" name="construction-type" value="casings" id="casings">
                     <label class="labelRadioButtonTab barSelect" for="casings">Casings</label>
-                <table class="usa-table usa-table-borderless" id="constructionTable">
+                <table class="usa-table usa-table-borderless constructionTable">
                     <thead>
                         <tr>
                             <th scope="col"></th>
@@ -91,24 +91,24 @@
         <label for="tab-2" class="labelRadioButtonTab">Detailed Lithology</label>
         <div class="panel">
             <div id="a2" class="usa-accordion-content">
-                        <table class="usa-table usa-table-borderless" id="lithologyTable">
-                <thead>
-                    <th scope="col">Depth from</th>
-                    <th scope="col">Depth to</th>
-                    <th scope="col">Lithology</th>
-                    <th scope="col">Description</th>
-                </thead>
-                <tbody>
-                    {% for entry in well_log.log_entries %}
-                        <tr>
-                            <td>{{ entry.shape.coordinates.start }} {{ entry.shape.unit }}</td>
-                            <td>{{ entry.shape.coordinates.end }} {{ entry.shape.unit }}</td>
-                            <td>{{ _(entry.unit.composition.lithology.value) }}</td>
-                            <td>{{ _(entry.unit.description) }}</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+                <table class="usa-table usa-table-borderless lithologyTable">
+                    <thead>
+                        <th scope="col">Depth from</th>
+                        <th scope="col">Depth to</th>
+                        <th scope="col">Lithology</th>
+                        <th scope="col">Description</th>
+                    </thead>
+                    <tbody>
+                        {% for entry in well_log.log_entries %}
+                            <tr data-local-id="{{ entry.id }}">
+                                <td>{{ entry.shape.coordinates.start }} {{ entry.shape.unit }}</td>
+                                <td>{{ entry.shape.coordinates.end }} {{ entry.shape.unit }}</td>
+                                <td>{{ _(entry.unit.composition.lithology.value) }}</td>
+                                <td>{{ _(entry.unit.description) }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
 
         </div>

@@ -69,7 +69,9 @@ export const getLithology = memoize((opts, chartType) => createSelector(
             const top = yScale(loc.start) || 0;
             const bottom = yScale(loc.end) || 0;
             const name = entry.unit.description;
+            console.log("this is entry " , entry)
             return {
+                id: entry.id,
                 x: layout.x,
                 y: top,
                 width: layout.width,
