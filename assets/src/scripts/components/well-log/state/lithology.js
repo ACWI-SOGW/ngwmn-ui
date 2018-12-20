@@ -6,9 +6,9 @@ const SELECTED_LITHOLOGY_ITEM_SET = `${MOUNT_POINT}/SELECTED_LITHOLOGY_ITEM_SET`
 
 
 /**
- * Action creator to set the selected construction item index, key on siteKey.
+ * Action creator to set the selected lithology item index, key on siteKey.
  * @param {Object} siteKey                 Site ID
- * @param {Object} selectedLithologyId Construction ID
+ * @param {Object} selectedLithologyId Lithology ID
  */
 export const setSelectedLithologyId = function (siteKey, selectedLithologyId) {
     return {
@@ -22,16 +22,13 @@ export const setSelectedLithologyId = function (siteKey, selectedLithologyId) {
 
 
 /**
- * Gets the index of the selected construction item.
+ * Gets the index of the selected lithology item.
  */
 export const getSelectedLithologyId = memoize(siteKey => state => {
     const selectedLithologyIds = state[MOUNT_POINT].selectedLithologyIds || {};
     return selectedLithologyIds[siteKey];
 });
 
-/**
- * Gets the visible IDs, if set.
- */
 
 /**
  * Well log reducer

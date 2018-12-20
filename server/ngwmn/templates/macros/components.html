@@ -12,7 +12,8 @@
 
 {% macro Graph(graph_type, agency_code, site_no) -%}
     <div class="has-script">
-        <div class="ngwmn-component loading" data-component="graph" data-site-id="{{ site_no }}" data-agency-code="{{ agency_code }}" data-graph-type="{{ graph_type }}">
+        <div class="ngwmn-component loading" data-component="graph" data-site-id="{{ site_no }}"
+             data-agency-code="{{ agency_code }}" data-graph-type="{{ graph_type }}">
             <div class="indicators">
                 <i class="loading-indicator fas fa-5x fa-spin fa-spinner"></i>
                 <i class="error-indicator fas fa-5x fa-exclamation-circle"></i>
@@ -34,39 +35,42 @@
 {%- endmacro %}
 
 {% macro WellLog(agency_code, site_no, well_log) -%}
-    <div class="ngwmn-component" data-component="well-log" data-site-id="{{ site_no }}" data-agency-code="{{ agency_code }}">
-
-<div id="wellLogTables">
-    <div class="tabs">
-        <input name="tabs" type="radio" id="tab-1" checked="checked" class="inputRadioButtonTab"/>
-        <label for="tab-1" class="labelRadioButtonTab">Well Construction</label>
-        <div class="panel">
-            <div id="a1" class="usa-accordion-content">
-                    <input class="inputRadioButtonTab" type="radio" name="construction-type" value="all" id="all" checked>
+    <div class="ngwmn-component" data-component="well-log" data-site-id="{{ site_no }}"
+         data-agency-code="{{ agency_code }}">
+        <div id="wellLogTables">
+            <div class="tabs">
+                <input name="tabs" type="radio" id="tab-1" checked="checked" class="inputRadioButtonTab"/>
+                <label for="tab-1" class="labelRadioButtonTab">Well Construction</label>
+                <div class="panel">
+                    <input class="inputRadioButtonTab" type="radio" name="construction-type" value="all" id="all"
+                           checked>
                     <label class="labelRadioButtonTab barSelect" for="all">All</label>
-                    <input class="inputRadioButtonTab" type="radio" name="construction-type" value="screens" id="screens">
+                    <input class="inputRadioButtonTab" type="radio" name="construction-type" value="screens"
+                           id="screens">
                     <label class="labelRadioButtonTab barSelect" for="screens">Screens</label>
-                    <input class="inputRadioButtonTab" type="radio" name="construction-type" value="casings" id="casings">
+                    <input class="inputRadioButtonTab" type="radio" name="construction-type" value="casings"
+                           id="casings">
                     <label class="labelRadioButtonTab barSelect" for="casings">Casings</label>
-                <table class="usa-table usa-table-borderless constructionTable">
-                    <thead>
+                    <table class="usa-table usa-table-borderless constructionTable">
+                        <thead>
                         <tr>
                             <th scope="col"></th>
                             <th scope="col">Depth</th>
                             <th scope="col">Description</th>
                         </tr>
-                    </thead>
-                    <tbody>
+                        </thead>
+                        <tbody>
                         {% for item in well_log.construction %}
                             <tr class="{{ item.type }}" data-local-id="{{ item.id }}">
                                 <td>
                                     {% if item.type == 'screen' %}
                                         <svg width="30" height="30" viewBox="0 0 30 30">
-                                            <rect width="30" height="30" fill="url(#screen-pattern-{{ loop.index0 % 2 }})" />
+                                            <rect width="30" height="30"
+                                                  fill="url(#screen-pattern-{{ loop.index0 % 2 }})"/></svg>
                                         </svg>
                                     {% else %}
                                         <svg width="30" height="30" viewBox="0 0 30 30">
-                                            <line x1="15" y1="0" x2="15" y2="30" stroke-width="2" stroke="gray" />
+                                            <line x1="15" y1="0" x2="15" y2="30" stroke-width="2" stroke="gray"></line>
                                         </svg>
                                     {% endif %}
                                 </td>
@@ -82,23 +86,23 @@
                                 </td>
                             </tr>
                         {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
+                        </tbody>
+                    </table>
+                </div>
 
-        <input name="tabs" type="radio" id="tab-2" class="inputRadioButtonTab"/>
-        <label for="tab-2" class="labelRadioButtonTab">Detailed Lithology</label>
-        <div class="panel">
-            <div id="a2" class="usa-accordion-content">
-                <table class="usa-table usa-table-borderless lithologyTable">
-                    <thead>
-                        <th scope="col">Depth from</th>
-                        <th scope="col">Depth to</th>
-                        <th scope="col">Lithology</th>
-                        <th scope="col">Description</th>
-                    </thead>
-                    <tbody>
+                <input name="tabs" type="radio" id="tab-2" class="inputRadioButtonTab"/>
+                <label for="tab-2" class="labelRadioButtonTab">Detailed Lithology</label>
+                <div class="panel">
+                    <table class="usa-table usa-table-borderless lithologyTable">
+                        <thead>
+                            <tr>
+                                <th scope="col">Depth from</th>
+                                <th scope="col">Depth to</th>
+                                <th scope="col">Lithology</th>
+                                <th scope="col">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
                         {% for entry in well_log.log_entries %}
                             <tr data-local-id="{{ entry.id }}">
                                 <td>{{ entry.shape.coordinates.start }} {{ entry.shape.unit }}</td>
@@ -107,112 +111,21 @@
                                 <td>{{ _(entry.unit.description) }}</td>
                             </tr>
                         {% endfor %}
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-
         </div>
-
-
-    </div>
-</div>
-
-
-
-
-
-
-
-{#<ul class="usa-accordion usa-tabs">#}
-{#    <li>#}
-{#        <button class="usa-accordion-button" aria-expanded="true" aria-controls="a1">#}
-{#            Well Construction#}
-{#        </button>#}
-{#        <div id="a1" class="usa-accordion-content">#}
-{#            <input class="usa-radio-input" type="radio" name="construction-type" value="all" id="all" checked>#}
-{#            <label class="usa-radio-label" for="all">All</label>#}
-{#            <input class="usa-radio-input" type="radio" name="construction-type" value="screens" id="screens">#}
-{#            <label class="usa-radio-label" for="screens">Screens</label>#}
-{#            <input class="usa-radio-input" type="radio" name="construction-type" value="casings" id="casings">#}
-{#            <label class="usa-radio-label" for="casings">Casings</label>#}
-{#            <table class="usa-table usa-table-borderless">#}
-{#                <thead>#}
-{#                    <tr>#}
-{#                        <th scope="col"></th>#}
-{#                        <th scope="col">Depth</th>#}
-{#                        <th scope="col">Description</th>#}
-{#                    </tr>#}
-{#                </thead>#}
-{#                <tbody>#}
-{#                    {% for item in well_log.construction %}#}
-{#                        <tr class="{{ item.type }}" data-local-id="{{ item.id }}">#}
-{#                            <td>#}
-{#                                {% if item.type == 'screen' %}#}
-{#                                    <svg width="30" height="30" viewBox="0 0 30 30">#}
-{#                                        <rect width="30" height="30" fill="url(#screen-pattern-{{ loop.index0 % 2 }})" />#}
-{#                                    </svg>#}
-{#                                {% else %}#}
-{#                                    <svg width="30" height="30" viewBox="0 0 30 30">#}
-{#                                        <line x1="15" y1="0" x2="15" y2="30" stroke-width="2" stroke="gray" />#}
-{#                                    </svg>#}
-{#                                {% endif %}#}
-{#                            </td>#}
-{#                            <td>{{ item.position.coordinates.start }}-{{ item.position.coordinates.end }} {{ item.position.unit }}</td>#}
-{#                            <td>#}
-{#                                {% if item.diameter and item.diameter.value %}#}
-{#                                    {{ item.diameter.value }} {{ item.diameter.unit }} diameter#}
-{#                                {% endif %}#}
-{#                                {% if item.material != 'Screen, Type Not Known' %}#}
-{#                                    {{ item.material | lower() }}#}
-{#                                {% endif %}#}
-{#                                {{ item.type | lower() }}#}
-{#                            </td>#}
-{#                        </tr>#}
-{#                    {% endfor %}#}
-{#                </tbody>#}
-{#            </table>#}
-{#        </div>#}
-{#    </li>#}
-{#    <li>#}
-{#    <button class="usa-accordion-button" aria-expanded="false" aria-controls="a2">#}
-{#      Detailed Lithology#}
-{#    </button>#}
-{#        <div id="a2" class="usa-accordion-content">#}
-{#                    <table class="usa-table usa-table-borderless">#}
-{#            <thead>#}
-{#                <th scope="col">Depth from</th>#}
-{#                <th scope="col">Depth to</th>#}
-{#                <th scope="col">Lithology</th>#}
-{#                <th scope="col">Description</th>#}
-{#            </thead>#}
-{#            <tbody>#}
-{#                {% for entry in well_log.log_entries %}#}
-{#                    <tr>#}
-{#                        <td>{{ entry.shape.coordinates.start }} {{ entry.shape.unit }}</td>#}
-{#                        <td>{{ entry.shape.coordinates.end }} {{ entry.shape.unit }}</td>#}
-{#                        <td>{{ _(entry.unit.composition.lithology.value) }}</td>#}
-{#                        <td>{{ _(entry.unit.description) }}</td>#}
-{#                    </tr>#}
-{#                {% endfor %}#}
-{#            </tbody>#}
-{#        </table>#}
-{#        </div>#}
-{#    </li>#}
-{#</ul>#}
-
-
-
-
-
     </div>
 {%- endmacro %}
 
 {% macro WaterLevelTable(agency_code, site_no) -%}
-<li class="ngwmn-component" data-component="water-level-table" data-site-id="{{ site_no }}" data-agency-code="{{ agency_code }}">
-    <button class="usa-accordion-button" aria-expanded="false" aria-controls="water-levels-div">
-        Water Levels
-    </button>
-    <div id="water-levels-div" class="usa-accordion-content">
-    </div>
-</li>
+    <li class="ngwmn-component" data-component="water-level-table" data-site-id="{{ site_no }}"
+        data-agency-code="{{ agency_code }}">
+        <button class="usa-accordion-button" aria-expanded="false" aria-controls="water-levels-div">
+            Water Levels
+        </button>
+        <div id="water-levels-div" class="usa-accordion-content">
+        </div>
+    </li>
 {%- endmacro %}
