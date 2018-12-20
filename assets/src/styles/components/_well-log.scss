@@ -35,7 +35,7 @@ tbody {
     display: table-row;
     /* add breakpoint to allow Well Construction table to be width: 100%
     when table is displayed for narrow view ports. */
-    @media only screen and (max-width: 760px) {
+    @media only screen and (max-width: 600px) {
       display: block;
     }
 }
@@ -92,6 +92,7 @@ tr {
         color: color('gray-warm-90');
     }
 
+    /* keep the tabs looking like tabs down to the breakpoint, then make them look like an accordion */
     @media (min-width: 600px) {
         .labelRadioButtonTab {
             width: auto;
@@ -105,13 +106,10 @@ tr {
         width: 100%;
     }
 
-    /* make the tabs visible side by side down to the breakpoint, then stack them */
+    /* Keep the tabs next to each other down to the breakpoint, then let one drop to the bottom of the panel*/
     @media (min-width: 600px) {
         .panel {
             order: 99;
-            padding-top: 10px;
-            padding-left: 10px;
-            padding-bottom: 10px;
         }
     }
 
@@ -124,7 +122,7 @@ tr {
 	    z-index: 1;
     }
 
-    /* add extra formatting and color to the Well Construction buttons */
+    /* add extra formatting and color to the Well Construction selection buttons */
     .barSelect {
         padding: 8px 10px;
         background-color: color('blue-30');
@@ -132,10 +130,9 @@ tr {
     }
 }
 
-
 /* added to make table data easy to read on narrow viewports format */
 @media
-only screen and (max-width: 760px) {
+only screen and (max-width: 600px) {
     /* Force table to not be like tables anymore */
     table, thead, tbody, th, td, tr {
         display: block;
