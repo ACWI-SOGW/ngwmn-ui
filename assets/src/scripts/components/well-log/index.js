@@ -29,7 +29,7 @@ const updateVisibleIds = function (store, elem, siteKey) {
 export default function (store, node, options) {
     const siteKey = getSiteKey(options.agencyCode, options.siteId);
     select(node)
-        .select('.constructionTable')
+        .select('.construction-table')
             // Initialize visible IDs from the DOM
             .call((elem) => updateVisibleIds(store, elem, siteKey))
             // Toggle "selected" class on state change.
@@ -56,7 +56,7 @@ export default function (store, node, options) {
                     store.dispatch(setSelectedConstructionId(siteKey, this.dataset.localId));
                 });
     select(node)
-        .select('.lithologyTable')
+        .select('.lithology-table')
             // Toggle "selected" class on state change.
             .call(link(store, (elem, selectedId) => {
                 elem.select('.selected')

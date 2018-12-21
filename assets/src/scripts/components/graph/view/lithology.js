@@ -1,4 +1,4 @@
-import {setSelectedConstructionId, setSelectedLithologyId} from "../../well-log/state";
+import { setSelectedConstructionId, setSelectedLithologyId } from "../../well-log/state";
 
 const LITHOLOGY_COLORS = [
     '#9A887E',

@@ -18,15 +18,15 @@ describe('well-log lithology state', () => {
     describe('selectedLithologyId', () => {
         it('works', () => {
             expect(getSelectedLithologyId(siteKey)(store.getState())).toBe(undefined);
-            store.dispatch(setSelectedLithologyId(siteKey, 'screen-4'));
-            expect(getSelectedLithologyId(siteKey)(store.getState())).toEqual('screen-4');
+            store.dispatch(setSelectedLithologyId(siteKey, 'lithology-4'));
+            expect(getSelectedLithologyId(siteKey)(store.getState())).toEqual('lithology-4');
         });
 
         it('works with mock state', () => {
             const store = getMockStore();
             expect(getSelectedLithologyId(siteKey)(store.getState())).toEqual(undefined);
-            store.dispatch(setSelectedLithologyId(siteKey, 'screen-5'));
-            expect(getSelectedLithologyId(siteKey)(store.getState())).toEqual('screen-5');
+            store.dispatch(setSelectedLithologyId(siteKey, 'lithology-5'));
+            expect(getSelectedLithologyId(siteKey)(store.getState())).toEqual('lithology-5');
         });
     });
 });
