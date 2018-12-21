@@ -1,3 +1,5 @@
+import { setSelectedConstructionId, setSelectedLithologyId } from "../../well-log/state";
+
 const LITHOLOGY_COLORS = [
     '#9A887E',
     '#72655C',
@@ -18,7 +20,7 @@ export const rgbFromHex = function (hexString) {
     ];
 };
 
-export default function (elem, {lithology, visible}, container) {
+export default function (elem, {lithology, visible, selectedLithologyId}, store, siteKey, container) {
     container = container || elem
         .append('g')
             .classed('lithology', true);
@@ -54,6 +56,15 @@ export default function (elem, {lithology, visible}, container) {
                 .attr('height', layer.height)
                 .attr('fill', `url(#lithology-${layer.materials[0]})`)
                 .attr('filter', `url(#filter-${i})`)
+                .classed('selected', layer.id == selectedLithologyId)
+                // Clear selection on mouse exit
+                .on('mouseout', function () {
+                    store.dispatch(setSelectedLithologyId(siteKey, null));
+                })
+                // On click, store the selected row in state.
+                .on('mouseover', function () {
+                    store.dispatch(setSelectedLithologyId(siteKey, layer.id))
+                })
                 .append('title')
                     .text(layer.title);
     }

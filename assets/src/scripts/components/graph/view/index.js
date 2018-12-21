@@ -4,6 +4,7 @@ import ResizeObserver from 'resize-observer-polyfill';
 
 import { link } from 'ngwmn/lib/d3-redux';
 import { callIf } from 'ngwmn/lib/utils';
+import { getSiteKey } from 'ngwmn/services/state/index';
 
 import {
     getChartPoints, getChartPosition, getConstructionElements,
@@ -18,6 +19,7 @@ import { drawFocusCircle, drawFocusLine, drawTooltip } from './cursor';
 import drawLegend from './legend';
 import drawLithology from './lithology';
 import drawWaterLevels from './water-levels';
+import {getSelectedLithologyId} from "../../well-log/state";
 
 
 /**
@@ -78,9 +80,10 @@ const drawChart = function (elem, store, opts, chartType) {
                 .attr('clip-path', `url(#${chartType}-clip-path)`)
                 // Draw well log lithology background
                 .call(callIf(chartType !== 'construction', link(store, drawLithology, createStructuredSelector({
+                    visible: getLithologyVisibility(opts),
                     lithology: getLithology(opts, chartType),
-                    visible: getLithologyVisibility(opts)
-                }))))
+                    selectedLithologyId: getSelectedLithologyId(getSiteKey(opts.agencyCode, opts.siteId))
+                }), store, getSiteKey(opts.agencyCode, opts.siteId))))
                 .call(callIf(chartType === 'construction', link(store, drawConstruction, createStructuredSelector({
                     elements: getConstructionElements(opts, chartType),
                     cursorWaterLevel: getWellWaterLevel(opts, chartType)

@@ -3,9 +3,9 @@ import { select } from 'd3-selection';
 import { link } from 'ngwmn/lib/d3-redux';
 import { getSiteKey } from 'ngwmn/services/state/index';
 import {
-    getSelectedConstructionId, setSelectedConstructionId,
-    setVisibleConstructionIds
-} from './state';
+    getSelectedConstructionId, setSelectedConstructionId, setSelectedLithologyId,
+    setVisibleConstructionIds} from './state';
+import {getSelectedLithologyId} from "./state/lithology";
 
 
 const updateVisibleIds = function (store, elem, siteKey) {
@@ -29,29 +29,50 @@ const updateVisibleIds = function (store, elem, siteKey) {
 export default function (store, node, options) {
     const siteKey = getSiteKey(options.agencyCode, options.siteId);
     select(node)
-        // Initialize visible IDs from the DOM
-        .call((elem) => updateVisibleIds(store, elem, siteKey))
-        // Toggle "selected" class on state change.
-        .call(link(store, (elem, selectedId) => {
-            elem.select('.selected')
-                .classed('selected', false);
-            elem.select(`[data-local-id="${selectedId}"]`)
-                .classed('selected', true);
-        }, getSelectedConstructionId(siteKey)))
-        // Visible construction IDs on checkbox click
-        .call((elem) => {
-            elem.selectAll('input')
-                .on('click', function () {
-                    updateVisibleIds(store, elem, siteKey);
+        .select('.construction-table')
+            // Initialize visible IDs from the DOM
+            .call((elem) => updateVisibleIds(store, elem, siteKey))
+            // Toggle "selected" class on state change.
+            .call(link(store, (elem, selectedId) => {
+                elem.select('.selected')
+                    .classed('selected', false);
+                elem.select(`[data-local-id="${selectedId}"]`)
+                    .classed('selected', true);
+            }, getSelectedConstructionId(siteKey)))
+            // Visible construction IDs on checkbox click
+            .call((elem) => {
+                elem.selectAll('input')
+                    .on('click', function () {
+                        updateVisibleIds(store, elem, siteKey);
+                    });
+            })
+            // Clear selection on mouse exit
+            .on('mouseout', function () {
+                store.dispatch(setSelectedConstructionId(siteKey, null));
+            })
+            // On click, store the selected row in state.
+            .selectAll('tbody tr')
+                .on('mouseover', function () {
+                    store.dispatch(setSelectedConstructionId(siteKey, this.dataset.localId));
                 });
-        })
-        // Clear selection on mouse exit
-        .on('mouseout', function () {
-            store.dispatch(setSelectedConstructionId(siteKey, null));
-        })
-        // On click, store the selected row in state.
-        .selectAll('tbody tr')
-            .on('mouseover', function () {
-                store.dispatch(setSelectedConstructionId(siteKey, this.dataset.localId));
-            });
+    select(node)
+        .select('.lithology-table')
+            // Toggle "selected" class on state change.
+            .call(link(store, (elem, selectedId) => {
+                elem.select('.selected')
+                    .classed('selected', false);
+                elem.select(`[data-local-id="${selectedId}"]`)
+                    .classed('selected', true);
+            }, getSelectedLithologyId(siteKey)))
+            // Clear selection on mouse exit
+            .on('mouseout', function () {
+                store.dispatch(setSelectedLithologyId(siteKey, null));
+            })
+            // On click, store the selected row in state.
+            .selectAll('tbody tr')
+                .on('mouseover', function () {
+                    store.dispatch(setSelectedLithologyId(siteKey, this.dataset.localId));
+                });
 }
+
+

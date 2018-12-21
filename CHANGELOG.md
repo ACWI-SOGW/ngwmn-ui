@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - Checkbox to water levels chart legend to toggle lithology layers visibility
 
+### Changed
+- Moved Lithology Table from Well Log accordion to Well Log component
+- Changed the Lithology and Well Construction table layout to better accommodate narrow viewports
+- Changed appearance of Well Construction radio buttons
+
 ## [0.2.0]
 ### Added
 - Added basic description text
