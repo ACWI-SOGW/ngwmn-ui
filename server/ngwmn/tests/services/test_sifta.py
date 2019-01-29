@@ -37,6 +37,6 @@ def test_sifta_request_exception():
 
 def test_sifta_non_request_exception():
     with requests_mock.mock() as req:
-        with pytest.raises(Exception, message='Expected Exception to be raised'):
+        with pytest.raises(Exception):
             req.get(requests_mock.ANY, exc=Exception())
             sifta.get_cooperators('12345')
