@@ -183,6 +183,10 @@ const drawConstructionGraph = (opts) => (elem, store) => {
 const drawWaterLevelsGraph = (opts) => (elem, store) => {
     // Append the chart and axis labels, scoped to .chart-container
     elem
+        .append('div')
+            .html('Water Levels, in feet below land surface')
+            .classed('chart-title-container', true)
+    elem
         // Draw a tooltip container. This is rendered to the upper-right and
         // shows details of the point closest to the current cursor location.
         .call(link(store, drawTooltip, createStructuredSelector({

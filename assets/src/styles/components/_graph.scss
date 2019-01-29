@@ -101,6 +101,10 @@ $provisional-color: color('accent-warm-dark');
                 font-weight: normal
             }
         }
+        .chart-title-container {
+            text-align: center;
+            color: red;
+        }
         .chart-container {
             flex-grow: 1;
             display: flex;
