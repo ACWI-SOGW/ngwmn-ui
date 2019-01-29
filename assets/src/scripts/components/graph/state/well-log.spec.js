@@ -121,6 +121,7 @@ describe('graph component well log state', () => {
 
     describe('getLithology', () => {
         const logEntries = [{
+            id: 23,
             shape: {
                 coordinates: {
                     start: '1',
@@ -141,6 +142,7 @@ describe('graph component well log state', () => {
                 }
             }
         }, {
+            id: 99,
             shape: {
                 coordinates: {
                     start: '2',
@@ -171,6 +173,7 @@ describe('graph component well log state', () => {
 
         it('works', () => {
             expect(getLithology({}, 'main').resultFunc(logEntries, chartPos, scale)).toEqual([{
+                id: 23,
                 x: 10,
                 y: 1,
                 width: 100,
@@ -179,6 +182,7 @@ describe('graph component well log state', () => {
                 materials: [616, 617, 618, 669, 631],
                 title: '1 - 2 ft, Siltstone'
             }, {
+                id: 99,
                 x: 10,
                 y: 2,
                 width: 100,

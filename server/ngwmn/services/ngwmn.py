@@ -223,8 +223,9 @@ def get_well_log(agency_cd, location_id):
     entries = water_well.findall('gwml:logElement/gsml:MappedInterval', xml.nsmap)
     if entries:
         result['log_entries'] = []
-        for entry in entries:
+        for index, entry in enumerate(entries):
             log_entry = {
+                'id': index,
                 'method': _find(entry, 'gsml:observationMethod/gsml:CGI_TermValue/gsml:value')
             }
 

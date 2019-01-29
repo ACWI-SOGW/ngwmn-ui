@@ -511,6 +511,7 @@ class TestWellLogResults(TestCase):
                     'url': 'http://ws.ncwater.org/ngwmn.php?site_no=381107098532401'
                 },
                 'log_entries': [{
+                    'id': 0,
                     'method': 'borehole',
                     'unit': {
                         'description': 'Sandstone',
@@ -544,6 +545,7 @@ class TestWellLogResults(TestCase):
                         'unit': 'ft'
                     }
                 }, {
+                    'id': 1,
                     'method': 'borehole',
                     'unit': {
                         'description': 'Siltstone',
@@ -577,6 +579,7 @@ class TestWellLogResults(TestCase):
                         'unit': 'ft'
                     }
                 }, {
+                    'id': 2,
                     'method': 'borehole',
                     'unit': {
                         'description': None,
