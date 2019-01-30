@@ -184,6 +184,10 @@ const drawConstructionGraph = (opts) => (elem, store) => {
  * @return {Object}       SVG node of rendered graph
  */
 const drawWaterLevelsGraph = (opts) => (elem, store) => {
+    elem
+        .append('div')
+            .html('Water Levels, in feet below land surface')
+            .classed('chart-title-container', true)
     // Append the chart and axis labels, scoped to .chart-container
     elem
         // Draw a tooltip container. This is rendered to the upper-right and

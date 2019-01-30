@@ -1,6 +1,7 @@
 $default-color: color('primary-dark');
 $approved-color: color('primary-vivid');
 $provisional-color: color('accent-warm-dark');
+$primary-darker: color('primary-darker');
 
 & {
     width: 100%;
@@ -100,6 +101,10 @@ $provisional-color: color('accent-warm-dark');
             .compare-tooltip-text {
                 font-weight: normal
             }
+        }
+        .chart-title-container {
+            text-align: center;
+            color: $primary-darker;
         }
         .chart-container {
             flex-grow: 1;
