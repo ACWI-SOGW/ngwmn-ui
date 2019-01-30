@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [0.2.0]
 ### Added
+- Added title to hydrograph
 - Added basic description text
 - Added keys and interactivity to well construction table with a responsive layout
 - Added providers view which provides a list of available providers
