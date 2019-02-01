@@ -37,6 +37,7 @@ describe('graph component construction', () => {
             drawConstruction(svg, selector(state), store, mockOpts);
             expect(svg.select('.screen').size()).not.toBe(0);
             expect(svg.select('.casing').size()).not.toBe(0);
+            expect(svg.select('.water-level-triangle').size()).toBe(1);
         });
     });
 });

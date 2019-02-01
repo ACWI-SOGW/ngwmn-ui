@@ -141,7 +141,7 @@ export const getWellWaterLevel = memoize((opts, chartType) => createSelector(
         return {
             x: xRange[0],
             y: top,
-            width: xRange[1],
+            width: xRange[1] - xRange[0],
             height: Math.max(bottom - top, 0)
         };
     }

@@ -192,6 +192,9 @@ $primary-darker: color('primary-darker');
                             }
                         }
                     }
+                    .water-level-triangle {
+                        fill: $approved-color;
+                    }
                 }
                 g.lithology {
                     rect {
