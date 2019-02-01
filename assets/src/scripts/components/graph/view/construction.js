@@ -77,6 +77,7 @@ const drawWaterLevel = function (elem, elements, cursorWaterLevel) {
             .attr('fill', 'lightblue')
             .attr('fill-opacity', '0.85');
 
+    // draw a line representing the top of the water level rectangle inside the casing
     container
         .append('line')
             .attr('x1', cursorWaterLevel.x)
@@ -87,9 +88,10 @@ const drawWaterLevel = function (elem, elements, cursorWaterLevel) {
         .classed('line-segment', true);
 
     // width of one side of the water level triangle
-    const sideWidth = cursorWaterLevel.width / 10;
+    // the larger the number, the smaller the overall size of the triangle
+    const sideWidth = cursorWaterLevel.width / 8;
 
-    // create an upside-down triangle polygon
+    // draw an upside-down triangle polygon
     container
         .append('polygon')
             .attr('points', `${cursorWaterLevel.x + cursorWaterLevel.width / 2 - sideWidth / 2},${cursorWaterLevel.y - sideWidth} `
