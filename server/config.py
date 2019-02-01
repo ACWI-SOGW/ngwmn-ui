@@ -5,6 +5,8 @@ Application configuration settings
 DEBUG = False
 
 SERVICE_ROOT = 'https://cida.usgs.gov'
+#SERVICE_ROOT = 'http://cida-eros-ngwmndev.er.usgs.gov:8080'
+
 
 CONFLUENCE_URL = 'https://my.usgs.gov/confluence/'
 

@@ -2,7 +2,10 @@ import memoize from 'fast-memoize';
 import { createSelector } from 'reselect';
 
 import * as stats from '../statistics';
-import { getSiteKey } from './index';
+import { 
+	getSiteWaterLevels, 
+	getSiteKey
+} from './index';
 
 
 export const MOUNT_POINT = 'services/median-water-levels';
@@ -55,15 +58,15 @@ export const getMedianWaterLevelStatus = memoize((agencyCode, siteId) => createS
 
 /**
  * Thunk action:
- * Action that returns a thunk that calls the getWaterLevels action and then
+ * Action that returns a thunk that calls the getMedianWaterLevels action and then
  * dispatches actions to update the state.
  * @param  {String} agencyCode Agency code
  * @param  {String} siteId)    Site ID
  * @return {Function}          Thunk
  */
 export const retrieveMedianWaterLevels = (agencyCode, siteId) => (dispatch) => {
-    dispatch(setWaterLevelStatus(agencyCode, siteId, 'STARTED'));
-    return stats.retrieveMedianWaterLevels(agencyCode, siteId)
+    dispatch(setMedianWaterLevelStatus(agencyCode, siteId, 'STARTED'));
+    return stats.retrieveMedianWaterLevels(getSiteWaterLevels(agencyCode, siteId))
         .then(waterLevels => {
             dispatch(setMedianWaterLevels(agencyCode, siteId, waterLevels));
             dispatch(setMedianWaterLevelStatus(agencyCode, siteId, 'DONE'));
@@ -83,7 +86,7 @@ export const getMedianWaterLevels = state => state[MOUNT_POINT]['data'] || {};
  * @param {String} siteId
  * @return {Function} selector to return water level data for the site. Returns empty object if no data available.
  */
-export const getSiteWaterLevels = memoize((agencyCode, siteId) =>  createSelector(
+export const getSiteMedianWaterLevels = memoize((agencyCode, siteId) =>  createSelector(
     getMedianWaterLevels,
     (waterLevels) => {
         const id = getSiteKey(agencyCode, siteId);

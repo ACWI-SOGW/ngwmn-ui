@@ -6,7 +6,10 @@ import List from 'list.js';
 
 import { link } from 'ngwmn/lib/d3-redux';
 import {
-    getSiteWaterLevels, getWaterLevelStatus, retrieveMedianWaterLevels
+	getSiteWaterLevels, 
+	getSiteMedianWaterLevels, 
+	getMedianWaterLevelStatus, 
+	retrieveMedianWaterLevels
 } from 'ngwmn/services/state/index';
 
 import { isTableRendered, renderTable } from './state';
@@ -43,7 +46,7 @@ const drawTableBody = function(table, waterLevels, tbody) {
     return tbody;
 };
 /*
- * Renders the water level table
+ * Renders the median water level table
  * @param  {Object} store               Redux store
  * @param  {Object} node                DOM node to draw graph into
  * @param  {Object} options.agencyCode  Agency of site to draw
@@ -53,7 +56,7 @@ const drawTableBody = function(table, waterLevels, tbody) {
 export default function(store, node, {agencyCode, siteId}) {
     // If a request for this site hasn't been made yet, make the water levels
     // service call.
-    if (!getWaterLevelStatus(agencyCode, siteId)(store.getState())) {
+    if (!getMedianWaterLevelStatus(agencyCode, siteId)(store.getState())) {
         store.dispatch(retrieveMedianWaterLevels(agencyCode, siteId));
     }
 
@@ -84,6 +87,6 @@ export default function(store, node, {agencyCode, siteId}) {
         }
     }, createStructuredSelector({
         isRendered: isTableRendered,
-        waterLevels: getSiteWaterLevels(agencyCode, siteId)
+        waterLevels: getSiteMedianWaterLevels(agencyCode, siteId)
     })));
 }
