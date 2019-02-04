@@ -327,7 +327,7 @@ describe('graph component well log state', () => {
             });
         });
 
-        it('works with a different scale, width is calculated properly', () => {
+        it('works with a different scale, waterlevel width is calculated properly', () => {
             expect(getWellWaterLevel(mockOpts, 'main').resultFunc(
                 // x dimensions
                 scaleLinear().range([20, 100]).domain([20, 100]),
