@@ -89,14 +89,14 @@ const drawChart = function (elem, store, opts, chartType) {
                     cursorWaterLevel: getWellWaterLevel(opts, chartType)
                 }), store, opts)))
                 // Draw the actual lines/circles for the current water level data set.
-                .call(callIf(chartType !== 'construction', link(store, drawWaterLevels, createStructuredSelector({
+                .call(callIf(chartType !== 'construction' && chartType !== 'lithology', link(store, drawWaterLevels, createStructuredSelector({
                     lineSegments: getLineSegments(opts),
                     chartPoints: getChartPoints(opts),
                     xScale: getScaleX(opts, chartType),
                     yScale: getScaleY(opts, chartType)
                 }), chartType)))
                 // Draw a vertical focus line representing the current cursor location.
-                .call(callIf(chartType !== 'construction', link(store, drawFocusLine, createStructuredSelector({
+                .call(callIf(chartType !== 'construction' && chartType !== 'lithology', link(store, drawFocusLine, createStructuredSelector({
                     cursor: getCursor(opts),
                     xScale: getScaleX(opts, chartType),
                     yScale: getScaleY(opts, chartType)

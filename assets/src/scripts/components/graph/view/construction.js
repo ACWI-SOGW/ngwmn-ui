@@ -53,6 +53,7 @@ const drawWaterLevel = function (elem, elements, cursorWaterLevel) {
 
     const container = elem.append('g');
 
+    // create a clip path that is the same geometry as the well-construction
     container
         .append('clipPath')
             .attr('id', 'water-level-path')
@@ -75,6 +76,28 @@ const drawWaterLevel = function (elem, elements, cursorWaterLevel) {
             .attr('height', cursorWaterLevel.height)
             .attr('fill', 'lightblue')
             .attr('fill-opacity', '0.85');
+
+    // draw a line representing the top of the water level rectangle inside the casing
+    container
+        .append('line')
+            .attr('x1', cursorWaterLevel.x)
+            .attr('y1', cursorWaterLevel.y)
+            .attr('x2', cursorWaterLevel.x + cursorWaterLevel.width)
+            .attr('y2', cursorWaterLevel.y)
+            .attr('clip-path', 'url(#water-level-path)')
+        .classed('line-segment', true);
+
+    // width of one side of the water level triangle
+    // the larger the number, the smaller the overall size of the triangle
+    const sideWidth = cursorWaterLevel.width / 8;
+
+    // draw an upside-down triangle polygon
+    container
+        .append('polygon')
+            .attr('points', `${cursorWaterLevel.x + cursorWaterLevel.width / 2 - sideWidth / 2},${cursorWaterLevel.y - sideWidth} `
+                            + `${cursorWaterLevel.x + sideWidth / 2 + cursorWaterLevel.width / 2},${cursorWaterLevel.y - sideWidth} `
+                            + `${cursorWaterLevel.x + cursorWaterLevel.width / 2},${cursorWaterLevel.y}`)
+            .classed('water-level-triangle', true);
 };
 
 const drawPatterns = function (elem) {

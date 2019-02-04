@@ -327,6 +327,23 @@ describe('graph component well log state', () => {
             });
         });
 
+        it('works with a different scale, waterlevel width is calculated properly', () => {
+            expect(getWellWaterLevel(mockOpts, 'main').resultFunc(
+                // x dimensions
+                scaleLinear().range([20, 100]).domain([20, 100]),
+                // y dimensions
+                scaleLinear().range([0, 100]).domain([new Date('2009-10-10'),
+                                                      new Date('2011-10-10')]),
+                {value: new Date('2010-10-10')},
+                [0, 100]
+            )).toEqual({
+                x: 20,
+                y: 50,
+                width: 80,
+                height: 0
+            });
+        });
+
         it('works with mock state', () => {
             expect(getWellWaterLevel(mockOpts, 'main')(getMockStore().getState())).not.toBe(null);
         });
