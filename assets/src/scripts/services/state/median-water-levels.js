@@ -2,10 +2,7 @@ import memoize from 'fast-memoize';
 import { createSelector } from 'reselect';
 
 import * as stats from '../statistics';
-import { 
-	getSiteWaterLevels, 
-	getSiteKey
-} from './index';
+import { getSiteKey } from './index';
 
 
 export const MOUNT_POINT = 'services/median-water-levels';
@@ -49,6 +46,7 @@ export const setMedianWaterLevelStatus = function (agencyCode, siteId, status) {
     };
 };
 
+// TODO asdf this looks like it might conflict with getWaterLevelStatus
 export const getMedianWaterLevelStatus = memoize((agencyCode, siteId) => createSelector(
     state => (state[MOUNT_POINT] || {}).requestStatus || {},
     (status) => {
@@ -66,7 +64,7 @@ export const getMedianWaterLevelStatus = memoize((agencyCode, siteId) => createS
  */
 export const retrieveMedianWaterLevels = (agencyCode, siteId) => (dispatch) => {
     dispatch(setMedianWaterLevelStatus(agencyCode, siteId, 'STARTED'));
-    return stats.retrieveMedianWaterLevels(getSiteWaterLevels(agencyCode, siteId))
+    return stats.retrieveMedianWaterLevels(agencyCode, siteId)
         .then(waterLevels => {
             dispatch(setMedianWaterLevels(agencyCode, siteId, waterLevels));
             dispatch(setMedianWaterLevelStatus(agencyCode, siteId, 'DONE'));

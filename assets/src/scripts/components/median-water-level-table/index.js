@@ -1,16 +1,15 @@
 
-import { select } from 'd3-selection';
+import { select } from '/../d3-selection';
 import { createStructuredSelector } from 'reselect';
 
 import List from 'list.js';
 
-import { link } from 'ngwmn/lib/d3-redux';
+import { link } from '../../lib/d3-redux';
 import {
-	getSiteWaterLevels, 
-	getSiteMedianWaterLevels, 
+	getSiteMedianWaterLevels,
 	getMedianWaterLevelStatus, 
 	retrieveMedianWaterLevels
-} from 'ngwmn/services/state/index';
+} from '../../services/state/index';
 
 import { isTableRendered, renderTable } from './state';
 
@@ -56,6 +55,7 @@ const drawTableBody = function(table, waterLevels, tbody) {
 export default function(store, node, {agencyCode, siteId}) {
     // If a request for this site hasn't been made yet, make the water levels
     // service call.
+    // TODO asdf if the status call is not stored correctly this will have issues.
     if (!getMedianWaterLevelStatus(agencyCode, siteId)(store.getState())) {
         store.dispatch(retrieveMedianWaterLevels(agencyCode, siteId));
     }

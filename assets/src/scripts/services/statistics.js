@@ -1,16 +1,18 @@
-import { post } from 'ngwmn/lib/ajax';
-import config from 'ngwmn/config';
+import { post } from '../lib/ajax';
+import {getWaterLevelStatus} from './state/water-levels';
 
 // median water level URL
+//import config from '../config';
 //const MWL_URL = `${config.SERVICE_ROOT}/statistics/calculate`;
-const MWL_URL = `http://localhost:8080/statistics/calculate`;
+const MWL_URL = 'http://localhost:8080/statistics/calculate';
 
 
 /**
  * Makes service call to the NGWMN cache for a site's historical water levels.
  * @return {Object}            Parsed XML with server response
  */
-export const retrieveMedianWaterLevels = function (waterLevels) {
+export const retrieveMedianWaterLevels = function(agencyCode, siteId) {
+    let waterLevels = getWaterLevelStatus(agencyCode, siteId);
     return post(`${MWL_URL}`, waterLevels.samples).then(data => {
         // Handle null responses from the service
         if (data === null) {
@@ -20,14 +22,14 @@ export const retrieveMedianWaterLevels = function (waterLevels) {
             };
         }
 
-        const samples = data.medians.split(",\n");
+        const samples = data.medians.split(',\n');
         return {
             medians: Array.prototype.map.call(samples, sample => {
-                values    = sample.split(",");
-                median    = values[1];
-                monthYear = values[0].split("-");
-                year      = monthYear[0];
-                month     = monthYear[1];
+                let values    = sample.split(',');
+                let median    = values[1];
+                let monthYear = values[0].split('-');
+                let year      = monthYear[0];
+                let month     = monthYear[1];
                 return {
                     year:year, month:month, median:median
                 };
