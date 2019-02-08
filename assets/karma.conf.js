@@ -87,11 +87,10 @@ module.exports = function (config) {
         // how many browser should be started simultaneous
         concurrency: Infinity,
 
-        // After upgrading to Jasmine 3.x, the tests fail when run in random
-        // order. Need to track down why this is the case.
+        // Set up jasmine as the test agent and dictate that the tests should run in no particular order
         client: {
             jasmine: {
-                random: false
+                random: true
             }
         }
     };

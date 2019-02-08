@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 -   Changed the Lithology and Well Construction table layout to better accommodate narrow viewports
 -   Changed appearance of Well Construction radio buttons
 -   Removed mini-hydrograph from construction element
+-   Fixed issue preventing tests from running successfully in random order
 
 ## [0.2.0][]
 ### Added
