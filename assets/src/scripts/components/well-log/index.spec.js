@@ -80,7 +80,7 @@ describe('well-log component', () => {
     let store;
 
     beforeEach(() => {
-        div = select('body').append('div').html(MOCK_COMPONENT)
+        div = select('body').append('div').html(MOCK_COMPONENT);
         store = getMockStore();
     });
 
@@ -92,4 +92,4 @@ describe('well-log component', () => {
         const node = div.node();
         attachToNode(store, node, node.dataset);
     });
-})
+});
