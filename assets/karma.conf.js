@@ -91,7 +91,7 @@ module.exports = function (config) {
         // order. Need to track down why this is the case.
         client: {
             jasmine: {
-                random: false
+                random: true
             }
         }
     };

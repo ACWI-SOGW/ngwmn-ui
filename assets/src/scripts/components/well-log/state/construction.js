@@ -58,7 +58,7 @@ export const getVisibleConstructionIds = memoize(siteKey => state => {
  * @param  {Object} action Action object
  * @return {Object}        New state
  */
-export const reducer = function (state = {}, action) {
+const reducer = function (state = {}, action) {
     switch (action.type) {
         case SELECTED_CONSTRUCTION_ITEM_SET:
             return {
