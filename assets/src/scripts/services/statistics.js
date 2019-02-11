@@ -1,5 +1,4 @@
 import { post } from '../lib/ajax';
-import {getWaterLevelStatus} from './state/water-levels';
 
 // median water level URL
 //import config from '../config';
@@ -9,10 +8,11 @@ const MWL_URL = 'http://localhost:8080/statistics/calculate';
 
 /**
  * Makes service call to the NGWMN cache for a site's historical water levels.
+ * @param  {String} agencyCode Site agency code
+ * @param  {String} siteId     Site identifier
  * @return {Object}            Parsed XML with server response
  */
-export const retrieveMedianWaterLevels = function(agencyCode, siteId) {
-    let waterLevels = getWaterLevelStatus(agencyCode, siteId);
+export const retrieveMedianWaterLevels = function(waterLevels) {
     return post(`${MWL_URL}`, waterLevels.samples).then(data => {
         // Handle null responses from the service
         if (data === null) {

@@ -17,7 +17,7 @@ export const MEDIAN_WATER_LEVELS_CALL_STATUS = `${MOUNT_POINT}/MEDIAN_WATER_LEVE
  * @param {Object} waterLevels Water level details to set
  * @return {Object}             WATER_LEVELS_SET action
  */
-export const setMedianWaterLevels = function (agencyCode, siteId, waterLevels) {
+export const setMedianWaterLevels = function(agencyCode, siteId, waterLevels) {
     return {
         type: MEDIAN_WATER_LEVELS_SET,
         payload: {
@@ -35,7 +35,7 @@ export const setMedianWaterLevels = function (agencyCode, siteId, waterLevels) {
  * @param {String} siteId     Site ID
  * @param {String} status     Status string of service call for specified site
  */
-export const setMedianWaterLevelStatus = function (agencyCode, siteId, status) {
+export const setMedianWaterLevelStatus = function(agencyCode, siteId, status) {
     return {
         type: MEDIAN_WATER_LEVELS_CALL_STATUS,
         payload: {
