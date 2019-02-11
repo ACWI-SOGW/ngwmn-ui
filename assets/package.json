@@ -43,7 +43,7 @@
     "autoprefixer": "^9.4.7",
     "eslint": "^5.9.0",
     "eslint-plugin-jasmine": "^2.9.2",
-    "gulp": "^3.9.1",
+    "gulp": "^4.0.0",
     "gulp-rev-all": "^1.0.0",
     "jasmine": "^3.3.0",
     "karma": "^4.0.0",
