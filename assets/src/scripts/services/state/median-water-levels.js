@@ -2,7 +2,7 @@ import memoize from 'fast-memoize';
 import { createSelector } from 'reselect';
 
 import * as stats from '../statistics';
-import { getSiteKey } from './index';
+import {getSiteKey, getSiteWaterLevels} from './index';
 
 
 export const MOUNT_POINT = 'services/median-water-levels';
@@ -62,11 +62,12 @@ export const getMedianWaterLevelStatus = memoize((agencyCode, siteId) => createS
  * @param  {String} siteId)    Site ID
  * @return {Function}          Thunk
  */
-export const retrieveMedianWaterLevels = (agencyCode, siteId) => (dispatch) => {
+export const retrieveMedianWaterLevels = (agencyCode, siteId) => (dispatch, getState) => {
     dispatch(setMedianWaterLevelStatus(agencyCode, siteId, 'STARTED'));
-    return stats.retrieveMedianWaterLevels(agencyCode, siteId)
-        .then(waterLevels => {
-            dispatch(setMedianWaterLevels(agencyCode, siteId, waterLevels));
+    const waterLevels = getSiteWaterLevels(agencyCode, siteId)(getState());
+    return stats.retrieveMedianWaterLevels(waterLevels)
+        .then(medians => {
+            dispatch(setMedianWaterLevels(agencyCode, siteId, medians));
             dispatch(setMedianWaterLevelStatus(agencyCode, siteId, 'DONE'));
         });
 };
