@@ -47,35 +47,42 @@ export function get(url, resolveWith='response') {
  *                              with. e.g., "response" or "responseXML"
  * @return {Promise}
  */
-export function post(url, sampleData, resolveWith='response') {
+export function post(url, sampleData, resolveWith='response', contentType = '') {
     // Return a new promise.
     return new Promise(function (resolve, reject) {
-        // Do the usual XHR stuff
-        var req = new XMLHttpRequest();
-        req.open('POST', url);
-
-        req.onload = function () {
-            // This is called even on 404 etc
-            // so check the status
-            if (req.status == 200) {
-                // Resolve the promise with the response text
-                resolve(req[resolveWith]);
-            } else {
-                // Otherwise reject with the status text
-                // which will hopefully be a meaningful error
-                if (window.ga) {
-                    window.ga('send', 'event', 'serviceFailure', req.status, url);
-                }
-                reject(Error(`Failed with status ${req.status}: ${req.statusText}`));
+        try {
+            // Do the usual XHR stuff
+            var req = new XMLHttpRequest();
+            req.open('POST', url);
+            if (contentType != '') {
+                req.setRequestHeader('Content-Type', contentType);
             }
-        };
 
-        // Handle network errors
-        req.onerror = function () {
-            reject(Error('Network Error'));
-        };
+            req.onload = function () {
+                // This is called even on 404 etc
+                // so check the status
+                if (req.status == 200) {
+                    // Resolve the promise with the response text
+                    resolve(req[resolveWith]);
+                } else {
+                    // Otherwise reject with the status text
+                    // which will hopefully be a meaningful error
+                    if (window.ga) {
+                        window.ga('send', 'event', 'serviceFailure', req.status, url);
+                    }
+                    reject(Error(`Failed with status ${req.status}: ${req.statusText}`));
+                }
+            };
 
-        // Make the request
-        req.send(sampleData);
+            // Handle network errors
+            req.onerror = function () {
+                reject(Error('Network Error'));
+            };
+
+            // Make the request
+            req.send(sampleData);
+        } catch (e) {
+            console.log(e);
+        }
     });
 }
