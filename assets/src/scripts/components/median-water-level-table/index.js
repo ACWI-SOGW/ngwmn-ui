@@ -1,4 +1,3 @@
-
 import { select } from 'd3-selection';
 import { createStructuredSelector } from 'reselect';
 
@@ -44,6 +43,7 @@ const drawTableBody = function(table, waterLevels, tbody) {
 
     return tbody;
 };
+
 /*
  * Renders the median water level table
  * @param  {Object} store               Redux store
@@ -52,18 +52,9 @@ const drawTableBody = function(table, waterLevels, tbody) {
  * @param  {Object} options.siteId      ID of site to draw
  * @param  {String} options.id          Unique ID for this component
  */
-export default function(store, node, {agencyCode, siteId}) {
-    // If a request for this site hasn't been made yet, make the water levels
-    // service call.
-    // TODO asdf if the status call is not stored correctly this will have issues.
-    if (!getMedianWaterLevelStatus(agencyCode, siteId)(store.getState())) {
-        store.dispatch(retrieveMedianWaterLevels(agencyCode, siteId));
-    }
-
+const drawTable = (store, node, agencyCode, siteId) => {
     const component = select(node);
-    component.select('button').on('click', () => {
-        store.dispatch(renderTable());
-    });
+
     const table = component
         .select('#median-water-levels-div')
             .append('table')
@@ -89,4 +80,38 @@ export default function(store, node, {agencyCode, siteId}) {
         isRendered: isTableRendered,
         waterLevels: getSiteMedianWaterLevels(agencyCode, siteId)
     })));
+};
+
+
+/*
+ * Checks that data has been fetched.
+ * @param  {Object} store               Redux store
+ * @param  {Object} node                DOM node to draw graph into
+ * @param  {Object} options.agencyCode  Agency of site to draw
+ * @param  {Object} options.siteId      ID of site to draw
+ * @param  {String} options.id          Unique ID for this component
+ */
+const ensureDatafetch = (store, node, agencyCode, siteId) => {
+    // If a request for this site hasn't been made yet, make the water levels
+    // service call.
+    if (!getMedianWaterLevelStatus(agencyCode, siteId)(store.getState())) {
+        store.dispatch(retrieveMedianWaterLevels(agencyCode, siteId));
+    }
+    store.dispatch(renderTable());
+}
+
+/*
+ * Renders the median water level table - on button click
+ * @param  {Object} store               Redux store
+ * @param  {Object} node                DOM node to draw graph into
+ * @param  {Object} options.agencyCode  Agency of site to draw
+ * @param  {Object} options.siteId      ID of site to draw
+ * @param  {String} options.id          Unique ID for this component
+ */
+export default function(store, node, {agencyCode, siteId}) {
+    const component = select(node);
+    component.select('button').on('click', () => {
+        ensureDatafetch(store, node, agencyCode, siteId);
+        drawTable(store, node, agencyCode, siteId);
+    });
 }
