@@ -59,9 +59,9 @@ const drawTable = (store, node, agencyCode, siteId) => {
     });
     const table = component
         .select('#median-water-levels-div')
-            .append('table')
+        .append('table')
         .attr('id', 'median-water-levels-table')
-            .classed('usa-table', true);
+        .classed('usa-table', true);
     component.select('#median-water-levels-div')
         .append('ul')
         .classed('pagination', true);

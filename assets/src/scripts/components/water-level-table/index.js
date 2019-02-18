@@ -71,9 +71,9 @@ export default function(store, node, {agencyCode, siteId}) {
     });
     const table = component
         .select('#water-levels-div')
-            .append('table')
+        .append('table')
         .attr('id', 'water-levels-table')
-            .classed('usa-table', true);
+        .classed('usa-table', true);
     component.select('#water-levels-div')
         .append('ul')
         .classed('pagination', true);
