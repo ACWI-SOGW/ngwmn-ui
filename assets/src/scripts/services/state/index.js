@@ -7,6 +7,7 @@ export * from './median-water-levels';
 export * from './well-log';
 export default {
     ...waterLevels,
+    ...medianWaterLevels,
     ...wellLog
 };
 
