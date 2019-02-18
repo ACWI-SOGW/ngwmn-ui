@@ -3,7 +3,7 @@ import config from '../config';
 
 // median water level URL
 //const MWL_URL = `${config.SERVICE_ROOT}/statistics/calculate`;
-const MWL_URL = 'http://localhost:8080/statistics/calculate';
+const MWL_URL = 'http://localhost:8777/statistics/calculate';
 
 
 /**
@@ -13,36 +13,47 @@ const MWL_URL = 'http://localhost:8080/statistics/calculate';
  * @return {Object}            Parsed XML with server response
  */
 export const retrieveMedianWaterLevels = function(waterLevels) {
-    return post(`${MWL_URL}`, waterLevels.samples).then(data => {
-        // Handle null responses from the service
-        if (data === null) {
+    let data = 'medians=true&mediation=BelowLand&data=';
+    for (let s in waterLevels.samples) {
+        const sample = waterLevels.samples[s];
+        data = data + sample['time'] +','+ sample['originalValue'] +',%0A';
+    }
+
+    return post(`${MWL_URL}`,
+        data,
+        'response',
+        'application/x-www-form-urlencoded')
+        .then(json => {
+            // Handle null responses from the service
+            if (json === null) {
+                return {
+                    message: 'No water level data available',
+                    medians: []
+                };
+            }
+
+            const data = JSON.parse(json);
+            const samples = data.medians.split('\n');
             return {
-                message: 'No water level data available',
+                medians: Array.prototype.map.call(samples, sample => {
+                    let values    = sample.split(',');
+                    let median    = values[1];
+                    let monthYear = values[0].split('-');
+                    let year      = monthYear[0];
+                    let month     = monthYear[1];
+                    return {
+                        year:year, month:month, median:median
+                    };
+                })
+            };
+        }).catch(reason => {
+            console.error(reason);
+            return {
+                error: true,
+                message: reason.message,
                 medians: []
             };
-        }
-
-        const samples = data.medians.split(',\n');
-        return {
-            medians: Array.prototype.map.call(samples, sample => {
-                let values    = sample.split(',');
-                let median    = values[1];
-                let monthYear = values[0].split('-');
-                let year      = monthYear[0];
-                let month     = monthYear[1];
-                return {
-                    year:year, month:month, median:median
-                };
-            })
-        };
-    }).catch(reason => {
-        console.error(reason);
-        return {
-            error: true,
-            message: reason.message,
-            medians: []
-        };
-    });
+        });
 };
 // sample repsonse json
 // {"overall":
