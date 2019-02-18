@@ -54,7 +54,9 @@ const drawTableBody = function(table, waterLevels, tbody) {
  */
 const drawTable = (store, node, agencyCode, siteId) => {
     const component = select(node);
-
+    component.select('button').on('click', () => {
+        store.dispatch(renderTable());
+    });
     const table = component
         .select('#median-water-levels-div')
             .append('table')
@@ -98,8 +100,7 @@ const ensureDatafetch = (store, node, agencyCode, siteId) => {
     if (!getMedianWaterLevelStatus(agencyCode, siteId)(store.getState())) {
         store.dispatch(retrieveMedianWaterLevels(agencyCode, siteId));
     }
-    store.dispatch(renderTable());
-}
+};
 
 /*
  * Renders the median water level table - on button click
@@ -114,5 +115,6 @@ export default function(store, node, {agencyCode, siteId}) {
     component.select('button').on('click', () => {
         ensureDatafetch(store, node, agencyCode, siteId);
         drawTable(store, node, agencyCode, siteId);
+        store.dispatch(renderTable());
     });
 }
