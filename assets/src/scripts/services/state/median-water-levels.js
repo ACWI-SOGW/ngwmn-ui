@@ -73,11 +73,13 @@ export const retrieveMedianWaterLevels = (agencyCode, siteId) => (dispatch, getS
 };
 
 /**
- * Return all water level data
+ * Return median water level data
  * @param  {Object} state Redux state
  * @return {Object}       Water levels keyed on ID
  */
-export const getMedianWaterLevels = state => state[MOUNT_POINT]['data'] || {};
+export const getMedianWaterLevels = state => {
+    return state[MOUNT_POINT]['data'] || {};
+}
 
 /**
  * Return water level data for the site or the empty object if no data available

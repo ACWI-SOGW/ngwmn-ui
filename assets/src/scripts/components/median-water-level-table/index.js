@@ -5,9 +5,9 @@ import List from 'list.js';
 
 import { link } from '../../lib/d3-redux';
 import {
-	getSiteMedianWaterLevels,
-	getMedianWaterLevelStatus, 
-	retrieveMedianWaterLevels
+    getSiteMedianWaterLevels,
+    getMedianWaterLevelStatus,
+    retrieveMedianWaterLevels
 } from '../../services/state/index';
 
 import { isTableRendered, renderTable } from './state';
@@ -65,11 +65,12 @@ const drawTable = (store, node, agencyCode, siteId) => {
         .classed('pagination', true);
 
     table.append('thead')
-        .append('tr')
-            .selectAll('th')
-            .data(COLUMN_HEADINGS).enter()
-            .append('th')
-                .text((col) => col);
+         .append('tr')
+         .selectAll('th')
+         .data(COLUMN_HEADINGS)
+         .enter()
+         .append('th')
+         .text((col) => col);
 
     table.call(link(store, (elem, {isRendered, waterLevels}) => {
         // Add code to rendered

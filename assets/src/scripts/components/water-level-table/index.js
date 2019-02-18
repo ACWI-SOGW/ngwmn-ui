@@ -6,7 +6,9 @@ import List from 'list.js';
 
 import { link } from 'ngwmn/lib/d3-redux';
 import {
-    getSiteWaterLevels, getWaterLevelStatus, retrieveWaterLevels
+    getSiteWaterLevels, 
+    getWaterLevelStatus, 
+    retrieveWaterLevels
 } from 'ngwmn/services/state/index';
 
 import { isTableRendered, renderTable } from './state';
@@ -77,11 +79,12 @@ export default function(store, node, {agencyCode, siteId}) {
         .classed('pagination', true);
 
     table.append('thead')
-        .append('tr')
-            .selectAll('th')
-            .data(COLUMN_HEADINGS).enter()
-            .append('th')
-                .text((col) => col);
+         .append('tr')
+         .selectAll('th')
+         .data(COLUMN_HEADINGS)
+         .enter()
+         .append('th')
+         .text((col) => col);
 
     table.call(link(store, (elem, {isRendered, waterLevels}) => {
         // Add code to rendered
