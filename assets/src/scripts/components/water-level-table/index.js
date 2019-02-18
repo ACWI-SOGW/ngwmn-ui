@@ -6,8 +6,8 @@ import List from 'list.js';
 
 import { link } from 'ngwmn/lib/d3-redux';
 import {
-    getSiteWaterLevels, 
-    getWaterLevelStatus, 
+    getSiteWaterLevels,
+    getWaterLevelStatus,
     retrieveWaterLevels
 } from 'ngwmn/services/state/index';
 
