@@ -46,7 +46,6 @@ export const setMedianWaterLevelStatus = function(agencyCode, siteId, status) {
     };
 };
 
-// TODO asdf this looks like it might conflict with getWaterLevelStatus
 export const getMedianWaterLevelStatus = memoize((agencyCode, siteId) => createSelector(
     state => (state[MOUNT_POINT] || {}).requestStatus || {},
     (status) => {
