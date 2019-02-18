@@ -28,7 +28,7 @@ const drawTableBody = function(table, waterLevels, tbody) {
     tbody = tbody || table
         .append('tbody')
         .classed('list', true);
-    const samples = (waterLevels.samples || []).reverse();
+    const samples = waterLevels.medians || [];
     const valueNames = ['year', 'month', 'median'];
     const item = valueNames.reduce(function(total, name) {
         return `${total}<td class="${name}"></td>`;
