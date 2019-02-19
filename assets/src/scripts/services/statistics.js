@@ -33,7 +33,14 @@ export const retrieveMedianWaterLevels = function(waterLevels) {
             }
 
             const data = JSON.parse(json);
-            const samples = data.medians.split('\n');
+
+            // this conditioning will be unnecessary when strict JSON is returned
+            const medians = data.medians.substr(1,data.medians.length-2);
+            const samples = medians.split('\n');
+            while (samples[samples.length-1].trim().length === 0) {
+                samples.pop();
+            }
+
             return {
                 medians: Array.prototype.map.call(samples, sample => {
                     let values    = sample.split(',');
