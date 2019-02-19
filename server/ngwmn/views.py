@@ -111,7 +111,6 @@ def site_page(agency_cd, location_id):
     indexOfFeature = 0
     searchIsDone = False
     while indexOfFeature < len(summary['features']):
-        testSiteId = summary['features'][indexOfFeature]['properties']['SITE_NO']
         if summary['features'][indexOfFeature]['properties']['SITE_NO'] == location_id:
             feature = summary['features'][indexOfFeature]['properties']
             searchIsDone = True
