@@ -1,9 +1,12 @@
 import { select } from 'd3-selection';
-
-import mockStore from 'ngwmn/store.mock';
-
+import mockStore from '../../store.mock';
 import attachToNode from './index';
-import { isTableRendered, renderTable } from './state';
+
+import {isTableRendered, renderTable} from './state';
+import {
+    setMedianWaterLevels,
+    setMedianWaterLevelStatus
+} from '../../services/state/median-water-levels';
 
 describe('median water level table component', () => {
 
