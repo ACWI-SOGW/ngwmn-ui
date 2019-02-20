@@ -110,7 +110,6 @@ def site_page(agency_cd, location_id):
     feature = {}
     index_of_feature = 0
     while index_of_feature < len(summary['features']):
-        this_should_be_it = summary['features'][index_of_feature]['properties']['SITE_NO']
         if summary['features'][index_of_feature]['properties']['SITE_NO'] == location_id:
             feature = summary['features'][index_of_feature]['properties']
             break
