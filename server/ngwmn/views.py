@@ -12,6 +12,7 @@ from .services.confluence import (
     OTHER_AGENCY_INFO_CONTENT)
 from .string_utils import generate_subtitle
 
+
 @app.route('/')
 def home():
     """testing home page"""
@@ -69,7 +70,7 @@ def provider(agency_cd):
                            data_collection=pull_feed(confluence_url(agency_cd, DATA_COLLECTION_CONTENT)),
                            data_management=pull_feed(confluence_url(agency_cd, DATA_MANAGEMENT_CONTENT)),
                            other_agency_info=pull_feed(confluence_url(agency_cd, OTHER_AGENCY_INFO_CONTENT))
-                          )
+                           )
 
 
 @app.route('/provider/<agency_cd>/site/', methods=['GET'])
