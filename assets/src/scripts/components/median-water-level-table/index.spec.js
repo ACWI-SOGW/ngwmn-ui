@@ -12,7 +12,7 @@ describe('median water level table component', () => {
     beforeEach(() => {
         div = select('body')
             .append('div')
-                .attr('id', 'test-div');
+            .attr('id', 'test-div');
         div.append('button');
         div.append('div')
             .attr('id', 'median-water-levels-div');
@@ -51,6 +51,12 @@ describe('median water level table component', () => {
         });
 
         it('The table should be rendered if the table rendered state is true in the store', () => {
+            store.dispatch(setMedianWaterLevelStatus('USGS','423532088254601','DONE'));
+            store.dispatch(setMedianWaterLevels('USGS','423532088254601',
+                {'medians':[
+                        {'year':'2017', 'month':'2', 'median':'22.22'}
+                ]}
+            ));
             store.dispatch(renderTable());
             attachToNode(store, div.node(), {
                 agencyCode: 'USGS',
