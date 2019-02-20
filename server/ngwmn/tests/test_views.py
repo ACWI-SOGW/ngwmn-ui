@@ -24,7 +24,7 @@ class TestWellPageView(TestCase):
     def setUp(self):
         self.app_client = app.test_client()
         _agency_cd = 'DOOP'
-        _location_id = 'BP-1729'
+        _location_id = '430406089232901'
         _iddata_url = 'ngwmn/iddata?request={}&agency_cd={}&siteNo={}'
         self.well_log_url = urljoin(SERVICE_ROOT, _iddata_url.format('well_log', _agency_cd, _location_id))
         self.wq_url = urljoin(SERVICE_ROOT, _iddata_url.format('water_quality', _agency_cd, _location_id))
@@ -119,10 +119,6 @@ class TestProviderView(TestCase):
         response = self.app_client.get('/provider/A/')
         self.assertIn(b'Agency A', response.data)
         self.assertIn(b'<div>My Content</div>', response.data)
-
-#working on this guy
-    def test_nested_wells_display_correct_data(self, m_pull_feed, m_get_providers):
-        self.assertEqual('a', 'a')
 
 
 @mock.patch('ngwmn.views.get_sites')

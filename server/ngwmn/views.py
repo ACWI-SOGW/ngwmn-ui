@@ -108,15 +108,13 @@ def site_page(agency_cd, location_id):
     # reduce the amount of data returned from GeoServer to only the monitoring location of interest
     # this section is important for monitoring locations that have the same geographical coordinates (i.e. nested wells)
     feature = {}
-    indexOfFeature = 0
-    searchIsDone = False
-    while indexOfFeature < len(summary['features']):
-        if summary['features'][indexOfFeature]['properties']['SITE_NO'] == location_id:
-            feature = summary['features'][indexOfFeature]['properties']
-            searchIsDone = True
-            if searchIsDone:
-                break
-        indexOfFeature += 1
+    index_of_feature = 0
+    while index_of_feature < len(summary['features']):
+        this_should_be_it = summary['features'][index_of_feature]['properties']['SITE_NO']
+        if summary['features'][index_of_feature]['properties']['SITE_NO'] == location_id:
+            feature = summary['features'][index_of_feature]['properties']
+            break
+        index_of_feature += 1
 
     if 'organization' in water_quality:
         organization = water_quality['organization']['name']
