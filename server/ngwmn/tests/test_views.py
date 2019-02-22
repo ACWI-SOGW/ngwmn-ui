@@ -3,7 +3,6 @@ Unit tests for NGWMN views
 
 """
 # pylint: disable=C0103
-
 import json
 from unittest import TestCase, mock
 from urllib.parse import urljoin
@@ -52,6 +51,9 @@ class TestWellPageView(TestCase):
 
     @requests_mock.Mocker()
     def test_best_case(self, mocker):
+        id_of_expected_nested_location = b'430406089232901'
+        id_of_not_expected_nested_location = b'430406089232902'
+
         mocker.post(requests_mock.ANY, text=TEST_SUMMARY_JSON, status_code=200)
         mocker.get(self.well_log_url, content=MOCK_WELL_LOG_RESPONSE, status_code=200)
         mocker.get(self.wq_url, content=MOCK_WQ_RESPONSE, status_code=200)
@@ -62,11 +64,17 @@ class TestWellPageView(TestCase):
 
         response = self.app_client.get(self.site_loc_url_1)
         self.assertEqual(response.status_code, 200)
+        # check that the expected 'site no' is in the response, and the other 'site no' is not
+        self.assertIn(id_of_expected_nested_location, response.data)
+        self.assertNotIn(id_of_not_expected_nested_location, response.data)
 
     # Tests if a nested site (a monitoring location with the same geographic coordinates as another monitoring location)
-    # can be selected by site id
+    # can be selected by site id from a (mock) geoserver response
     @requests_mock.Mocker()
     def test_nested_monitoring_location(self, mocker):
+        id_of_expected_nested_location = b'430406089232902'
+        id_of_not_expected_nested_location = b'430406089232901'
+
         mocker.post(requests_mock.ANY, text=TEST_SUMMARY_JSON, status_code=200)
         mocker.get(self.well_log_url_2, content=MOCK_WELL_LOG_RESPONSE, status_code=200)
         mocker.get(self.wq_url_2, content=MOCK_WQ_RESPONSE, status_code=200)
@@ -76,7 +84,10 @@ class TestWellPageView(TestCase):
 
         response = self.app_client.get(self.site_loc_url_2)
         self.assertEqual(response.status_code, 200)
-        
+        # check that the expected 'site no' is in the response, and the other 'site no' is not
+        self.assertIn(id_of_expected_nested_location, response.data)
+        self.assertNotIn(id_of_not_expected_nested_location, response.data)
+
     @requests_mock.Mocker()
     def test_failed_service_with_non_server_error(self, mocker):
         mocker.post(requests_mock.ANY, status_code=403)
@@ -237,7 +248,7 @@ TEST_SUMMARY_JSON = """{
         "QW_WELL_TYPE": null,
         "QW_WELL_TYPE_DESC": null,
         "SITE_NAME": "DN-07/09E/23-1297",
-        "SITE_NO": "430406089232902",
+        "SITE_NO": "430406089232901",
         "SITE_TYPE": "WELL",
         "STATE_CD": "55",
         "STATE_NM": "Wisconsin",
@@ -298,12 +309,12 @@ TEST_SUMMARY_JSON = """{
             "DEC_LAT_VA": 43.0683722222222,
             "DEC_LONG_VA": -89.3928,
             "DISPLAY_FLAG": "1",
-            "FID": "USGS.430406089232901",
+            "FID": "USGS.430406089232902",
             "HORZ_ACY": "Accurate to +/- .01 second (differentially corrected GPS)",
             "HORZ_DATUM": "NAD83",
             "HORZ_METHOD": "GNSS4 - Level 1 Quality Survey Grade Global Navigation Satellite System",
             "INSERT_DATE": "2015-09-11Z",
-            "LINK": "http://waterdata.usgs.gov/nwis/inventory?search_site_no=430406089232901&search_site_no_match_type=exact&sort_key=site_no&group_key=NONE&sitefile_output_format=html_table&column_name=agency_cd&column_name=site_no&column_name=station_nm&format=station_manuscript&list_of_search_criteria=search_site_no",
+            "LINK": "http://waterdata.usgs.gov/nwis/inventory?search_site_no=430406089232902&search_site_no_match_type=exact&sort_key=site_no&group_key=NONE&sitefile_output_format=html_table&column_name=agency_cd&column_name=site_no&column_name=station_nm&format=station_manuscript&list_of_search_criteria=search_site_no",
             "LITH_DATA_PROVIDER": "USGS",
             "LOCAL_AQUIFER_CD": "300SNDSA",
             "LOCAL_AQUIFER_NAME": "Sandstone Aquifer",
@@ -326,7 +337,7 @@ TEST_SUMMARY_JSON = """{
             "QW_WELL_TYPE": null,
             "QW_WELL_TYPE_DESC": null,
             "SITE_NAME": "DN-07/09E/23-1297",
-            "SITE_NO": "430406089232901",
+            "SITE_NO": "430406089232902",
             "SITE_TYPE": "WELL",
             "STATE_CD": "55",
             "STATE_NM": "Wisconsin",
