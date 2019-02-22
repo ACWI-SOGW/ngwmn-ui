@@ -13,11 +13,30 @@ const MWL_URL = 'http://localhost:8777/statistics/calculate';
  * @return {Object}            Parsed XML with server response
  */
 export const retrieveMedianWaterLevels = function(waterLevels) {
-    let data = 'medians=true&mediation=BelowLand&data=';
+    let data = '';
+    let needsDirection = true;
+    let direction = 'BelowLand';
     for (let s in waterLevels.samples) {
         const sample = waterLevels.samples[s];
-        data = data + sample['time'] +','+ sample['originalValue'] +',%0A';
+        let aging = ''
+        if (sample.comment === 'P' || sample.comment === 'p') {
+            aging = 'P';
+        }
+        data = data + sample.time +','+ sample.originalValue +','+ aging +'%0A';
+
+        if (needsDirection && sample.direction) {
+            if (sample.direction === 'up') {
+                direction = 'AboveDatum';
+                needsDirection = false;
+            }
+            if (sample.direction === 'down') {
+                direction = 'BelowLand';
+                needsDirection = false;
+            }
+        }
     }
+    data = 'medians=true&mediation='+ direction +'&data=' +data;
+
 
     return post(`${MWL_URL}`,
         data,
