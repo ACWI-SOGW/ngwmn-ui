@@ -20,8 +20,9 @@ const COLUMN_HEADINGS = [
 
 /*
  * Draws the waterLevels data into table
- * @param {D3 node} table
- * @param {Array of Object} waterLevels
+ * @param {D3 node} table the table to render body rows
+ * @param {Array of Object} waterLevels the data used to render table rows
+ * @param {D3 node} tbody the table body if not found will pull from table
  * @return {Object} - Return the tbody element for the table
  */
 const drawTableBody = function(table, waterLevels, tbody) {
@@ -46,11 +47,10 @@ const drawTableBody = function(table, waterLevels, tbody) {
 
 /*
  * Renders the median water level table
- * @param  {Object} store               Redux store
- * @param  {Object} node                DOM node to draw graph into
- * @param  {Object} options.agencyCode  Agency of site to draw
- * @param  {Object} options.siteId      ID of site to draw
- * @param  {String} options.id          Unique ID for this component
+ * @param  {Object} store       Redux store
+ * @param  {Object} node        DOM node to draw graph into
+ * @param  {Object} agencyCode  Agency of site to draw
+ * @param  {Object} siteId      ID of site to draw
  */
 const drawTable = (store, node, agencyCode, siteId) => {
     const component = select(node);
@@ -105,7 +105,6 @@ const ensureDatafetch = (store, node, agencyCode, siteId) => {
  * @param  {Object} node                DOM node to draw graph into
  * @param  {Object} options.agencyCode  Agency of site to draw
  * @param  {Object} options.siteId      ID of site to draw
- * @param  {String} options.id          Unique ID for this component
  */
 export default function(store, node, {agencyCode, siteId}) {
     const component = select(node);

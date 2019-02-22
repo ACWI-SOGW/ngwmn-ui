@@ -1,5 +1,4 @@
 import { post } from '../lib/ajax';
-import config from '../config';
 
 // median water level URL
 //const MWL_URL = `${config.SERVICE_ROOT}/statistics/calculate`;
@@ -18,7 +17,7 @@ export const retrieveMedianWaterLevels = function(waterLevels) {
     let direction = 'BelowLand';
     for (let s in waterLevels.samples) {
         const sample = waterLevels.samples[s];
-        let aging = ''
+        let aging = '';
         if (sample.comment === 'P' || sample.comment === 'p') {
             aging = 'P';
         }
