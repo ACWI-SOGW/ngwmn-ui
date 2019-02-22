@@ -48,7 +48,6 @@ export const retrieveWaterLevels = function (agencyCode, siteId) {
                 })
             };
         }).catch(reason => {
-            console.error(reason);
             return {
                 error: true,
                 message: reason.message,

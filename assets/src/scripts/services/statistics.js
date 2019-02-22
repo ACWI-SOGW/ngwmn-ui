@@ -24,35 +24,39 @@ export const retrieveMedianWaterLevels = function(waterLevels) {
         'response',
         'application/x-www-form-urlencoded')
         .then(json => {
-            // Handle null responses from the service
-            if (json === null) {
-                return {
-                    message: 'No water level data available',
-                    medians: []
-                };
-            }
-
-            const data = JSON.parse(json);
-
-            // this conditioning will be unnecessary when strict JSON is returned
-            const medians = data.medians.substr(1,data.medians.length-2);
-            const samples = medians.split('\n');
-            while (samples[samples.length-1].trim().length === 0) {
-                samples.pop();
-            }
-
-            return {
-                medians: Array.prototype.map.call(samples, sample => {
-                    let values    = sample.split(',');
-                    let median    = values[1];
-                    let monthYear = values[0].split('-');
-                    let year      = monthYear[0];
-                    let month     = monthYear[1];
-                    return {
-                        year:year.trim(), month:month.trim(), median:median.trim()
-                    };
-                })
+            const errorResponse = {
+                error: true,
+                message: 'No water level data available',
+                //json: json,
+                medians: []
             };
+
+            try {
+                const data = JSON.parse(json);
+
+                // this conditioning will be unnecessary when strict JSON is returned
+                const medians = data.medians.substr(1,data.medians.length-2);
+                const samples = medians.split('\n');
+                while (samples[samples.length-1].trim().length === 0) {
+                    samples.pop();
+                }
+
+                return {
+                    medians: Array.prototype.map.call(samples, sample => {
+                        let values = sample.split(',');
+                        let median = values[1];
+                        let monthYear = values[0].split('-');
+                        let year = monthYear[0];
+                        let month = monthYear[1];
+                        return {
+                            year: year.trim(), month: month.trim(), median: median.trim()
+                        };
+                    })
+                };
+            } catch (e) {
+                // Handles null and other bad responses from the service
+                return errorResponse;
+            }
         }).catch(reason => {
             return {
                 error: true,
@@ -61,7 +65,7 @@ export const retrieveMedianWaterLevels = function(waterLevels) {
             };
         });
 };
-// sample repsonse json
+// sample response json
 // {"overall":
 // {"RECORD_YEARS":"13.0","SAMPLE_COUNT":28,"LATEST_PCTILE":"0.31250","LATEST_VALUE":"11.000","MAX_VALUE":"1.000","MEDIAN":"1.500","MIN_VALUE":"43.000","CALC_DATE":"2018-12-06","MAX_DATE":"2018-06-10T04:15:00-05:00","MIN_DATE":"2005-06-10T04:15:00-05:00","MEDIATION":"BelowLand"},
 // "monthly":{

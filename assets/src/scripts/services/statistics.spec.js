@@ -1,6 +1,5 @@
 import { retrieveMedianWaterLevels } from './statistics';
 
-
 export const MOCK_MEDIAN_WATER_LEVEL_RESPONSE = '{ \
     "monthly":"not used in the test", \
     "overall":"not used in the test", \
@@ -25,6 +24,33 @@ export const MOCK_MEDIAN_WATER_LEVEL_DATA = [
     }
 ];
 
+export const MOCK_WATER_LEVEL_SAMPLES = {
+    'samples': [
+        {
+            'time': '2016-06-10T04:15:00-05:00',
+            'originalValue': '43.00',
+            'fromLandsurfaceValue': '16.52',
+            'fromDatumValue': '842.5',
+            'comment': 'A'
+        },
+        {
+            'time':'2006-06-10T04:15:00-05:00',
+            'originalValue': '22.00',
+            'fromLandsurfaceValue': '16.60',
+            'fromDatumValue': '842.4',
+            'comment': 'A'
+        },
+        {
+            'time':'2010-06-10T04:15:00-05:00',
+            'originalValue': '20.00',
+            'fromLandsurfaceValue': '16.60',
+            'fromDatumValue': '842.4',
+            'comment': 'A'
+        }
+    ]
+};
+
+
 describe('statistics service module', () => {
     beforeEach(() => {
         jasmine.Ajax.install();
@@ -39,7 +65,7 @@ describe('statistics service module', () => {
         let promise;
 
         beforeEach(() => {
-            promise = retrieveMedianWaterLevels('USGS', 1);
+            promise = retrieveMedianWaterLevels(MOCK_WATER_LEVEL_SAMPLES);
             request = jasmine.Ajax.requests.mostRecent();
         });
 
@@ -52,8 +78,7 @@ describe('statistics service module', () => {
                 expect(resp).toEqual({
                     error: true,
                     message: 'Failed with status 500: oops my bad',
-                    elevationReference: {},
-                    samples: []
+                    medians: []
                 });
             });
         });
@@ -61,11 +86,11 @@ describe('statistics service module', () => {
         it('returns correctly parsed JSON', () => {
             request.respondWith({
                 status: 200,
-                responseText: MOCK_MEDIAN_WATER_LEVEL_RESPONSE,
+                response: MOCK_MEDIAN_WATER_LEVEL_RESPONSE,
                 contentType: 'text/xml'
             });
             promise.then(waterLevels => {
-                expect(waterLevels).toEqual(MOCK_MEDIAN_WATER_LEVEL_DATA);
+                expect(waterLevels.medians).toEqual(MOCK_MEDIAN_WATER_LEVEL_DATA);
             });
         });
 
@@ -75,9 +100,9 @@ describe('statistics service module', () => {
             });
             promise.then(waterLevels => {
                 expect(waterLevels).toEqual({
+                    error: true,
                     message: 'No water level data available',
-                    elevationReference: {},
-                    samples: []
+                    medians: []
                 });
             });
         });
