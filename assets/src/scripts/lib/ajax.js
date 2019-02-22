@@ -82,7 +82,7 @@ export function post(url, sampleData, resolveWith='response', contentType = '') 
             // Make the request
             req.send(sampleData);
         } catch (e) {
-            console.log(e);
+            //console.log(e);
         }
     });
 }

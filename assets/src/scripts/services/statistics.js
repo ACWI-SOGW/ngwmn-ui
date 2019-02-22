@@ -54,7 +54,6 @@ export const retrieveMedianWaterLevels = function(waterLevels) {
                 })
             };
         }).catch(reason => {
-            console.error(reason);
             return {
                 error: true,
                 message: reason.message,
