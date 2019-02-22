@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 -   Checkbox to water levels chart legend to toggle lithology layers visibility
 -   Added title to hydrograph
 -   Added triangular water level indicator to construction water level element
+-   Added Median Montly Statistical Water Levels section
 
 ### Changed
 -   Moved Lithology Table from Well Log accordion to Well Log component
