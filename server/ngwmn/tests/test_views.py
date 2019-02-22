@@ -73,11 +73,10 @@ class TestWellPageView(TestCase):
         mocker.get(self.sifta_url_2, text=MOCK_SIFTA_RESPONSE, status_code=200)
         mocker.get(self.site_info_url_2, text=self.mock_site_info_json, status_code=200)
         mocker.get(self.stats_overall_url_2, text=self.mock_overall_json, status_code=200)
-        mocker.get(self.stats_monthly_url_2, text=self.mock_monthly_json, status_code=200)
 
         response = self.app_client.get(self.site_loc_url_2)
         self.assertEqual(response.status_code, 200)
-
+        
     @requests_mock.Mocker()
     def test_failed_service_with_non_server_error(self, mocker):
         mocker.post(requests_mock.ANY, status_code=403)
