@@ -51,8 +51,8 @@ class TestWellPageView(TestCase):
 
     @requests_mock.Mocker()
     def test_best_case(self, mocker):
-        id_of_expected_nested_location = b'430406089232901'
-        id_of_not_expected_nested_location = b'430406089232902'
+        id1 = b'430406089232901'
+        id2 = b'430406089232902'
 
         mocker.post(requests_mock.ANY, text=TEST_SUMMARY_JSON, status_code=200)
         mocker.get(self.well_log_url, content=MOCK_WELL_LOG_RESPONSE, status_code=200)
@@ -65,15 +65,15 @@ class TestWellPageView(TestCase):
         response = self.app_client.get(self.site_loc_url_1)
         self.assertEqual(response.status_code, 200)
         # check that the expected 'site no' is in the response, and the other 'site no' is not
-        self.assertIn(id_of_expected_nested_location, response.data)
-        self.assertNotIn(id_of_not_expected_nested_location, response.data)
+        self.assertIn(id1, response.data)
+        self.assertNotIn(id2, response.data)
 
     # Tests if a nested site (a monitoring location with the same geographic coordinates as another monitoring location)
     # can be selected by site id from a (mock) geoserver response
     @requests_mock.Mocker()
     def test_nested_monitoring_location(self, mocker):
-        id_of_expected_nested_location = b'430406089232902'
-        id_of_not_expected_nested_location = b'430406089232901'
+        id1 = b'430406089232902'
+        id2 = b'430406089232901'
 
         mocker.post(requests_mock.ANY, text=TEST_SUMMARY_JSON, status_code=200)
         mocker.get(self.well_log_url_2, content=MOCK_WELL_LOG_RESPONSE, status_code=200)
@@ -85,8 +85,8 @@ class TestWellPageView(TestCase):
         response = self.app_client.get(self.site_loc_url_2)
         self.assertEqual(response.status_code, 200)
         # check that the expected 'site no' is in the response, and the other 'site no' is not
-        self.assertIn(id_of_expected_nested_location, response.data)
-        self.assertNotIn(id_of_not_expected_nested_location, response.data)
+        self.assertIn(id1, response.data)
+        self.assertNotIn(id2, response.data)
 
     @requests_mock.Mocker()
     def test_failed_service_with_non_server_error(self, mocker):
