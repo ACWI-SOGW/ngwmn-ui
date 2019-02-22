@@ -9,8 +9,7 @@ import {
 } from './median-water-levels';
 import { MOCK_WATER_LEVEL_DATA } from '../cache.spec';
 import { MOCK_MEDIAN_WATER_LEVEL_RESPONSE, MOCK_MEDIAN_WATER_LEVEL_DATA } from '../statistics.spec';
-import {default as waterLevels, MOUNT_POINT as WATER_LEVELS_MOUNT_POINT} from './water-levels';
-// import configureStore from '../../store';
+import { MOUNT_POINT as WATER_LEVELS_MOUNT_POINT} from './water-levels';
 
 
 describe('median water levels service state', () => {
