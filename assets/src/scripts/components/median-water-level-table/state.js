@@ -2,7 +2,7 @@
 const MOUNT_POINT = 'components/median-water-level-table';
 const TABLE_RENDERED = `${MOUNT_POINT}/TABLE_RENDERED`;
 
-export const renderTable = function() {
+export const setTableWasExpanded = function() {
     return {
         type: TABLE_RENDERED,
         payload: {}

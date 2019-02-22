@@ -10,7 +10,7 @@ import {
     retrieveMedianWaterLevels
 } from '../../services/state';
 
-import { isTableRendered, renderTable } from './state';
+import { isTableRendered, setTableWasExpanded } from './state';
 
 const COLUMN_HEADINGS = [
     'Year',
@@ -111,6 +111,6 @@ export default function(store, node, {agencyCode, siteId}) {
     drawTable(store, node, agencyCode, siteId);
     component.select('button').on('click', () => {
         ensureDatafetch(store, node, agencyCode, siteId);
-        store.dispatch(renderTable());
+        store.dispatch(setTableWasExpanded());
     });
 }

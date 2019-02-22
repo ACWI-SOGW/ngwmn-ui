@@ -2,7 +2,7 @@ import { select } from 'd3-selection';
 import mockStore from '../../store.mock';
 import attachToNode from './index';
 
-import {isTableRendered, renderTable} from './state';
+import {isTableRendered, setTableWasExpanded} from './state';
 import {
     setMedianWaterLevels,
     setMedianWaterLevelStatus
@@ -62,7 +62,7 @@ describe('median water level table component', () => {
                         {'year':'2017', 'month':'2', 'median':'22.22'}
                 ]}
             ));
-            store.dispatch(renderTable());
+            store.dispatch(setTableWasExpanded());
             attachToNode(store, div.node(), {
                 agencyCode: 'USGS',
                 siteId: '423532088254601'
