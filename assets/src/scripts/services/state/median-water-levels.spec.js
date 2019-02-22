@@ -1,13 +1,16 @@
 import { combineReducers, createStore } from 'redux';
 import configureStore from 'redux-mock-store';
-import { default as thunk } from 'redux-thunk';
+import thunk from 'redux-thunk';
 
 import {
-    default as medianWaterLevels, getSiteWaterLevels, getMedianWaterLevels,
+    default as medianWaterLevels, getSiteMedianWaterLevels, getMedianWaterLevels,
     getMedianWaterLevelStatus, retrieveMedianWaterLevels, setMedianWaterLevels,
-    setMedianWaterLevelStatus, WATER_LEVELS_SET, WATER_LEVELS_CALL_STATUS, MOUNT_POINT
+    setMedianWaterLevelStatus, MEDIAN_WATER_LEVELS_SET, MEDIAN_WATER_LEVELS_CALL_STATUS, MOUNT_POINT
 } from './median-water-levels';
-import { MOCK_WATER_LEVEL_RESPONSE, MOCK_WATER_LEVEL_DATA } from '../cache.spec';
+import { MOCK_WATER_LEVEL_DATA } from '../cache.spec';
+import { MOCK_MEDIAN_WATER_LEVEL_RESPONSE, MOCK_MEDIAN_WATER_LEVEL_DATA } from '../statistics.spec';
+import {default as waterLevels, setWaterLevels, MOUNT_POINT as WATER_LEVELS_MOUNT_POINT} from './water-levels';
+// import configureStore from '../../store';
 
 
 describe('median water levels service state', () => {
@@ -29,11 +32,11 @@ describe('median water levels service state', () => {
         };
 
         it('Returns empty object if agency:site is not in the water levels data', () => {
-            expect(getSiteWaterLevels('USSS', '12345678')(mockStoreData)).toEqual({});
+            expect(getSiteMedianWaterLevels('USSS', '12345678')(mockStoreData)).toEqual({});
         });
 
         it('Returns the expected data if agency:site is in the water levels data', () => {
-            const levels = getSiteWaterLevels('USGS', '12345678')(mockStoreData);
+            const levels = getSiteMedianWaterLevels('USGS', '12345678')(mockStoreData);
             expect(levels).toEqual(mockStoreData[MOUNT_POINT]['data']['USGS:12345678']);
         });
     });
@@ -43,14 +46,21 @@ describe('median water levels service state', () => {
 
         beforeEach(() => {
             store = createStore(combineReducers({
-                ...waterLevels
+                ...medianWaterLevels
             }), {});
-            store.dispatch(setMedianWaterLevels('USGS', '430406089232901', MOCK_WATER_LEVEL_DATA));
+            store.dispatch(setMedianWaterLevelStatus('USGS','430406089232901','DONE'));
+            store.dispatch(setMedianWaterLevels('USGS', '430406089232901', MOCK_MEDIAN_WATER_LEVEL_DATA));
         });
+
+        // store.dispatch(setMedianWaterLevels('USGS','423532088254601',
+        //     {'medians':[
+        //             {'year':'2017', 'month':'2', 'median':'22.22'}
+        //     ]}
+        // ));
 
         it('and getMedianWaterLevels returns correct data', () => {
             expect(getMedianWaterLevels(store.getState())).toEqual({
-                'USGS:430406089232901': MOCK_WATER_LEVEL_DATA
+                'USGS:430406089232901': MOCK_MEDIAN_WATER_LEVEL_DATA
             });
         });
     });
@@ -61,7 +71,9 @@ describe('median water levels service state', () => {
 
         // Mock a service call response
         beforeEach(() => {
-            store = MockStore({});
+            let init = {};
+            init[WATER_LEVELS_MOUNT_POINT] = {'data':{'USGS:430406089232901':MOCK_WATER_LEVEL_DATA}};
+            store = MockStore(init);
             jasmine.Ajax.install();
         });
 
@@ -73,14 +85,14 @@ describe('median water levels service state', () => {
             const promise = store.dispatch(retrieveMedianWaterLevels('USGS', '430406089232901'));
             jasmine.Ajax.requests.mostRecent().respondWith({
                 status: 200,
-                responseText: MOCK_WATER_LEVEL_RESPONSE,
-                contentType: 'text/xml'
+                responseText: MOCK_MEDIAN_WATER_LEVEL_RESPONSE,
+                contentType: 'application/json'
             });
             promise.then(() => {
                 const actions = store.getActions();
                 expect(actions.length).toBe(3);
                 expect(actions[0]).toEqual({
-                    type: WATER_LEVELS_CALL_STATUS,
+                    type: MEDIAN_WATER_LEVELS_CALL_STATUS,
                     payload: {
                         agencyCode: 'USGS',
                         siteId: '430406089232901',
@@ -88,15 +100,15 @@ describe('median water levels service state', () => {
                     }
                 });
                 expect(actions[1]).toEqual({
-                    type: WATER_LEVELS_SET,
+                    type: MEDIAN_WATER_LEVELS_SET,
                     payload: {
                         agencyCode: 'USGS',
                         siteId: '430406089232901',
-                        waterLevels: MOCK_WATER_LEVEL_DATA
+                        waterLevels:{medians: MOCK_MEDIAN_WATER_LEVEL_DATA}
                     }
                 });
                 expect(actions[2]).toEqual({
-                    type: WATER_LEVELS_CALL_STATUS,
+                    type: MEDIAN_WATER_LEVELS_CALL_STATUS,
                     payload: {
                         agencyCode: 'USGS',
                         siteId: '430406089232901',
@@ -113,7 +125,7 @@ describe('median water levels service state', () => {
 
         beforeEach(() => {
             store = createStore(combineReducers({
-                ...waterLevels
+                ...medianWaterLevels
             }), {});
         });
 

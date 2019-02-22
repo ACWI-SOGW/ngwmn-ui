@@ -49,7 +49,7 @@ export const retrieveMedianWaterLevels = function(waterLevels) {
                     let year      = monthYear[0];
                     let month     = monthYear[1];
                     return {
-                        year:year, month:month, median:median
+                        year:year.trim(), month:month.trim(), median:median.trim()
                     };
                 })
             };

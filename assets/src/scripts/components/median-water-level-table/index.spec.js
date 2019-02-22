@@ -48,7 +48,9 @@ describe('median water level table component', () => {
                 siteId: '423532088254601'
             });
             div.select('button').dispatch('click');
-
+            // this is testing that the dispatch to call statistics/calculate was called
+            // it executes the code that calls the service and even if unavailable it should pass
+            // TODO it would be nice to mock out the stats call to prevent an unnecessary error
             expect(store.dispatch).toHaveBeenCalled();
             expect(isTableRendered(store.getState())).toBe(true);
         });
