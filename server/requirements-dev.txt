@@ -1,6 +1,6 @@
 bumpversion==0.5.3
 coverage==4.5.2
-coveralls==1.5.1
+coveralls==1.6.0
 pylint==2.2.2
 pytest==4.2.0
 pytest-flask==0.14.0
