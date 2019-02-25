@@ -13,7 +13,7 @@ import { get } from 'ngwmn/lib/ajax';
  * @param  {String} options.id      Unique ID for this component
  */
 export default function (store, node, {url, domId, multiplier = 2}) {
-    get(url, 'responseXML').then(function (document) {
+    get(url, {resolveWith:'responseXML'}).then(function (document) {
         const svgElem = document.documentElement;
         const width = parseFloat(svgElem.getAttribute('width')) * multiplier;
         const height = parseFloat(svgElem.getAttribute('height')) * multiplier;

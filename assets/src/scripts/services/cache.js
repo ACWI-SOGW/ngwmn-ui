@@ -11,7 +11,7 @@ const WL_URL = `${config.SERVICE_ROOT}/ngwmn_cache/direct/flatXML/waterlevel`;
  * @return {Object}            Parsed XML with server response
  */
 export const retrieveWaterLevels = function (agencyCode, siteId) {
-    return get(`${WL_URL}/${agencyCode}/${siteId}`, 'responseXML')
+    return get(`${WL_URL}/${agencyCode}/${siteId}`, {resolveWith:'responseXML'})
        .then(xml => {
             // Handle null responses from the service
             if (xml === null) {

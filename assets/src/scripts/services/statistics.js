@@ -37,51 +37,50 @@ export const retrieveMedianWaterLevels = function(waterLevels) {
     data = 'medians=true&mediation='+ direction +'&data=' +data;
 
 
-    return post(`${MWL_URL}`,
-        data,
-        'response',
-        'application/x-www-form-urlencoded')
-        .then(json => {
-            const errorResponse = {
-                error: true,
-                message: 'No water level data available',
-                //json: json,
-                medians: []
-            };
+    return post(`${MWL_URL}`, {
+        data:data,
+        contentType:'application/x-www-form-urlencoded'
+    }).then(json => {
+        const errorResponse = {
+            error: true,
+            message: 'No water level data available',
+            //json: json,
+            medians: []
+        };
 
-            try {
-                const data = JSON.parse(json);
+        try {
+            const data = JSON.parse(json);
 
-                // this conditioning will be unnecessary when strict JSON is returned
-                const medians = data.medians.substr(1,data.medians.length-2);
-                const samples = medians.split('\n');
-                while (samples[samples.length-1].trim().length === 0) {
-                    samples.pop();
-                }
-
-                return {
-                    medians: Array.prototype.map.call(samples, sample => {
-                        let values = sample.split(',');
-                        let median = values[1];
-                        let monthYear = values[0].split('-');
-                        let year = monthYear[0];
-                        let month = monthYear[1];
-                        return {
-                            year: year.trim(), month: month.trim(), median: median.trim()
-                        };
-                    })
-                };
-            } catch (e) {
-                // Handles null and other bad responses from the service
-                return errorResponse;
+            // this conditioning will be unnecessary when strict JSON is returned
+            const medians = data.medians.substr(1,data.medians.length-2);
+            const samples = medians.split('\n');
+            while (samples[samples.length-1].trim().length === 0) {
+                samples.pop();
             }
-        }).catch(reason => {
+
             return {
-                error: true,
-                message: reason.message,
-                medians: []
+                medians: Array.prototype.map.call(samples, sample => {
+                    let values = sample.split(',');
+                    let median = values[1];
+                    let monthYear = values[0].split('-');
+                    let year = monthYear[0];
+                    let month = monthYear[1];
+                    return {
+                        year: year.trim(), month: month.trim(), median: median.trim()
+                    };
+                })
             };
-        });
+        } catch (e) {
+            // Handles null and other bad responses from the service
+            return errorResponse;
+        }
+    }).catch(reason => {
+        return {
+            error: true,
+            message: reason.message,
+            medians: []
+        };
+    });
 };
 // sample response json
 // {"overall":
