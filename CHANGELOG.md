@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 -   Changed appearance of Well Construction radio buttons
 -   Removed mini-hydrograph from construction element
 -   Fixed issue preventing tests from running successfully in random order
+-   Fixed issue with 'nested' monitoring locations showing incorrect data
 
 ## [0.2.0][]
 ### Added
