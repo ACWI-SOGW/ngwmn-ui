@@ -33,7 +33,7 @@ const COLUMN_HEADINGS = [
 const drawTableBody = function(table, waterLevels, tbody) {
     tbody = tbody || table
         .append('tbody')
-        .classed('list', true);
+            .classed('list', true);
     const samples = (waterLevels.samples || []).reverse();
     const valueNames = ['time', 'originalValue', 'unit', 'accuracyValue', 'accuracyUnit',
             'sourceCode', 'fromLandsurfaceValue', 'fromDatumValue'];

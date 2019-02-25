@@ -15,7 +15,7 @@ describe('median water level table component', () => {
     beforeEach(() => {
         div = select('body')
             .append('div')
-            .attr('id', 'test-div');
+                .attr('id', 'test-div');
         div.append('button');
         div.append('div')
             .attr('id', 'median-water-levels-div');

@@ -18,7 +18,7 @@ const UNIT_DISPLAY = {
 export const drawAxisX = function (elem, {xScale, layout}, axis) {
     axis = axis || elem
         .append('g')
-        .classed('x-axis', true);
+            .classed('x-axis', true);
     axis.transition().duration(25)
         .attr('transform', `translate(${layout.x}, ${layout.y + layout.height})`)
         .call(axisBottom()
@@ -41,7 +41,7 @@ export const drawAxisY = function (elem, {yScale, layout}, callback, context) {
     context = context || {};
     context.axis = context.axis || elem
         .append('g')
-        .classed('y-axis', true);
+            .classed('y-axis', true);
     context.bBox = context.bBox || {};
 
     context.axis.transition().duration(25)

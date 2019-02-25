@@ -28,7 +28,7 @@ const COLUMN_HEADINGS = [
 const drawTableBody = function(table, waterLevels, tbody) {
     tbody = tbody || table
         .append('tbody')
-        .classed('list', true);
+            .classed('list', true);
     const samples = waterLevels.medians || [];
     const valueNames = ['year', 'month', 'median'];
     const item = valueNames.reduce(function(total, name) {
@@ -57,19 +57,19 @@ const drawTable = (store, node, agencyCode, siteId) => {
     const table = component
         .select('#median-water-levels-div')
         .append('table')
-        .attr('id', 'median-water-levels-table')
-        .classed('usa-table', true);
+            .attr('id', 'median-water-levels-table')
+            .classed('usa-table', true);
     component.select('#median-water-levels-div')
         .append('ul')
-        .classed('pagination', true);
+            .classed('pagination', true);
 
     table.append('thead')
          .append('tr')
-         .selectAll('th')
-         .data(COLUMN_HEADINGS)
-         .enter()
+            .selectAll('th')
+            .data(COLUMN_HEADINGS)
+            .enter()
          .append('th')
-         .text((col) => col);
+            .text((col) => col);
 
     table.call(link(store, (elem, {isRendered, waterLevels}) => {
         // Add code to rendered
