@@ -4,7 +4,7 @@ import ResizeObserver from 'resize-observer-polyfill';
 
 import { link } from 'ngwmn/lib/d3-redux';
 import { callIf } from 'ngwmn/lib/utils';
-import { getSiteKey } from 'ngwmn/services/state/index';
+import { getSiteKey } from '../../../services/site-key';
 
 import {
     getChartPoints, getChartPosition, getConstructionElements,

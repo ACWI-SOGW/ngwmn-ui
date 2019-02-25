@@ -2,7 +2,7 @@ import memoize from 'fast-memoize';
 import { createSelector } from 'reselect';
 
 import * as cache from '../cache';
-import { getSiteKey } from './index';
+import { getSiteKey } from '../site-key';
 
 
 export const MOUNT_POINT = 'services/water-levels';

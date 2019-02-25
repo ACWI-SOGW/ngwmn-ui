@@ -2,7 +2,8 @@ import memoize from 'fast-memoize';
 import { createSelector } from 'reselect';
 
 import * as stats from '../statistics';
-import {getSiteKey, getSiteWaterLevels} from './index';
+import {getSiteWaterLevels} from './water-levels';
+import { getSiteKey } from '../site-key';
 
 
 export const MOUNT_POINT = 'services/median-water-levels';

@@ -1,4 +1,4 @@
-import { getSiteKey } from './index';
+import { getSiteKey } from '../site-key';
 
 
 const MOUNT_POINT = 'services/well-log';
