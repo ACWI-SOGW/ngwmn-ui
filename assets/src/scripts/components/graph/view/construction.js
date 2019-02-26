@@ -132,7 +132,7 @@ const drawPatterns = function (elem) {
         });
 };
 
-const drawWellHole =  function drawWellHole(store, container, opts, elements) {
+const drawWellBorehole =  function drawWellHole(store, container, opts, elements) {
     const wellDepth = {
         title: 'depth',
         type: 'depth',
@@ -173,11 +173,11 @@ export default function (elem, {elements, cursorWaterLevel}, store, opts, contai
     // Remove any previously drawn children
     container.selectAll('*').remove();
 
+    // Draw well raw borehole element
+    drawWellBorehole(store, container, opts, elements);
+
     // Draw the current cursor water level inside the well chamber
     drawWaterLevel(container, elements, cursorWaterLevel);
-
-    // Draw well raw hole element
-    drawWellHole(store, container, opts, elements);
 
     // Draw each construction element
     elements.forEach((element, index) => {
