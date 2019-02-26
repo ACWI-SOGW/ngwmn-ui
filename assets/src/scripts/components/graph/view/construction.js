@@ -25,6 +25,10 @@ const drawElement = function (store, elem, opts, element, index=0) {
                 .call(callIf(element.type === 'screen', (rect) => {
                     rect.attr('fill', `url(#screen-pattern-${index % 2})`);
                 }))
+                .call(callIf(element.type === 'depth', (rect) => {
+                    rect.attr('fill', '#99FFFF')
+                        .attr('opacity', '0.25');
+                }))
                 .append('title')
                     .text(element.title);
             elem.append('line')
