@@ -1,11 +1,11 @@
 import { select } from 'd3-selection';
 
 import { link } from 'ngwmn/lib/d3-redux';
-import { getSiteKey } from 'ngwmn/services/state/index';
+import { getSiteKey } from '../../services/site-key';
 import {
     getSelectedConstructionId, setSelectedConstructionId, setSelectedLithologyId,
     setVisibleConstructionIds} from './state';
-import {getSelectedLithologyId} from "./state/lithology";
+import {getSelectedLithologyId} from './state/lithology';
 
 
 const updateVisibleIds = function (store, elem, siteKey) {

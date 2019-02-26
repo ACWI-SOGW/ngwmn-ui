@@ -16,7 +16,7 @@ describe('ajax module', () => {
         });
 
         it('The url passed to the get command is used to make a request', () => {
-            get(FAKE_SERVICE);
+            get(FAKE_SERVICE, {});
             const requests = jasmine.Ajax.requests;
             const thisRequest = requests.mostRecent();
 
@@ -30,7 +30,7 @@ describe('ajax module', () => {
                 status: 200,
                 response: 'Successful response'
             });
-            let p = get(FAKE_SERVICE).then(resolveSpy, rejectSpy);
+            let p = get(FAKE_SERVICE, {}).then(resolveSpy, rejectSpy);
             p.then(() => {
                 expect(resolveSpy).toHaveBeenCalledWith('Successful response');
                 expect(rejectSpy).not.toHaveBeenCalled();
@@ -43,7 +43,7 @@ describe('ajax module', () => {
                 status: 404,
                 statusText: 'Information not found'
             });
-            let p = get(FAKE_SERVICE).then(resolveSpy, rejectSpy);
+            let p = get(FAKE_SERVICE, {}).then(resolveSpy, rejectSpy);
             p.then(() => {
                 expect(resolveSpy).not.toHaveBeenCalled();
                 expect(rejectSpy).toHaveBeenCalled();
@@ -54,7 +54,7 @@ describe('ajax module', () => {
 
         it('Network error rejects the promise', (done) => {
             jasmine.Ajax.stubRequest(FAKE_SERVICE).andError();
-            let p = get(FAKE_SERVICE).then(resolveSpy, rejectSpy);
+            let p = get(FAKE_SERVICE, {}).then(resolveSpy, rejectSpy);
             p.then(() => {
                 expect(resolveSpy).not.toHaveBeenCalled();
                 expect(rejectSpy).toHaveBeenCalled();
