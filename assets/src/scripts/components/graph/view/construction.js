@@ -11,7 +11,7 @@ import { setSelectedConstructionId } from 'ngwmn/components/well-log/state/index
  * @param  {Object} element Element data to render
  * @param  {Number} index   Index of this element
  */
-const drawElement = function (store, elem, opts, element, index) {
+const drawElement = function (store, elem, opts, element, index=0) {
     elem.append('g')
         .attr('id', `${element.type}-${index}`)
         .classed(element.type, true)
@@ -128,6 +128,37 @@ const drawPatterns = function (elem) {
         });
 };
 
+const drawWellHole =  function drawWellHole(store, container, opts, elements) {
+    const wellDepth = {
+        title: 'depth',
+        type: 'depth',
+        thickness: 1,
+        left: {
+            x: 99999,
+            y1: 99999,
+            y2: -1
+        },
+        right: {
+            x: 99999,
+            y1: 99999,
+            y2: -1
+        }
+    };
+    elements.forEach((element) => {
+        wellDepth.left.x = Math.min(wellDepth.left.x, element.left.x);
+        wellDepth.right.x = Math.max(wellDepth.right.x, element.right.x);
+
+        wellDepth.left.y1 = Math.min(wellDepth.left.y1, element.left.y1);
+        wellDepth.right.y1 = Math.min(wellDepth.right.y1, element.right.y1);
+
+        wellDepth.left.y2 = Math.max(wellDepth.left.y2, element.left.y2);
+        wellDepth.right.y2 = Math.max(wellDepth.right.y2, element.right.y2);
+    });
+
+    drawElement(store, container, opts, wellDepth);
+}
+
+
 export default function (elem, {elements, cursorWaterLevel}, store, opts, container) {
     // Get/create container for construction elements
     container = container || elem
@@ -140,6 +171,9 @@ export default function (elem, {elements, cursorWaterLevel}, store, opts, contai
 
     // Draw the current cursor water level inside the well chamber
     drawWaterLevel(container, elements, cursorWaterLevel);
+
+    // Draw well raw hole element
+    drawWellHole(store, container, opts, elements);
 
     // Draw each construction element
     elements.forEach((element, index) => {
