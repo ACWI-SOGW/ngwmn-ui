@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 -   Checkbox to water levels chart legend to toggle lithology layers visibility
 -   Added title to hydrograph
+-   Added conditional to hide well when no data exists
 -   Added triangular water level indicator to construction water level element
 
 ### Changed
