@@ -171,7 +171,7 @@ def get_water_quality(agency_cd, location_id):
 
 def get_well_log(agency_cd, location_id):
     """
-    Retrieves water-quality data from the NGWMN iddata service.
+    Retrieves well log data from the NGWMN iddata service.
 
     :param str agency_cd: agency code for the agency that manages the location
     :param str location_id: the location's identifier
