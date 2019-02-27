@@ -1,6 +1,8 @@
 import { callIf } from 'ngwmn/lib/utils';
 
 import { setSelectedConstructionId } from 'ngwmn/components/well-log/state/index';
+import {getScaleX} from '../state';
+import {getWellDepth} from '../../../services/state';
 
 
 /**
@@ -25,8 +27,8 @@ const drawElement = function (store, elem, opts, element, index=0) {
                 .call(callIf(element.type === 'screen', (rect) => {
                     rect.attr('fill', `url(#screen-pattern-${index % 2})`);
                 }))
-                .call(callIf(element.type === 'depth', (rect) => {
-                    rect.attr('fill', '#99FFFF')
+                .call(callIf(element.type === 'borehole', (rect) => {
+                    rect.attr('fill', '#995500')
                         .attr('opacity', '0.25');
                 }))
                 .append('title')
@@ -133,19 +135,23 @@ const drawPatterns = function (elem) {
 };
 
 const drawWellBorehole =  function drawWellHole(store, container, opts, elements) {
+//    store.getState()['services/well-log']['USGS:423532088254601'].well_depth.value
+    const rawDepth = getWellDepth(store, opts.agencyCode, opts.siteId);
+    const maxDepth = getScaleX(opts, 'construction')(rawDepth);
+
     const wellDepth = {
-        title: 'depth',
-        type: 'depth',
+        title: 'borehole',
+        type: 'borehole',
         thickness: 1,
         left: {
             x: 99999,
             y1: 99999,
-            y2: -1
+            y2: maxDepth
         },
         right: {
             x: 99999,
             y1: 99999,
-            y2: -1
+            y2: maxDepth
         }
     };
     elements.forEach((element) => {
@@ -160,7 +166,7 @@ const drawWellBorehole =  function drawWellHole(store, container, opts, elements
     });
 
     drawElement(store, container, opts, wellDepth);
-}
+};
 
 
 export default function (elem, {elements, cursorWaterLevel}, store, opts, container) {

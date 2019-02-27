@@ -4,6 +4,13 @@ import { getSiteKey } from '../site-key';
 const MOUNT_POINT = 'services/well-log';
 const WELL_LOG_SET = `${MOUNT_POINT}/WELL_LOG_SET`;
 
+
+export const getWellDepth = (store, agencyCode, siteId) => {
+    const siteKey = getSiteKey(agencyCode, siteId);
+    return store.getState()[MOUNT_POINT][siteKey]['well_depth']['value'];
+};
+
+
 /**
  * Action creator:
  * Store the specified well log for a given site in the store.
