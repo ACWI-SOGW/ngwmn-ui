@@ -132,38 +132,51 @@ const drawPatterns = function (elem) {
 };
 
 const drawWellBorehole =  function drawWellHole(store, container, opts, elements) {
-//    store.getState()['services/well-log']['USGS:423532088254601'].well_depth.value
+    // get the sate from the store
     const state = store.getState();
-    const rawDepth = getSiteWellDepth(opts.agencyCode, opts.siteId)(state);
-    const maxDepth = getScaleY(opts, 'construction')(state)(rawDepth);
+    // get the measured depth of the well
+    const rawDepth    = getSiteWellDepth(opts.agencyCode, opts.siteId)(state);
+    // scale the depth to the graph size
+    const scaleDepth  = getScaleY(opts, 'construction')(state)(rawDepth);
+    // check to see if we have construction elements
+    const hasElements = elements && elements.length > 0;
+    // if there are no elements then use max size of the graph, else use 0 for max function to work
+    const minDepth    = hasElements ? 520 : 0;
+    // if there is good depth info then use it else use a high value for min function to work
+    const maxDepth    = scaleDepth > 300 ? scaleDepth : 520;
 
-    const wellDepth = {
+    // if there are elements use them to discover left and right otherwise use defaults
+    const left   = hasElements ? 100 : 8;
+    const right  = hasElements ? 8 : 100;
+
+    const borehole = {
         title: 'borehole',
         type: 'borehole',
         thickness: 1,
         left: {
-            x: 99999,
-            y1: 99999,
+            x:  left,
+            y1: minDepth,
             y2: maxDepth
         },
         right: {
-            x: 99999,
-            y1: 99999,
+            x:  right,
+            y1: minDepth,
             y2: maxDepth
         }
     };
     elements.forEach((element) => {
-        wellDepth.left.x = Math.min(wellDepth.left.x, element.left.x);
-        wellDepth.right.x = Math.max(wellDepth.right.x, element.right.x);
+        borehole.left.x = Math.min(borehole.left.x, element.left.x);
+        borehole.right.x = Math.max(borehole.right.x, element.right.x);
 
-        wellDepth.left.y1 = Math.min(wellDepth.left.y1, element.left.y1);
-        wellDepth.right.y1 = Math.min(wellDepth.right.y1, element.right.y1);
+        borehole.left.y1 = Math.min(borehole.left.y1, element.left.y1);
+        borehole.right.y1 = Math.min(borehole.right.y1, element.right.y1);
 
-        wellDepth.left.y2 = Math.max(wellDepth.left.y2, element.left.y2);
-        wellDepth.right.y2 = Math.max(wellDepth.right.y2, element.right.y2);
+        borehole.left.y2 = Math.max(borehole.left.y2, element.left.y2);
+        borehole.right.y2 = Math.max(borehole.right.y2, element.right.y2);
     });
 
-    drawElement(store, container, opts, wellDepth);
+    drawElement(store, container, opts, borehole);
+    return borehole;
 };
 
 
@@ -178,10 +191,17 @@ export default function (elem, {elements, cursorWaterLevel}, store, opts, contai
     container.selectAll('*').remove();
 
     // Draw well raw borehole element
-    drawWellBorehole(store, container, opts, elements);
+    const borehole = drawWellBorehole(store, container, opts, elements);
+    let waterLevelElements = elements;
+    if (!elements || elements.length == 0) {
+        waterLevelElements = [borehole];
+        if (cursorWaterLevel) {
+            cursorWaterLevel.height = borehole.left.y2 - cursorWaterLevel.y;
+        }
+    }
 
     // Draw the current cursor water level inside the well chamber
-    drawWaterLevel(container, elements, cursorWaterLevel);
+    drawWaterLevel(container, waterLevelElements, cursorWaterLevel);
 
     // Draw each construction element
     elements.forEach((element, index) => {
