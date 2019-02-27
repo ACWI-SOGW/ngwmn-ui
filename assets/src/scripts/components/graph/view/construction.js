@@ -1,7 +1,7 @@
 import { callIf } from 'ngwmn/lib/utils';
 
 import { setSelectedConstructionId } from 'ngwmn/components/well-log/state/index';
-import {getScaleX} from '../state';
+import {getScaleY} from '../state';
 import {getSiteWellDepth} from '../../../services/state';
 
 
@@ -136,8 +136,9 @@ const drawPatterns = function (elem) {
 
 const drawWellBorehole =  function drawWellHole(store, container, opts, elements) {
 //    store.getState()['services/well-log']['USGS:423532088254601'].well_depth.value
-    const rawDepth = getSiteWellDepth(opts.agencyCode, opts.siteId)(store.getState());
-    const maxDepth = getScaleX(opts, 'construction')(rawDepth);
+    const state = store.getState();
+    const rawDepth = getSiteWellDepth(opts.agencyCode, opts.siteId)(state);
+    const maxDepth = getScaleY(opts, 'construction')(state)(rawDepth);
 
     const wellDepth = {
         title: 'borehole',
