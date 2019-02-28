@@ -1,16 +1,12 @@
 import { getSiteKey } from '../site-key';
-import memoize from "fast-memoize";
-import {createSelector} from "reselect";
+import memoize from 'fast-memoize';
+import {createSelector} from 'reselect';
 
 
 const MOUNT_POINT = 'services/well-log';
 const WELL_LOG_SET = `${MOUNT_POINT}/WELL_LOG_SET`;
 
 
-export const getWellDepth = (store, agencyCode, siteId) => {
-    const siteKey = getSiteKey(agencyCode, siteId);
-    return store.getState()[MOUNT_POINT][siteKey]['well_depth']['value'];
-};
 
 /**
  * Return all well log data
