@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased][]
 ### Added
 -   Added Median Montly Statistical Water Levels section
+-   Added borehole rendering, especially useful for sites w/o construction information
 
 ### Fixed
 -   Fixed issue with 'nested' monitoring locations showing incorrect data
