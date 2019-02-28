@@ -78,6 +78,24 @@
                                 <th scope="row">Well Depth</th>
                                 <td>{{ _(feature.WELL_DEPTH) }} {{ feature.WELL_DEPTH_UNITS_NM }}</td>
                             </tr>
+                            </tr>
+                                <th scope="row">Elevation {% if well_log.elevation %}({{ well_log.elevation.scheme }}){% endif %}</th>
+                                <td>{% if well_log.elevation %}
+                                    {{ well_log.elevation.value }} {{ well_log.elevation.unit }}
+                                {% endif %}</td>
+                            <tr>
+                            </tr>
+                                <th scope="row">Latitude</th>
+                                <td>{% if well_log.location %}
+                                    {{ well_log.location.latitude }}
+                                {% endif %}</td>
+                            <tr>
+                            </tr>
+                                <th scope="row">Longitude</th>
+                                <td>{% if well_log.location %}
+                                    {{ well_log.location.longitude }}
+                                {% endif %}</td>
+                            </tr>
                             <tr>
                                 <th scope="row">Local Aquifer Name</th>
                                 <td>{{ _(feature.LOCAL_AQUIFER_NAME) }} ({{ feature.LOCAL_AQUIFER_CD }})</td>
@@ -155,41 +173,6 @@
                                     </tr>
                                 {% endfor %}
                             {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </li>
-            <li>
-                <button class="usa-accordion-button" aria-expanded="false" aria-controls="ts-a3">
-                    Well Log
-                </button>
-                <div id="ts-a3" class="usa-accordion-content">
-                    <table class="usa-table usa-table-borderless">
-                        <caption>Basic Well Information</caption>
-                        <tbody>
-                            <tr>
-                                <th scope="row">Well depth</th>
-                                <td>{% if well_log.well_depth %}
-                                    {{ well_log.well_depth.value }} {{ well_log.well_depth.unit }}
-                                {% endif %}</td>
-                            </tr>
-                                <th scope="row">Elevation {% if well_log.elevation %}({{ well_log.elevation.scheme }}){% endif %}</th>
-                                <td>{% if well_log.elevation %}
-                                    {{ well_log.elevation.value }} {{ well_log.elevation.unit }}
-                                {% endif %}</td>
-                            <tr>
-                            </tr>
-                                <th scope="row">Latitude</th>
-                                <td>{% if well_log.location %}
-                                    {{ well_log.location.latitude }}
-                                {% endif %}</td>
-                            <tr>
-                            </tr>
-                                <th scope="row">Longitude</th>
-                                <td>{% if well_log.location %}
-                                    {{ well_log.location.longitude }}
-                                {% endif %}</td>
-                            </tr>
                         </tbody>
                     </table>
                 </div>
