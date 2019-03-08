@@ -8,11 +8,15 @@ import { getSiteKey } from '../../../services/site-key';
 
 import {
     getChartPoints, getChartPosition, getConstructionElements,
-    getCurrentWaterLevelUnit, getCursor, getCursorDatum, getLineSegments,
-    getLithology, getLithologyVisibility, getScaleX, getScaleY, getViewBox,
+    getCurrentWaterLevelUnit, getCurrentWellLog, getCursor, getCursorDatum, getLineSegments,
+    getLithology, getLithologyVisibility, getScaleX, getScaleY, getScaleYElevation, getViewBox,
     getWellWaterLevel, setAxisYBBox, setCursor, setContainerSize
 } from '../state';
-import { drawAxisX, drawAxisY, drawAxisYLabel } from './axes';
+
+import { drawAxisX, drawAxisY, drawAxisYLabel, drawAxisYLabelLithologyDepth, drawAxisYLabelLithologyElevation,
+    drawAxisYElevation
+} from './axes';
+
 import addBrushZoomBehavior from './brush-zoom';
 import drawConstruction from './construction';
 import { drawFocusCircle, drawFocusLine, drawTooltip } from './cursor';
@@ -108,14 +112,23 @@ const drawChart = function (elem, store, opts, chartType) {
                     yScale: getScaleY(opts, chartType)
                 }))));
         })
-        // Draw the y-axis, only for the main chart.
-        .call(callIf(chartType === 'main', link(store, drawAxisY, createStructuredSelector({
+        // Draw the y-axis, only for the main and the lithology chart (which is part of the construction diagram).
+        .call(callIf(chartType === 'main' || chartType === 'lithology', link(store, drawAxisY, createStructuredSelector({
             yScale: getScaleY(opts, chartType),
             layout: getChartPosition(opts, chartType)
         }), (bBox) => {
             // When the bounding box has changed, update the state with it.
             store.dispatch(setAxisYBBox(opts.id, bBox));
         })))
+        // Draw the another y-axis for the elevation on the lithology chart (which is part of the construction diagram).
+        .call(callIf(chartType === 'lithology', link(store, drawAxisYElevation, createStructuredSelector({
+            yScale: getScaleYElevation(opts, chartType),
+            layout: getChartPosition(opts, chartType)
+        }), (bBox) => {
+// TODO fix this is weirdness (or at least understand it). Everything works as long as this is here and empty, but without it, two y elevation axes are drawn
+        })))
+
+
         // Draw the x-axis, only for the main chart.
         .call(callIf(chartType === 'main', link(store, drawAxisX, createStructuredSelector({
             xScale: getScaleX(opts, chartType),
@@ -161,6 +174,11 @@ const drawConstructionGraph = (opts) => (elem, store) => {
     // Append the chart and axis labels, scoped to .chart-container
     elem.append('div')
         .classed('chart-container', true)
+// TODO work in progress
+//          .call(link(store, drawAxisYLabelLithologyDepth, createStructuredSelector({
+//             unit: getCurrentWaterLevelUnit(opts)
+//         })))
+
         .call(elem => {
             // Append an SVG container that we will draw to
             elem.append('svg')
@@ -174,6 +192,14 @@ const drawConstructionGraph = (opts) => (elem, store) => {
                     drawChart(svg, store, opts, 'construction');
                 });
         })
+
+// TODO work in progress -- logic works for label but graph sizing incorrect
+//                  .call(link(store, drawAxisYLabelLithologyElevation, createStructuredSelector({
+//                 unit: getCurrentWaterLevelUnit(opts),
+//                 wellLog: getCurrentWellLog(opts)
+//             })))
+
+
         .call(observeSize, opts, store);
 };
 

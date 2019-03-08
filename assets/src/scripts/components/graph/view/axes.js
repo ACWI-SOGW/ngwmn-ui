@@ -1,4 +1,4 @@
-import { axisBottom, axisLeft } from 'd3-axis';
+import { axisBottom, axisLeft, axisRight } from 'd3-axis';
 import { timeFormat } from 'd3-time-format';
 
 const UNIT_DISPLAY = {
@@ -92,5 +92,58 @@ export const drawAxisYLabel = function (elem, {unit}, label) {
         label.text('Depth to water');
     }
 
+    return label;
+};
+
+export const drawAxisYElevation = function (elem, {yScale: yScaleElevation, layout}, callback, context) {
+    context = context || {};
+    context.axis = context.axis || elem
+        .append('g')
+            .classed('y-axis', true);
+    context.bBox = context.bBox || {};
+    context.axis
+        .attr('transform', `translate(${layout.x  + layout.width}, ${layout.y} )`)
+        .call(axisRight()
+            .scale(yScaleElevation)
+            .tickPadding(3)
+            .tickSizeOuter(0))
+            // this is a test
+        .append('g')
+        .append("text")
+      .attr("y", 0)
+      .attr("x", 0).text("sample text")
+    return context;
+}
+
+// TODO logic works for label, need to fix size and
+export const drawAxisYLabelLithologyDepth = function (elem, {unit}, label) {
+    // Create a span for the label, if it doesn't already exist
+    label = label || elem.append('span')
+        .classed('y-label', true);
+    // Set the label text
+    if (unit) {
+        unit = unit.toLowerCase();
+        const unitDisplay = UNIT_DISPLAY[unit] || unit;
+        label.text(`Depth below land surface in ${unitDisplay}`);
+    } else {
+        label.text('Depth below land surface');
+    }
+
+    return label;
+};
+
+// TODO this logic works for making elevation axis label, but is turned off for troubleshooting
+export const drawAxisYLabelLithologyElevation = function (elem, {unit, wellLog}, label) {
+    // Create a span for the label, if it doesn't already exist
+    label = label || elem.append('span')
+        .classed('y-label', true);
+    if (unit && wellLog) {
+        unit = unit.toLowerCase();
+        const elevationScheme = wellLog['elevation']['scheme'];
+        const unitDisplay = UNIT_DISPLAY[unit] || unit;
+        label.text(`Elevation(${elevationScheme}) in ${unitDisplay}`);
+    } else {
+        label.text('Elevation');
+    }
     return label;
 };
