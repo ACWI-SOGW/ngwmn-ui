@@ -123,7 +123,7 @@ const drawChart = function (elem, store, opts, chartType) {
         // Draw the another y-axis for the elevation on the lithology chart (which is part of the construction diagram).
         .call(callIf(chartType === 'lithology', link(store, drawAxisYConstructionDiagramElevation, createStructuredSelector({
             yScale: getScaleYElevation(opts, chartType),
-            layout: getChartPosition(opts, chartType),
+            layout: getChartPosition(opts, chartType)
         }))))
         // Draw the x-axis, only for the main chart.
         .call(callIf(chartType === 'main', link(store, drawAxisX, createStructuredSelector({

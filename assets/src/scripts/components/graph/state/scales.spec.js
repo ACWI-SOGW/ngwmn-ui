@@ -1,7 +1,6 @@
 import getMockStore from 'ngwmn/store.mock';
 
-import { getScaleX, getScaleY, getScaleYElevation } from './scales';
-import {getCurrentWellLog} from "./well-log";
+import { getScaleX, getScaleY } from './scales';
 
 describe('graph component scales state', () => {
     const mockOpts = {

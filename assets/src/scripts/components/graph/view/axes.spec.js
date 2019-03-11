@@ -2,7 +2,7 @@ import { scaleLinear } from 'd3-scale';
 import { select } from 'd3-selection';
 
 import { drawAxisX, drawAxisY, drawAxisYConstructionDiagramElevation, drawAxisYLabel,
-         drawAxisYLabelConstructionDiagramDepth, drawAxisYLabelConstructionDiagramElevation,  } from './axes';
+         drawAxisYLabelConstructionDiagramDepth, drawAxisYLabelConstructionDiagramElevation } from './axes';
 
 
 describe('graph component', () => {
@@ -79,10 +79,10 @@ describe('graph component', () => {
             let label = drawAxisYLabelConstructionDiagramElevation(div, {});
             let wellLog =
                     {
-                        "elevation": {
-                            "scheme": "NAVD88",
-                            "unit": "ft",
-                            "value": 1000
+                        'elevation': {
+                            'scheme': 'NAVD88',
+                            'unit': 'ft',
+                            'value': 1000
                         }
                     };
             expect(label.text()).toEqual('Elevation');
