@@ -50,8 +50,7 @@ export const getScaleYElevation = memoize((opts, chartType) => createSelector(
     getCurrentWellLog(opts),
     (domainY, size, wellLog) => {
         return scaleLinear()
-        // this sets the location of the axis. The second value of both the range and domain are of primary importance here
-            .domain([domainY[0] + wellLog['elevation']['value'], domainY[1] - wellLog['elevation']['value']])
+            .domain([wellLog['elevation']['value'], wellLog['elevation']['value'] - domainY[1]])
             .range([size.y, size.y + size.height]);
     }
 ));

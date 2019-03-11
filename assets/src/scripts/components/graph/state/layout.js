@@ -148,8 +148,8 @@ export const getViewBox = memoize(opts => createSelector(
 
 /**
  * Returns the position of a chart type within the graph container.
- * @param  {String} graph Chart type identifier
- * @return {Function}     Selector for chart position
+ * @param  {String}     graph Chart type identifier
+ * @return {Function}   Selector for chart position
  */
 export const getChartPosition = memoize((opts, chartType) => createSelector(
     getViewBox(opts),
@@ -174,15 +174,23 @@ export const getChartPosition = memoize((opts, chartType) => createSelector(
                 };
             case 'lithology':
                 return {
-                    x: 0,
+                    // x: adjusts starting point of well lithology chart within the SVG view box
+                    // No multiplication (x: viewBox.right * 1) well construction chart is out of the SVG view box to the right
+                    // No multiplication (x: viewBox.right * 0) well construction chart touches edge of SVG view box to the left
+                    x: viewBox.right * .04,
                     y: 0,
-                    width: width * .5,
+                    // reduces the width lithology chart so that the tick mark labels fit in the SVG viewport
+                    width: width * .8,
                     height: height
                 };
             case 'construction':
                 return {
-                    x: viewBox.right * 0.08,
+                    // x: adjusts starting point of well construction chart within the SVG view box
+                    // No multiplication (x: viewBox.right * 1) well construction chart is out of the SVG view box to the right
+                    // No multiplication (x: viewBox.right * 0) well construction chart touches edge of SVG view box to the left
+                    x: viewBox.right * .27,
                     y: 0,
+                    // reduces the width of the construction chart to produce a visually appealing effect
                     width: width * 0.35,
                     height: height
                 };
