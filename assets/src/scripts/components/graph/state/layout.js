@@ -134,7 +134,11 @@ export const getViewBox = memoize(opts => createSelector(
     getContainerSize(opts),
     getAxisYBBox(opts),
     (containerSize, axisYBBox) => {
-        const aspectRatio = containerSize.height / containerSize.width || 0;
+        if (chartType === 'main' || chartType === 'brush') {
+           const aspectRatio = containerSize.height / containerSize.width || 0;
+        } else if (chartType === 'lithology' || chartType === 'construction') {
+           const aspectRatio = 4;
+        }
         const width = containerSize.width + axisYBBox.width + FOCUS_CIRCLE_RADIUS;
         const height = width * aspectRatio;
 
@@ -152,7 +156,7 @@ export const getViewBox = memoize(opts => createSelector(
  * @param  {String}     graph Chart type identifier
  * @return {Function}   Selector for chart position
  */
-export const getChartPosition = memoize((opts, chartType) => createSelector(
+export const getChartPosition = memoize((opts) => createSelector(
     getViewBox(opts),
     (viewBox) => {
         const height = viewBox.bottom - viewBox.top;
