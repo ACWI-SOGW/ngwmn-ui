@@ -79,7 +79,7 @@ export const drawAxisY = function (elem, {yScale, layout}, callback, context) {
  * @param {Object} context              The existing context containing the bounding box and axis information
  * @returns {Object} context            The new context
  */
-export const drawAxisYElevation = function (elem, {yScale: yScaleElevation, layout}, context) {
+export const drawAxisYConstructionDiagramElevation = function (elem, {yScale: yScaleElevation, layout}, context) {
     context = context || {};
     context.axis = context.axis || elem
         .append('g')
@@ -151,7 +151,7 @@ export const drawAxisYLabelConstructionDiagramDepth = function (elem, {unit}, la
  * @param {object} label    The current label for the y-axis depth on the construction diagram
  * @returns {object} label  The new label for the y-axis depth on the construction diagram
  */
-export const drawAxisYLabelLithologyElevation = function (elem, {unit, wellLog}, label) {
+export const drawAxisYLabelConstructionDiagramElevation = function (elem, {unit, wellLog}, label) {
     // Create a span for the label, if it doesn't already exist
     label = label || elem.append('span')
         .classed('y-label', true);
