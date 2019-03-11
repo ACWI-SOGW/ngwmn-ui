@@ -71,6 +71,24 @@ export const drawAxisY = function (elem, {yScale, layout}, callback, context) {
     return context;
 };
 
+//TODO finish the comments
+export const drawAxisYElevation = function (elem, {yScale: yScaleElevation, layout}, callback, context) {
+    context = context || {};
+    context.axis = context.axis || elem
+        .append('g')
+            .classed('y-axis', true);
+    context.bBox = context.bBox || {};
+    context.axis
+        .attr('transform', `translate(${layout.x  + layout.width}, ${layout.y} )`)
+        .call(axisRight()
+            .scale(yScaleElevation)
+            .tickPadding(3)
+            .tickSizeOuter(0));
+
+    return context;
+};
+
+
 /**
  * Draws a y-axis label
  * @param  {Object} elem         D3 selector
@@ -94,26 +112,6 @@ export const drawAxisYLabel = function (elem, {unit}, label) {
 
     return label;
 };
-
-export const drawAxisYElevation = function (elem, {yScale: yScaleElevation, layout}, callback, context) {
-    context = context || {};
-    context.axis = context.axis || elem
-        .append('g')
-            .classed('y-axis', true);
-    context.bBox = context.bBox || {};
-    context.axis
-        .attr('transform', `translate(${layout.x  + layout.width}, ${layout.y} )`)
-        .call(axisRight()
-            .scale(yScaleElevation)
-            .tickPadding(3)
-            .tickSizeOuter(0))
-            // this is a test
-        .append('g')
-        .append("text")
-      .attr("y", 0)
-      .attr("x", 0).text("sample text")
-    return context;
-}
 
 // TODO logic works for label, need to fix size and
 export const drawAxisYLabelLithologyDepth = function (elem, {unit}, label) {
@@ -145,5 +143,6 @@ export const drawAxisYLabelLithologyElevation = function (elem, {unit, wellLog},
     } else {
         label.text('Elevation');
     }
+
     return label;
 };

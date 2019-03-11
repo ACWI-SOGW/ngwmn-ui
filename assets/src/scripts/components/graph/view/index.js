@@ -123,10 +123,11 @@ const drawChart = function (elem, store, opts, chartType) {
         // Draw the another y-axis for the elevation on the lithology chart (which is part of the construction diagram).
         .call(callIf(chartType === 'lithology', link(store, drawAxisYElevation, createStructuredSelector({
             yScale: getScaleYElevation(opts, chartType),
-            layout: getChartPosition(opts, chartType)
+            layout: getChartPosition(opts, chartType),
         }), (bBox) => {
 // TODO fix this is weirdness (or at least understand it). Everything works as long as this is here and empty, but without it, two y elevation axes are drawn
         })))
+
 
 
         // Draw the x-axis, only for the main chart.
@@ -175,9 +176,9 @@ const drawConstructionGraph = (opts) => (elem, store) => {
     elem.append('div')
         .classed('chart-container', true)
 // TODO work in progress
-//          .call(link(store, drawAxisYLabelLithologyDepth, createStructuredSelector({
-//             unit: getCurrentWaterLevelUnit(opts)
-//         })))
+         .call(link(store, drawAxisYLabelLithologyDepth, createStructuredSelector({
+            unit: getCurrentWaterLevelUnit(opts)
+        })))
 
         .call(elem => {
             // Append an SVG container that we will draw to
@@ -194,10 +195,10 @@ const drawConstructionGraph = (opts) => (elem, store) => {
         })
 
 // TODO work in progress -- logic works for label but graph sizing incorrect
-//                  .call(link(store, drawAxisYLabelLithologyElevation, createStructuredSelector({
-//                 unit: getCurrentWaterLevelUnit(opts),
-//                 wellLog: getCurrentWellLog(opts)
-//             })))
+            .call(link(store, drawAxisYLabelLithologyElevation, createStructuredSelector({
+                unit: getCurrentWaterLevelUnit(opts),
+                wellLog: getCurrentWellLog(opts)
+            })))
 
 
         .call(observeSize, opts, store);
