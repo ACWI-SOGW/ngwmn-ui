@@ -40,7 +40,7 @@
   },
   "homepage": "https://github.com/ACWI-SSWD/ngwmn-ui#readme",
   "devDependencies": {
-    "autoprefixer": "^9.4.9",
+    "autoprefixer": "^9.4.10",
     "eslint": "^5.14.1",
     "eslint-plugin-jasmine": "^2.9.2",
     "gulp": "^4.0.0",
