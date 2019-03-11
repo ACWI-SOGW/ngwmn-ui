@@ -13,7 +13,7 @@ import {
     getWellWaterLevel, setAxisYBBox, setCursor, setContainerSize
 } from '../state';
 
-import { drawAxisX, drawAxisY, drawAxisYLabel, drawAxisYLabelLithologyDepth, drawAxisYLabelLithologyElevation,
+import { drawAxisX, drawAxisY, drawAxisYLabel, drawAxisYLabelConstructionDiagramDepth, drawAxisYLabelLithologyElevation,
     drawAxisYElevation
 } from './axes';
 
@@ -124,9 +124,7 @@ const drawChart = function (elem, store, opts, chartType) {
         .call(callIf(chartType === 'lithology', link(store, drawAxisYElevation, createStructuredSelector({
             yScale: getScaleYElevation(opts, chartType),
             layout: getChartPosition(opts, chartType),
-        }), (bBox) => {
-// TODO fix this is weirdness (or at least understand it). Everything works as long as this is here and empty, but without it, two y elevation axes are drawn
-        })))
+        }))))
 
 
 
@@ -175,11 +173,9 @@ const drawConstructionGraph = (opts) => (elem, store) => {
     // Append the chart and axis labels, scoped to .chart-container
     elem.append('div')
         .classed('chart-container', true)
-// TODO work in progress
-         .call(link(store, drawAxisYLabelLithologyDepth, createStructuredSelector({
+         .call(link(store, drawAxisYLabelConstructionDiagramDepth, createStructuredSelector({
             unit: getCurrentWaterLevelUnit(opts)
         })))
-
         .call(elem => {
             // Append an SVG container that we will draw to
             elem.append('svg')
@@ -193,14 +189,10 @@ const drawConstructionGraph = (opts) => (elem, store) => {
                     drawChart(svg, store, opts, 'construction');
                 });
         })
-
-// TODO work in progress -- logic works for label but graph sizing incorrect
-            .call(link(store, drawAxisYLabelLithologyElevation, createStructuredSelector({
-                unit: getCurrentWaterLevelUnit(opts),
-                wellLog: getCurrentWellLog(opts)
-            })))
-
-
+        .call(link(store, drawAxisYLabelLithologyElevation, createStructuredSelector({
+            unit: getCurrentWaterLevelUnit(opts),
+            wellLog: getCurrentWellLog(opts)
+        })))
         .call(observeSize, opts, store);
 };
 

@@ -38,13 +38,19 @@ export const getScaleY = memoize((opts, chartType) => createSelector(
 ));
 
 
-// TODO add comments
+/**
+ * Selector for y-scale for elevation
+ * @param  {Object} opts        Detailed specifications to identify a specific monitoring location
+ * @param {Object} chartType    Identifies for which chart type the functions are called
+ * @return {Function}           D3 scale function containing the domain and range of the axis
+ */
 export const getScaleYElevation = memoize((opts, chartType) => createSelector(
     getDomainY(opts, chartType),
     getChartPosition(opts, chartType),
     getCurrentWellLog(opts),
     (domainY, size, wellLog) => {
         return scaleLinear()
+        // this sets the location of the axis. The second value of both the range and domain are of primary importance here
             .domain([domainY[0] + wellLog['elevation']['value'], domainY[1] - wellLog['elevation']['value']])
             .range([size.y, size.y + size.height]);
     }

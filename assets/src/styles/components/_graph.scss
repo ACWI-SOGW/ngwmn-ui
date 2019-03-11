@@ -119,7 +119,7 @@ $primary-darker: color('primary-darker');
             }
             svg {
                 flex-grow: 1;
-                width: 75%;
+                width: 100%;
                 g.chart {
                     &.zoom {
                         cursor: move;

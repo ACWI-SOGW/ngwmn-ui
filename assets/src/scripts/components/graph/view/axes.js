@@ -71,14 +71,22 @@ export const drawAxisY = function (elem, {yScale, layout}, callback, context) {
     return context;
 };
 
-//TODO finish the comments
-export const drawAxisYElevation = function (elem, {yScale: yScaleElevation, layout}, callback, context) {
+/**
+ * A function that will draw the y-axis for elevation on the construction diagram
+ * @param {Object}elem                  A D3 selector that forms the HTML structure of the page
+ * @param {function} yScaleElevation    A D3 scale function, containing the highest and lowest points (the domain) of the axis
+ * @param {Object}layout                The position and size of the lithology chart
+ * @param {Object} context              The existing context containing the bounding box and axis information
+ * @returns {Object} context            The new context
+ */
+export const drawAxisYElevation = function (elem, {yScale: yScaleElevation, layout}, context) {
     context = context || {};
     context.axis = context.axis || elem
         .append('g')
             .classed('y-axis', true);
     context.bBox = context.bBox || {};
     context.axis
+        //change the horizontal (x position) of the y-axis for elevation to match the width of the lithology chart
         .attr('transform', `translate(${layout.x  + layout.width}, ${layout.y} )`)
         .call(axisRight()
             .scale(yScaleElevation)
@@ -113,8 +121,14 @@ export const drawAxisYLabel = function (elem, {unit}, label) {
     return label;
 };
 
-// TODO logic works for label, need to fix size and
-export const drawAxisYLabelLithologyDepth = function (elem, {unit}, label) {
+/**
+ * Function that creates and adds the label for the y-axis depth on the construction diagram
+ * @param {object} elem     A D3 selector that forms the HTML structure of the page
+ * @param {object} unit     The unit of measurement
+ * @param {object} label    The current label for the y-axis depth on the construction diagram
+ * @returns {object} label  The new label for the y-axis depth on the construction diagram
+ */
+export const drawAxisYLabelConstructionDiagramDepth = function (elem, {unit}, label) {
     // Create a span for the label, if it doesn't already exist
     label = label || elem.append('span')
         .classed('y-label', true);
@@ -130,7 +144,14 @@ export const drawAxisYLabelLithologyDepth = function (elem, {unit}, label) {
     return label;
 };
 
-// TODO this logic works for making elevation axis label, but is turned off for troubleshooting
+/**
+ * Function that creates and adds the label for the y-axis depth on the construction diagram
+ * @param {object} elem     A D3 selector that forms the HTML structure of the page
+ * @param {object} unit     The unit of measurement
+ * @param {object} wellLog  The well log containing the elevation scheme
+ * @param {object} label    The current label for the y-axis depth on the construction diagram
+ * @returns {object} label  The new label for the y-axis depth on the construction diagram
+ */
 export const drawAxisYLabelLithologyElevation = function (elem, {unit, wellLog}, label) {
     // Create a span for the label, if it doesn't already exist
     label = label || elem.append('span')
