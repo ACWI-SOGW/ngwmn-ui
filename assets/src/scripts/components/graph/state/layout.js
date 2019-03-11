@@ -177,10 +177,10 @@ export const getChartPosition = memoize((opts, chartType) => createSelector(
                     // x: adjusts starting point of well lithology chart within the SVG view box
                     // No multiplication (x: viewBox.right * 1) well construction chart is out of the SVG view box to the right
                     // No multiplication (x: viewBox.right * 0) well construction chart touches edge of SVG view box to the left
-                    x: viewBox.right * .04,
+                    x: viewBox.right * .03,
                     y: 0,
                     // reduces the width lithology chart so that the tick mark labels fit in the SVG viewport
-                    width: width * .8,
+                    width: width * .75,
                     height: height
                 };
             case 'construction':
@@ -188,7 +188,7 @@ export const getChartPosition = memoize((opts, chartType) => createSelector(
                     // x: adjusts starting point of well construction chart within the SVG view box
                     // No multiplication (x: viewBox.right * 1) well construction chart is out of the SVG view box to the right
                     // No multiplication (x: viewBox.right * 0) well construction chart touches edge of SVG view box to the left
-                    x: viewBox.right * .27,
+                    x: viewBox.right * .235,
                     y: 0,
                     // reduces the width of the construction chart to produce a visually appealing effect
                     width: width * 0.35,
