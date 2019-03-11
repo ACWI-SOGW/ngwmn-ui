@@ -96,7 +96,6 @@ export const drawAxisYElevation = function (elem, {yScale: yScaleElevation, layo
     return context;
 };
 
-
 /**
  * Draws a y-axis label
  * @param  {Object} elem         D3 selector

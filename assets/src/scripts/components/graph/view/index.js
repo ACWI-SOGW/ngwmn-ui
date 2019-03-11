@@ -125,9 +125,6 @@ const drawChart = function (elem, store, opts, chartType) {
             yScale: getScaleYElevation(opts, chartType),
             layout: getChartPosition(opts, chartType),
         }))))
-
-
-
         // Draw the x-axis, only for the main chart.
         .call(callIf(chartType === 'main', link(store, drawAxisX, createStructuredSelector({
             xScale: getScaleX(opts, chartType),
