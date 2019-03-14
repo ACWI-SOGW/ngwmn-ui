@@ -2,14 +2,21 @@ import { scaleLinear } from 'd3-scale';
 import memoize from 'fast-memoize';
 import capitalize from 'lodash/capitalize';
 import { createSelector } from 'reselect';
+import store from '../../../store';
 
-import { getWellLogs } from 'ngwmn/services/state/index';
+// import {
+//     getSelectedConstructionId, getVisibleConstructionIds
+// } from 'ngwmn/components/well-log/state/index';
 import {
     getSelectedConstructionId, getVisibleConstructionIds
-} from 'ngwmn/components/well-log/state/index';
+} from '../../well-log/state';
+
 import { getCursorDatum } from './cursor';
 import { getChartPosition } from './layout';
 import { getScaleX, getScaleY } from './scales';
+
+// import { getWellLogs } from 'ngwmn/services/state/index';
+import { getSiteWellDepth, getWellLogs } from '../../../services/state';
 
 
 /**
@@ -179,6 +186,51 @@ const getRadiusScale = memoize((opts, chartType) => createSelector(
     }
 ));
 
+const createBoreholeElement = function(opts, xScale, yScale, elements) {
+    // get the measured depth of the well
+    const rawDepth    = getSiteWellDepth(opts.agencyCode, opts.siteId)(store().getState());
+    // scale the depth to the graph size
+    const scaleDepth  = yScale(rawDepth);
+    // check to see if we have construction elements
+    const hasElements = elements && elements.length > 0;
+    // if there are no elements then use max size of the graph, else use 0 for max function to work
+    const minDepth    = hasElements ? 520 : 0;
+    // if there is good depth info then use it else use a high value for min function to work
+    const maxDepth    = scaleDepth > 300 ? scaleDepth : 520;
+
+    // if there are elements use them to discover left and right otherwise use defaults
+    const left   = hasElements ? 100 : 8;
+    const right  = hasElements ? 8 : 100;
+
+    const borehole = {
+        title: 'borehole',
+        type: 'borehole',
+        thickness: 1,
+        left: {
+            x:  left,
+            y1: minDepth,
+            y2: maxDepth
+        },
+        right: {
+            x:  right,
+            y1: minDepth,
+            y2: maxDepth
+        }
+    };
+    elements.forEach((element) => {
+        borehole.left.x = Math.min(borehole.left.x, element.left.x);
+        borehole.right.x = Math.max(borehole.right.x, element.right.x);
+
+        borehole.left.y1 = Math.min(borehole.left.y1, element.left.y1);
+        borehole.right.y1 = Math.min(borehole.right.y1, element.right.y1);
+
+        borehole.left.y2 = Math.max(borehole.left.y2, element.left.y2);
+        borehole.right.y2 = Math.max(borehole.right.y2, element.right.y2);
+    });
+
+    return borehole;
+};
+
 /**
  * Returns the construction elements for the current site.
  * @param  {Object} state       Redux state
@@ -266,6 +318,9 @@ export const getConstructionElements = memoize((opts, chartType) => createSelect
             return 0;
         });
 
-        return parts;
+        return [
+            createBoreholeElement(opts, xScale, yScale, parts),
+            ...parts
+        ];
     }
 ));

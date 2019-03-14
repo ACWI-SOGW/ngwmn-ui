@@ -131,6 +131,7 @@ const drawPatterns = function (elem) {
         });
 };
 
+/*
 const drawWellBorehole =  function drawWellHole(store, container, opts, elements) {
     // get the sate from the store
     const state = store.getState();
@@ -178,7 +179,7 @@ const drawWellBorehole =  function drawWellHole(store, container, opts, elements
     drawElement(store, container, opts, borehole);
     return borehole;
 };
-
+*/
 
 export default function (elem, {elements, cursorWaterLevel}, store, opts, container) {
     // Get/create container for construction elements
@@ -191,7 +192,8 @@ export default function (elem, {elements, cursorWaterLevel}, store, opts, contai
     container.selectAll('*').remove();
 
     // Draw well raw borehole element
-    const borehole = drawWellBorehole(store, container, opts, elements);
+    // const borehole = drawWellBorehole(store, container, opts, elements);
+/*
     let waterLevelElements = elements;
     if (!elements || elements.length == 0) {
         waterLevelElements = [borehole];
@@ -202,6 +204,8 @@ export default function (elem, {elements, cursorWaterLevel}, store, opts, contai
 
     // Draw the current cursor water level inside the well chamber
     drawWaterLevel(container, waterLevelElements, cursorWaterLevel);
+*/
+    drawWaterLevel(container, elements, cursorWaterLevel);
 
     // Draw each construction element
     elements.forEach((element, index) => {
