@@ -13,7 +13,7 @@ const VIEWPORT_SET = `${MOUNT_POINT}/VIEWPORT_SET`;
 
 
 const getNamespace = createSelector(
-    state => state,
+    state => state, // TODO This is probably not correct.
     (state) => {
         return (state || {})[MOUNT_POINT] || {};
     }
