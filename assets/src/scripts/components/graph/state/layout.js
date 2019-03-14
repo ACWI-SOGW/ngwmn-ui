@@ -130,14 +130,15 @@ export const getAxisYBBox = memoize(opts => createSelector(
  * @param  {Object} state   Redux state
  * @return {Object}         {x, y, width, height} of viewBox
  */
-export const getViewBox = memoize(opts => createSelector(
+export const getViewBox = memoize((opts) => createSelector(
     getContainerSize(opts),
     getAxisYBBox(opts),
     (containerSize, axisYBBox) => {
-        if (chartType === 'main' || chartType === 'brush') {
-           const aspectRatio = containerSize.height / containerSize.width || 0;
-        } else if (chartType === 'lithology' || chartType === 'construction') {
-           const aspectRatio = 4;
+        let aspectRatio;
+        if (opts.graphType === 'water-levels') {
+           aspectRatio = containerSize.height / containerSize.width || 0;
+        } else if (opts.graphType === 'construction') {
+           aspectRatio = 3.7;
         }
         const width = containerSize.width + axisYBBox.width + FOCUS_CIRCLE_RADIUS;
         const height = width * aspectRatio;
@@ -156,7 +157,7 @@ export const getViewBox = memoize(opts => createSelector(
  * @param  {String}     graph Chart type identifier
  * @return {Function}   Selector for chart position
  */
-export const getChartPosition = memoize((opts) => createSelector(
+export const getChartPosition = memoize((opts, chartType) => createSelector(
     getViewBox(opts),
     (viewBox) => {
         const height = viewBox.bottom - viewBox.top;
