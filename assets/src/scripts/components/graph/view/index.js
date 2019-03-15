@@ -13,8 +13,8 @@ import {
     getWellWaterLevel, setAxisYBBox, setCursor, setContainerSize
 } from '../state';
 
-import { drawAxisX, drawAxisY, drawAxisYLabel, drawAxisYLabelConstructionDiagramDepth, drawAxisYLabelConstructionDiagramElevation,
-    drawAxisYConstructionDiagramElevation
+import { drawAxisX, drawAxisY, drawAxisYWellDiagramDepth, drawAxisYLabel, drawAxisYLabelWellDiagramDepth,
+    drawAxisYLabelWellDiagramElevation, drawAxisYWellDiagramElevation
 } from './axes';
 
 import addBrushZoomBehavior from './brush-zoom';
@@ -112,8 +112,16 @@ const drawChart = function (elem, store, opts, chartType) {
                     yScale: getScaleY(opts, chartType)
                 }))));
         })
-        // Draw the y-axis, only for the main and the lithology chart (which is part of the construction diagram).
-        .call(callIf(chartType === 'main' || chartType === 'lithology', link(store, drawAxisY, createStructuredSelector({
+        // Draw the y-axis for the main.
+        .call(callIf(chartType === 'main', link(store, drawAxisY, createStructuredSelector({
+            yScale: getScaleY(opts, chartType),
+            layout: getChartPosition(opts, chartType)
+        }), (bBox) => {
+            // When the bounding box has changed, update the state with it.
+            store.dispatch(setAxisYBBox(opts.id, bBox));
+        })))
+        // Draw the y-axis for well depth on the lithology chart (which is part of the well diagram)
+        .call(callIf(chartType === 'lithology', link(store, drawAxisYWellDiagramDepth, createStructuredSelector({
             yScale: getScaleY(opts, chartType),
             layout: getChartPosition(opts, chartType)
         }), (bBox) => {
@@ -121,7 +129,7 @@ const drawChart = function (elem, store, opts, chartType) {
             store.dispatch(setAxisYBBox(opts.id, bBox));
         })))
         // Draw the another y-axis for the elevation on the lithology chart (which is part of the construction diagram).
-        .call(callIf(chartType === 'lithology', link(store, drawAxisYConstructionDiagramElevation, createStructuredSelector({
+        .call(callIf(chartType === 'lithology', link(store, drawAxisYWellDiagramElevation, createStructuredSelector({
             yScale: getScaleYElevation(opts, chartType),
             layout: getChartPosition(opts, chartType)
         }))))
@@ -170,7 +178,7 @@ const drawConstructionGraph = (opts) => (elem, store) => {
     // Append the chart and axis labels, scoped to .chart-container
     elem.append('div')
         .classed('chart-container', true)
-         .call(link(store, drawAxisYLabelConstructionDiagramDepth, createStructuredSelector({
+         .call(link(store, drawAxisYLabelWellDiagramDepth, createStructuredSelector({
             unit: getCurrentWaterLevelUnit(opts)
         })))
         .call(elem => {
@@ -186,7 +194,7 @@ const drawConstructionGraph = (opts) => (elem, store) => {
                     drawChart(svg, store, opts, 'construction');
                 });
         })
-        .call(link(store, drawAxisYLabelConstructionDiagramElevation, createStructuredSelector({
+        .call(link(store, drawAxisYLabelWellDiagramElevation, createStructuredSelector({
             unit: getCurrentWaterLevelUnit(opts),
             wellLog: getCurrentWellLog(opts)
         })))

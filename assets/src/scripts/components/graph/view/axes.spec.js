@@ -1,8 +1,8 @@
 import { scaleLinear } from 'd3-scale';
 import { select } from 'd3-selection';
 
-import { drawAxisX, drawAxisY, drawAxisYConstructionDiagramElevation, drawAxisYLabel,
-         drawAxisYLabelConstructionDiagramDepth, drawAxisYLabelConstructionDiagramElevation } from './axes';
+import { drawAxisX, drawAxisY, drawAxisYWellDiagramElevation, drawAxisYLabel,
+         drawAxisYLabelWellDiagramDepth, drawAxisYLabelWellDiagramElevation } from './axes';
 
 
 describe('graph component', () => {
@@ -45,9 +45,9 @@ describe('graph component', () => {
         });
     });
 
-    describe('drawAxisYConstructionDiagramElevation function', () => {
+    describe('drawAxisYWellDiagramElevation function', () => {
         it('renders', () => {
-            drawAxisYConstructionDiagramElevation(svg, {
+            drawAxisYWellDiagramElevation(svg, {
                 yScale: scaleLinear().domain([0, 1])
                                      .range([0, 100]),
                 layout: {x: 0, y: 0}
@@ -65,18 +65,18 @@ describe('graph component', () => {
         });
     });
 
-    describe('drawAxisYLabelConstructionDiagramDepth function', () => {
+    describe('drawAxisYLabelWellDiagramDepth function', () => {
         it('renders without a unit label and with', () => {
-            let label = drawAxisYLabelConstructionDiagramDepth(div, {});
+            let label = drawAxisYLabelWellDiagramDepth(div, {});
             expect(label.text()).toEqual('Depth below land surface');
-            label = drawAxisYLabelConstructionDiagramDepth(div, {unit: 'feet'}, label);
+            label = drawAxisYLabelWellDiagramDepth(div, {unit: 'feet'}, label);
             expect(label.text()).toEqual('Depth below land surface in feet');
         });
     });
 
-    describe('drawAxisYLabelConstructionDiagramElevation function', () => {
+    describe('drawAxisYLabelWellDiagramElevation function', () => {
         it('renders without a unit label and with', () => {
-            let label = drawAxisYLabelConstructionDiagramElevation(div, {});
+            let label = drawAxisYLabelWellDiagramElevation(div, {});
             let wellLog =
                     {
                         'elevation': {
@@ -86,7 +86,7 @@ describe('graph component', () => {
                         }
                     };
             expect(label.text()).toEqual('Elevation');
-            label = drawAxisYLabelConstructionDiagramElevation(div, {unit: 'feet', wellLog: wellLog}, label);
+            label = drawAxisYLabelWellDiagramElevation(div, {unit: 'feet', wellLog: wellLog}, label);
             expect(label.text()).toEqual('Elevation(NAVD88) in feet');
         });
     });

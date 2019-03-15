@@ -136,9 +136,10 @@ export const getViewBox = memoize((opts) => createSelector(
     (containerSize, axisYBBox) => {
         let aspectRatio;
         if (opts.graphType === 'water-levels') {
-           aspectRatio = containerSize.height / containerSize.width || 0;
+            aspectRatio = containerSize.height / containerSize.width || 0;
         } else if (opts.graphType === 'construction') {
-           aspectRatio = 3.7;
+            // add an arbitrary number to the aspect ratio to keep it long and not wide
+            aspectRatio = containerSize.height / containerSize.width + 1 || 0;
         }
         const width = containerSize.width + axisYBBox.width + FOCUS_CIRCLE_RADIUS;
         const height = width * aspectRatio;
@@ -180,13 +181,13 @@ export const getChartPosition = memoize((opts, chartType) => createSelector(
                 };
             case 'lithology':
                 return {
-                    // x: adjusts starting point of well lithology chart within the SVG view box
+                    // x: adjusts the horizontal starting point of well lithology chart within the SVG view box
                     // No multiplication (x: viewBox.right * 1) well construction chart is out of the SVG view box to the right
-                    // No multiplication (x: viewBox.right * 0) well construction chart touches edge of SVG view box to the left
-                    x: viewBox.right * .03,
+                    // No multiplication (x: viewBox.right * 0) start of well construction chart touches edge of SVG view box to the left
+                    x: viewBox.right * 0.13,
                     y: 0,
                     // reduces the width lithology chart so that the tick mark labels fit in the SVG viewport
-                    width: width * .75,
+                    width: width * 0.6,
                     height: height
                 };
             case 'construction':
@@ -194,7 +195,7 @@ export const getChartPosition = memoize((opts, chartType) => createSelector(
                     // x: adjusts starting point of well construction chart within the SVG view box
                     // No multiplication (x: viewBox.right * 1) well construction chart is out of the SVG view box to the right
                     // No multiplication (x: viewBox.right * 0) well construction chart touches edge of SVG view box to the left
-                    x: viewBox.right * .235,
+                    x: viewBox.right * 0.255,
                     y: 0,
                     // reduces the width of the construction chart to produce a visually appealing effect
                     width: width * 0.35,

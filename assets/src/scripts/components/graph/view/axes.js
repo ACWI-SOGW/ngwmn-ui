@@ -71,6 +71,42 @@ export const drawAxisY = function (elem, {yScale, layout}, callback, context) {
     return context;
 };
 
+export const drawAxisYWellDiagramDepth = function (elem, {yScale, layout}, callback, context) {
+    context = context || {};
+    context.axis = context.axis || elem
+        .append('g')
+            .classed('y-axis', true);
+    context.bBox = context.bBox || {};
+
+    context.axis.transition().duration(25)
+        .attr('transform', `translate(${layout.x}, ${layout.y})`)
+        .call(axisLeft()
+            .scale(yScale)
+            .tickPadding(3)
+            .tickSizeOuter(0))
+            .selectAll('text') // to style the selects tick labels they must be selected after creation
+            .style("font-size","20px") // add sizing to prevent well diagram tick labels from being too small
+        .on('end', function () {
+            try {
+                const newBBox = context.axis.node().getBBox();
+                if (newBBox.x !== context.bBox.x ||
+                        newBBox.y !== context.bBox.y ||
+                        newBBox.width !== context.bBox.width ||
+                        newBBox.height !== context.bBox.height) {
+                    context.bBox = newBBox;
+                    callback(newBBox);
+                }
+            } catch (error) {
+                // See here for details on why we ignore getBBox() exceptions
+                // to fix issues with Firefox:
+                // https://bugzilla.mozilla.org/show_bug.cgi?id=612118
+                // https://stackoverflow.com/questions/28282295/getbbox-of-svg-when-hidden.
+            }
+        });
+
+    return context;
+};
+
 /**
  * A function that will draw the y-axis for elevation on the construction diagram
  * @param {Object}elem                  A D3 selector that forms the HTML structure of the page
@@ -79,7 +115,7 @@ export const drawAxisY = function (elem, {yScale, layout}, callback, context) {
  * @param {Object} context              The existing context containing the bounding box and axis information
  * @returns {Object} context            The new context
  */
-export const drawAxisYConstructionDiagramElevation = function (elem, {yScale: yScaleElevation, layout}, context) {
+export const drawAxisYWellDiagramElevation = function (elem, {yScale: yScaleElevation, layout}, context) {
     context = context || {};
     context.axis = context.axis || elem
         .append('g')
@@ -91,7 +127,9 @@ export const drawAxisYConstructionDiagramElevation = function (elem, {yScale: yS
         .call(axisRight()
             .scale(yScaleElevation)
             .tickPadding(3)
-            .tickSizeOuter(0));
+            .tickSizeOuter(0))
+            .selectAll('text') // to style the selects tick labels they must be selected after creation
+            .style("font-size","20px") // add sizing to prevent well diagram tick labels from being too small
 
     return context;
 };
@@ -127,7 +165,7 @@ export const drawAxisYLabel = function (elem, {unit}, label) {
  * @param {object} label    The current label for the y-axis depth on the construction diagram
  * @returns {object} label  The new label for the y-axis depth on the construction diagram
  */
-export const drawAxisYLabelConstructionDiagramDepth = function (elem, {unit}, label) {
+export const drawAxisYLabelWellDiagramDepth = function (elem, {unit}, label) {
     // Create a span for the label, if it doesn't already exist
     label = label || elem.append('span')
         .classed('y-label', true);
@@ -151,7 +189,7 @@ export const drawAxisYLabelConstructionDiagramDepth = function (elem, {unit}, la
  * @param {object} label    The current label for the y-axis depth on the construction diagram
  * @returns {object} label  The new label for the y-axis depth on the construction diagram
  */
-export const drawAxisYLabelConstructionDiagramElevation = function (elem, {unit, wellLog}, label) {
+export const drawAxisYLabelWellDiagramElevation = function (elem, {unit, wellLog}, label) {
     // Create a span for the label, if it doesn't already exist
     label = label || elem.append('span')
         .classed('y-label', true);
