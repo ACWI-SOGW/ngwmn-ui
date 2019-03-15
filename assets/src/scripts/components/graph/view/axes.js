@@ -129,7 +129,7 @@ export const drawAxisYWellDiagramElevation = function (elem, {yScale: yScaleElev
             .tickPadding(3)
             .tickSizeOuter(0))
             .selectAll('text') // to style the selects tick labels they must be selected after creation
-            .style('font-size','20px') // add sizing to prevent well diagram tick labels from being too small
+            .style('font-size','20px'); // add sizing to prevent well diagram tick labels from being too small
 
     return context;
 };
