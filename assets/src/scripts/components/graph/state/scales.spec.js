@@ -11,12 +11,12 @@ describe('graph component scales state', () => {
     };
 
     const wellLog = {
-		"elevation": {
-			"scheme": "NAVD88",
-			"unit": "ft",
-			"value": 858.6
+		'elevation': {
+			'scheme': 'NAVD88',
+			'unit': 'ft',
+			'value': 858.6
 		}
-	}
+	};
 
     describe('getScaleX', () => {
         let scale = getScaleX(mockOpts, 'main').resultFunc([0, 100], {x: 0, width: 50});
