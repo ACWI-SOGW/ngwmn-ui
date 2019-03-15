@@ -2,7 +2,6 @@ import { scaleLinear } from 'd3-scale';
 import memoize from 'fast-memoize';
 import capitalize from 'lodash/capitalize';
 import { createSelector } from 'reselect';
-import store from '../../../store';
 
 // import {
 //     getSelectedConstructionId, getVisibleConstructionIds
@@ -188,7 +187,7 @@ const getRadiusScale = memoize((opts, chartType) => createSelector(
 
 const createBoreholeElement = function(opts, xScale, yScale, elements) {
     // get the measured depth of the well
-    const rawDepth    = getSiteWellDepth(opts.agencyCode, opts.siteId)(store().getState());
+    const rawDepth    = getSiteWellDepth(opts.agencyCode, opts.siteId)(store.getState());
     // scale the depth to the graph size
     const scaleDepth  = yScale(rawDepth);
     // check to see if we have construction elements
