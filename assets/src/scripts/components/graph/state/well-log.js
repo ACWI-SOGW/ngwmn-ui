@@ -20,7 +20,6 @@ import { getScaleX, getScaleY } from './scales';
 export const getCurrentWellLog = memoize(opts => createSelector(
     getWellLogs,
     (wellLogs) => {
-
         return wellLogs[opts.siteKey] || {};
     }
 ));

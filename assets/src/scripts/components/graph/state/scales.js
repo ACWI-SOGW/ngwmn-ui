@@ -37,7 +37,6 @@ export const getScaleY = memoize((opts, chartType) => createSelector(
     }
 ));
 
-
 /**
  * Selector for y-scale for elevation
  * @param  {Object} opts        Detailed specifications to identify a specific monitoring location

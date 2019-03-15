@@ -8,6 +8,7 @@ $fa-font-path: './fonts' !default;
 $theme-font-path: './fonts';
 $theme-image-path: './img';
 $theme-grid-container-max-width: 100%;
+/* turned on the breakpoint for 'desktop-lg */
 $theme-utility-breakpoints: (
 'card':             false,   // 160px
 'card-lg':          false,   // 240px

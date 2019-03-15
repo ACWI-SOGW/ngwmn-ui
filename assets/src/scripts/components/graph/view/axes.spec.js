@@ -1,7 +1,7 @@
 import { scaleLinear } from 'd3-scale';
 import { select } from 'd3-selection';
 
-import { drawAxisX, drawAxisY, drawAxisYWellDiagramElevation, drawAxisYLabel,
+import { drawAxisX, drawAxisY, drawAxisYWellDiagramDepth, drawAxisYWellDiagramElevation, drawAxisYLabel,
          drawAxisYLabelWellDiagramDepth, drawAxisYLabelWellDiagramElevation } from './axes';
 
 
@@ -55,6 +55,18 @@ describe('graph component', () => {
             expect(svg.selectAll('.y-axis').size()).toBe(1);
         });
     });
+
+    describe('drawAxisYWellDiagramDepth function', () => {
+        it('renders', () => {
+            drawAxisYWellDiagramDepth(svg, {
+                yScale: scaleLinear().domain([0, 1])
+                                     .range([0, 100]),
+                layout: {x: 0, y: 0}
+            });
+            expect(svg.selectAll('.y-axis').size()).toBe(1);
+        });
+    });
+
 
     describe('drawAxisYLabel function', () => {
         it('renders without a unit label and with', () => {
