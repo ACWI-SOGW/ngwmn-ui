@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased][]
 
+### Added
+-   Added FLDEP Logo to images/provider_logos
+
 ## [0.4.0][]
 ### Added
 -   Added Median Montly Statistical Water Levels section
