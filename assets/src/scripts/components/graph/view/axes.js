@@ -71,6 +71,14 @@ export const drawAxisY = function (elem, {yScale, layout}, callback, context) {
     return context;
 };
 
+/**
+ * A function that will draw the y-axis for well depth on the construction diagram
+ * @param {Object}elem                  A D3 selector that forms the HTML structure of the page
+ * @param {function} yScale             A D3 scale function, containing the highest and lowest points (the domain) of the axis
+ * @param {Object}layout                The position and size of the lithology chart
+ * @param {Object} context              The existing context containing the bounding box and axis information
+ * @returns {Object} context            The new context
+ */
 export const drawAxisYWellDiagramDepth = function (elem, {yScale, layout}, callback, context) {
     context = context || {};
     context.axis = context.axis || elem

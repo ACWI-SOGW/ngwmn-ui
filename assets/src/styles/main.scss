@@ -51,7 +51,7 @@ body {
         text-align: center;
     }
     /* don't show the well diagram title except at narrow screen widths (where the well diagram takes the full width of the page) */
-    @media (min-width: 480px) {
+    @include at-media('mobile-lg') {
        .well-diagram-title {
             display: none;
         }

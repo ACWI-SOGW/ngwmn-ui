@@ -128,7 +128,7 @@ const drawChart = function (elem, store, opts, chartType) {
             // When the bounding box has changed, update the state with it.
             store.dispatch(setAxisYBBox(opts.id, bBox));
         })))
-        // Draw the another y-axis for the elevation on the lithology chart (which is part of the construction diagram).
+        // Draw the another y-axis for the elevation on the lithology chart (which is part of the well diagram).
         .call(callIf(chartType === 'lithology', link(store, drawAxisYWellDiagramElevation, createStructuredSelector({
             yScale: getScaleYElevation(opts, chartType),
             layout: getChartPosition(opts, chartType)

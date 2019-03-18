@@ -141,7 +141,7 @@ export const getViewBox = memoize((opts) => createSelector(
             // add an arbitrary number to the aspect ratio to keep it long and not wide
             aspectRatio = containerSize.height / containerSize.width + 1 || 0;
         }
-        const width = containerSize.width + axisYBBox.width + FOCUS_CIRCLE_RADIUS;
+        const width = containerSize.width + axisYBBox.width;
         const height = width * aspectRatio;
 
         return {
