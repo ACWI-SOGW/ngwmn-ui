@@ -196,6 +196,9 @@ export const getConstructionElements = memoize((opts, chartType) => createSelect
             const radius = element.diameter ? element.diameter.value / 2 : null;
             const diamStr = radius ? `${element.diameter.value} ${element.diameter.unit}` : 'unknown';
             const locString = `${loc.start} - ${loc.end} ${unit}`;
+            if (loc.start === loc.end || loc.end == null) {
+
+            }
             return {
                 id: element.id,
                 isSelected: element.id == selectedId,
