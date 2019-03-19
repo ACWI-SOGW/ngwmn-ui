@@ -255,7 +255,7 @@ describe('graph component well log state', () => {
                 scaleLinear(),
                 scaleLinear(),
                 'screen-0'
-            )).toEqual([ {
+            )).toEqual([{
                 id: 'screen-3',
                 isSelected: false,
                 type: 'screen',
