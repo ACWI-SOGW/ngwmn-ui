@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 -   Added FLDEP Logo to images/provider_logos
+-   Added visualization of to the well diagram of elements that have zero total length
 
 ## [0.4.0][]
 ### Added
