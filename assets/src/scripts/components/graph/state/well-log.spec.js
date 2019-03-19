@@ -265,12 +265,12 @@ describe('graph component well log state', () => {
                 left: {
                     x: -6,
                     y1: 201,
-                    y2: 201.5
+                    y2: 201
                 },
                 right: {
                     x: 6,
                     y1: 201,
-                    y2: 201.5
+                    y2: 201
                 }
             }, {
                 id: 'screen-0',

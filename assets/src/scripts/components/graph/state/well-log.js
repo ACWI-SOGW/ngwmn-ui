@@ -192,23 +192,10 @@ export const getConstructionElements = memoize((opts, chartType) => createSelect
     (elements, xScale, yScale, selectedId) => {
         const parts = elements.map(element => {
             const loc = element.position.coordinates;
-            // Visualize well construction components that have no listed length
-            // If the element has no listed length (for example depth 77.0-77.0) add 6 inches (0.5 ft).
-            // This will not show in the well table but will show as an element in the well diagram.
-            // First check if the element has marked as zeroLength, if so skip this step
-           if (!element.zeroLength && element.position.coordinates.start === element.position.coordinates.end ) {
-                element.position.coordinates.end = element.position.coordinates.end  + 0.5;
-                // Add an attribute to indicate that this element is of zero length and has been adjusted.
-                // This is needed to prevent the 'locString' from being over written when this function is called again (and it will be called)
-                element.zeroLength = true;
-            }
             const unit = element.position.unit;
-            // remove the distance added to visualize the zero length element from the element's 'hover' description
-            const locString = !element.zeroLength ? `${loc.start} - ${loc.end} ${unit}`: `${loc.start} - ${loc.end - 0.5} ${unit}`;
-
             const radius = element.diameter ? element.diameter.value / 2 : null;
             const diamStr = radius ? `${element.diameter.value} ${element.diameter.unit}` : 'unknown';
-
+            const locString = `${loc.start} - ${loc.end} ${unit}`;
             return {
                 id: element.id,
                 isSelected: element.id == selectedId,
