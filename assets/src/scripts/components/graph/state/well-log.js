@@ -195,7 +195,7 @@ export const getConstructionElements = memoize((opts, chartType) => createSelect
             // Visualize well construction components that have no listed length
             // If the element has no listed length (for example depth 77.0-77.0) add 6 inches (0.5 ft).
             // This will not show in the well table but will show as an element in the well diagram.
-            // First check it the element has marked as zeroLength, if so skip this step
+            // First check if the element has marked as zeroLength, if so skip this step
            if (!element.zeroLength && element.position.coordinates.start === element.position.coordinates.end ) {
                 element.position.coordinates.end = element.position.coordinates.end  + 0.5;
                 // Add an attribute to indicate that this element is of zero length and has been adjusted.
