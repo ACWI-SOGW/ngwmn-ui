@@ -290,7 +290,6 @@ describe('graph component well log state', () => {
                     y2: 200
                 }
             }, {
-
                 id: 'screen-1',
                 isSelected: false,
                 type: 'screen',
