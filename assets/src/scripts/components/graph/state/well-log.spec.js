@@ -260,7 +260,7 @@ describe('graph component well log state', () => {
                 isSelected: false,
                 type: 'screen',
                 radius: null,
-                title: 'Screen, unknown diameter, 201 - 201.5 undefined depth',
+                title: 'Screen, unknown diameter, 201 - 201 undefined depth',
                 thickness: 0.5,
                 left: {
                     x: -6,
@@ -273,7 +273,7 @@ describe('graph component well log state', () => {
                     y2: 201.5
                 }
             }, {
-                                id: 'screen-0',
+                id: 'screen-0',
                 isSelected: true,
                 type: 'screen',
                 radius: 5,
