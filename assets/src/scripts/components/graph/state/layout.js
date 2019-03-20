@@ -130,13 +130,14 @@ export const getAxisYBBox = memoize(opts => createSelector(
  * @param  {Object} state   Redux state
  * @return {Object}         {x, y, width, height} of viewBox
  */
-export const getViewBox = memoize(opts => createSelector(
+export const getViewBox = memoize((opts) => createSelector(
     getContainerSize(opts),
     getAxisYBBox(opts),
     (containerSize, axisYBBox) => {
         const aspectRatio = containerSize.height / containerSize.width || 0;
-        const width = containerSize.width + axisYBBox.width + FOCUS_CIRCLE_RADIUS;
+        const width = containerSize.width + axisYBBox.width;
         const height = width * aspectRatio;
+
         return {
             left: axisYBBox.x,
             top: 0,
@@ -148,8 +149,8 @@ export const getViewBox = memoize(opts => createSelector(
 
 /**
  * Returns the position of a chart type within the graph container.
- * @param  {String} graph Chart type identifier
- * @return {Function}     Selector for chart position
+ * @param  {String}     graph Chart type identifier
+ * @return {Function}   Selector for chart position
  */
 export const getChartPosition = memoize((opts, chartType) => createSelector(
     getViewBox(opts),
@@ -174,16 +175,24 @@ export const getChartPosition = memoize((opts, chartType) => createSelector(
                 };
             case 'lithology':
                 return {
-                    x: 0,
+                    // x: adjusts the horizontal starting point of well lithology chart within the SVG view box
+                    // Note: (x: viewBox.right * 1) well construction chart is out of the SVG view box to the right
+                    // Note: (x: viewBox.right * 0) start of well construction chart touches edge of SVG view box to the left
+                    x: viewBox.right * 0.13,
                     y: 0,
-                    width: width,
+                    // reduces the width lithology chart so that the tick mark labels fit in the SVG viewport
+                    width: width * 0.6,
                     height: height
                 };
             case 'construction':
                 return {
-                    x: viewBox.right * 0.2,
+                    // x: adjusts starting point of well construction chart within the SVG view box
+                    // Note: (x: viewBox.right * 1) well construction chart is out of the SVG view box to the right
+                    // Note: (x: viewBox.right * 0) well construction chart touches edge of SVG view box to the left
+                    x: viewBox.right * 0.255,
                     y: 0,
-                    width: width * 0.6,
+                    // reduces the width of the construction chart to produce a visually appealing effect
+                    width: width * 0.35,
                     height: height
                 };
             default:
