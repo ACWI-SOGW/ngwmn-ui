@@ -185,11 +185,9 @@ const getRadiusScale = memoize((opts, chartType) => createSelector(
     }
 ));
 
-const createBoreholeElement = function(opts, xScale, yScale, elements) {
-    // get the measured depth of the well
-    const rawDepth    = getSiteWellDepth(opts.agencyCode, opts.siteId)(store.getState());
+const createBoreholeElement = function(opts, xScale, yScale, elements, wellDepth) {
     // scale the depth to the graph size
-    const scaleDepth  = yScale(rawDepth);
+    const scaleDepth  = yScale(wellDepth);
     // check to see if we have construction elements
     const hasElements = elements && elements.length > 0;
     // if there are no elements then use max size of the graph, else use 0 for max function to work
@@ -240,7 +238,8 @@ export const getConstructionElements = memoize((opts, chartType) => createSelect
     getRadiusScale(opts, chartType),
     getScaleY(opts, chartType),
     getSelectedConstructionId(opts.siteKey),
-    (elements, xScale, yScale, selectedId) => {
+    getSiteWellDepth(opts.agencyCode, opts.siteId),
+    (elements, xScale, yScale, selectedId, wellDepth) => {
         const parts = elements.map(element => {
             const loc = element.position.coordinates;
             const unit = element.position.unit;
@@ -318,7 +317,7 @@ export const getConstructionElements = memoize((opts, chartType) => createSelect
         });
 
         return [
-            createBoreholeElement(opts, xScale, yScale, parts),
+            createBoreholeElement(opts, xScale, yScale, parts, wellDepth),
             ...parts
         ];
     }
