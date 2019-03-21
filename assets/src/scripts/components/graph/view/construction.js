@@ -21,7 +21,8 @@ const drawElement = function (store, elem, opts, element, index) {
                 .attr('x', element.left.x)
                 .attr('y', element.left.y1)
                 .attr('width', element.right.x - element.left.x)
-                .attr('height', element.right.y2 - element.right.y1)
+                // if an element is less than one pixel in height, make that element one pixel in height
+                .attr('height', element.right.y2 - element.right.y1 < 1 ? 1 : element.right.y2 - element.right.y1)
                 .call(callIf(element.type === 'screen', (rect) => {
                     rect.attr('fill', `url(#screen-pattern-${index % 2})`);
                 }))
