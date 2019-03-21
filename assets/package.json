@@ -70,7 +70,7 @@
     "rollup-plugin-replace": "^2.1.0",
     "rollup-plugin-uglify": "^6.0.2",
     "svgo": "^1.2.0",
-    "uglify-js": "^3.4.9",
+    "uglify-js": "^3.4.10",
     "uglifycss": "0.0.29"
   },
   "dependencies": {
