@@ -49,7 +49,6 @@ const drawTableBody = function(table, waterLevels, tbody) {
             innerWindow: 2,
             right: 1
         }]
-
     };
     new List('water-levels-div', options, samples);
 
