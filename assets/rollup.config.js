@@ -60,6 +60,8 @@ module.exports = {
             }
         })
     ],
+    // The following was added to prevent problems during development,
+    // specifically with the 'watch' state not refreshing on a save.
     watch: {
         chokidar: false
     },
