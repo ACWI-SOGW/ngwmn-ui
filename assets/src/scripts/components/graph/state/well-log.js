@@ -3,9 +3,6 @@ import memoize from 'fast-memoize';
 import capitalize from 'lodash/capitalize';
 import { createSelector } from 'reselect';
 
-// import {
-//     getSelectedConstructionId, getVisibleConstructionIds
-// } from 'ngwmn/components/well-log/state/index';
 import {
     getSelectedConstructionId, getVisibleConstructionIds
 } from '../../well-log/state';
@@ -14,7 +11,6 @@ import { getCursorDatum } from './cursor';
 import { getChartPosition } from './layout';
 import { getScaleX, getScaleY } from './scales';
 
-// import { getWellLogs } from 'ngwmn/services/state/index';
 import { getSiteWellDepth, getWellLogs } from '../../../services/state';
 
 
