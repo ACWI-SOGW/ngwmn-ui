@@ -60,6 +60,9 @@ module.exports = {
             }
         })
     ],
+    watch: {
+        chokidar: false
+    },
     output: {
         name: 'ngwmn_ui',
         file: 'dist/bundle.js',
