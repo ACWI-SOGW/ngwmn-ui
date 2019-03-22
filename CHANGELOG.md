@@ -11,6 +11,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 -   Changed pagination to include start and end points
 
+### Fixed
+-   Added 'utf-8' decoding parameter to open method for lithology parser to prevent failure during Jenkins build
+
 ## [0.5.0][]
 ### Added
 -   Added FLDEP Logo to images/provider_logos
