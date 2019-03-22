@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 -   Added y axes to well diagram for depth and elevation
 
+### Changed
+-   Changed pagination to include start and end points
+
 ## [0.5.0][]
 ### Added
 -   Added FLDEP Logo to images/provider_logos
