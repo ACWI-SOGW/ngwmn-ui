@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 -   Added y axes to well diagram for depth and elevation
 
+### Fixed
+-   Added 'utf-8' decoding parameter to open method for lithology parser to prevent failure during Jenkins build
+
 ### Changed
 -   Changed pagination to include start and end points
 
