@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 -   Added 'utf-8' decoding parameter to open method for lithology parser to prevent failure during Jenkins build
 -   Fixed issue preventing auto refresh on save when set to watch
+-   Altered numerous USWDS related class names to maintain compatibility with USWDS 2.0.0 Beta 6
 
 ## [0.5.0][]
 ### Added
@@ -25,7 +26,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [0.4.0][]
 ### Added
--   Added Median Montly Statistical Water Levels section
+-   Added Median Monthly Statistical Water Levels section
 
 ### Fixed
 -   Fixed issue with 'nested' monitoring locations showing incorrect data
