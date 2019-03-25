@@ -27,7 +27,7 @@
     "watch:js": "rollup -c --watch"
   },
   "engines": {
-    "node": "10.13.0"
+    "node": "10.15.3"
   },
   "respository": {
     "type": "git",
@@ -85,6 +85,6 @@
     "redux-thunk": "^2.3.0",
     "reselect": "^4.0.0",
     "resize-observer-polyfill": "^1.5.1",
-    "uswds": "^2.0.0-beta.4"
+    "uswds": "=2.0.0-beta.6"
   }
 }
