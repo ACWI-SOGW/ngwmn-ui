@@ -49,10 +49,10 @@
         </div>
         <ul class="usa-accordion">
             <li>
-                <button class="usa-accordion-button" aria-expanded="false" aria-controls="ts-a1">
+                <button class="usa-accordion__button" aria-expanded="false" aria-controls="ts-a1">
                     Summary
                 </button>
-                <div id="ts-a1" class="usa-accordion-content">
+                <div id="ts-a1" class="usa-accordion__content">
                     <table class="usa-table usa-table-borderless">
                         <tbody>
                             <tr>
@@ -130,10 +130,10 @@
                 </div>
             </li>
             <li>
-                <button class="usa-accordion-button" aria-expanded="false" aria-controls="ts-a2">
+                <button class="usa-accordion__button" aria-expanded="false" aria-controls="ts-a2">
                     Water Quality
                 </button>
-                <div id="ts-a2" class="usa-accordion-content">
+                <div id="ts-a2" class="usa-accordion__content">
                     <table class="usa-table usa-table-borderless">
                         <thead>
                             <th scope="col">Activity Start Date</th>
@@ -182,10 +182,10 @@
             {{ components.WaterLevelTable(feature.AGENCY_CD, feature.SITE_NO) }}
 
             <li>
-                <button class="usa-accordion-button" aria-expanded="false" aria-controls="ts-a4">
+                <button class="usa-accordion__button" aria-expanded="false" aria-controls="ts-a4">
                     Water Level Statistics
                 </button>
-                <div id="ts-a4" class="usa-accordion-content">
+                <div id="ts-a4" class="usa-accordion__content">
 
                     <table id="overall-stats" class="usa-table usa-table-borderless water-stats-table">
                         <caption>Overall Water Level Statistics ({{ stats.overall.alt_datum }})</caption>
