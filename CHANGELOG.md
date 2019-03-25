@@ -13,11 +13,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 -   Changed pagination to include start and end points
--   Now using Node.js version 10.15.3
 -   Altered numerous USWDS related class names to maintain compatibility with USWDS 2.0.0 Beta 6
-
-### Fixed
--   Added 'utf-8' decoding parameter to open method for lithology parser to prevent failure during Jenkins build
 
 ## [0.5.0][]
 ### Added
