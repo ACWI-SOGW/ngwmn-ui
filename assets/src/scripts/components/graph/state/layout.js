@@ -12,9 +12,7 @@ const VIEWPORT_RESET = `${MOUNT_POINT}/VIEWPORT_RESET`;
 const VIEWPORT_SET = `${MOUNT_POINT}/VIEWPORT_SET`;
 
 
-const getNamespace = (state) => {
-    return (state || {})[MOUNT_POINT] || {};
-};
+const getNamespace = (state) => (state || {})[MOUNT_POINT] || {};
 
 /**
  * Action creator to set the current viewport date range (x-axis)
@@ -49,7 +47,7 @@ export const resetViewport = function (id) {
  * @type {Object}
  */
 export const getViewport = memoize(opts => createSelector(
-    (state) => getNamespace(state).viewports || {},
+    state => getNamespace(state).viewports || {},
     getExtentX(opts),
     (viewports, extentX) => {
         return viewports[opts.id] || [
@@ -80,7 +78,7 @@ export const setContainerSize = function (id, {width, height}) {
  * @return {Object}       Layout
  */
 export const getContainerSize = memoize(opts => createSelector(
-    (state) => getNamespace(state).graphSizes || {},
+    state => getNamespace(state).graphSizes || {},
     (graphSizes) => {
         return graphSizes[opts.id] || {
             width: 0,
@@ -117,7 +115,7 @@ export const setAxisYBBox = function (id, {x, y, width, height}) {
  * @return {Object}       Layout
  */
 export const getAxisYBBox = memoize(opts => createSelector(
-    (state) => getNamespace(state).axisYBBoxes || {},
+    state => getNamespace(state).axisYBBoxes || {},
     (axisYBBoxes) => {
         return axisYBBoxes[opts.id] || {
             x: 0,

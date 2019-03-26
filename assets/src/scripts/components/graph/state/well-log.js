@@ -8,7 +8,7 @@ import {
 } from '../../well-log/state';
 
 import { getCursorDatum } from './cursor';
-import { getChartPosition } from './layout';
+import { getChartPosition, getContainerSize } from './layout';
 import { getScaleX, getScaleY } from './scales';
 
 import { getSiteWellDepth, getWellLogs } from '../../../services/state';
@@ -181,46 +181,51 @@ const getRadiusScale = memoize((opts, chartType) => createSelector(
     }
 ));
 
-const createBoreholeElement = function(opts, xScale, yScale, elements, wellDepth) {
-    // scale the depth to the graph size
-    const scaleDepth  = yScale(wellDepth);
+const createBoreholeElement = function(opts, xScale, yScale, elements, wellDepth, size) {
     // check to see if we have construction elements
     const hasElements = elements && elements.length > 0;
-    // if there are no elements then use max size of the graph, else use 0 for max function to work
-    const minDepth    = hasElements ? 520 : 0;
-    // if there is good depth info then use it else use a high value for min function to work
-    const maxDepth    = scaleDepth > 300 ? scaleDepth : 520;
+    // scale the well depth to the graph size
+    const scaleDepth  = yScale(wellDepth); // TODO is the well depth always scaled to graph height?
 
-    // if there are elements use them to discover left and right otherwise use defaults
-    const left   = hasElements ? 100 : 8;
-    const right  = hasElements ? 8 : 100;
+    const margin = 10;
+
+    // initialize variables assuming no elements
+    let minDepth = 0;
+    let maxDepth = size.height;
+    let leftX    = 0;
+    let rightX   = Math.max(size.width-margin, 0);
+
+    if (hasElements) {
+        // if there are elements then prepare to base the bounds from them.
+        // use the opposite bounds in order to detect the reverse extremes.
+        minDepth = size.height;
+        maxDepth = Math.max(scaleDepth,0); // if there is good depth info then default to it
+        leftX    = rightX;
+        rightX   = 0;
+
+        elements.forEach((element) => {
+            leftX    = Math.min(leftX,    element.left.x);  // left.x is more like position
+            rightX   = Math.max(rightX,   element.right.x); // right.x is max girth or width
+            minDepth = Math.min(minDepth, element.left.y1); // y1 is more like position
+            maxDepth = Math.max(maxDepth, element.left.y2); // y2 is max depth or height
+        });
+    }
 
     const borehole = {
         title: 'borehole',
         type: 'borehole',
         thickness: 1,
         left: {
-            x:  left,
+            x:  leftX,
             y1: minDepth,
             y2: maxDepth
         },
         right: {
-            x:  right,
+            x:  rightX,
             y1: minDepth,
             y2: maxDepth
         }
     };
-    elements.forEach((element) => {
-        borehole.left.x = Math.min(borehole.left.x, element.left.x);
-        borehole.right.x = Math.max(borehole.right.x, element.right.x);
-
-        borehole.left.y1 = Math.min(borehole.left.y1, element.left.y1);
-        borehole.right.y1 = Math.min(borehole.right.y1, element.right.y1);
-
-        borehole.left.y2 = Math.max(borehole.left.y2, element.left.y2);
-        borehole.right.y2 = Math.max(borehole.right.y2, element.right.y2);
-    });
-
     return borehole;
 };
 
@@ -235,7 +240,8 @@ export const getConstructionElements = memoize((opts, chartType) => createSelect
     getScaleY(opts, chartType),
     getSelectedConstructionId(opts.siteKey),
     getSiteWellDepth(opts.agencyCode, opts.siteId),
-    (elements, xScale, yScale, selectedId, wellDepth) => {
+    getContainerSize(opts),
+    (elements, xScale, yScale, selectedId, wellDepth, containerSize) => {
         const parts = elements.map(element => {
             const loc = element.position.coordinates;
             const unit = element.position.unit;
@@ -313,7 +319,7 @@ export const getConstructionElements = memoize((opts, chartType) => createSelect
         });
 
         return [
-            createBoreholeElement(opts, xScale, yScale, parts, wellDepth),
+            createBoreholeElement(opts, xScale, yScale, parts, wellDepth, containerSize),
             ...parts
         ];
     }
