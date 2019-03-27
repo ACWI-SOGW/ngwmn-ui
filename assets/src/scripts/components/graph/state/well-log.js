@@ -191,7 +191,7 @@ const createBoreholeElement = function(yScale, elements, wellDepth, size) {
 
     // initialize variables assuming no elements
     let minDepth = 0;
-    let maxDepth = size.height;
+    let maxDepth = Math.max(size.height, scaleDepth);
     let leftX    = 0;
     let rightX   = Math.max(size.width-margin, 0);
 
