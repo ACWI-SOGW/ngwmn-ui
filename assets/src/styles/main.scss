@@ -8,6 +8,19 @@ $fa-font-path: './fonts' !default;
 $theme-font-path: './fonts';
 $theme-image-path: './img';
 $theme-grid-container-max-width: 100%;
+/* turned on the breakpoint for 'desktop-lg */
+$theme-utility-breakpoints: (
+'card':             false,   // 160px
+'card-lg':          false,   // 240px
+'mobile':           false,   // 320px
+'mobile-lg':        true,    // 480px
+'tablet':           true,    // 640px
+'tablet-lg':        false,   // 800px
+'desktop':          true,    // 1024px
+'desktop-lg':       true,   // 1200px
+'widescreen':       false,   // 1400px
+);
+
 @import 'uswds';
 
 @import './partials/footer';
@@ -32,7 +45,19 @@ body {
     &#site-location {
         @import './pages/site-location';
     }
+
+    /* style the well diagram title */
+    .well-diagram-title {
+        text-align: center;
+    }
+    /* don't show the well diagram title except at narrow screen widths (where the well diagram takes the full width of the page) */
+    @include at-media('mobile-lg') {
+       .well-diagram-title {
+            display: none;
+        }
+    }
 }
+
 #banner-title {
     float: right;
     font-family: calibri,tahoma,arial,verdana,sans-serif;

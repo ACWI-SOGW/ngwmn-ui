@@ -238,6 +238,15 @@ describe('graph component well log state', () => {
                     end: 100
                 }
             }
+        }, {
+             id: 'screen-3',
+            type: 'screen',
+            position: {
+                coordinates: {
+                    start: 201,
+                    end: 201
+                }
+            }
         }];
 
         it('returns correct data properly sorted', () => {
@@ -247,6 +256,23 @@ describe('graph component well log state', () => {
                 scaleLinear(),
                 'screen-0'
             )).toEqual([{
+                id: 'screen-3',
+                isSelected: false,
+                type: 'screen',
+                radius: null,
+                title: 'Screen, unknown diameter, 201 - 201 undefined depth',
+                thickness: 0.5,
+                left: {
+                    x: -6,
+                    y1: 201,
+                    y2: 201
+                },
+                right: {
+                    x: 6,
+                    y1: 201,
+                    y2: 201
+                }
+            }, {
                 id: 'screen-0',
                 isSelected: true,
                 type: 'screen',
