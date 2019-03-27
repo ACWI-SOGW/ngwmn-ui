@@ -181,7 +181,7 @@ const getRadiusScale = memoize((opts, chartType) => createSelector(
     }
 ));
 
-const createBoreholeElement = function(opts, xScale, yScale, elements, wellDepth, size) {
+const createBoreholeElement = function(yScale, elements, wellDepth, size) {
     // check to see if we have construction elements
     const hasElements = elements && elements.length > 0;
     // scale the well depth to the graph size
@@ -319,7 +319,7 @@ export const getConstructionElements = memoize((opts, chartType) => createSelect
         });
 
         return [
-            createBoreholeElement(opts, xScale, yScale, parts, wellDepth, containerSize),
+            createBoreholeElement(yScale, parts, wellDepth, containerSize),
             ...parts
         ];
     }
