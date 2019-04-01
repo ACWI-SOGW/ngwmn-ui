@@ -22,8 +22,8 @@ export const getWellLogs = state => state[MOUNT_POINT] || {};
  */
 export const getSiteWellDepth = memoize((agencyCode, siteId) =>  createSelector(
     getWellLogs,
-    getSiteKey(agencyCode, siteId),
-    (wellLogs, siteKey) => {
+    (wellLogs) => {
+        const siteKey = getSiteKey(agencyCode, siteId);
         if (wellLogs && wellLogs[siteKey] && wellLogs[siteKey]['well_depth']) {
             return wellLogs[siteKey]['well_depth']['value'] || -1;
         }
