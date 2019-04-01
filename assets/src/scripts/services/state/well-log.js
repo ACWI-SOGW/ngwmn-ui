@@ -7,15 +7,12 @@ const MOUNT_POINT = 'services/well-log';
 const WELL_LOG_SET = `${MOUNT_POINT}/WELL_LOG_SET`;
 
 
-
 /**
- * Return all well log data
+ * Return all water level data
  * @param  {Object} state Redux state
- * @return {Object} well log data object
+ * @return {Object}       Water levels keyed on ID
  */
-export const getWellLogData = (state) => {
-    return state[MOUNT_POINT] || {};
-}
+export const getWellLogs = state => state[MOUNT_POINT] || {};
 
 /**
  * Return water level data for the site or the empty object if no data available
@@ -24,11 +21,11 @@ export const getWellLogData = (state) => {
  * @return {Function} selector to return well depth. Returns -1 if no depth available.
  */
 export const getSiteWellDepth = memoize((agencyCode, siteId) =>  createSelector(
-    getWellLogData,
-    (wellLogData) => {
-        const siteKey = getSiteKey(agencyCode, siteId);
-        if (wellLogData && wellLogData[siteKey] && wellLogData[siteKey]['well_depth']) {
-            return wellLogData[siteKey]['well_depth']['value'] || -1;
+    getWellLogs,
+    getSiteKey(agencyCode, siteId),
+    (wellLogs, siteKey) => {
+        if (wellLogs && wellLogs[siteKey] && wellLogs[siteKey]['well_depth']) {
+            return wellLogs[siteKey]['well_depth']['value'] || -1;
         }
         return -1;
     }
@@ -52,13 +49,6 @@ export const setWellLog = function (agencyCode, siteId, wellLog) {
         }
     };
 };
-
-/**
- * Return all water level data
- * @param  {Object} state Redux state
- * @return {Object}       Water levels keyed on ID
- */
-export const getWellLogs = state => state[MOUNT_POINT];
 
 /**
  * Well log reducer
