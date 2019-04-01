@@ -12,7 +12,7 @@ from ngwmn.services import lithology_parser
 def test_classify_material():
     scores = []
     materials_txt = os.path.join(os.path.dirname(__file__), 'materials.txt')
-    with open(materials_txt) as file:
+    with open(materials_txt, encoding=ascii('utf-8')) as file:
         for index, material in enumerate(file):
             # To speed up the test, only test every 200th material
             if index % 200:

@@ -27,7 +27,10 @@ export const getSiteWellDepth = memoize((agencyCode, siteId) =>  createSelector(
     getWellLogData,
     (wellLogData) => {
         const siteKey = getSiteKey(agencyCode, siteId);
-        return wellLogData[siteKey]['well_depth']['value'] || -1;
+        if (wellLogData && wellLogData[siteKey] && wellLogData[siteKey]['well_depth']) {
+            return wellLogData[siteKey]['well_depth']['value'] || -1;
+        }
+        return -1;
     }
 ));
 
