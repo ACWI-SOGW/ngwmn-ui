@@ -56,7 +56,7 @@ const drawWaterLevel = function (elem, elements, cursorWaterLevel) {
         return;
     }
     // when there are no construction elements, water level height is wrong
-    if (elements && elements.length == 1) {
+    if (elements && elements.length === 1) {
         let borehole = elements[0]; // the first element should be the borehole
         cursorWaterLevel.height = borehole.left.y2 - cursorWaterLevel.y;
     }
