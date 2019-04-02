@@ -203,6 +203,12 @@ describe('graph component well log state', () => {
     });
 
     describe('getConstructionElements', () => {
+        const graphSize = {
+            width:100,
+            height:500
+        };
+        const wellDepth = 201;
+
         const elements = [{
             id: 'screen-0',
             type: 'screen',
@@ -254,8 +260,24 @@ describe('graph component well log state', () => {
                 elements,
                 scaleLinear(),
                 scaleLinear(),
-                'screen-0'
+                'screen-0',
+                wellDepth,
+                graphSize,
             )).toEqual([{
+                title: 'borehole',
+                type: 'borehole',
+                thickness: 1,
+                left: {
+                    x:   -6,
+                    y1:  10,
+                    y2: 201
+                },
+                right: {
+                    x:    6,
+                    y1:  10,
+                    y2: 201
+                }
+            }, {
                 id: 'screen-3',
                 isSelected: false,
                 type: 'screen',

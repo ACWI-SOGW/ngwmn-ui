@@ -182,6 +182,10 @@ const getRadiusScale = memoize((opts, chartType) => createSelector(
 ));
 
 const createBoreholeElement = function(yScale, elements, wellDepth, size) {
+    if (yScale === undefined || size === undefined || size.height === undefined) {
+        return undefined; // there is a unit test that suggest this could be called without params
+    }
+
     // check to see if we have construction elements
     const hasElements = elements && elements.length > 0;
     // scale the well depth to the graph size
@@ -317,9 +321,14 @@ export const getConstructionElements = memoize((opts, chartType) => createSelect
             }
             return 0;
         });
-
+        // handle undefined arguments
+        const borehole = createBoreholeElement(yScale, parts, wellDepth, containerSize);
+        // unit tests expect to send in undefined arguments that return empty parts
+        if (borehole === undefined) {
+            return parts;
+        }
         return [
-            createBoreholeElement(yScale, parts, wellDepth, containerSize),
+            borehole,
             ...parts
         ];
     }
