@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased][]
 ### Added
+-   Added borehole rendering, especially useful for sites w/o construction information
 -   Added y axes to well diagram for depth and elevation
 
 ### Fixed
