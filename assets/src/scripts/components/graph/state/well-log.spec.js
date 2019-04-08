@@ -54,6 +54,7 @@ describe('graph component well log state', () => {
     });
 
     describe('getWellLogEntriesExtentY', () => {
+        const wellDepth = 3;
         const logEntries = [{
             shape: {
                 coordinates: {
@@ -65,21 +66,21 @@ describe('graph component well log state', () => {
             shape: {
                 coordinates: {
                     start: '2',
-                    end: '3'
+                    end: '4'
                 }
             }
         }];
 
         it('works', () => {
-            expect(getWellLogEntriesExtentY({}).resultFunc(logEntries)).toEqual([1, 3]);
+            expect(getWellLogEntriesExtentY({}).resultFunc(logEntries,wellDepth)).toEqual([1, 4]);
         });
 
         it('works with empty log', () => {
-            expect(getWellLogEntriesExtentY({}).resultFunc([])).toEqual([0, 0]);
+            expect(getWellLogEntriesExtentY({}).resultFunc([],wellDepth)).toEqual([0, 3]);
         });
 
         it('works with mock state', () => {
-            expect(getWellLogEntriesExtentY(mockOpts)(getMockStore().getState())).not.toBe(null);
+            expect(getWellLogEntriesExtentY(mockOpts)(getMockStore().getState(),wellDepth)).not.toBe(null);
         });
     });
 

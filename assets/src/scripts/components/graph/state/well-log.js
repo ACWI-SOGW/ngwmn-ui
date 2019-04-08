@@ -45,13 +45,14 @@ export const getWellLogEntries = memoize(opts => createSelector(
  */
 export const getWellLogEntriesExtentY = memoize(opts => createSelector(
     getWellLogEntries(opts),
-    (wellLogEntries) => {
+    getSiteWellDepth(opts.agencyCode, opts.siteId),
+    (wellLogEntries, wellDepth) => {
         if (wellLogEntries.length === 0) {
-            return [0, 0];
+            return [0, Math.max(0,wellDepth)];
         }
         return [
             Math.min(...wellLogEntries.map(entry => entry.shape.coordinates.start)),
-            Math.max(...wellLogEntries.map(entry => entry.shape.coordinates.end))
+            Math.max(...wellLogEntries.map(entry => entry.shape.coordinates.end), wellDepth)
         ];
     }
 ));
