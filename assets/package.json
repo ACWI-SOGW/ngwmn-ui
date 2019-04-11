@@ -41,11 +41,11 @@
   "homepage": "https://github.com/ACWI-SSWD/ngwmn-ui#readme",
   "devDependencies": {
     "autoprefixer": "^9.5.0",
-    "eslint": "^5.15.2",
+    "eslint": "^5.16.0",
     "eslint-plugin-jasmine": "^2.9.2",
     "gulp": "^4.0.0",
     "gulp-rev-all": "^1.0.0",
-    "jasmine": "^3.3.1",
+    "jasmine": "^3.4.0",
     "karma": "^4.0.1",
     "karma-chrome-launcher": "^2.2.0",
     "karma-coverage": "^1.1.2",
@@ -60,21 +60,21 @@
     "postcss-cli": "^6.1.2",
     "postcss-flexbugs-fixes": "^4.0.0",
     "redux-mock-store": "^1.5.3",
-    "rollup": "^1.7.3",
+    "rollup": "^1.9.0",
     "rollup-plugin-alias": "^1.5.1",
     "rollup-plugin-buble": "^0.19.6",
-    "rollup-plugin-commonjs": "^9.2.1",
+    "rollup-plugin-commonjs": "^9.3.4",
     "rollup-plugin-istanbul": "^2.0.1",
-    "rollup-plugin-json": "^3.1.0",
+    "rollup-plugin-json": "^4.0.0",
     "rollup-plugin-node-resolve": "^4.0.1",
-    "rollup-plugin-replace": "^2.1.0",
+    "rollup-plugin-replace": "^2.1.1",
     "rollup-plugin-uglify": "^6.0.2",
-    "svgo": "^1.2.0",
-    "uglify-js": "^3.4.10",
+    "svgo": "^1.2.1",
+    "uglify-js": "^3.5.3",
     "uglifycss": "0.0.29"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-free": "^5.7.2",
+    "@fortawesome/fontawesome-free": "^5.8.1",
     "autotrack": "^2.4.1",
     "d3": "^5.9.2",
     "fast-memoize": "^2.5.1",
@@ -85,6 +85,6 @@
     "redux-thunk": "^2.3.0",
     "reselect": "^4.0.0",
     "resize-observer-polyfill": "^1.5.1",
-    "uswds": "^2.0.0-beta.7"
+    "uswds": "^2.0.1"
   }
 }
