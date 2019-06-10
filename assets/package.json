@@ -74,7 +74,7 @@
     "uglifycss": "0.0.29"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-free": "^5.8.1",
+    "@fortawesome/fontawesome-free": "^5.9.0",
     "autotrack": "^2.4.1",
     "d3": "^5.9.2",
     "fast-memoize": "^2.5.1",
