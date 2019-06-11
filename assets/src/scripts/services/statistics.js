@@ -2,7 +2,7 @@ import { post } from '../lib/ajax';
 import config from 'ngwmn/config';
 
 // median water level URL
-const MWL_URL = `${config.SERVICE_ROOT}/statistics/calculate`;
+const MWL_URL = `${config.SERVICE_ROOT}/statistics/statistics/calculate`;
 // const MWL_URL = 'http://localhost:8777/statistics/calculate';
 
 
