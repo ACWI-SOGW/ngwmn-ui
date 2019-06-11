@@ -6,7 +6,7 @@ import json
 from flask import Flask, render_template
 
 
-__version__ = '0.6.0dev'
+__version__ = '0.6.0'
 
 app = Flask(__name__.split()[0], instance_relative_config=True)
 
