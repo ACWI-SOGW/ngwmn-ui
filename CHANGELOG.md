@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased][]
 
+## [0.7.0][]
+### Fixed
+-   Updated the statistics service URL to match recently created public mapping.
 
 ## [0.6.0][]
 ### Added
