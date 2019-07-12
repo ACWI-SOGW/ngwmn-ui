@@ -1,8 +1,9 @@
 import { select } from 'd3-selection';
 
 import { link } from 'ngwmn/lib/d3-redux';
+import { getSiteKey } from '../../services/site-key';
 import {
-    getSiteKey, getWaterLevelStatus, setWellLog, retrieveWaterLevels
+    getWaterLevelStatus, setWellLog, retrieveWaterLevels
 } from 'ngwmn/services/state/index';
 
 import { getCurrentWaterLevels } from './state';

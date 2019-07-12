@@ -1,8 +1,35 @@
-import { getSiteKey } from './index';
+import { getSiteKey } from '../site-key';
+import memoize from 'fast-memoize';
+import {createSelector} from 'reselect';
 
 
 const MOUNT_POINT = 'services/well-log';
 const WELL_LOG_SET = `${MOUNT_POINT}/WELL_LOG_SET`;
+
+
+/**
+ * Return all water level data
+ * @param  {Object} state Redux state
+ * @return {Object}       Water levels keyed on ID
+ */
+export const getWellLogs = state => state[MOUNT_POINT] || {};
+
+/**
+ * Return water level data for the site or the empty object if no data available
+ * @param {String} agencyCode
+ * @param {String} siteId
+ * @return {Function} selector to return well depth. Returns -1 if no depth available.
+ */
+export const getSiteWellDepth = memoize((agencyCode, siteId) =>  createSelector(
+    getWellLogs,
+    (wellLogs) => {
+        const siteKey = getSiteKey(agencyCode, siteId);
+        if (wellLogs && wellLogs[siteKey] && wellLogs[siteKey]['well_depth']) {
+            return wellLogs[siteKey]['well_depth']['value'] || -1;
+        }
+        return -1;
+    }
+));
 
 /**
  * Action creator:
@@ -22,13 +49,6 @@ export const setWellLog = function (agencyCode, siteId, wellLog) {
         }
     };
 };
-
-/**
- * Return all water level data
- * @param  {Object} state Redux state
- * @return {Object}       Water levels keyed on ID
- */
-export const getWellLogs = state => state[MOUNT_POINT];
 
 /**
  * Well log reducer

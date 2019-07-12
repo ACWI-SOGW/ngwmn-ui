@@ -12,6 +12,7 @@ from .services.confluence import (
     OTHER_AGENCY_INFO_CONTENT)
 from .string_utils import generate_subtitle
 
+
 @app.route('/')
 def home():
     """testing home page"""
@@ -62,14 +63,12 @@ def provider(agency_cd):
     if agency_cd not in providers_by_agency_cd:
         return '{0} is not a valid agency code'.format(agency_cd), 404
 
-    return render_template('provider.html',
-                           agency_metadata=providers_by_agency_cd.get(agency_cd),
+    return render_template('provider.html', agency_metadata=providers_by_agency_cd.get(agency_cd),
                            provider_content=pull_feed(confluence_url(agency_cd, MAIN_CONTENT)),
                            site_selection=pull_feed(confluence_url(agency_cd, SITE_SELECTION_CONTENT)),
                            data_collection=pull_feed(confluence_url(agency_cd, DATA_COLLECTION_CONTENT)),
                            data_management=pull_feed(confluence_url(agency_cd, DATA_MANAGEMENT_CONTENT)),
-                           other_agency_info=pull_feed(confluence_url(agency_cd, OTHER_AGENCY_INFO_CONTENT))
-                          )
+                           other_agency_info=pull_feed(confluence_url(agency_cd, OTHER_AGENCY_INFO_CONTENT)))
 
 
 @app.route('/provider/<agency_cd>/site/', methods=['GET'])
@@ -105,7 +104,13 @@ def site_page(agency_cd, location_id):
     )
     water_quality = get_water_quality(agency_cd, location_id)
 
-    feature = summary['features'][0]['properties']
+    # reduce the amount of data returned from GeoServer to only the monitoring location of interest
+    # this section is important for monitoring locations that have the same geographical coordinates (i.e. nested wells)
+    feature = {}
+    for a_single_feature in summary['features']:
+        if a_single_feature['properties']['SITE_NO'] == location_id:
+            feature = a_single_feature['properties']
+            break
 
     if 'organization' in water_quality:
         organization = water_quality['organization']['name']

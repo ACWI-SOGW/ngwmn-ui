@@ -4,57 +4,104 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [Unreleased][]
+
+## [0.7.0][]
+### Fixed
+-   Updated the statistics service URL to match recently created public mapping.
+
+## [0.6.0][]
 ### Added
-- Checkbox to water levels chart legend to toggle lithology layers visibility
-- Added title to hydrograph
+-   Added borehole rendering, especially useful for sites w/o construction information
+-   Added y axes to well diagram for depth and elevation
+
+### Fixed
+-   Added 'utf-8' decoding parameter to open method for lithology parser to prevent failure during Jenkins build
+-   Fixed (swapped) column header labels for Min/Max overall water level.
+-   Fixed median monthly values url
 
 ### Changed
-- Moved Lithology Table from Well Log accordion to Well Log component
-- Changed the Lithology and Well Construction table layout to better accommodate narrow viewports
-- Changed appearance of Well Construction radio buttons
+-   Changed pagination to include start and end points
 
-## [0.2.0]
+### Fixed
+-   Added 'utf-8' decoding parameter to open method for lithology parser to prevent failure during Jenkins build
+-   Fixed issue preventing auto refresh on save when set to watch
+-   Altered numerous USWDS related class names to maintain compatibility with USWDS 2.0.0 Beta 6
+
+## [0.5.0][]
 ### Added
-- Added basic description text
-- Added keys and interactivity to well construction table with a responsive layout
-- Added providers view which provides a list of available providers
-- Added provider view which shows information about an individual provider
-- Added sites view which provides a list of sites for a provider
-- Added error template for backing service calls, 404s, and 500s
-- Added hyperlink back to NGMWN Portal UI
+-   Added FLDEP Logo to images/provider_logos
+-   Added visualization of to the well diagram of elements that have zero total length
+
+## [0.4.0][]
+### Added
+-   Added Median Monthly Statistical Water Levels section
+
+### Fixed
+-   Fixed issue with 'nested' monitoring locations showing incorrect data
 
 ### Changed
-- The site page route was changed
-- Replaced the SIFTA service with hard coded provider logos.
-- Support sites that lack water level data.
-- Changed location and wording of monitoring location summary
+-   Moved elevation, latitude, and longitude from well log section to the summary section and removed the well log section.
 
-## [0.1.0]
+## [0.3.0][]
 ### Added
-- Added view for a site location
-- Added cooperator logos to site location view
-- Added summary table to location view
-- Added US Web Design System and basic page layout
-- Added water quality table to site location view
-- Added water levels graph to site location page
-- Added brush/pan chart under main chart
-- Add legend to chart when there are classed points
-- Line gaps drawn on gap of 6 months or more
-- y-axis label set to depth to water, feet below land surface
-- Added zoom behaviors to main chart
-- Added lithology chart
-- Added well log tables
-- Added well construction drawing (screens, casings)
-- Fill lithology layers with FGDC Digital Cartographic Standard patterns
-- Added water level data table
-- Added Statistics Section
+-   Checkbox to water levels chart legend to toggle lithology layers visibility
+-   Added title to hydrograph
+-   Added triangular water level indicator to construction water level element
 
 ### Changed
-- Removed duplicate service call to retrieve well log data
-- Using headless Firefox to run tests for CI
-- Using node 10.13.0
+-   Moved Lithology Table from Well Log accordion to Well Log component
+-   Changed the Lithology and Well Construction table layout to better accommodate narrow viewports
+-   Changed appearance of Well Construction radio buttons
+-   Removed mini-hydrograph from construction element
+-   Fixed issue preventing tests from running successfully in random order
 
-[Unreleased]: https://github.com/ACWI-SOGW/ngwmn-ui-0.2.0...master
-[0.2.0]: https://github.com/ACWI-SOGW/ngwmn-ui-0.1.0...ngwmn-ui-0.2.0
+## [0.2.0][]
+### Added
+-   Added basic description text
+-   Added keys and interactivity to well construction table with a responsive layout
+-   Added providers view which provides a list of available providers
+-   Added provider view which shows information about an individual provider
+-   Added sites view which provides a list of sites for a provider
+-   Added error template for backing service calls, 404s, and 500s
+-   Added hyperlink back to NGMWN Portal UI
+
+### Changed
+-   The site page route was changed
+-   Replaced the SIFTA service with hard coded provider logos.
+-   Support sites that lack water level data.
+-   Changed location and wording of monitoring location summary
+
+## [0.1.0][]
+### Added
+-   Added view for a site location
+-   Added cooperator logos to site location view
+-   Added summary table to location view
+-   Added US Web Design System and basic page layout
+-   Added water quality table to site location view
+-   Added water levels graph to site location page
+-   Added brush/pan chart under main chart
+-   Add legend to chart when there are classed points
+-   Line gaps drawn on gap of 6 months or more
+-   y-axis label set to depth to water, feet below land surface
+-   Added zoom behaviors to main chart
+-   Added lithology chart
+-   Added well log tables
+-   Added well construction drawing (screens, casings)
+-   Fill lithology layers with FGDC Digital Cartographic Standard patterns
+-   Added water level data table
+-   Added Statistics Section
+
+### Changed
+-   Removed duplicate service call to retrieve well log data
+-   Using headless Firefox to run tests for CI
+-   Using node 10.13.0
+
+[Unreleased]: https://github.com/ACWI-SOGW/ngwmn-ui/compare/ngwmn-ui-0.7.0...master
+[0.7.0]: https://github.com/ACWI-SOGW/ngwmn-ui/compare/ngwmn-ui-0.6.0...ngwmn-ui-0.7.0
+[0.6.0]: https://github.com/ACWI-SOGW/ngwmn-ui/compare/ngwmn-ui-0.5.0...ngwmn-ui-0.6.0
+[0.5.0]: https://github.com/ACWI-SOGW/ngwmn-ui/compare/ngwmn-ui-0.4.0...ngwmn-ui-0.5.0
+[0.4.0]: https://github.com/ACWI-SOGW/ngwmn-ui/compare/ngwmn-ui-0.3.0...ngwmn-ui-0.4.0
+[0.3.0]: https://github.com/ACWI-SOGW/ngwmn-ui/compare/ngwmn-ui-0.2.0...ngwmn-ui-0.3.0
+[0.2.0]: https://github.com/ACWI-SOGW/ngwmn-ui/compare/ngwmn-ui-0.1.0...ngwmn-ui-0.2.0
 [0.1.0]: https://github.com/ACWI-SOGW/ngwmn-ui/tree/ngwmn-ui-0.1.0

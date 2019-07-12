@@ -6,7 +6,9 @@ import List from 'list.js';
 
 import { link } from 'ngwmn/lib/d3-redux';
 import {
-    getSiteWaterLevels, getWaterLevelStatus, retrieveWaterLevels
+    getSiteWaterLevels,
+    getWaterLevelStatus,
+    retrieveWaterLevels
 } from 'ngwmn/services/state/index';
 
 import { isTableRendered, renderTable } from './state';
@@ -31,7 +33,7 @@ const COLUMN_HEADINGS = [
 const drawTableBody = function(table, waterLevels, tbody) {
     tbody = tbody || table
         .append('tbody')
-        .classed('list', true);
+            .classed('list', true);
     const samples = (waterLevels.samples || []).reverse();
     const valueNames = ['time', 'originalValue', 'unit', 'accuracyValue', 'accuracyUnit',
             'sourceCode', 'fromLandsurfaceValue', 'fromDatumValue'];
@@ -42,7 +44,11 @@ const drawTableBody = function(table, waterLevels, tbody) {
         valueNames: valueNames,
         item: `<tr>${item}</tr>`,
         page: 30,
-        pagination: true
+        pagination: [{
+            left: 1,
+            innerWindow: 2,
+            right: 1
+        }]
     };
     new List('water-levels-div', options, samples);
 
@@ -69,19 +75,20 @@ export default function(store, node, {agencyCode, siteId}) {
     });
     const table = component
         .select('#water-levels-div')
-            .append('table')
+        .append('table')
         .attr('id', 'water-levels-table')
-            .classed('usa-table', true);
+        .classed('usa-table', true);
     component.select('#water-levels-div')
         .append('ul')
         .classed('pagination', true);
 
     table.append('thead')
-        .append('tr')
-            .selectAll('th')
-            .data(COLUMN_HEADINGS).enter()
-            .append('th')
-                .text((col) => col);
+         .append('tr')
+         .selectAll('th')
+         .data(COLUMN_HEADINGS)
+         .enter()
+         .append('th')
+         .text((col) => col);
 
     table.call(link(store, (elem, {isRendered, waterLevels}) => {
         // Add code to rendered

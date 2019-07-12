@@ -36,7 +36,7 @@ export const getSelectedLithologyId = memoize(siteKey => state => {
  * @param  {Object} action Action object
  * @return {Object}        New state
  */
-export const reducer = function (state = {}, action) {
+const reducer = function (state = {}, action) {
     switch (action.type) {
         case SELECTED_LITHOLOGY_ITEM_SET:
             return {

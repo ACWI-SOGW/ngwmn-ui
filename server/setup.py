@@ -76,7 +76,7 @@ def identify_data_files(data_dirs, exclusions=('.gitignore', '.webassets-cache')
 
 setup(
     name='ngwmn_ui',
-    version='0.3.0dev',
+    version='0.8.0dev',
     description='USGS Water Data',
     author='Andrew Yan, Mary Bucknell, Dan Naab, David Uselmann',
     author_email='ayan@usgs.gov',

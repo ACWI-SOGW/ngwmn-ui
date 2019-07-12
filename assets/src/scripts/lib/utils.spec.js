@@ -35,7 +35,7 @@ describe('Utils module', () => {
         beforeEach(() => {
             svg = select('body')
                 .append('svg')
-                .attr('viewBox', '0 0 0 0');
+                    .attr('viewBox', '0 0 0 0');
         });
 
         afterEach(() => {

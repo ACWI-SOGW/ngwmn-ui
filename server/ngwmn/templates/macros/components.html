@@ -21,10 +21,10 @@
         </div>
     </div>
     <noscript>
-        <div class="usa-alert usa-alert-warning">
-            <div class="usa-alert-body">
-                <h3 class="usa-alert-heading">Warning</h3>
-                <p class="usa-alert-text">Javascript is required to view the interactive water-level graph.</p>
+        <div class="usa-alert usa-alert--warning">
+            <div class="usa-alert__body">
+                <h3 class="usa-alert__heading">Warning</h3>
+                <p class="usa-alert__text">Javascript is required to view the interactive water-level graph.</p>
             </div>
         </div>
     </noscript>
@@ -54,7 +54,7 @@
                         <input class="inputRadioButtonTab" type="radio" name="construction-type" value="casings"
                                id="casings">
                         <label class="labelRadioButtonTab barSelect" for="casings">Casings</label>
-                        <table class="usa-table usa-table-borderless construction-table">
+                        <table class="usa-table usa-table--borderless construction-table">
                             <thead>
                             <tr>
                                 <th scope="col"></th>
@@ -101,7 +101,7 @@
                         <p>No lithology data is available</p>
                     {% else %}
 
-                        <table class="usa-table usa-table-borderless lithology-table">
+                        <table class="usa-table usa-table--borderless lithology-table">
                             <thead>
                                 <tr>
                                     <th scope="col">Depth</th>
@@ -130,10 +130,22 @@
 {% macro WaterLevelTable(agency_code, site_no) -%}
     <li class="ngwmn-component" data-component="water-level-table" data-site-id="{{ site_no }}"
         data-agency-code="{{ agency_code }}">
-        <button class="usa-accordion-button" aria-expanded="false" aria-controls="water-levels-div">
+        <button class="usa-accordion__button" aria-expanded="false" aria-controls="water-levels-div">
             Water Levels
         </button>
-        <div id="water-levels-div" class="usa-accordion-content">
+        <div id="water-levels-div" class="usa-accordion__content">
         </div>
     </li>
+{%- endmacro %}
+
+{% macro MedianWaterLevelTable(agency_code, site_no) -%}
+<ul class="usa-accordion" stye="padding-left:40px">
+	<li class="ngwmn-component" data-component="median-water-level-table" data-site-id="{{ site_no }}" data-agency-code="{{ agency_code }}">
+	    <button class="usa-accordion__button" aria-expanded="false" aria-controls="median-water-levels-div">
+	        Median Water Levels
+	    </button>
+	    <div id="median-water-levels-div" class="usa-accordion__content">
+	    </div>
+	</li>
+</ul>
 {%- endmacro %}

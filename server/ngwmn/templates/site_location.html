@@ -39,20 +39,21 @@
             <div class="desktop:grid-col-6">
                 {{ components.Graph('water-levels', feature.AGENCY_CD, feature.SITE_NO) }}
             </div>
-            <div class="grid-col-2 desktop:grid-col-1">
+            <div class="grid-col-12 mobile-lg:grid-col-5 desktop:grid-col-3 desktop-lg:grid-col-2">
+                <p class="well-diagram-title">Well Construction</p>
                 {{ components.Graph('construction', feature.AGENCY_CD, feature.SITE_NO) }}
             </div>
-            <div class="grid-col-10 desktop:grid-col-5">
+            <div class="grid-col-12 mobile-lg:grid-col-7 desktop:grid-col-3 desktop-lg:grid-col-4">
                 {{ components.WellLog(feature.AGENCY_CD, feature.SITE_NO, well_log) }}
             </div>
         </div>
         <ul class="usa-accordion">
             <li>
-                <button class="usa-accordion-button" aria-expanded="false" aria-controls="ts-a1">
+                <button class="usa-accordion__button" aria-expanded="false" aria-controls="ts-a1">
                     Summary
                 </button>
-                <div id="ts-a1" class="usa-accordion-content">
-                    <table class="usa-table usa-table-borderless">
+                <div id="ts-a1" class="usa-accordion__content">
+                    <table class="usa-table usa-table--borderless">
                         <tbody>
                             <tr>
                                 <th scope="row">Agency</th>
@@ -77,6 +78,24 @@
                             <tr>
                                 <th scope="row">Well Depth</th>
                                 <td>{{ _(feature.WELL_DEPTH) }} {{ feature.WELL_DEPTH_UNITS_NM }}</td>
+                            </tr>
+                            </tr>
+                                <th scope="row">Elevation {% if well_log.elevation %}({{ well_log.elevation.scheme }}){% endif %}</th>
+                                <td>{% if well_log.elevation %}
+                                    {{ well_log.elevation.value }} {{ well_log.elevation.unit }}
+                                {% endif %}</td>
+                            <tr>
+                            </tr>
+                                <th scope="row">Latitude</th>
+                                <td>{% if well_log.location %}
+                                    {{ well_log.location.latitude }}
+                                {% endif %}</td>
+                            <tr>
+                            </tr>
+                                <th scope="row">Longitude</th>
+                                <td>{% if well_log.location %}
+                                    {{ well_log.location.longitude }}
+                                {% endif %}</td>
                             </tr>
                             <tr>
                                 <th scope="row">Local Aquifer Name</th>
@@ -111,11 +130,11 @@
                 </div>
             </li>
             <li>
-                <button class="usa-accordion-button" aria-expanded="false" aria-controls="ts-a2">
+                <button class="usa-accordion__button" aria-expanded="false" aria-controls="ts-a2">
                     Water Quality
                 </button>
-                <div id="ts-a2" class="usa-accordion-content">
-                    <table class="usa-table usa-table-borderless">
+                <div id="ts-a2" class="usa-accordion__content">
+                    <table class="usa-table usa-table--borderless">
                         <thead>
                             <th scope="col">Activity Start Date</th>
                             <th scope="col">Activity Start Time</th>
@@ -159,57 +178,22 @@
                     </table>
                 </div>
             </li>
-            <li>
-                <button class="usa-accordion-button" aria-expanded="false" aria-controls="ts-a3">
-                    Well Log
-                </button>
-                <div id="ts-a3" class="usa-accordion-content">
-                    <table class="usa-table usa-table-borderless">
-                        <caption>Basic Well Information</caption>
-                        <tbody>
-                            <tr>
-                                <th scope="row">Well depth</th>
-                                <td>{% if well_log.well_depth %}
-                                    {{ well_log.well_depth.value }} {{ well_log.well_depth.unit }}
-                                {% endif %}</td>
-                            </tr>
-                                <th scope="row">Elevation {% if well_log.elevation %}({{ well_log.elevation.scheme }}){% endif %}</th>
-                                <td>{% if well_log.elevation %}
-                                    {{ well_log.elevation.value }} {{ well_log.elevation.unit }}
-                                {% endif %}</td>
-                            <tr>
-                            </tr>
-                                <th scope="row">Latitude</th>
-                                <td>{% if well_log.location %}
-                                    {{ well_log.location.latitude }}
-                                {% endif %}</td>
-                            <tr>
-                            </tr>
-                                <th scope="row">Longitude</th>
-                                <td>{% if well_log.location %}
-                                    {{ well_log.location.longitude }}
-                                {% endif %}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </li>
 
             {{ components.WaterLevelTable(feature.AGENCY_CD, feature.SITE_NO) }}
 
             <li>
-                <button class="usa-accordion-button" aria-expanded="false" aria-controls="ts-a4">
+                <button class="usa-accordion__button" aria-expanded="false" aria-controls="ts-a4">
                     Water Level Statistics
                 </button>
-                <div id="ts-a4" class="usa-accordion-content">
+                <div id="ts-a4" class="usa-accordion__content">
 
-                    <table id="overall-stats" class="usa-table usa-table-borderless water-stats-table">
+                    <table id="overall-stats" class="usa-table usa-table--borderless water-stats-table">
                         <caption>Overall Water Level Statistics ({{ stats.overall.alt_datum }})</caption>
                         <thead>
                             <tr class="light">
-                                <th>Highest Water Level</th>
-                                <th>Median Water Level</th>
                                 <th>Lowest Water Level</th>
+                                <th>Median Water Level</th>
+                                <th>Highest Water Level</th>
                                 <th>First Measurement Date</th>
                                 <th>Last Measurement Date</th>
                                 <th>Number of Measurements</th>
@@ -238,7 +222,7 @@
                         </tfoot>
                     </table>
                     {% if stats.monthly|length > 0 %}
-                    <table id="monthly-stats" class="usa-table usa-table-borderless water-stats-table">
+                    <table id="monthly-stats" class="usa-table usa-table--borderless water-stats-table">
                         <caption>Monthly Water Level Statistics ({{ stats.overall.alt_datum }})</caption>
                         <thead>
                             <tr class="light">
@@ -277,6 +261,8 @@
                         </tfoot>
                     </table>
                     {% endif %}
+
+                {{ components.MedianWaterLevelTable(feature.AGENCY_CD, feature.SITE_NO) }}
                 </div>
 
             </li>
@@ -286,7 +272,7 @@
         <h4>Data Provider</h4>
         <figure class="provider-logo">
             <img src="{{ logo_agency_id | asset_url }}" alt="logo for {{ feature.AGENCY_NM }}" height="50">
-            <figcaption>{{ feature.AGENCY_NM }}</a></figcaption>
+            <figcaption>{{ feature.AGENCY_NM }}</figcaption>
         </figure>
     </div>
 {% endblock %}

@@ -11,7 +11,7 @@ import { setSelectedConstructionId } from 'ngwmn/components/well-log/state/index
  * @param  {Object} element Element data to render
  * @param  {Number} index   Index of this element
  */
-const drawElement = function (store, elem, opts, element, index) {
+const drawElement = function (store, elem, opts, element, index=0) {
     elem.append('g')
         .attr('id', `${element.type}-${index}`)
         .classed(element.type, true)
@@ -21,9 +21,14 @@ const drawElement = function (store, elem, opts, element, index) {
                 .attr('x', element.left.x)
                 .attr('y', element.left.y1)
                 .attr('width', element.right.x - element.left.x)
-                .attr('height', element.right.y2 - element.right.y1)
+                // if an element is less than one pixel in height, make that element one pixel in height
+                .attr('height', element.right.y2 - element.right.y1 < 1 ? 1 : element.right.y2 - element.right.y1)
                 .call(callIf(element.type === 'screen', (rect) => {
                     rect.attr('fill', `url(#screen-pattern-${index % 2})`);
+                }))
+                .call(callIf(element.type === 'borehole', (rect) => {
+                    rect.attr('fill', '#995500')
+                        .attr('opacity', '0.25');
                 }))
                 .append('title')
                     .text(element.title);
@@ -50,31 +55,56 @@ const drawWaterLevel = function (elem, elements, cursorWaterLevel) {
     if (!cursorWaterLevel) {
         return;
     }
+    // when there are no construction elements, water level height is wrong
+    if (elements && elements.length === 1) {
+        let borehole = elements[0]; // the first element should be the borehole
+        cursorWaterLevel.height = borehole.left.y2 - cursorWaterLevel.y;
+    }
 
     const container = elem.append('g');
 
-    container
-        .append('clipPath')
-            .attr('id', 'water-level-path')
-            .call(path => {
-                for (const element of elements) {
-                    path.append('rect')
-                        .attr('x', element.left.x)
-                        .attr('y', element.left.y1)
-                        .attr('width', element.right.x - element.left.x)
-                        .attr('height', element.right.y2 - element.right.y1);
-                }
-            });
-    container
-        .append('rect')
-            .attr('id', 'water-level')
-            .attr('clip-path', 'url(#water-level-path)')
-            .attr('x', cursorWaterLevel.x)
-            .attr('y', cursorWaterLevel.y)
-            .attr('width', cursorWaterLevel.width)
-            .attr('height', cursorWaterLevel.height)
-            .attr('fill', 'lightblue')
-            .attr('fill-opacity', '0.85');
+    // create a clip path that is the same geometry as the well-construction
+    container.append('clipPath')
+        .attr('id', 'water-level-path')
+        .call(path => {
+            for (const element of elements) {
+                path.append('rect')
+                    .attr('x', element.left.x)
+                    .attr('y', element.left.y1)
+                    .attr('width', element.right.x - element.left.x)
+                    .attr('height', element.right.y2 - element.right.y1);
+            }
+        });
+
+    container.append('rect')
+        .attr('id', 'water-level')
+        .attr('clip-path', 'url(#water-level-path)')
+        .attr('x', cursorWaterLevel.x)
+        .attr('y', cursorWaterLevel.y)
+        .attr('width', cursorWaterLevel.width)
+        .attr('height', cursorWaterLevel.height)
+        .attr('fill', 'lightblue')
+        .attr('fill-opacity', '0.85');
+
+    // draw a line representing the top of the water level rectangle inside the casing
+    container.append('line')
+        .attr('x1', cursorWaterLevel.x)
+        .attr('y1', cursorWaterLevel.y)
+        .attr('x2', cursorWaterLevel.x + cursorWaterLevel.width)
+        .attr('y2', cursorWaterLevel.y)
+        .attr('clip-path', 'url(#water-level-path)')
+        .classed('line-segment', true);
+
+    // width of one side of the water level triangle
+    // the larger the number, the smaller the overall size of the triangle
+    const sideWidth = cursorWaterLevel.width / 8;
+
+    // draw an upside-down triangle polygon
+    container.append('polygon')
+        .attr('points', `${cursorWaterLevel.x + cursorWaterLevel.width / 2 - sideWidth / 2},${cursorWaterLevel.y - sideWidth} `
+                        + `${cursorWaterLevel.x + sideWidth / 2 + cursorWaterLevel.width / 2},${cursorWaterLevel.y - sideWidth} `
+                        + `${cursorWaterLevel.x + cursorWaterLevel.width / 2},${cursorWaterLevel.y}`)
+        .classed('water-level-triangle', true);
 };
 
 const drawPatterns = function (elem) {
@@ -105,6 +135,7 @@ const drawPatterns = function (elem) {
         });
 };
 
+
 export default function (elem, {elements, cursorWaterLevel}, store, opts, container) {
     // Get/create container for construction elements
     container = container || elem
@@ -115,7 +146,6 @@ export default function (elem, {elements, cursorWaterLevel}, store, opts, contai
     // Remove any previously drawn children
     container.selectAll('*').remove();
 
-    // Draw the current cursor water level inside the well chamber
     drawWaterLevel(container, elements, cursorWaterLevel);
 
     // Draw each construction element

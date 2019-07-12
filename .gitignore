@@ -1,5 +1,7 @@
 __pycache__/
 .pytest_cache/
+.project
+.pydevproject
 assets/coverage/
 assets/dist/
 assets/node_modules/
