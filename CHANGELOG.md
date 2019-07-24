@@ -6,9 +6,36 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased][]
 
+## [0.7.0][]
+### Fixed
+-   Updated the statistics service URL to match recently created public mapping.
+
+## [0.6.0][]
+### Added
+-   Added borehole rendering, especially useful for sites w/o construction information
+-   Added y axes to well diagram for depth and elevation
+
+### Fixed
+-   Added 'utf-8' decoding parameter to open method for lithology parser to prevent failure during Jenkins build
+-   Fixed (swapped) column header labels for Min/Max overall water level.
+-   Fixed median monthly values url
+
+### Changed
+-   Changed pagination to include start and end points
+
+### Fixed
+-   Added 'utf-8' decoding parameter to open method for lithology parser to prevent failure during Jenkins build
+-   Fixed issue preventing auto refresh on save when set to watch
+-   Altered numerous USWDS related class names to maintain compatibility with USWDS 2.0.0 Beta 6
+
+## [0.5.0][]
+### Added
+-   Added FLDEP Logo to images/provider_logos
+-   Added visualization of to the well diagram of elements that have zero total length
+
 ## [0.4.0][]
 ### Added
--   Added Median Montly Statistical Water Levels section
+-   Added Median Monthly Statistical Water Levels section
 
 ### Fixed
 -   Fixed issue with 'nested' monitoring locations showing incorrect data
@@ -70,7 +97,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 -   Using headless Firefox to run tests for CI
 -   Using node 10.13.0
 
-[Unreleased]: https://github.com/ACWI-SOGW/ngwmn-ui/compare/ngwmn-ui-0.4.0...master
+[Unreleased]: https://github.com/ACWI-SOGW/ngwmn-ui/compare/ngwmn-ui-0.7.0...master
+[0.7.0]: https://github.com/ACWI-SOGW/ngwmn-ui/compare/ngwmn-ui-0.6.0...ngwmn-ui-0.7.0
+[0.6.0]: https://github.com/ACWI-SOGW/ngwmn-ui/compare/ngwmn-ui-0.5.0...ngwmn-ui-0.6.0
+[0.5.0]: https://github.com/ACWI-SOGW/ngwmn-ui/compare/ngwmn-ui-0.4.0...ngwmn-ui-0.5.0
 [0.4.0]: https://github.com/ACWI-SOGW/ngwmn-ui/compare/ngwmn-ui-0.3.0...ngwmn-ui-0.4.0
 [0.3.0]: https://github.com/ACWI-SOGW/ngwmn-ui/compare/ngwmn-ui-0.2.0...ngwmn-ui-0.3.0
 [0.2.0]: https://github.com/ACWI-SOGW/ngwmn-ui/compare/ngwmn-ui-0.1.0...ngwmn-ui-0.2.0

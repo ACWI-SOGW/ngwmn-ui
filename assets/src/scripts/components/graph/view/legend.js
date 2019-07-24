@@ -59,7 +59,7 @@ export default function (elem, store, opts) {
                 span.append('input')
                     .attr('id', `show-lithology-${opts.id}`)
                     .attr('type', 'checkbox')
-                    .classed('usa-checkbox-input', true)
+                    .classed('usa-checkbox__input', true)
                     .call(link(store, (input, visibility) => {
                         input.property('checked', visibility);
                     }, getLithologyVisibility(opts.id)))
@@ -67,7 +67,7 @@ export default function (elem, store, opts) {
                         store.dispatch(setLithologyVisibility(opts.id, this.checked));
                     });
                 span.append('label')
-                    .classed('usa-checkbox-label', true)
+                    .classed('usa-checkbox__label', true)
                     .attr('for', `show-lithology-${opts.id}`)
                     .text('Show lithology');
             });

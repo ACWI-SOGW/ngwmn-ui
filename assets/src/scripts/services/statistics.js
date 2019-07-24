@@ -1,4 +1,5 @@
 import { post } from '../lib/ajax';
+import config from 'ngwmn/config';
 
 // median water level URL
 const MWL_URL = `${window.CONFIG.STATS_SERVICE_ROOT}/statistics/calculate`;

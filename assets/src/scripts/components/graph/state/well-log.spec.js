@@ -54,6 +54,7 @@ describe('graph component well log state', () => {
     });
 
     describe('getWellLogEntriesExtentY', () => {
+        const wellDepth = 3;
         const logEntries = [{
             shape: {
                 coordinates: {
@@ -65,21 +66,21 @@ describe('graph component well log state', () => {
             shape: {
                 coordinates: {
                     start: '2',
-                    end: '3'
+                    end: '4'
                 }
             }
         }];
 
         it('works', () => {
-            expect(getWellLogEntriesExtentY({}).resultFunc(logEntries)).toEqual([1, 3]);
+            expect(getWellLogEntriesExtentY({}).resultFunc(logEntries,wellDepth)).toEqual([1, 4]);
         });
 
         it('works with empty log', () => {
-            expect(getWellLogEntriesExtentY({}).resultFunc([])).toEqual([0, 0]);
+            expect(getWellLogEntriesExtentY({}).resultFunc([],wellDepth)).toEqual([0, 3]);
         });
 
         it('works with mock state', () => {
-            expect(getWellLogEntriesExtentY(mockOpts)(getMockStore().getState())).not.toBe(null);
+            expect(getWellLogEntriesExtentY(mockOpts)(getMockStore().getState(),wellDepth)).not.toBe(null);
         });
     });
 
@@ -203,6 +204,12 @@ describe('graph component well log state', () => {
     });
 
     describe('getConstructionElements', () => {
+        const graphSize = {
+            width:100,
+            height:500
+        };
+        const wellDepth = 201;
+
         const elements = [{
             id: 'screen-0',
             type: 'screen',
@@ -238,6 +245,15 @@ describe('graph component well log state', () => {
                     end: 100
                 }
             }
+        }, {
+             id: 'screen-3',
+            type: 'screen',
+            position: {
+                coordinates: {
+                    start: 201,
+                    end: 201
+                }
+            }
         }];
 
         it('returns correct data properly sorted', () => {
@@ -245,8 +261,41 @@ describe('graph component well log state', () => {
                 elements,
                 scaleLinear(),
                 scaleLinear(),
-                'screen-0'
+                'screen-0',
+                wellDepth,
+                graphSize,
             )).toEqual([{
+                title: 'borehole',
+                type: 'borehole',
+                thickness: 1,
+                left: {
+                    x:   -6,
+                    y1:  10,
+                    y2: 201
+                },
+                right: {
+                    x:    6,
+                    y1:  10,
+                    y2: 201
+                }
+            }, {
+                id: 'screen-3',
+                isSelected: false,
+                type: 'screen',
+                radius: null,
+                title: 'Screen, unknown diameter, 201 - 201 undefined depth',
+                thickness: 0.5,
+                left: {
+                    x: -6,
+                    y1: 201,
+                    y2: 201
+                },
+                right: {
+                    x: 6,
+                    y1: 201,
+                    y2: 201
+                }
+            }, {
                 id: 'screen-0',
                 isSelected: true,
                 type: 'screen',

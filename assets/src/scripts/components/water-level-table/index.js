@@ -44,7 +44,11 @@ const drawTableBody = function(table, waterLevels, tbody) {
         valueNames: valueNames,
         item: `<tr>${item}</tr>`,
         page: 30,
-        pagination: true
+        pagination: [{
+            left: 1,
+            innerWindow: 2,
+            right: 1
+        }]
     };
     new List('water-levels-div', options, samples);
 
