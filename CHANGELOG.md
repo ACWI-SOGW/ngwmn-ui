@@ -5,7 +5,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased][]
-### Added 
+### Added
+
+## [0.8.0][]
 -   Added new config variable STATS_SERVICE_ROOT to distinguish between the base NGWMN service and
 the statistics service.
 
@@ -100,7 +102,8 @@ the statistics service.
 -   Using headless Firefox to run tests for CI
 -   Using node 10.13.0
 
-[Unreleased]: https://github.com/ACWI-SOGW/ngwmn-ui/compare/ngwmn-ui-0.7.0...master
+[Unreleased]: https://github.com/ACWI-SOGW/ngwmn-ui/compare/ngwmn-ui-0.9.0...master
+[0.8.0]: https://github.com/ACWI-SOGW/ngwmn-ui/compare/ngwmn-ui-0.7.0...ngwmn-ui-0.8.0
 [0.7.0]: https://github.com/ACWI-SOGW/ngwmn-ui/compare/ngwmn-ui-0.6.0...ngwmn-ui-0.7.0
 [0.6.0]: https://github.com/ACWI-SOGW/ngwmn-ui/compare/ngwmn-ui-0.5.0...ngwmn-ui-0.6.0
 [0.5.0]: https://github.com/ACWI-SOGW/ngwmn-ui/compare/ngwmn-ui-0.4.0...ngwmn-ui-0.5.0
