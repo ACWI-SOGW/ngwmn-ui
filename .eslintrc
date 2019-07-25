@@ -32,6 +32,7 @@
     "document": true,
     "process": true,
     "XMLHttpRequest": true,
-    "window": true
+    "window": true,
+    "config": true
   }
 }
