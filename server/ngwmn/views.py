@@ -9,7 +9,7 @@ from . import __version__, app
 from .services.ngwmn import get_features, get_water_quality, get_well_log, get_statistics, get_providers, get_sites
 from .services.confluence import (
     pull_feed, confluence_url, MAIN_CONTENT, SITE_SELECTION_CONTENT, DATA_COLLECTION_CONTENT, DATA_MANAGEMENT_CONTENT,
-    OTHER_AGENCY_INFO_CONTENT)
+    OTHER_AGENCY_INFO_CONTENT, STATISTICS_METHODS_URL)
 from .string_utils import generate_subtitle
 
 
@@ -43,6 +43,12 @@ def version():
         'version': __version__
     })
 
+@app.route('/statistics-methods', methods=['GET'])
+def statistics_methods():
+    """
+    NGWMN statistics methods view
+    """
+    return render_template('statistics_methods.html', stats_methods=pull_feed(STATISTICS_METHODS_URL))
 
 @app.route('/provider/', methods=['GET'])
 def providers():
