@@ -3,6 +3,6 @@
 {% block content %}
     <div class="usa-width-one-whole">
         <h1>Testing new NGWMN Statistics Methods Page!</h1>
-        <h2>{{ stats_methods }}</h2>
+        {{ stats_methods | safe }}
     </div>
 {% endblock content %}
