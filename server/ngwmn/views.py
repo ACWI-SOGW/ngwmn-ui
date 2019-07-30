@@ -43,12 +43,14 @@ def version():
         'version': __version__
     })
 
-@app.route('/statistics-methods', methods=['GET'])
+
+@app.route('/statistics-methods/', methods=['GET'])
 def statistics_methods():
     """
     NGWMN statistics methods view
     """
     return render_template('statistics_methods.html', stats_methods=pull_feed(STATISTICS_METHODS_URL))
+
 
 @app.route('/provider/', methods=['GET'])
 def providers():

@@ -47,7 +47,9 @@ SITE_SELECTION_CONTENT = 'siteselect'
 DATA_COLLECTION_CONTENT = 'datacollection'
 DATA_MANAGEMENT_CONTENT = 'datamanagement'
 OTHER_AGENCY_INFO_CONTENT = 'otherinfo'
-STATISTICS_METHODS_URL = 'https://my.usgs.gov/confluence/createrssfeed.action?types=page&spaces=GWDataPortal&title=NGWMN+Statistics+Methods&labelString=ngwmn-stat-meth&excludedSpaceKeys%3D&sort=modified&maxResults=10&timeSpan=5000&showContent=true&confirm=Create+RSS+Feed'
+STATISTICS_METHODS_URL = 'https://my.usgs.gov/confluence/createrssfeed.action?types=page&spaces=GWDataPortal&title' \
+                         '=NGWMN+Statistics+Methods&labelString=ngwmn-stat-meth&excludedSpaceKeys%3D&sort=modified' \
+                         '&maxResults=10&timeSpan=5000&showContent=true&confirm=Create+RSS+Feed '
 
 
 def confluence_url(agency_cd, content_type):
