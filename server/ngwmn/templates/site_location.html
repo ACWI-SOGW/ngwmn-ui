@@ -186,7 +186,14 @@
                     Water Level Statistics
                 </button>
                 <div id="ts-a4" class="usa-accordion__content">
-
+                    <table id="stats-methods" class="usa-table usa-table--borderless water-stats-table">
+                        <tbody>
+                            <tr>
+                                <th scope="row">How do we calculate statistics?</th>
+                                <td><a href="{{ url_for('statistics_methods') }}">Link</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
                     <table id="overall-stats" class="usa-table usa-table--borderless water-stats-table">
                         <caption>Overall Water Level Statistics ({{ stats.overall.alt_datum }})</caption>
                         <thead>
