@@ -534,6 +534,15 @@ def convert_keys_and_booleans(dictionary):
     return lower_case
 
 
+def replace_null_values(dictionary, replacement_value):
+    print (dictionary)
+    if dictionary is not None and len(dictionary) == 0:
+        return
+    for key in dictionary:
+        if dictionary[key] in ('null', 'UNKNOWN'):
+            dictionary[key] = replacement_value
+
+
 def get_statistics(agency_cd, site_no):
     """
     Call ngwmn_cache for site statistics data.
@@ -542,6 +551,9 @@ def get_statistics(agency_cd, site_no):
     :param site_no: alphanumeric site number
     :returns overall and monthly statistics
     """
+
+    substitution = '--'
+
     # handle to potential fetch fail with default
     stats = {
         'overall': {
@@ -552,7 +564,9 @@ def get_statistics(agency_cd, site_no):
     }
 
     overall = get_statistic(agency_cd, site_no, 'wl-overall')
+
     if overall.get('is_fetched'):
+        replace_null_values(overall, substitution)
         stats['overall'] = overall
         site_info = get_statistic(agency_cd, site_no, 'site-info')
         alt_datum_cd = ''
@@ -570,6 +584,8 @@ def get_statistics(agency_cd, site_no):
                         month_stats = monthly[str(month_num)]
                         month_stats['month'] = month_abbr
                         stats['monthly'].append(month_stats)
+                for month in stats['monthly']:
+                    replace_null_values(month, substitution)
 
         if overall.get('mediation', '') == 'BelowLand':
             stats['overall']['alt_datum'] = 'Depth to water, feet below land surface'
