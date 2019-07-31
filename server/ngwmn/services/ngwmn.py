@@ -535,11 +535,10 @@ def convert_keys_and_booleans(dictionary):
 
 
 def replace_null_values(dictionary, replacement_value):
-    print (dictionary)
     if dictionary is not None and len(dictionary) == 0:
         return
     for key in dictionary:
-        if dictionary[key] in ('null', 'UNKNOWN'):
+        if dictionary[key] in ('null', 'UNKNOWN', None):
             dictionary[key] = replacement_value
 
 
@@ -564,7 +563,6 @@ def get_statistics(agency_cd, site_no):
     }
 
     overall = get_statistic(agency_cd, site_no, 'wl-overall')
-
     if overall.get('is_fetched'):
         replace_null_values(overall, substitution)
         stats['overall'] = overall

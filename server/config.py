@@ -4,8 +4,8 @@ Application configuration settings
 """
 DEBUG = False
 
-SERVICE_ROOT = 'http://cida-eros-ngwmndev.er.usgs.gov:8080'
-STATS_SERVICE_ROOT = 'http://cida-eros-ngwmndev.er.usgs.gov:8080/statistics'
+SERVICE_ROOT = 'https://cida.usgs.gov'
+STATS_SERVICE_ROOT = 'http://cida.usgs.gov/ngwmn_statistics'
 
 
 CONFLUENCE_URL = 'https://my.usgs.gov/confluence/'
