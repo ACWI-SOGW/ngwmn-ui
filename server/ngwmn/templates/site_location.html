@@ -211,11 +211,7 @@
                         <tbody>
                             <tr>
                                 <td>{{ stats.overall.min_value }}</td>
-                                {% if stats.overall.median %}
-                                <td>{{ stats.overall.median }}</td>
-                                {% elif stats.overall.median_value %}
                                 <td>{{ stats.overall.median_value }}</td>
-                                {% endif %}
                                 <td>{{ stats.overall.max_value }}</td>
                                 <td>{{ stats.overall.min_date }}</td>
                                 <td>{{ stats.overall.max_date }}</td>
