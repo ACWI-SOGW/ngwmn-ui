@@ -538,7 +538,7 @@ def replace_null_values(dictionary, replacement_value):
     if dictionary is not None and len(dictionary) == 0:
         return
     for key in dictionary:
-        if dictionary[key] in ('null', 'UNKNOWN', None):
+        if dictionary[key] in ('null', 'UNKNOWN', None, 'None'):
             dictionary[key] = replacement_value
 
 
