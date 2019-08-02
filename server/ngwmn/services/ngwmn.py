@@ -535,7 +535,14 @@ def convert_keys_and_booleans(dictionary):
 
 
 def replace_null_values(dictionary, replacement_value):
-    if dictionary is not None and len(dictionary) == 0:
+    """
+    This is a utility method to replace null or empty values with a replacement value
+
+    :param dictionary: A dict of values
+    :param replacement_value: a value to be used as a substitute for nulls/empties, such as "--"
+    :return: a dict with null/empty values replaced
+    """
+    if dictionary is not None and not dictionary:
         return
     for key in dictionary:
         if dictionary[key] in ('null', 'UNKNOWN', 'unknown', None, 'None'):
