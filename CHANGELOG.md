@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased][]
 ### Added
+-   Added stats method page and a link to it from the site pages waterlevel stats accordion.
+-   Added a link to the stats methods wiki in confluence.
+-   Added "--" in place of null/empty values in the overall and monthly stats tables.
+-   Monthly stats table headings are always displayed even if there is no monthly data.
 
 ## [0.8.0][]
 -   Added new config variable STATS_SERVICE_ROOT to distinguish between the base NGWMN service and

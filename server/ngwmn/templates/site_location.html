@@ -186,7 +186,13 @@
                     Water Level Statistics
                 </button>
                 <div id="ts-a4" class="usa-accordion__content">
-
+                    <table id="stats-methods" class="usa-table usa-table--borderless water-stats-table">
+                        <tbody>
+                            <tr>
+                                <th scope="row">How do we <a href="{{ url_for('statistics_methods') }}">calculate statistics?</a></th>
+                            </tr>
+                        </tbody>
+                    </table>
                     <table id="overall-stats" class="usa-table usa-table--borderless water-stats-table">
                         <caption>Overall Water Level Statistics ({{ stats.overall.alt_datum }})</caption>
                         <thead>
@@ -221,7 +227,6 @@
                             </tr>
                         </tfoot>
                     </table>
-                    {% if stats.monthly|length > 0 %}
                     <table id="monthly-stats" class="usa-table usa-table--borderless water-stats-table">
                         <caption>Monthly Water Level Statistics ({{ stats.overall.alt_datum }})</caption>
                         <thead>
@@ -238,6 +243,7 @@
                                 <th>Years of Record</th>
                             </tr>
                         </thead>
+                        {% if stats.monthly|length > 0 %}
                         <tbody>
                             {% for stat in stats.monthly %}
                                 <tr>
@@ -259,8 +265,9 @@
                                 <td colspan="10">Statistics Calculated {{ stats.overall.calc_date }}</td>
                             </tr>
                         </tfoot>
+                        {% endif %}
                     </table>
-                    {% endif %}
+
 
                 {{ components.MedianWaterLevelTable(feature.AGENCY_CD, feature.SITE_NO) }}
                 </div>
