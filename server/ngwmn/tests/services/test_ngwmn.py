@@ -235,7 +235,7 @@ class TestGetStatistics(TestCase):
                          'When dictionary contains ''None'' then value should be replaced by substitution.')
         self.assertEqual(None, test_dictionary['2'], 'The original value at key 2 is unchanged')
 
-    def test_replace_null_values_undefined(self):
+    def test_replace_null_values_None(self):
         # input
         test_dictionary = None
         test_substitution = None
