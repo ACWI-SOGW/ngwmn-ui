@@ -542,11 +542,17 @@ def replace_null_values(dictionary, replacement_value):
     :param replacement_value: a value to be used as a substitute for nulls/empties, such as "--"
     :return: a dict with null/empty values replaced
     """
-    if dictionary is not None and not dictionary:
-        return
+    clean_dictionary = {}
+    if dictionary is None and not dictionary:
+        return clean_dictionary
+
     for key in dictionary:
         if dictionary[key] in ('null', 'UNKNOWN', 'unknown', None, 'None'):
-            dictionary[key] = replacement_value
+            clean_dictionary[key] = replacement_value
+        else:
+            clean_dictionary[key] = dictionary[key]
+
+    return clean_dictionary
 
 
 def get_statistics(agency_cd, site_no):
@@ -569,30 +575,30 @@ def get_statistics(agency_cd, site_no):
         'monthly': []
     }
 
-    overall = get_statistic(agency_cd, site_no, 'wl-overall')
-    if overall.get('is_fetched'):
-        replace_null_values(overall, substitution)
-        stats['overall'] = overall
+    overall_statistics = get_statistic(agency_cd, site_no, 'wl-overall')
+    if overall_statistics.get('is_fetched'):
+        overall_statistics = replace_null_values(overall_statistics, substitution)
+        stats['overall'] = overall_statistics
         site_info = get_statistic(agency_cd, site_no, 'site-info')
         alt_datum_cd = ''
         if site_info.get('is_fetched'):
             alt_datum_cd = site_info['altdatumcd']
 
-        if overall.get('is_ranked'):
-            monthly = get_statistic(agency_cd, site_no, 'wl-monthly')
-            if monthly.get('is_fetched'):
+        if overall_statistics.get('is_ranked'):
+            monthly_statistics = get_statistic(agency_cd, site_no, 'wl-monthly')
+            if monthly_statistics.get('is_fetched'):
                 stats['monthly'] = []
-                month_num = 0
+                month_int = 0
                 for month_abbr in calendar.month_abbr[1:]:
-                    month_num += 1
-                    if str(month_num) in monthly:
-                        month_stats = monthly[str(month_num)]
+                    month_int += 1
+                    month_num = str(month_int)
+                    if month_num in monthly_statistics:
+                        month_stats = monthly_statistics[month_num]
+                        month_stats = replace_null_values(month_stats, substitution)
                         month_stats['month'] = month_abbr
                         stats['monthly'].append(month_stats)
-                for month in stats['monthly']:
-                    replace_null_values(month, substitution)
 
-        if overall.get('mediation', '') == 'BelowLand':
+        if overall_statistics.get('mediation', '') == 'BelowLand':
             stats['overall']['alt_datum'] = 'Depth to water, feet below land surface'
         else:
             stats['overall']['alt_datum'] = 'Water level in feet relative to ' + alt_datum_cd
