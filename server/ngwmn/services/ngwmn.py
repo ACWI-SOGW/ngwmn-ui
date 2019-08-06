@@ -575,29 +575,30 @@ def get_statistics(agency_cd, site_no):
         'monthly': []
     }
 
-    overall = get_statistic(agency_cd, site_no, 'wl-overall')
-    if overall.get('is_fetched'):
-        overall = replace_null_values(overall, substitution)
-        stats['overall'] = overall
+    overall_statistics = get_statistic(agency_cd, site_no, 'wl-overall')
+    if overall_statistics.get('is_fetched'):
+        overall_statistics = replace_null_values(overall_statistics, substitution)
+        stats['overall'] = overall_statistics
         site_info = get_statistic(agency_cd, site_no, 'site-info')
         alt_datum_cd = ''
         if site_info.get('is_fetched'):
             alt_datum_cd = site_info['altdatumcd']
 
-        if overall.get('is_ranked'):
-            monthly = get_statistic(agency_cd, site_no, 'wl-monthly')
-            if monthly.get('is_fetched'):
+        if overall_statistics.get('is_ranked'):
+            monthly_statistics = get_statistic(agency_cd, site_no, 'wl-monthly')
+            if monthly_statistics.get('is_fetched'):
                 stats['monthly'] = []
                 month_int = 0
                 for month_abbr in calendar.month_abbr[1:]:
                     month_int += 1
                     month_num = str(month_int)
-                    if month_num in monthly:
-                        month_stats = replace_null_values(monthly[month_num], substitution)
+                    if month_num in monthly_statistics:
+                        month_stats = monthly_statistics[month_num]
+                        month_stats = replace_null_values(month_stats, substitution)
                         month_stats['month'] = month_abbr
                         stats['monthly'].append(month_stats)
 
-        if overall.get('mediation', '') == 'BelowLand':
+        if overall_statistics.get('mediation', '') == 'BelowLand':
             stats['overall']['alt_datum'] = 'Depth to water, feet below land surface'
         else:
             stats['overall']['alt_datum'] = 'Water level in feet relative to ' + alt_datum_cd
