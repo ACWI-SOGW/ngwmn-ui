@@ -543,7 +543,7 @@ def replace_null_values(dictionary, replacement_value):
     :return: a dict with null/empty values replaced
     """
     clean_dictionary = {}
-    if dictionary is not None and not dictionary:
+    if dictionary is None and not dictionary:
         return clean_dictionary
 
     for key in dictionary:

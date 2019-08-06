@@ -215,6 +215,35 @@ class TestGetStatistics(TestCase):
         self.assertEqual(overall['LATEST_VALUE'], stats['overall']['latest_value'], 'Expect the latest value.')
         self.assertEqual(overall['LATEST_PCTILE'], stats['overall']['latest_pctile'], 'Expect the latest percentile.')
 
+    def test_replace_null_values(self):
+        # input
+        test_dictionary = {'1':'value','2':None, '3':'UNKNOWN', '4': 'unknown', '5':'None'}
+        test_substitution = '--'
+
+        # actual
+        clean_dictionary = mock_ngwmn.replace_null_values(test_dictionary, test_substitution)
+
+        self.assertEqual(test_dictionary['1'], clean_dictionary['1'],
+                         'When dictionary contains valid value then value should is not replaced.')
+        self.assertEqual(test_substitution, clean_dictionary['2'],
+                         'When dictionary contains None then value should be replaced by substitution.')
+        self.assertEqual(test_substitution, clean_dictionary['3'],
+                         'When dictionary contains ''UNKNOWN'' then value should be replaced by substitution.')
+        self.assertEqual(test_substitution, clean_dictionary['4'],
+                         'When dictionary contains ''unknown'' then value should be replaced by substitution.')
+        self.assertEqual(test_substitution, clean_dictionary['5'],
+                         'When dictionary contains ''None'' then value should be replaced by substitution.')
+        self.assertEqual(None, test_dictionary['2'], 'The original value at key 2 is unchanged')
+
+    def test_replace_null_values_undefined(self):
+        # input
+        test_dictionary = None
+        test_substitution = None
+
+        # actual
+        clean_dictionary = mock_ngwmn.replace_null_values(test_dictionary, test_substitution)
+        self.assertEqual({}, clean_dictionary, 'When given nothing, an empty dictionary is returned.')
+
 
 class TestGetProviders(TestCase):
 
