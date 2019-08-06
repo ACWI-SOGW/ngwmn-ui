@@ -217,7 +217,7 @@ class TestGetStatistics(TestCase):
 
     def test_replace_null_values(self):
         # input
-        test_dictionary = {'1':'value','2':None, '3':'UNKNOWN', '4': 'unknown', '5':'None'}
+        test_dictionary = {'1':'value', '2':None, '3':'UNKNOWN', '4': 'unknown', '5':'None'}
         test_substitution = '--'
 
         # actual
