@@ -44,7 +44,7 @@ def version():
     })
 
 
-@app.route('/statistics-methods/', methods=['GET'])
+@app.route('/provider/statistics-methods/', methods=['GET'])
 def statistics_methods():
     """
     NGWMN statistics methods view

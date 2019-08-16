@@ -5,7 +5,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased][]
-### Added
+
+## [0.10.0][]
+-   Updated statistics-methods page to use provider url.
+
+## [0.9.0][]
 -   Added stats method page and a link to it from the site pages waterlevel stats accordion.
 -   Added a link to the stats methods wiki in confluence.
 -   Added "--" in place of null/empty values in the overall and monthly stats tables.
@@ -106,7 +110,9 @@ the statistics service.
 -   Using headless Firefox to run tests for CI
 -   Using node 10.13.0
 
-[Unreleased]: https://github.com/ACWI-SOGW/ngwmn-ui/compare/ngwmn-ui-0.9.0...master
+[Unreleased]: https://github.com/ACWI-SOGW/ngwmn-ui/compare/ngwmn-ui-0.11.0...master
+[0.10.0]: https://github.com/ACWI-SOGW/ngwmn-ui/compare/ngwmn-ui-0.9.0...ngwmn-ui-0.10.0
+[0.9.0]: https://github.com/ACWI-SOGW/ngwmn-ui/compare/ngwmn-ui-0.8.0...ngwmn-ui-0.9.0
 [0.8.0]: https://github.com/ACWI-SOGW/ngwmn-ui/compare/ngwmn-ui-0.7.0...ngwmn-ui-0.8.0
 [0.7.0]: https://github.com/ACWI-SOGW/ngwmn-ui/compare/ngwmn-ui-0.6.0...ngwmn-ui-0.7.0
 [0.6.0]: https://github.com/ACWI-SOGW/ngwmn-ui/compare/ngwmn-ui-0.5.0...ngwmn-ui-0.6.0
