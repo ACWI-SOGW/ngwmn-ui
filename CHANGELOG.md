@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 -   Added logo for NWNA and link to match logo with NWNA sites 
 -   Added logo for SRWMA and link to match logo with SRWMA sites
+-   Added link to provider page from provider logo on site page
 
 ## [0.10.0][]
 -   Updated statistics-methods page to use provider url.

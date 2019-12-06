@@ -272,7 +272,9 @@
     <div>
         <h4>Data Provider</h4>
         <figure class="provider-logo">
-            <img src="{{ logo_agency_id | asset_url }}" alt="logo for {{ feature.AGENCY_NM }}" height="50">
+            <a href="{{ url_for('provider', agency_cd=feature.AGENCY_CD) }}" target="_blank">
+                <img src="{{ logo_agency_id | asset_url }}" alt="logo for {{ feature.AGENCY_NM }}" height="50">
+            </a>
             <figcaption>{{ feature.AGENCY_NM }}</figcaption>
         </figure>
     </div>
