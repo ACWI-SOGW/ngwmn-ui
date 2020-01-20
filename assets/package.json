@@ -52,7 +52,7 @@
     "karma-firefox-launcher": "^1.1.0",
     "karma-jasmine": "^2.0.1",
     "karma-jasmine-ajax": "^0.1.13",
-    "karma-rollup-preprocessor": "^7.0.0",
+    "karma-rollup-preprocessor": "^7.0.3",
     "live-server": "^1.2.1",
     "node-sass": "^4.12.0",
     "nodemon": "^1.19.1",
