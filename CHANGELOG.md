@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased][]
 -   Added logo for NDEE to image folder
 
+## [0.12.0][]
+### Changed
+-   Removed mentions of OWI and ACWI
+
 ## [0.11.0][]
 ### Added
 -   Added logo for NWNA and link to match logo with NWNA sites 
