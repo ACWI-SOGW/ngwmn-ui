@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased][]
 -   Added logo for NDEE to image folder
+-   Added logo for CADWR to image folder
 
 ## [0.12.0][]
 ### Changed
