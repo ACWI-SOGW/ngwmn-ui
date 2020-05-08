@@ -5,6 +5,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased][]
+
+## [0.13.0][]
+### Changed
+-   Renamed NWNA logo to work correctly in UI
 -   Added logo for NDEE to image folder
 -   Added logo for CADWR to image folder
 
@@ -122,7 +126,8 @@ the statistics service.
 -   Using headless Firefox to run tests for CI
 -   Using node 10.13.0
 
-[Unreleased]: https://github.com/ACWI-SOGW/ngwmn-ui/compare/ngwmn-ui-0.11.0...master
+[Unreleased]: https://github.com/ACWI-SOGW/ngwmn-ui/compare/ngwmn-ui-0.12.0...master
+[0.12.0]: https://github.com/ACWI-SOGW/ngwmn-ui/compare/ngwmn-ui-0.11.0...ngwmn-ui-0.12.0
 [0.11.0]: https://github.com/ACWI-SOGW/ngwmn-ui/compare/ngwmn-ui-0.10.0...ngwmn-ui-0.11.0
 [0.10.0]: https://github.com/ACWI-SOGW/ngwmn-ui/compare/ngwmn-ui-0.9.0...ngwmn-ui-0.10.0
 [0.9.0]: https://github.com/ACWI-SOGW/ngwmn-ui/compare/ngwmn-ui-0.8.0...ngwmn-ui-0.9.0
