@@ -16,6 +16,7 @@
   ],
   "extends": "eslint:recommended",
   "rules": {
+    "array-bracket-spacing": ["error", "never"],
     "comma-dangle": [2,"never"],
     "linebreak-style": ["error", "unix"],
     "no-console": "off",
@@ -24,7 +25,9 @@
     "brace-style": [1,"1tbs",{}],
     "no-mixed-spaces-and-tabs": 2,
     "quotes": ["error", "single"],
-    "semi": ["error", "always"]
+    "semi": ["error", "always"],
+    "space-before-blocks": ["error", "always"],
+    "space-before-function-paren": ["error", "never"]
   },
   "globals": {
     "__dirname": true,

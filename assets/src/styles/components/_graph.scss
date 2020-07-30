@@ -4,230 +4,268 @@ $provisional-color: color('accent-warm-dark');
 $primary-darker: color('primary-darker');
 
 & {
-    width: 100%;
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1em;
+
+  & {
+    box-sizing: border-box;
+    position: relative;
+    // To maintain a fixed aspect ratio, this method may be used.
+    // 5:3 aspect ratio on this element (3 / 5)
+    //  padding-top: 60%;
+    // Set a fixed height
+    height: 30rem;
+
+    & > * {
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  // Style loading and error indicators
+  & {
+    // Center the indicators container
+    .indicators {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+
+      i {
+        opacity: .8;
+      }
+
+      .loading-indicator, .error-indicator {
+        display: none;
+      }
+    }
+
+    // Show loading-indicator when loading class is set on the component
+    &.loading {
+      .indicators {
+        .loading-indicator {
+          display: block;
+          width: auto;
+          text-align: center;
+          color: color('primary-light');
+        }
+      }
+    }
+
+    // Show error-indicator when has-error class is set on the component
+    &.has-error {
+      .indicators {
+        .error-indicator {
+          display: block;
+          width: auto;
+          text-align: center;
+          color: color('error');
+        }
+      }
+    }
+
+    .overlay {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      color: color('primary-light');
+      font-size: 1em;
+      padding: 2.75em;
+      @include at-media('mobile-lg') {
+        font-size: 1.25em;
+      }
+    }
+  }
+
+  // container for everything drawn by the graph component
+  .graph-container {
     display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 1em;
+    flex-direction: column;
+    flex-grow: 1;
 
-    & {
-        box-sizing: border-box;
-        position: relative;
-        // To maintain a fixed aspect ratio, this method may be used.
-        // 5:3 aspect ratio on this element (3 / 5)
-        //  padding-top: 60%;
-        // Set a fixed height
-        height: 30rem;
-        & > * {
-            position: absolute;
-            top: 0;
-            left: 0;
-            bottom: 0;
-            right: 0;
-            width: 100%;
-            height: 100%;
-        }
+    .tooltip {
+      text-align: right;
+      pointer-events: none;
+      background: rgba(255, 255, 255, 0.8);
+      color: $default-color;
+
+      .current-tooltip-text {
+        font-weight: bold;
+      }
+
+      color: $approved-color;
+
+      .provisional {
+        color: $provisional-color;
+      }
+
+      .compare-tooltip-text {
+        font-weight: normal
+      }
     }
 
-    // Style loading and error indicators
-    & {
-        // Center the indicators container
-        .indicators {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            justify-content: center;
-            i {
-                opacity: .8;
-            }
-            .loading-indicator, .error-indicator {
-                display: none;
-            }
-        }
-        // Show loading-indicator when loading class is set on the component
-        &.loading {
-            .indicators {
-                .loading-indicator {
-                    display: block;
-                    width: auto;
-                    text-align: center;
-                    color: color('primary-light');
-                }
-            }
-        }
-        // Show error-indicator when has-error class is set on the component
-        &.has-error {
-            .indicators {
-                .error-indicator {
-                    display: block;
-                    width: auto;
-                    text-align: center;
-                    color: color('error');
-                }
-            }
-        }
-        .overlay {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            justify-content: center;
-            color: color('primary-light');
-            font-size: 1em;
-            padding: 2.75em;
-            @include at-media('mobile-lg') {
-                font-size: 1.25em;
-            }
-        }
+    .chart-title-container {
+      text-align: center;
+      color: $primary-darker;
     }
 
-    // container for everything drawn by the graph component
-    .graph-container {
-        display: flex;
-        flex-direction: column;
+    .chart-container {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: row;
+
+      .y-label {
+        flex-grow: 0;
+        writing-mode: vertical-rl;
+        transform: rotate(180deg);
+        text-align: center;
+        padding: 0em;
+      }
+
+      svg {
         flex-grow: 1;
-        .tooltip {
-            text-align: right;
-            pointer-events: none;
-            background: rgba(255, 255, 255, 0.8);
-            color: $default-color;
-            .current-tooltip-text {
-                font-weight: bold;
+        width: 100%;
+
+        g.chart {
+          &.zoom {
+            cursor: move;
+          }
+
+          path.line-segment {
+            fill: none;
+            stroke-linejoin: round;
+            stroke-linecap: round;
+          }
+
+          .line-segment {
+            stroke-width: 2px;
+            stroke: $approved-color;
+
+            &.provisional {
+              stroke: $provisional-color;
             }
-            color: $approved-color;
-            .provisional {
-                color: $provisional-color;
+          }
+
+          path.area-path {
+            fill: lightblue;
+            opacity: .75;
+          }
+
+          .overlay {
+            fill: none;
+            pointer-events: all;
+          }
+
+          circle.focus {
+            fill: color('accent-warm');
+            opacity: .9;
+          }
+
+          .focus {
+            line {
+              opacity: .5;
+              stroke: #436BAF;
+              fill: lightblue;
+              stroke-width: 1px;
+              stroke-dasharray: 5, 5
             }
-            .compare-tooltip-text {
-                font-weight: normal
-            }
+          }
         }
-        .chart-title-container {
-            text-align: center;
-            color: $primary-darker;
+
+        g.construction {
+          .casing {
+            line {
+              stroke: gray;
+            }
+
+            rect {
+              fill: white;
+              fill-opacity: 0.25;
+            }
+
+            &.selected {
+              rect {
+                fill: yellow;
+              }
+            }
+          }
+
+          .screen {
+            line {
+              stroke: gray;
+              stroke-linecap: round;
+            }
+
+            rect {
+              fill-opacity: 1;
+
+              .selected {
+                fill: yellow;
+                fill-opacity: 0.75;
+              }
+            }
+
+            &.selected {
+              rect {
+                fill: yellow;
+                fill-opacity: 0.75;
+              }
+            }
+          }
+
+          .water-level-triangle {
+            fill: $approved-color;
+          }
         }
-        .chart-container {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: row;
-            .y-label {
-                flex-grow: 0;
-                writing-mode: vertical-rl;
-                transform: rotate(180deg);
-                text-align: center;
-                padding: 0em;
+
+        g.lithology {
+          rect {
+            &.selected {
+              stroke: yellow;
+              stroke-opacity: 0.5;
+              stroke-width: 4px;
             }
-            svg {
-                flex-grow: 1;
-                width: 100%;
-                g.chart {
-                    &.zoom {
-                        cursor: move;
-                    }
-                    path.line-segment {
-                        fill: none;
-                        stroke-linejoin: round;
-                        stroke-linecap: round;
-                    }
-                    .line-segment {
-                        stroke-width: 2px;
-                        stroke: $approved-color;
-                        &.provisional {
-                            stroke: $provisional-color;
-                        }
-                    }
-                    path.area-path {
-                        fill: lightblue;
-                        opacity: .75;
-                    }
-                    .overlay {
-                        fill: none;
-                        pointer-events: all;
-                    }
-                    circle.focus {
-                        fill: color('accent-warm');
-                        opacity: .9;
-                    }
-                    .focus {
-                        line {
-                            opacity: .5;
-                            stroke: #436BAF;
-                            fill: lightblue;
-                            stroke-width: 1px;
-                            stroke-dasharray: 5, 5
-                        }
-                    }
-                }
-                g.construction {
-                    .casing {
-                        line {
-                            stroke: gray;
-                        }
-                        rect {
-                            fill: white;
-                            fill-opacity: 0.25;
-                        }
-                        &.selected {
-                            rect {
-                                fill: yellow;
-                            }
-                        }
-                    }
-                    .screen {
-                        line {
-                            stroke: gray;
-                            stroke-linecap: round;
-                        }
-                        rect {
-                            fill-opacity: 1;
-                            .selected {
-                                fill: yellow;
-                                fill-opacity: 0.75;
-                            }
-                        }
-                        &.selected {
-                            rect {
-                                fill: yellow;
-                                fill-opacity: 0.75;
-                            }
-                        }
-                    }
-                    .water-level-triangle {
-                        fill: $approved-color;
-                    }
-                }
-                g.lithology {
-                    rect {
-                        &.selected {
-                            stroke: yellow;
-                            stroke-opacity: 0.5;
-                            stroke-width: 4px;
-                        }
-                    }
-                }
-            }
-            path.domain-mapping {
-                fill: none;
-                stroke: color('secondary');
-            }
+          }
         }
-        .legend {
-            flex-grow: 0;
-            text-align: center;
-            span {
-                padding: 0 1em 0 .5em;
-                &.show-lithology {
-                    display: inline-block;
-                    padding: .25em 0;
-                }
-            }
-            .line-segment {
-                stroke-width: 2px;
-                stroke: $approved-color;
-                &.provisional {
-                    stroke: $provisional-color;
-                }
-            }
-        }
+      }
+
+      path.domain-mapping {
+        fill: none;
+        stroke: color('secondary');
+      }
     }
+
+    .legend {
+      flex-grow: 0;
+      text-align: center;
+
+      span {
+        padding: 0 1em 0 .5em;
+
+        &.show-lithology {
+          display: inline-block;
+          padding: .25em 0;
+        }
+      }
+
+      .line-segment {
+        stroke-width: 2px;
+        stroke: $approved-color;
+
+        &.provisional {
+          stroke: $provisional-color;
+        }
+      }
+    }
+  }
 }

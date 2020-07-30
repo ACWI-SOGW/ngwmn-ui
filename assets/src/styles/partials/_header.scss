@@ -1,59 +1,42 @@
-header {
-    .usa-banner-inner {
-        padding-left: 1rem;
+#header,
+.usa-banner {
+  color: black;
+  background-color: white;
+}
+
+#header {
+  margin-left: 0;
+  padding-left: 0;
+  border-bottom: solid 10px #0050d8;
+}
+
+#header .usa-banner__inner {
+  margin-left: 0;
+}
+
+.banner-title {
+  font-family: calibri, tahoma, arial, verdana, sans-serif;
+  font-size: 1.4em;
+  display: inline-block;
+  @include at-media('tablet') {
+    font-size: 1.5em;
+  }
+  @include at-media('desktop') {
+    font-size: 2em;
+  }
+  a {
+    text-decoration: none;
+    vertical-align: middle;
+    color: #233f8f !important;
+  }
+  img {
+    display: none;
+    @include at-media('mobile-lg') {
+      display: inline;
     }
-    .banner-container {
-        border-bottom: solid 10px color('primary-vivid');
-        a {
-            color: color('primary-lighter');
-            text-decoration: none;
-        }
-        .logo {
-            display: inline-block;
-            img {
-                vertical-align: bottom;
-                height: 44px;
-                margin: .5em;
-                @include at-media('mobile-lg') {
-                    height: 51px;
-                    margin: 1em;
-                }
-                @include at-media('tablet') {
-                    height: 58px;
-                }
-                @include at-media('desktop-lg') {
-                    height: 65px;
-                }
-            }
-        }
-        .banner-title {
-            font-family: calibri,tahoma,arial,verdana,sans-serif;
-            font-size: 1em;
-            text-decoration: none;
-            text-align: right;
-            display: inline-block;
-        
-            a {
-                color: #233f8f !important;
-            }
-            .ngwmn-highlight {
-                color: #d1544a;
-            }
-        }
-        @include at-media('mobile-lg') {
-            .banner-title {
-                font-size: 1.25em;
-            }
-        }    
-        @include at-media('tablet') {
-            .banner-title {
-                font-size: 1.5em;
-            }
-        }
-         @include at-media('desktop') {
-            .banner-title {
-                font-size: 2em;
-            }
-        }
-    }
+  }
+}
+
+.ngwmn-highlight {
+  color: #d1544a;
 }

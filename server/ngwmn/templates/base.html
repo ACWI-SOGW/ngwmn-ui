@@ -2,11 +2,11 @@
 
 
 {% block body %}
-    <header role="banner">
+    <div id="header" role="banner">
         {% include 'partials/banner.html' %}
         {% include 'partials/header.html' %}
-    </header>
-    <main id="main-content" class="grid-container">
+    </div>
+    <main id="main-content">
         {% block content %}{% endblock %}
     </main>
     {% include 'partials/footer.html' %}
