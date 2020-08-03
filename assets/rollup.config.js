@@ -5,7 +5,7 @@
 const path = require('path');
 
 const alias = require('@rollup/plugin-alias');
-const buble = require('rollup-plugin-buble');
+const buble = require('@rollup/plugin-buble');
 const commonjs = require('@rollup/plugin-commonjs');
 const json = require('@rollup/plugin-json');
 const resolve = require('@rollup/plugin-node-resolve');
