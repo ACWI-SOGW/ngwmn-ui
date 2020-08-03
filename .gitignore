@@ -23,3 +23,6 @@ server/ngwmn_ui.egg-info
 assets/.DS_Store
 
 venv/
+
+.coverage
+coverage.xml
