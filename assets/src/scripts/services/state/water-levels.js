@@ -17,7 +17,7 @@ export const WATER_LEVELS_CALL_STATUS = `${MOUNT_POINT}/WATER_LEVELS_CALL_STATUS
  * @param {Object} waterLevels Water level details to set
  * @return {Object}             WATER_LEVELS_SET action
  */
-export const setWaterLevels = function (agencyCode, siteId, waterLevels) {
+export const setWaterLevels = function(agencyCode, siteId, waterLevels) {
     return {
         type: WATER_LEVELS_SET,
         payload: {
@@ -35,7 +35,7 @@ export const setWaterLevels = function (agencyCode, siteId, waterLevels) {
  * @param {String} siteId     Site ID
  * @param {String} status     Status string of service call for specified site
  */
-export const setWaterLevelStatus = function (agencyCode, siteId, status) {
+export const setWaterLevelStatus = function(agencyCode, siteId, status) {
     return {
         type: WATER_LEVELS_CALL_STATUS,
         payload: {
@@ -97,24 +97,23 @@ export const getSiteWaterLevels = memoize((agencyCode, siteId) =>  createSelecto
  * @param  {Object} action Action object
  * @return {Object}        New state
  */
-const reducer = function (state = {}, action) {
+const reducer = function(state = {}, action) {
+    let data;
+    let requestStatus;
     switch (action.type) {
         case WATER_LEVELS_SET:
+            data = Object.assign({}, state.data);
+            data[getSiteKey(action.payload.agencyCode, action.payload.siteId)] = action.payload.waterLevels;
             return {
                 ...state,
-                data: {
-                    ...state.data,
-                    ...{[getSiteKey(action.payload.agencyCode, action.payload.siteId)]: action.payload.waterLevels}
-                }
-
+                data: data
             };
         case WATER_LEVELS_CALL_STATUS:
+            requestStatus = Object.assign({}, state.requestStatus);
+            requestStatus[getSiteKey(action.payload.agencyCode, action.payload.siteId)] = action.payload.status;
             return {
                 ...state,
-                requestStatus: {
-                    ...state.requestStatus,
-                    ...{[getSiteKey(action.payload.agencyCode, action.payload.siteId)]: action.payload.status}
-                }
+                requestStatus: requestStatus
             };
         default:
             return state;

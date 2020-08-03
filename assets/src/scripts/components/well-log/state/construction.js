@@ -11,7 +11,7 @@ const VISIBLE_CONSTRUCTION_ITEMS_SET = `${MOUNT_POINT}/VISIBLE_CONSTRUCTION_ITEM
  * @param {Object} siteKey                 Site ID
  * @param {Object} selectedConstructionId Construction ID
  */
-export const setSelectedConstructionId = function (siteKey, selectedConstructionId) {
+export const setSelectedConstructionId = function(siteKey, selectedConstructionId) {
     return {
         type: SELECTED_CONSTRUCTION_ITEM_SET,
         payload: {
@@ -26,7 +26,7 @@ export const setSelectedConstructionId = function (siteKey, selectedConstruction
  * @param {Object} siteKey                 Site ID
  * @param {Object} visibleConstructionIds Currently visible IDs
  */
-export const setVisibleConstructionIds = function (siteKey, visibleConstructionIds) {
+export const setVisibleConstructionIds = function(siteKey, visibleConstructionIds) {
     return {
         type: VISIBLE_CONSTRUCTION_ITEMS_SET,
         payload: {
@@ -58,23 +58,23 @@ export const getVisibleConstructionIds = memoize(siteKey => state => {
  * @param  {Object} action Action object
  * @return {Object}        New state
  */
-const reducer = function (state = {}, action) {
+const reducer = function(state = {}, action) {
+    let selectedConstructionIds;
+    let visibleConstructionIds;
     switch (action.type) {
         case SELECTED_CONSTRUCTION_ITEM_SET:
+            selectedConstructionIds = Object.assign({}, state.selectedConstructionIds);
+            selectedConstructionIds[action.payload.siteKey] = action.payload.selectedConstructionId;
             return {
                 ...state,
-                selectedConstructionIds: {
-                    ...state.selectedConstructionIds,
-                    ...{[action.payload.siteKey]: action.payload.selectedConstructionId}
-                }
+                selectedConstructionIds: selectedConstructionIds
             };
         case VISIBLE_CONSTRUCTION_ITEMS_SET:
+            visibleConstructionIds = Object.assign({}, state.visibleConstructionIds);
+            visibleConstructionIds[action.payload.siteKey] = action.payload.visibleConstructionIds;
             return {
                 ...state,
-                visibleConstructionIds: {
-                    ...state.visibleConstructionIds,
-                    ...{[action.payload.siteKey]: action.payload.visibleConstructionIds}
-                }
+                visibleConstructionIds: visibleConstructionIds
             };
         default:
             return state;

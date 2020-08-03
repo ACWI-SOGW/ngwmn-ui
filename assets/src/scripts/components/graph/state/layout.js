@@ -19,7 +19,7 @@ const getNamespace = (state) => (state || {})[MOUNT_POINT] || {};
  * @param {Date} startDate  Start date of viewport
  * @param {Date} endDate    End date of viewport
  */
-export const setViewport = function (id, [startDate, endDate]) {
+export const setViewport = function(id, [startDate, endDate]) {
     return {
         type: VIEWPORT_SET,
         payload: {
@@ -33,7 +33,7 @@ export const setViewport = function (id, [startDate, endDate]) {
  * Action creator to reset the viewport to the default, 100% view.
  * @return {Object} VIEWPORT_RESET action
  */
-export const resetViewport = function (id) {
+export const resetViewport = function(id) {
     return {
         type: VIEWPORT_RESET,
         payload: {
@@ -62,7 +62,7 @@ export const getViewport = memoize(opts => createSelector(
  * @param {Number} options.width  Width of graph container
  * @param {Number} options.height Height of graph container
  */
-export const setContainerSize = function (id, {width, height}) {
+export const setContainerSize = function(id, {width, height}) {
     return {
         type: GRAPH_SIZE_SET,
         payload: {
@@ -94,7 +94,7 @@ export const getContainerSize = memoize(opts => createSelector(
  * @param {Number} options.width  width of y-axis bounding box
  * @param {Number} options.height height of y-axis bounding box
  */
-export const setAxisYBBox = function (id, {x, y, width, height}) {
+export const setAxisYBBox = function(id, {x, y, width, height}) {
     return {
         type: AXIS_Y_BBOX_SET,
         payload: {
@@ -209,23 +209,24 @@ export const getChartPosition = memoize((opts, chartType) => createSelector(
  * @param  {Object} action Action object
  * @return {Object}        New state
  */
-export const reducer = function (state = {}, action) {
+export const reducer = function(state = {}, action) {
+    let graphSizes;
+    let axisYBBoxes;
+    let viewports;
     switch (action.type) {
         case GRAPH_SIZE_SET:
+            graphSizes = Object.assign({}, state.graphSizes);
+            graphSizes[action.payload.id] = action.payload.size;
             return {
                 ...state,
-                graphSizes: {
-                    ...state.graphSizes,
-                    ...{[action.payload.id]: action.payload.size}
-                }
+                graphSizes: graphSizes
             };
         case AXIS_Y_BBOX_SET:
+            axisYBBoxes = Object.assign({}, state.axisYBBoxes);
+            axisYBBoxes[action.payload.id] = action.payload.axisYBBox;
             return {
                 ...state,
-                axisYBBoxes: {
-                    ...state.axisYBBoxes,
-                    ...{[action.payload.id]: action.payload.axisYBBox}
-                }
+                axisYBBoxes: axisYBBoxes
             };
         case VIEWPORT_SET:
             // Don't update if values are not valid
@@ -238,20 +239,18 @@ export const reducer = function (state = {}, action) {
                     state.viewports[action.payload.id][1] === action.payload.viewport[1]) {
                 return state;
             }
+            viewports = Object.assign({}, state.viewports);
+            viewports[action.payload.id] = action.payload.viewport;
             return {
                 ...state,
-                viewports: {
-                    ...state.viewports,
-                    ...{[action.payload.id]: action.payload.viewport}
-                }
+                viewports: viewports
             };
         case VIEWPORT_RESET:
+            viewports = Object.assign({}, state.viewports);
+            viewports[action.payload.id] = null;
             return {
                 ...state,
-                viewports: {
-                    ...state.viewports,
-                    ...{[action.payload.id]: null}
-                }
+                viewports: viewports
             };
         default:
             return state;

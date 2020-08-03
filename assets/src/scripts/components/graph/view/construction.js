@@ -11,7 +11,7 @@ import { setSelectedConstructionId } from 'ngwmn/components/well-log/state/index
  * @param  {Object} element Element data to render
  * @param  {Number} index   Index of this element
  */
-const drawElement = function (store, elem, opts, element, index=0) {
+const drawElement = function(store, elem, opts, element, index=0) {
     elem.append('g')
         .attr('id', `${element.type}-${index}`)
         .classed(element.type, true)
@@ -45,12 +45,12 @@ const drawElement = function (store, elem, opts, element, index=0) {
                 .attr('y2', element.right.y2)
                 .attr('stroke-width', element.thickness);
         })
-        .on('mouseenter', function () {
+        .on('mouseenter', function() {
             store.dispatch(setSelectedConstructionId(opts.siteKey, element.id));
         });
 };
 
-const drawWaterLevel = function (elem, elements, cursorWaterLevel) {
+const drawWaterLevel = function(elem, elements, cursorWaterLevel) {
     // Don't draw anything if there is not a cursor datum.
     if (!cursorWaterLevel) {
         return;
@@ -67,13 +67,13 @@ const drawWaterLevel = function (elem, elements, cursorWaterLevel) {
     container.append('clipPath')
         .attr('id', 'water-level-path')
         .call(path => {
-            for (const element of elements) {
+            elements.forEach ((element) => {
                 path.append('rect')
                     .attr('x', element.left.x)
                     .attr('y', element.left.y1)
                     .attr('width', element.right.x - element.left.x)
                     .attr('height', element.right.y2 - element.right.y1);
-            }
+            });
         });
 
     container.append('rect')
@@ -107,7 +107,7 @@ const drawWaterLevel = function (elem, elements, cursorWaterLevel) {
         .classed('water-level-triangle', true);
 };
 
-const drawPatterns = function (elem) {
+const drawPatterns = function(elem) {
     elem.append('defs')
         .call(defs => {
             defs.append('pattern')
@@ -136,7 +136,7 @@ const drawPatterns = function (elem) {
 };
 
 
-export default function (elem, {elements, cursorWaterLevel}, store, opts, container) {
+export default function(elem, {elements, cursorWaterLevel}, store, opts, container) {
     // Get/create container for construction elements
     container = container || elem
         .call(drawPatterns)
