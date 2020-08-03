@@ -170,22 +170,22 @@ tr {
   }
   /* Add the data labels before the table row contents */
   .lithology-table td:nth-of-type(1):before {
-    content: "Depth";
+    content: 'Depth';
   }
   .lithology-table td:nth-of-type(2):before {
-    content: "Lithology";
+    content: 'Lithology';
   }
   .lithology-table td:nth-of-type(3):before {
-    content: "Description";
+    content: 'Description';
   }
 
   .construction-table td:nth-of-type(1):before {
-    content: "Legend";
+    content: 'Legend';
   }
   .construction-table td:nth-of-type(2):before {
-    content: "Depth";
+    content: 'Depth';
   }
   .construction-table td:nth-of-type(3):before {
-    content: "Description";
+    content: 'Description';
   }
 }

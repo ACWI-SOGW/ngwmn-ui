@@ -110,7 +110,7 @@ $primary-darker: color('primary-darker');
       }
 
       .compare-tooltip-text {
-        font-weight: normal
+        font-weight: normal;
       }
     }
 
@@ -129,7 +129,7 @@ $primary-darker: color('primary-darker');
         writing-mode: vertical-rl;
         transform: rotate(180deg);
         text-align: center;
-        padding: 0em;
+        padding: 0;
       }
 
       svg {
@@ -174,10 +174,10 @@ $primary-darker: color('primary-darker');
           .focus {
             line {
               opacity: .5;
-              stroke: #436BAF;
+              stroke: #436baf;
               fill: lightblue;
               stroke-width: 1px;
-              stroke-dasharray: 5, 5
+              stroke-dasharray: 5, 5;
             }
           }
         }
