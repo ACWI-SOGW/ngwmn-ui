@@ -17,7 +17,8 @@ clean-server:
 # Development targets
 #
 test-server:
-	cd server && env/bin/coverage run --omit=ngwmn/tests/*.py,env/* -m pytest ngwmn/
+	server/env/bin/coverage run --omit=server/ngwmn/tests/*.py,env/* -m pytest server/ngwmn/
+	server/env/bin/coverage xml
 
 watch-server:
 	$(PYTHON) server/run.py
