@@ -7,7 +7,7 @@
  * time, and `karma --watch` tasks are very fast.
  */
 
-import './components/graph/index.spec.js';
+import 'ngwmn/components/graph/index.spec.js';
 import 'ngwmn/components/graph/state/cursor.spec.js';
 import 'ngwmn/components/graph/state/layout.spec.js';
 import 'ngwmn/components/graph/state/options.spec.js';
