@@ -46,9 +46,6 @@ tbody {
 }
 
 tr {
-  &.screen {
-  }
-
   &.selected {
     td {
       background-color: color('yellow-5');
