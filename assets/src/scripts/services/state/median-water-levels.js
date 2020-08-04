@@ -101,24 +101,23 @@ export const getSiteMedianWaterLevels = memoize((agencyCode, siteId) =>  createS
  * @param  {Object} action Action object
  * @return {Object}        New state
  */
-const reducer = function (state = {}, action) {
+const reducer = function(state = {}, action) {
+    let data;
+    let requestStatus;
     switch (action.type) {
         case MEDIAN_WATER_LEVELS_SET:
+            data = Object.assign({}, state.data);
+            data[getSiteKey(action.payload.agencyCode, action.payload.siteId)] = action.payload.waterLevels;
             return {
                 ...state,
-                data: {
-                    ...state.data,
-                    ...{[getSiteKey(action.payload.agencyCode, action.payload.siteId)]: action.payload.waterLevels}
-                }
-
+                data: data
             };
         case MEDIAN_WATER_LEVELS_CALL_STATUS:
+            requestStatus = Object.assign({}, state.requestStatus);
+            requestStatus[getSiteKey(action.payload.agencyCode, action.payload.siteId)] = action.payload.status;
             return {
                 ...state,
-                requestStatus: {
-                    ...state.requestStatus,
-                    ...{[getSiteKey(action.payload.agencyCode, action.payload.siteId)]: action.payload.status}
-                }
+                requestStatus: requestStatus
             };
         default:
             return state;

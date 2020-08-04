@@ -56,8 +56,8 @@ describe('water levels service state', () => {
     });
 
     describe('retrieveWaterLevels', () => {
-        const MockStore = configureStore([thunk]);
         let store;
+        const MockStore = configureStore.default([thunk]);
 
         // Mock a service call response
         beforeEach(() => {

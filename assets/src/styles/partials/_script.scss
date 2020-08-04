@@ -1,2 +1,7 @@
-body .has-script { display: none; }
-body.js .has-script { display: block; }
+body .has-script {
+  display: none;
+}
+
+body.js .has-script {
+  display: block;
+}

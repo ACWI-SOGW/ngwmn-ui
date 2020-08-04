@@ -4,7 +4,7 @@
 import throttle from 'raf-throttle';
 
 
-const subscribe = function (store, callback, args) {
+const subscribe = function(store, callback, args) {
     let currentState = store.getState();
 
     function handleUpdate() {
@@ -16,7 +16,7 @@ const subscribe = function (store, callback, args) {
         }
     }
 
-    store.subscribe(throttle(handleUpdate));
+    store.subscribe(throttle.default(handleUpdate));
 };
 
 /**
@@ -28,8 +28,8 @@ const subscribe = function (store, callback, args) {
  * @param  {Function} callback Callback function
  * @return {Function}
  */
-const connect = function (store, callback) {
-    return function (selection) {
+const connect = function(store, callback) {
+    return function(selection) {
         let args = [selection].concat([].slice.call(arguments, 1));
         subscribe(store, callback, args);
         callback.apply(null, args.concat([store.getState()]));
@@ -44,10 +44,10 @@ const connect = function (store, callback) {
  * @param  {Object} ...args     Optional additional arguments to proxy to `func`
  * @return {Function}           D3 callback
  */
-export const link = function (store, func, selector, ...args) {
+export const link = function(store, func, selector, ...args) {
     let currentOptions = null;
     let context = null;
-    return connect(store, function (selection, state) {
+    return connect(store, function(selection, state) {
         let nextOptions = selector(state);
         if (currentOptions !== nextOptions) {
             currentOptions = nextOptions;
@@ -63,9 +63,9 @@ export const link = function (store, func, selector, ...args) {
  * @param  {Function} initFunc (elem, options) => D3 selection
  * @param  {Function} updateFunc (elem, options)
  */
-export const initAndUpdate = function (initFunc, updateFunc) {
+export const initAndUpdate = function(initFunc, updateFunc) {
     let node = null;
-    return function (elem, options) {
+    return function(elem, options) {
         if (node === null) {
             node = initFunc(elem, options);
         }
@@ -81,9 +81,9 @@ export const initAndUpdate = function (initFunc, updateFunc) {
  * @param  {Function} raf       If true, throttle callback with requestAnimationFrame
  * @return {Function}           Unsubscribe function
  */
-export const listen = function (store, selector, func, raf = true) {
+export const listen = function(store, selector, func, raf = true) {
     let current = selector(store.getState());
-    let callback = function () {
+    let callback = function() {
         let newData = selector(store.getState());
         if (current !== newData) {
             current = newData;
@@ -91,7 +91,7 @@ export const listen = function (store, selector, func, raf = true) {
         }
     };
     if (raf) {
-        callback = throttle(callback);
+        callback = throttle.default(callback);
     }
     func(current);
     return store.subscribe(callback);

@@ -11,9 +11,9 @@ const DEFAULT_LITHOLOGY_VISIBILITY = false;
  * Action creator to set the default visibility of the lithology layers in the
  * water levels chart.
  * @param {Object}  id      ID of component who visibility to set
- * @param {Boolean} visible Visibility
+ * @param {Boolean} lithologyVisibility
  */
-export const setLithologyVisibility = function (id, lithologyVisibility) {
+export const setLithologyVisibility = function(id, lithologyVisibility) {
     return {
         type: LITHOLOGY_VISIBILITY_SET,
         payload: {
@@ -59,7 +59,8 @@ export const getLithologyVisibility = memoize(opts => createSelector(
  * @param  {Object} action Action object
  * @return {Object}        New state
  */
-export const reducer = function (state = {}, action) {
+export const reducer = function(state = {}, action) {
+    let lithologyVisibility;
     switch (action.type) {
         case LITHOLOGY_VISIBILITY_SET:
             // Remember this visibility for next page load
@@ -67,12 +68,11 @@ export const reducer = function (state = {}, action) {
                 'defaultLithologyVisibility',
                 action.payload.lithologyVisibility
             );
+            lithologyVisibility = Object.assign({}, state.lithologyVisibility);
+            lithologyVisibility[action.payload.id] = action.payload.lithologyVisibility;
             return {
                 ...state,
-                lithologyVisibility: {
-                    ...state.lithologyVisibility,
-                    ...{[action.payload.id]: action.payload.lithologyVisibility}
-                }
+                lithologyVisibility: lithologyVisibility
             };
         default:
             return state;

@@ -1,15 +1,15 @@
 .cooperator_logo {
-    display: inline-block;
-    margin-left: 0px;
-    margin-top: 0px;
+  display: inline-block;
+  margin-left: 0;
+  margin-top: 0;
 }
 
- h1, h2 {
-    margin: 0;
- }
+h1, h2 {
+  margin: 0;
+}
 
 .water-stats-table td {
-    text-align: center;
+  text-align: center;
 }
 
 .provider-logo {
@@ -27,16 +27,19 @@
     @include u-border('solid');
     @include u-border(1px);
     @include u-radius('md');
+
     a {
       text-decoration: none;
     }
   }
+
   .active {
     background-color: color('gray-20');
   }
 
   .disabled {
     border: none;
+
     a {
       cursor: not-allowed;
     }

@@ -39,7 +39,7 @@ export const getSiteWellDepth = memoize((agencyCode, siteId) =>  createSelector(
  * @params {Object} wellLog     Well log to set
  * @return {Object}             WELL_LOG_SET action
  */
-export const setWellLog = function (agencyCode, siteId, wellLog) {
+export const setWellLog = function(agencyCode, siteId, wellLog) {
     return {
         type: WELL_LOG_SET,
         payload: {
@@ -56,7 +56,7 @@ export const setWellLog = function (agencyCode, siteId, wellLog) {
  * @param  {Object} action Action object
  * @return {Object}        New state
  */
-const reducer = function (state = {}, action) {
+const reducer = function(state = {}, action) {
     switch (action.type) {
         case WELL_LOG_SET:
             return {

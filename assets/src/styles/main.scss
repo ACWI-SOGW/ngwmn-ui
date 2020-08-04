@@ -7,18 +7,17 @@ $fa-font-path: './fonts' !default;
 // may be overridden here.
 $theme-font-path: './fonts';
 $theme-image-path: './img';
-$theme-grid-container-max-width: 100%;
 /* turned on the breakpoint for 'desktop-lg */
 $theme-utility-breakpoints: (
-'card':             false,   // 160px
-'card-lg':          false,   // 240px
-'mobile':           false,   // 320px
-'mobile-lg':        true,    // 480px
-'tablet':           true,    // 640px
-'tablet-lg':        false,   // 800px
-'desktop':          true,    // 1024px
-'desktop-lg':       true,   // 1200px
-'widescreen':       false,   // 1400px
+  'card': false, // 160px
+  'card-lg': false, // 240px
+  'mobile': false, // 320px
+  'mobile-lg': true, // 480px
+  'tablet': true, // 640px
+  'tablet-lg': false, // 800px
+  'desktop': true, // 1024px
+  'desktop-lg': true, // 1200px
+  'widescreen': false, // 1400px
 );
 
 @import 'uswds';
@@ -28,46 +27,35 @@ $theme-utility-breakpoints: (
 @import './partials/script';
 
 .ngwmn-component {
-    &[data-component='graph'] {
-        @import './components/graph';
-    }
-    &[data-component='well-log'] {
-        @import './components/well-log';
-    }
+  &[data-component='graph'] {
+    @import './components/graph';
+  }
+
+  &[data-component='well-log'] {
+    @import './components/well-log';
+  }
 }
 
 body {
-    #main-content {
-        margin-top: 1em;
-        margin-bottom: 1em;
-        padding: 0 1em;
-    }
-    &#site-location {
-        @import './pages/site-location';
-    }
+  #main-content {
+    margin-top: 1em;
+    margin-bottom: 1em;
+    padding: 0 1em;
+  }
 
-    /* style the well diagram title */
+  &#site-location {
+    @import './pages/site-location';
+  }
+
+  /* style the well diagram title */
+  .well-diagram-title {
+    text-align: center;
+  }
+
+  /* don't show the well diagram title except at narrow screen widths (where the well diagram takes the full width of the page) */
+  @include at-media('mobile-lg') {
     .well-diagram-title {
-        text-align: center;
+      display: none;
     }
-    /* don't show the well diagram title except at narrow screen widths (where the well diagram takes the full width of the page) */
-    @include at-media('mobile-lg') {
-       .well-diagram-title {
-            display: none;
-        }
-    }
-}
-
-#banner-title {
-    float: right;
-    font-family: calibri,tahoma,arial,verdana,sans-serif;
-    font-size: 30px;
-    text-decoration: none;
-
-    a {
-        color: #233f8f !important;
-    }
-    .ngwmn-highlight {
-        color: #d1544a;
-    }
+  }
 }

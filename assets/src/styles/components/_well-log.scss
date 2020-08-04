@@ -1,178 +1,188 @@
 & {
-    text-align: center;
-    max-height: 30rem;
-    overflow: scroll;
+  text-align: center;
+  max-height: 30rem;
+  overflow: scroll;
 }
 
 h3 {
-    margin: 1rem 0;
+  margin: 1rem 0;
 }
 
 label,
 input {
-    display: inline-block;
-    margin: 1rem 0;
+  display: inline-block;
+  margin: 1rem 0;
 }
 
 label {
-    padding-right: 2rem;
+  padding-right: 2rem;
 }
 
 table {
-    width: 100%;
-    margin: 0;
-    text-align: left;
+  width: 100%;
+  margin: 0;
+  text-align: left;
 }
 
 tbody {
-    padding: 12px;
+  padding: 12px;
 }
 
 #all:checked ~ table .screen,
 #all:checked ~ table .casing,
 #screens:checked ~ table .screen,
 #casings:checked ~ table .casing {
-    display: table-row;
-    /* add breakpoint to allow Well Construction table to be width: 100%
-    when table is displayed for narrow view ports. */
-    @include at-media-max('tablet') {
-      display: block;
-    }
+  display: table-row;
+  /* add breakpoint to allow Well Construction table to be width: 100%
+  when table is displayed for narrow view ports. */
+  @include at-media-max('tablet') {
+    display: block;
+  }
 }
 
 .screen,
 .casing {
-    display: none;
+  display: none;
 }
 
 tr {
-    &.screen {
+  &.selected {
+    td {
+      background-color: color('yellow-5');
+      transition: background-color .25s;
     }
-    &.selected {
-        td {
-            background-color: color('yellow-5');
-            transition: background-color .25s;
-        }
-    }
+  }
 }
 
 /* Formats tabs for the construction and lithology tables */
 .tabs {
-    display: flex;
-    flex-wrap: wrap;
-    background-color: color('blue-70v');
-    border-top: solid color('gray-warm-90') 2px;
-    border-left: solid color('gray-warm-90') 2px;
+  display: flex;
+  flex-wrap: wrap;
+  background-color: color('blue-70v');
+  border-top: solid color('gray-warm-90') 2px;
+  border-left: solid color('gray-warm-90') 2px;
+  width: 100%;
+
+  .inputRadioButtonTab {
+    position: absolute;
+    opacity: 0;
+  }
+
+  .labelRadioButtonTab {
     width: 100%;
+    padding: 20px 30px;
+    background-color: color('blue-70v');
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1.25em;
+    color: white;
+    transition: background 0.1s, color 0.1s;
+    margin: 0;
+  }
 
-    .inputRadioButtonTab {
-        position: absolute;
-        opacity: 0;
-    }
+  .labelRadioButtonTab:active {
+    background-color: color('gray-cool-2');
+  }
 
+  .inputRadioButtonTab:checked + .labelRadioButtonTab {
+    background-color: color('gray-cool-2');
+    border-right: 2px;
+    color: color('gray-warm-90');
+  }
+
+  /* keep the tabs looking like tabs down to the breakpoint, then make them look like an accordion */
+  @include at-media('tablet') {
     .labelRadioButtonTab {
-        width: 100%;
-        padding: 20px 30px;
-        background-color: color('blue-70v');
-        cursor: pointer;
-        font-weight: bold;
-        font-size: 1.25em;
-        color: white;
-        transition: background 0.1s, color 0.1s;
-        margin: 0;
+      width: auto;
     }
+  }
 
-    .labelRadioButtonTab:active {
-        background-color: color('gray-cool-2');
-    }
+  .panel {
+    display: none; /* stop both tables from showing in the same panel */
+    text-align: left;
+    background-color: color('gray-cool-2');
+    padding: 10px;
+    width: 100%;
+  }
 
-    .inputRadioButtonTab:checked + .labelRadioButtonTab {
-        background-color: color('gray-cool-2');
-        border-right: 2px;
-        color: color('gray-warm-90');
-    }
-
-    /* keep the tabs looking like tabs down to the breakpoint, then make them look like an accordion */
-    @include at-media('tablet') {
-        .labelRadioButtonTab {
-            width: auto;
-        }
-    }
-
+  /* Keep the tabs next to each other down to the breakpoint, then let one drop to the bottom of the panel*/
+  @include at-media('tablet') {
     .panel {
-        display: none; /* stop both tables from showing in the same panel */
-        text-align: left;
-        background-color: color('gray-cool-2');
-        padding: 10px;
-        width: 100%;
+      order: 99;
     }
+  }
 
-    /* Keep the tabs next to each other down to the breakpoint, then let one drop to the bottom of the panel*/
-    @include at-media('tablet') {
-        .panel {
-            order: 99;
-        }
-    }
+  .inputRadioButtonTab:checked + .labelRadioButtonTab + .panel {
+    display: block;
+  }
 
-    .inputRadioButtonTab:checked + .labelRadioButtonTab + .panel {
-        display: block;
-    }
+  .inputRadioButtonTab:focus + .barSelect {
+    box-shadow: inset 0 0 0 3px color('blue-30');
+    z-index: 1;
+  }
 
-    .inputRadioButtonTab:focus + .barSelect {
-        box-shadow: inset 0 0 0 3px color('blue-30');
-        z-index: 1;
-    }
-
-    /* add extra formatting and color to the Well Construction selection buttons */
-    .barSelect {
-        padding: 8px 10px;
-        background-color: color('blue-30');
-        font-size: 1em;
-    }
+  /* add extra formatting and color to the Well Construction selection buttons */
+  .barSelect {
+    padding: 8px 10px;
+    background-color: color('blue-30');
+    font-size: 1em;
+  }
 }
 
 /* added to make table data easy to read on narrow viewports format */
 @include at-media-max('tablet') {
-    /* Force table to not be like tables anymore */
-    table, thead, tbody, th, td, tr {
-        display: block;
-        width: 100%;
-    }
+  /* Force table to not be like tables anymore */
+  table, thead, tbody, th, td, tr {
+    display: block;
+    width: 100%;
+  }
 
-    /* Hide table headers (but not display: none;, for accessibility) */
-    thead tr {
-        position: absolute;
-        top: -9999px;
-        left: -9999px;
-    }
+  /* Hide table headers (but not display: none;, for accessibility) */
+  thead tr {
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+  }
 
   tr {
-      border-top: solid color('gray-warm-90') 2px;
-      margin: 0;
+    border-top: solid color('gray-warm-90') 2px;
+    margin: 0;
   }
-      td {
-          /* Behave  like a "row" */
-          border: none;
-          border-bottom: 1px solid color('gray-warm-5');
-          position: relative;
-          padding-left: 50%;
-      }
+  td {
+    /* Behave  like a "row" */
+    border: none;
+    border-bottom: 1px solid color('gray-warm-5');
+    position: relative;
+    padding-left: 50%;
+  }
 
-      td:before {
-          /* Now like a table header */
-          position: absolute;
-          /* Top and left values mimic padding */
-          top: 0;
-          left: 6px;
-          padding-right: 10px;
-          white-space: nowrap;
-      }
-      /* Add the data labels before the table row contents */
-      .lithology-table td:nth-of-type(1):before { content: "Depth"; }
-      .lithology-table td:nth-of-type(2):before { content: "Lithology"; }
-      .lithology-table td:nth-of-type(3):before { content: "Description"; }
+  td:before {
+    /* Now like a table header */
+    position: absolute;
+    /* Top and left values mimic padding */
+    top: 0;
+    left: 6px;
+    padding-right: 10px;
+    white-space: nowrap;
+  }
+  /* Add the data labels before the table row contents */
+  .lithology-table td:nth-of-type(1):before {
+    content: 'Depth';
+  }
+  .lithology-table td:nth-of-type(2):before {
+    content: 'Lithology';
+  }
+  .lithology-table td:nth-of-type(3):before {
+    content: 'Description';
+  }
 
-      .construction-table td:nth-of-type(1):before { content: "Legend"; }
-      .construction-table td:nth-of-type(2):before { content: "Depth"; }
-      .construction-table td:nth-of-type(3):before { content: "Description"; }
+  .construction-table td:nth-of-type(1):before {
+    content: 'Legend';
+  }
+  .construction-table td:nth-of-type(2):before {
+    content: 'Depth';
+  }
+  .construction-table td:nth-of-type(3):before {
+    content: 'Description';
+  }
 }

@@ -130,7 +130,7 @@ export const getLineSegments = memoize(opts => createSelector(
         // approval status.
         let lastClass;
 
-        for (let pt of points) {
+        points.forEach((pt) => {
             // Split lines if the gap from the period point exceeds
             // MAX_LINE_POINT_GAP.
             let splitOnGap = false;
@@ -156,7 +156,7 @@ export const getLineSegments = memoize(opts => createSelector(
 
             // Cache the class for the next loop iteration.
             lastClass = pt.class;
-        }
+        });
         return lines;
     }
 ));

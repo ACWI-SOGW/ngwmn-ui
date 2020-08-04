@@ -11,10 +11,9 @@ before_install:
 
 install:
   - make env
-  - gem install coveralls-lcov
 
 script:
   - make test
 
 after_success:
-  - make coverage
+  - bash <(curl -s https://codecov.io/bash)

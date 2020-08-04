@@ -10,7 +10,7 @@ const SELECTED_LITHOLOGY_ITEM_SET = `${MOUNT_POINT}/SELECTED_LITHOLOGY_ITEM_SET`
  * @param {Object} siteKey                 Site ID
  * @param {Object} selectedLithologyId Lithology ID
  */
-export const setSelectedLithologyId = function (siteKey, selectedLithologyId) {
+export const setSelectedLithologyId = function(siteKey, selectedLithologyId) {
     return {
         type: SELECTED_LITHOLOGY_ITEM_SET,
         payload: {
@@ -36,15 +36,15 @@ export const getSelectedLithologyId = memoize(siteKey => state => {
  * @param  {Object} action Action object
  * @return {Object}        New state
  */
-const reducer = function (state = {}, action) {
+const reducer = function(state = {}, action) {
+    let selectedLithologyIds;
     switch (action.type) {
         case SELECTED_LITHOLOGY_ITEM_SET:
+            selectedLithologyIds = Object.assign({}, state.selectedLithologyIds);
+            selectedLithologyIds[action.payload.siteKey] = action.payload.selectedLithologyId;
             return {
                 ...state,
-                selectedLithologyIds: {
-                    ...state.selectedLithologyIds,
-                    ...{[action.payload.siteKey]: action.payload.selectedLithologyId}
-                }
+                selectedLithologyIds: selectedLithologyIds
             };
         default:
             return state;

@@ -1,6 +1,6 @@
 import { combineReducers, createStore } from 'redux';
 import configureStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
+import { default as thunk } from 'redux-thunk';
 
 import {
     default as medianWaterLevels, getSiteMedianWaterLevels, getMedianWaterLevels,
@@ -65,11 +65,11 @@ describe('median water levels service state', () => {
     });
 
     describe('retrieveMedianWaterLevels', () => {
-        const MockStore = configureStore([thunk]);
         let store;
 
         // Mock a service call response
         beforeEach(() => {
+            const MockStore = configureStore.default([thunk]);
             let init = {};
             init[WATER_LEVELS_MOUNT_POINT] = {'data':{'USGS:430406089232901':MOCK_WATER_LEVEL_DATA}};
             store = MockStore(init);
