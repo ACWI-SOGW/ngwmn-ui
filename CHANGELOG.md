@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased](https://github.com/ACWI-SOGW/ngwmn-ui/compare/ngwmn-ui-0.13.0...master)
+### Changed
+-   Updated the header and footer to match the new well registry application
 
 ## [0.13.0](https://github.com/ACWI-SOGW/ngwmn-ui/compare/ngwmn-ui-0.12.0...ngwmn-ui-0.13.0)
 ### Changed
