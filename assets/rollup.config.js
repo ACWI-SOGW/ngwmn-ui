@@ -33,7 +33,10 @@ module.exports = {
         json(),
         commonjs(),
         buble({
-            objectAssign: 'Object.assign'
+            objectAssign: 'Object.assign',
+            transforms: {
+                dangerousForOf: true
+            }
         }),
         replace({
           'process.env.NODE_ENV': JSON.stringify(ENV)
