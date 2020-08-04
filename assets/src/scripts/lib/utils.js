@@ -1,5 +1,7 @@
 import { bisector } from 'd3-array';
-import ResizeObserver from 'resize-observer-polyfill';
+import { ResizeObserver as Polyfill } from '@juggle/resize-observer';
+
+const ResizeObserver = window.ResizeObserver || Polyfill;
 
 
 /**
@@ -8,8 +10,8 @@ import ResizeObserver from 'resize-observer-polyfill';
  * @param  {Boolean} condition If true, will run `func`
  * @param  {Function} func
  */
-export const callIf = function (condition, func) {
-    return function (...args) {
+export const callIf = function(condition, func) {
+    return function(...args) {
         if (condition) {
             func(...args);
         }
@@ -21,7 +23,7 @@ export const callIf = function (condition, func) {
  * change.
  * @param  {Object} svg D3 selection containing an SVG node
  */
-export const initCropper = function (svg) {
+export const initCropper = function(svg) {
     // Try a few methods to delay calling this until after the browser has
     // rendered the SVG node.
     // Attempt to address this bug:
@@ -47,7 +49,7 @@ export const initCropper = function (svg) {
  * @param {Date} attr   attribute of data objects containing date object
  * @return {Object}     {datum, index}
  */
-export const getNearestTime = function (data, time, attr='dateTime') {
+export const getNearestTime = function(data, time, attr='dateTime') {
     // Function that returns the left bounding point for a given chart point.
     if (data.length === 0) {
         return null;

@@ -1,10 +1,11 @@
-import { mouse } from 'd3-selection';
-import { createStructuredSelector } from 'reselect';
-import ResizeObserver from 'resize-observer-polyfill';
+import {mouse} from 'd3-selection';
+import {createStructuredSelector} from 'reselect';
+import {ResizeObserver as Polyfill} from '@juggle/resize-observer';
 
-import { link } from 'ngwmn/lib/d3-redux';
-import { callIf } from 'ngwmn/lib/utils';
-import { getSiteKey } from '../../../services/site-key';
+import {link} from 'ngwmn/lib/d3-redux';
+import {callIf} from 'ngwmn/lib/utils';
+import {getSiteKey} from 'ngwmn/services/site-key';
+import {getSelectedLithologyId} from 'ngwmn/components/well-log/state';
 
 import {
     getChartPoints, getChartPosition, getConstructionElements,
@@ -13,17 +14,19 @@ import {
     getWellWaterLevel, setAxisYBBox, setCursor, setContainerSize
 } from '../state';
 
-import { drawAxisX, drawAxisY, drawAxisYWellDiagramDepth, drawAxisYLabel, drawAxisYLabelWellDiagramDepth,
+import {
+    drawAxisX, drawAxisY, drawAxisYWellDiagramDepth, drawAxisYLabel, drawAxisYLabelWellDiagramDepth,
     drawAxisYLabelWellDiagramElevation, drawAxisYWellDiagramElevation
 } from './axes';
 
 import addBrushZoomBehavior from './brush-zoom';
 import drawConstruction from './construction';
-import { drawFocusCircle, drawFocusLine, drawTooltip } from './cursor';
+import {drawFocusCircle, drawFocusLine, drawTooltip} from './cursor';
 import drawLegend from './legend';
 import drawLithology from './lithology';
 import drawWaterLevels from './water-levels';
-import {getSelectedLithologyId} from "../../well-log/state";
+
+const ResizeObserver = window.ResizeObserver || Polyfill;
 
 
 /**
@@ -31,28 +34,29 @@ import {getSelectedLithologyId} from "../../well-log/state";
  * area.
  * @param  {Object} elem      D3 selector to append to
  * @param  {Object} store     Redux store
+ * @param  {Object} opts      {agencyCode, siteId} of site to draw
  * @param  {String} chartType Kind of chart
  */
-const drawClipPath = function (elem, store, opts, chartType) {
+const drawClipPath = function(elem, store, opts, chartType) {
     elem.append('defs')
         .append('clipPath')
-            .attr('id', `${chartType}-clip-path`)
-            .append('rect')
-                .call(link(store, (rect, chartPosition) => {
-                    rect.attr('x', chartPosition.x)
-                        .attr('y', chartPosition.y)
-                        .attr('width', chartPosition.width)
-                        .attr('height', chartPosition.height);
-                }, getChartPosition(opts, chartType)));
+        .attr('id', `${chartType}-clip-path`)
+        .append('rect')
+        .call(link(store, (rect, chartPosition) => {
+            rect.attr('x', chartPosition.x)
+                .attr('y', chartPosition.y)
+                .attr('width', chartPosition.width)
+                .attr('height', chartPosition.height);
+        }, getChartPosition(opts, chartType)));
 };
 
-const observeSize = function (elem, opts, store) {
+const observeSize = function(elem, opts, store) {
     // Create an observer on the .chart-container node.
     // Here, we use a ResizeObserver polyfill to trigger redraws when
     // the CSS-driven size of our container changes.
     const node = elem.node();
     let size = {};
-    const observer = new ResizeObserver(function (entries) {
+    const observer = new ResizeObserver(function(entries) {
         const newSize = {
             width: parseFloat(entries[0].contentRect.width),
             height: parseFloat(entries[0].contentRect.height)
@@ -69,9 +73,10 @@ const observeSize = function (elem, opts, store) {
  * Draws a water-levels graph.
  * @param  {Object} store   Redux store
  * @param  {Object} node    DOM node to draw graph into
- * @param  {Object} options {agencyCode, siteId} of site to draw
+ * @param  {Object} opt {agencyCode, siteId} of site to draw
+ * @param  {String} chartType Kind of chart
  */
-const drawChart = function (elem, store, opts, chartType) {
+const drawChart = function(elem, store, opts, chartType) {
     // Each chart gets its own group container, classed .chart
     return elem.append('g')
         .classed('chart', true)
@@ -178,7 +183,7 @@ const drawConstructionGraph = (opts) => (elem, store) => {
     // Append the chart and axis labels, scoped to .chart-container
     elem.append('div')
         .classed('chart-container', true)
-         .call(link(store, drawAxisYLabelWellDiagramDepth, createStructuredSelector({
+        .call(link(store, drawAxisYLabelWellDiagramDepth, createStructuredSelector({
             unit: getCurrentWaterLevelUnit(opts)
         })))
         .call(elem => {
@@ -210,8 +215,8 @@ const drawConstructionGraph = (opts) => (elem, store) => {
 const drawWaterLevelsGraph = (opts) => (elem, store) => {
     elem
         .append('div')
-            .html('Water Levels, in feet below land surface')
-            .classed('chart-title-container', true)
+        .html('Water Levels, in feet below land surface')
+        .classed('chart-title-container', true);
     // Append the chart and axis labels, scoped to .chart-container
     elem
         // Draw a tooltip container. This is rendered to the upper-right and
@@ -221,29 +226,29 @@ const drawWaterLevelsGraph = (opts) => (elem, store) => {
             unit: getCurrentWaterLevelUnit(opts)
         })))
         .append('div')
-            .classed('chart-container', true)
-            // Draw the y-axis label on the left of the chart.
-            // See the SASS for the flexbox rules driving the layout.
-            .call(link(store, drawAxisYLabel, createStructuredSelector({
-                unit: getCurrentWaterLevelUnit(opts)
-            })))
-            .call(elem => {
-                // Append an SVG container that we will draw to
-                elem.append('svg')
-                    .attr('xmlns', 'http://www.w3.org/2000/svg')
-                    .call(link(store, (svg, viewBox) => {
-                        svg.attr('viewBox', `${viewBox.left} ${viewBox.top} ${viewBox.right - viewBox.left} ${viewBox.bottom - viewBox.top}`);
-                    }, getViewBox(opts)))
-                    .call(svg => {
-                        // Draw the charts
-                        const brush = drawChart(svg, store, opts, 'brush');
-                        const main = drawChart(svg, store, opts, 'main');
+        .classed('chart-container', true)
+        // Draw the y-axis label on the left of the chart.
+        // See the SASS for the flexbox rules driving the layout.
+        .call(link(store, drawAxisYLabel, createStructuredSelector({
+            unit: getCurrentWaterLevelUnit(opts)
+        })))
+        .call(elem => {
+            // Append an SVG container that we will draw to
+            elem.append('svg')
+                .attr('xmlns', 'http://www.w3.org/2000/svg')
+                .call(link(store, (svg, viewBox) => {
+                    svg.attr('viewBox', `${viewBox.left} ${viewBox.top} ${viewBox.right - viewBox.left} ${viewBox.bottom - viewBox.top}`);
+                }, getViewBox(opts)))
+                .call(svg => {
+                    // Draw the charts
+                    const brush = drawChart(svg, store, opts, 'brush');
+                    const main = drawChart(svg, store, opts, 'main');
 
-                        // Add interactive brush and zoom behavior over the charts
-                        svg.call(addBrushZoomBehavior, store, opts, main, brush);
-                    });
-            })
-            .call(observeSize, opts, store);
+                    // Add interactive brush and zoom behavior over the charts
+                    svg.call(addBrushZoomBehavior, store, opts, main, brush);
+                });
+        })
+        .call(observeSize, opts, store);
 
     // Append the legend
     drawLegend(elem, store, opts);
@@ -254,7 +259,7 @@ export default (opts) => (elem, store) => {
     // .graph-container is used to scope all the CSS styles.
     const graphContainer = elem
         .append('div')
-            .classed('graph-container', true);
+        .classed('graph-container', true);
 
     if (opts.graphType === 'water-levels') {
         drawWaterLevelsGraph(opts)(graphContainer, store);
