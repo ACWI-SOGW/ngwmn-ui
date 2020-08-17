@@ -81,7 +81,7 @@
     "d3": "5.16.0",
     "fast-memoize": "2.5.2",
     "list.js": "1.5.0",
-    "lodash": "4.17.19",
+    "lodash": "4.17.20",
     "raf-throttle": "2.0.3",
     "redux": "4.0.5",
     "redux-thunk": "2.3.0",
