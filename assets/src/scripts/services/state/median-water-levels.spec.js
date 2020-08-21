@@ -69,7 +69,7 @@ describe('median water levels service state', () => {
 
         // Mock a service call response
         beforeEach(() => {
-            const MockStore = configureStore.default([thunk]);
+            const MockStore = configureStore([thunk]);
             let init = {};
             init[WATER_LEVELS_MOUNT_POINT] = {'data':{'USGS:430406089232901':MOCK_WATER_LEVEL_DATA}};
             store = MockStore(init);
