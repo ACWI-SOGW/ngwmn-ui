@@ -60,7 +60,7 @@ describe('graph component', () => {
         });
 
         // This test is failing only on the centOS7 Jenkins machine. Going to exclude it for now.
-        xit('renders chart after service data returned', (done) => {
+        it('renders chart after service data returned', (done) => {
             jasmine.Ajax.requests.mostRecent().respondWith({
                 status: 200,
                 responseText: MOCK_WATER_LEVEL_RESPONSE,
