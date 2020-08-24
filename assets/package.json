@@ -87,6 +87,6 @@
     "redux": "4.0.5",
     "redux-thunk": "2.3.0",
     "reselect": "4.0.0",
-    "uswds": "2.8.0"
+    "uswds": "2.8.1"
   }
 }
