@@ -122,6 +122,7 @@ the statistics service.
 -   Fill lithology layers with FGDC Digital Cartographic Standard patterns
 -   Added water level data table
 -   Added Statistics Section
+-   Added logo images for UKGGS and SJRWMD
 
 ### Changed
 -   Removed duplicate service call to retrieve well log data
