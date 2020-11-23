@@ -9,8 +9,7 @@ from ngwmn import app
 
 def get_cooperators(site_no):
     """
-    Gets the cooperator data from a json file
-
+    Gets the cooperator data from the SIFTA service
     :param site_no: USGS site number
     """
 
