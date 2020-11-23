@@ -10,6 +10,7 @@ from .services.ngwmn import get_features, get_water_quality, get_well_log, get_s
 from .services.confluence import (
     pull_feed, confluence_url, MAIN_CONTENT, SITE_SELECTION_CONTENT, DATA_COLLECTION_CONTENT, DATA_MANAGEMENT_CONTENT,
     OTHER_AGENCY_INFO_CONTENT)
+from .services.sifta import (get_cooperators)
 from .string_utils import generate_subtitle
 
 
@@ -143,5 +144,6 @@ def site_page(agency_cd, location_id):
         well_log=well_log,
         lithology_ids=lithology_ids,
         stats=get_statistics(agency_cd, location_id),
-        monitoring_location_description=monitoring_location_description
+        monitoring_location_description=monitoring_location_description,
+        cooperators=get_cooperators(location_id)
     ), 200

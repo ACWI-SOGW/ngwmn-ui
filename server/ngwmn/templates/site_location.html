@@ -269,13 +269,31 @@
             </li>
         </ul>
     </div>
+    <p>Operated in cooperation with:</p>
     <div>
-        <h4>Data Provider</h4>
+    {% if feature.AGENCY_CD != 'USGS' %}
         <figure class="provider-logo">
             <a href="{{ url_for('provider', agency_cd=feature.AGENCY_CD) }}" target="_blank">
                 <img src="{{ logo_agency_id | asset_url }}" alt="logo for {{ feature.AGENCY_NM }}" height="50">
             </a>
             <figcaption>{{ feature.AGENCY_NM }}</figcaption>
         </figure>
+    {% endif %}
+    {% if cooperators %}
+        <div>
+            {% for cooperator in cooperators | sort(attribute='Name') %}
+                <figure class="cooperator_logo">
+                    <a class="usa-class" href="{{ cooperator.URL }}">
+                        <img src="{{ cooperator.IconURL | https_url }}" alt="logo for {{ cooperator.Name }}" height="50">
+                    </a>
+                    <figcaption><a class="usa-class"href="{{ cooperator.URL }}">{{ cooperator.Name }}</a></figcaption>
+                </figure>
+            {% endfor %}
+        </div>
+    {% elif feature.AGENCY_CD == 'USGS' %}
+        <a href="{{ url_for('provider', agency_cd=feature.AGENCY_CD) }}" target="_blank">
+            <img src="{{ logo_agency_id | asset_url }}" alt="logo for {{ feature.AGENCY_NM }}" height="50">
+        </a>
+    {% endif %}
     </div>
 {% endblock %}

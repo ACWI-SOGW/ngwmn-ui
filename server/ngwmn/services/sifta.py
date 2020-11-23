@@ -1,6 +1,7 @@
 """
 Helpers to retrieve SIFTA cooperator data.
 """
+import datetime
 
 import requests
 
@@ -13,7 +14,12 @@ def get_cooperators(site_no):
     :param site_no: USGS site number
     """
 
-    url = app.config['COOPERATOR_SERVICE_PATTERN'].format(site_no=site_no)
+    current_date = datetime.datetime.now()
+    year_current = current_date.year
+    year_previous = year_current - 1
+
+    url = app.config['COOPERATOR_SERVICE_PATTERN'].format(site_no=site_no, year_previous=year_previous,
+                                                          year=year_current)
     try:
         response = requests.get(url)
     except requests.exceptions.RequestException as err:
