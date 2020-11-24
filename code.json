@@ -3,7 +3,7 @@
     "name": "NGWMN UI",
     "organization": "U.S. Geological Survey",
     "description": "National Ground Water Monitoring Network UI",
-    "version": "0.14.0",
+    "version": "0.15.0dev",
     "status": "Development",
 
     "permissions": {

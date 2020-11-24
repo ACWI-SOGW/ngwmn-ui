@@ -1,6 +1,6 @@
 {
   "name": "ngwmn-ui",
-  "version": "0.14.0",
+  "version": "0.15.0dev",
   "description": "National Ground Water Monitoring Network",
   "scripts": {
     "test": "karma start",
