@@ -15,11 +15,17 @@ def get_cooperators(site_no):
     """
 
     current_date = datetime.datetime.now()
-    year_current = current_date.year
-    year_previous = year_current - 1
+    year = current_date.year
 
-    url = app.config['COOPERATOR_SERVICE_PATTERN'].format(site_no=site_no, year_previous=year_previous,
-                                                          year=year_current)
+    # Only query for providers active in the current water year which runs from October 1st through September 30th
+    end_of_water_year = datetime.datetime(year, 9, 30)
+    if end_of_water_year < datetime.datetime.now():
+        year = year - 1
+    else:
+        year = year
+
+    url = app.config['COOPERATOR_SERVICE_PATTERN'].format(site_no=site_no, year=year,
+                                                          current_date=current_date)
     try:
         response = requests.get(url)
     except requests.exceptions.RequestException as err:
