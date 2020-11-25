@@ -60,7 +60,7 @@ class TestWellPageView(TestCase):
         mocker.post(requests_mock.ANY, text=TEST_SUMMARY_JSON, status_code=200)
         mocker.get(self.well_log_url, content=MOCK_WELL_LOG_RESPONSE, status_code=200)
         mocker.get(self.wq_url, content=MOCK_WQ_RESPONSE, status_code=200)
-        mocker.get(self.sifta_url, text=MOCK_SIFTA_RESPONSE, status_code=200)
+        # mocker.get(self.sifta_url, text=MOCK_SIFTA_RESPONSE, status_code=200)
         mocker.get(self.site_info_url, text=self.mock_site_info_json, status_code=200)
         mocker.get(self.stats_overall_url, text=self.mock_overall_json, status_code=200)
         mocker.get(self.stats_monthly_url, text=self.mock_monthly_json, status_code=200)
