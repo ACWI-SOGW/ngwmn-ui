@@ -13,19 +13,19 @@ def get_cooperators(site_no):
     Gets the cooperator data from the SIFTA service
     :param site_no: USGS site number
     """
-
     current_date = datetime.datetime.now()
     year = current_date.year
 
-    # Only query for providers active in the current water year which runs from October 1st through September 30th
+    # Only query for providers active in the current wateryear which runs from October 1st through September 30th
     end_of_water_year = datetime.datetime(year, 9, 30)
-    if end_of_water_year < datetime.datetime.now():
-        year = year - 1
-    else:
-        year = year
 
-    url = app.config['COOPERATOR_SERVICE_PATTERN'].format(site_no=site_no, year=year,
-                                                          current_date=current_date)
+    # If the current date is not past the end date for the wateryear, set the wateryear start date to last year.
+    if datetime.datetime.now() < end_of_water_year:
+        year = year - 1
+
+    url = app.config['COOPERATOR_SERVICE_PATTERN'].format(site_no=site_no, year=str(year),
+                                                          current_date=current_date.strftime("%m/%d/%Y"))
+
     try:
         response = requests.get(url)
     except requests.exceptions.RequestException as err:
