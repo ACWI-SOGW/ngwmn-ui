@@ -26,7 +26,7 @@ class TestWellPageView(TestCase):
         _location_id_1 = '430406089232901'
         _location_id_2 = '430406089232902'
         _year = '2019'
-        _date = '2/20/20'
+        _date = '02/20/2020'
 
         _iddata_url = 'ngwmn/iddata?request={}&agency_cd={}&siteNo={}'
         self.well_log_url = urljoin(SERVICE_ROOT, _iddata_url.format('well_log', _agency_cd, _location_id_1))
@@ -36,7 +36,7 @@ class TestWellPageView(TestCase):
 
         self.well_log_url_2 = urljoin(SERVICE_ROOT, _iddata_url.format('well_log', _agency_cd, _location_id_2))
         self.wq_url_2 = urljoin(SERVICE_ROOT, _iddata_url.format('water_quality', _agency_cd, _location_id_2))
-        self.sifta_url_2 = COOP_SERVICE_PATTERN.format(site_no=_location_id_1, year=_year, current_date=_date)
+        self.sifta_url_2 = COOP_SERVICE_PATTERN.format(site_no=_location_id_2, year=_year, current_date=_date)
         self.site_loc_url_2 = '/provider/{0}/site/{1}/'.format(_agency_cd, _location_id_2)
 
         _stats_url = '/'.join(['ngwmn_cache', 'direct', 'json'])
@@ -75,7 +75,6 @@ class TestWellPageView(TestCase):
 
     # Tests if a nested site (a monitoring location with the same geographic coordinates as another monitoring location)
     # can be selected by site id from a (mock) geoserver response
-    # @mock.patch('ngwmn.services.sifta.get_current_date')
     @requests_mock.Mocker()
     @mock.patch('ngwmn.services.sifta.get_current_date')
     def test_nested_monitoring_location(self, mocker, m_get_current_date):

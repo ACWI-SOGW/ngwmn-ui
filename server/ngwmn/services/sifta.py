@@ -24,7 +24,7 @@ def get_cooperators(site_no):
     end_of_water_year = datetime.datetime(year, 9, 30)
 
     # If the current date is not past the end date for the wateryear, set the wateryear start date to last year.
-    if datetime.datetime.now() < end_of_water_year:
+    if datetime.datetime.now() > end_of_water_year:
         year = year - 1
 
     url = app.config['COOPERATOR_SERVICE_PATTERN'].format(site_no=site_no, year=str(year),
