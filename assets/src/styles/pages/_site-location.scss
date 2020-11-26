@@ -13,10 +13,10 @@ h1, h2 {
 }
 
 .provider-logo {
-  img {
-    @include u-width('card');
-    height: auto;
-  }
+  max-height: 150px;
+  display: inline-block;
+  margin-left: 0;
+  margin-top: 0;
 }
 
 .pagination {
