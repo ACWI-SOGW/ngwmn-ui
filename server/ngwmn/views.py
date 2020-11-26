@@ -2,6 +2,7 @@
 NGWMN UI application views
 
 """
+import datetime
 
 from flask import abort, jsonify, render_template
 
@@ -145,5 +146,5 @@ def site_page(agency_cd, location_id):
         lithology_ids=lithology_ids,
         stats=get_statistics(agency_cd, location_id),
         monitoring_location_description=monitoring_location_description,
-        cooperators=get_cooperators(location_id)
+        # cooperators=get_cooperators(location_id)
     ), 200

@@ -8,12 +8,16 @@ import requests
 from ngwmn import app
 
 
+def get_current_date():
+    return datetime.datetime.now()
+
+
 def get_cooperators(site_no):
     """
     Gets the cooperator data from the SIFTA service
     :param site_no: USGS site number
     """
-    current_date = datetime.datetime.now()
+    current_date = get_current_date()
     year = current_date.year
 
     # Only query for providers active in the current wateryear which runs from October 1st through September 30th
