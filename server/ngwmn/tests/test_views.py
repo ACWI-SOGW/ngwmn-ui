@@ -27,6 +27,8 @@ class TestWellPageView(TestCase):
         _location_id_2 = '430406089232902'
         _year = '2019'
         _date = '02/20/2020'
+        _year_2 = '2020'
+        _date_2 = '11/20/2020'
 
         _iddata_url = 'ngwmn/iddata?request={}&agency_cd={}&siteNo={}'
         self.well_log_url = urljoin(SERVICE_ROOT, _iddata_url.format('well_log', _agency_cd, _location_id_1))
@@ -36,7 +38,7 @@ class TestWellPageView(TestCase):
 
         self.well_log_url_2 = urljoin(SERVICE_ROOT, _iddata_url.format('well_log', _agency_cd, _location_id_2))
         self.wq_url_2 = urljoin(SERVICE_ROOT, _iddata_url.format('water_quality', _agency_cd, _location_id_2))
-        self.sifta_url_2 = COOP_SERVICE_PATTERN.format(site_no=_location_id_2, year=_year, current_date=_date)
+        self.sifta_url_2 = COOP_SERVICE_PATTERN.format(site_no=_location_id_2, year=_year_2, current_date=_date_2)
         self.site_loc_url_2 = '/provider/{0}/site/{1}/'.format(_agency_cd, _location_id_2)
 
         _stats_url = '/'.join(['ngwmn_cache', 'direct', 'json'])
@@ -78,7 +80,7 @@ class TestWellPageView(TestCase):
     @requests_mock.Mocker()
     @mock.patch('ngwmn.services.sifta.get_current_date')
     def test_nested_monitoring_location(self, mocker, m_get_current_date):
-        m_get_current_date.return_value = datetime.date(2020, 2, 20)
+        m_get_current_date.return_value = datetime.date(2020, 11, 20)
         id1 = b'430406089232902'
         id2 = b'430406089232901'
 

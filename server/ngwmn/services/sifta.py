@@ -9,7 +9,11 @@ from ngwmn import app
 
 
 def get_current_date():
-    return datetime.datetime.now()
+    """
+    A wrapper function to allow unit testing of methods using datetime.now()
+    :return: datetime object for current date
+    """
+    return datetime.date.today()
 
 
 def get_cooperators(site_no):
@@ -21,10 +25,11 @@ def get_cooperators(site_no):
     year = current_date.year
 
     # Only query for providers active in the current wateryear which runs from October 1st through September 30th
-    end_of_water_year = datetime.datetime(year, 9, 30)
+    end_of_water_year = datetime.date(year, 9, 30)
 
     # If the current date is not past the end date for the wateryear, set the wateryear start date to last year.
-    if datetime.datetime.now() > end_of_water_year:
+    if current_date < end_of_water_year:
+        print('current date is before cut off')
         year = year - 1
 
     url = app.config['COOPERATOR_SERVICE_PATTERN'].format(site_no=site_no, year=str(year),
