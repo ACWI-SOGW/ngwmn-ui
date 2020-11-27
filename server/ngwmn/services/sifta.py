@@ -10,7 +10,7 @@ from ngwmn import app
 
 def get_current_date():
     """
-    A wrapper function to allow unit testing of methods using datetime.now()
+    A wrapper function to allow unit testing of methods using datetime.date.today
     :return: datetime object for current date
     """
     return datetime.date.today()
