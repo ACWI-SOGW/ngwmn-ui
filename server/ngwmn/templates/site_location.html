@@ -287,42 +287,47 @@
         </figure>
     {% endif %}
     {% if cooperators %}
-        <div>
-            {% for cooperator in cooperators | sort(attribute='Name') %}
-                <figure class="provider-logo">
-                    <a class="usa-class"
-                       href="{{ cooperator.URL }}"
-                       target="_blank"
-                       rel="noopener"
+        {% for cooperator in cooperators | sort(attribute='Name') %}
+            {% if not 'usgs' in cooperator.URL %}
+            <figure class="provider-logo">
+                <a class="usa-class"
+                   href="{{ cooperator.URL }}"
+                   target="_blank"
+                   rel="noopener"
+                >
+                    <img src="{{ cooperator.IconURL | https_url }}"
+                         alt="logo for {{ cooperator.Name }}"
+                         height="50">
+                </a>
+                <figcaption>
+                    <a  class="usa-class"
+                        href="{{ cooperator.URL }}"
+                        target="_blank"
+                        rel="noopener"
                     >
-                        <img src="{{ cooperator.IconURL | https_url }}"
-                             alt="logo for {{ cooperator.Name }}"
-                             height="50">
+                        {{ cooperator.Name }}
                     </a>
-                    <figcaption>
-                        <a  class="usa-class"
-                            href="{{ cooperator.URL }}"
-                            target="_blank"
-                            rel="noopener"
-                        >
-                            {{ cooperator.Name }}
-                        </a>
-                    </figcaption>
-                </figure>
-            {% endfor %}
-        </div>
+                </figcaption>
+            </figure>
+            {% endif %}
+        {% endfor %}
     {% endif %}
     <figure class="provider-logo">
-        <a href="{{ url_for('provider', agency_cd=feature.AGENCY_CD) }}"
+        <a href="{{ url_for('provider', agency_cd='USGS') }}"
            target="_blank"
            rel="noopener"
         >
-            <img src="{{ logo_agency_id | asset_url }}"
-                 alt="logo for {{ feature.AGENCY_NM }}"
+            <img src="{{ 'img/provider_logos/usgs_logo.png' | asset_url }}"
+                 alt="logo for USGS"
                  height="50">
             <figcaption>
-                <a class="usa-class"
-                   href="">US Geological Survey</a>
+                <a class="usa-link"
+                    href="{{ url_for('provider', agency_cd='USGS') }}"
+                   target="_blank"
+                   rel="noopener"
+                >
+                    US Geological Survey
+                </a>
             </figcaption>
         </a>
     </figure>
