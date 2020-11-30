@@ -3,6 +3,6 @@ defusedxml==0.6.0
 feedparser==5.2.1
 Flask==1.1.2
 fuzzywuzzy[speedup]==0.18.0
-lxml==4.5.2
+lxml==4.6.2
 requests==2.24.0
 webcolors==1.11.1
