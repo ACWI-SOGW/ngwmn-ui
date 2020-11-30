@@ -36,6 +36,7 @@ def get_cooperators(site_no):
 
     try:
         response = requests.get(url)
+        app.logger.debug('attempting to contact SIFTA services with this url: %s', url)
     except requests.exceptions.RequestException as err:
         app.logger.error(str(err))
         return []
