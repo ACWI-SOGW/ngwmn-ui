@@ -6,7 +6,12 @@
         <h5>Example site pages</h5>
         <ul class="usa-list">
             {% for test_site in test_sites %}
-                <li class="usa-list-item"><a href="{{ url_for('site_page', agency_cd=test_site.agency_cd, location_id=test_site.location_id) }}">{{ test_site.agency_cd }} - {{ test_site.location_id }}</a></li>
+                <li class="usa-list-item"><a href="{{ url_for('site_page', agency_cd=test_site.agency_cd, location_id=test_site.location_id) }}">
+                    {{ test_site.agency_cd }} -
+                    {{ test_site.location_id }} --
+                    {{ test_site.common_name }} {% if test_site.notes !='' %} - {% endif %}
+                    {{ test_site.notes }}
+                </a></li>
             {% endfor %}
         </ul>
     </div>
