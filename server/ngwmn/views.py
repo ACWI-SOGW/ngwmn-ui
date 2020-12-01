@@ -20,18 +20,19 @@ def home():
         'index.html',
         version=__version__,
         test_sites=[
-            {'agency_cd': 'USGS', 'location_id': '353945105574502'},
-            {'agency_cd': 'USGS', 'location_id': '282532081075601'},
-            {'agency_cd': 'USGS', 'location_id': '473442118162201'},
-            {'agency_cd': 'USGS', 'location_id': '423532088254601'},
-            {'agency_cd': 'USGS', 'location_id': '401105074120205'},
-            {'agency_cd': 'USGS', 'location_id': '411958079540202'},
-            {'agency_cd': 'ADWR', 'location_id': '334306112433801'},
-            {'agency_cd': 'DGS', 'location_id': 'Eb53-33'},
-            {'agency_cd': 'KSGS', 'location_id': '381107098532401'},
-            {'agency_cd': 'MEGS', 'location_id': '39412'},
-            {'agency_cd': 'MBMG', 'location_id': '235474'},
-            {'agency_cd': 'TWRB', 'location_id': '2763901'}
+            {'agency_cd': 'USGS', 'location_id': '353945105574502', 'common_name': 'Santa Fe County, New Mexico', 'notes': ''},
+            {'agency_cd': 'USGS', 'location_id': '282532081075601', 'common_name': 'Orange County, Florida', 'notes': ''},
+            {'agency_cd': 'USGS', 'location_id': '473442118162201', 'common_name': 'Lincoln County, Washington', 'notes': ''},
+            {'agency_cd': 'USGS', 'location_id': '423532088254601', 'common_name': 'Walworth County, Wisconsin', 'notes': ''},
+            {'agency_cd': 'USGS', 'location_id': '401105074120205', 'common_name': 'Monmouth County, New Jersey,', 'notes': ''},
+            {'agency_cd': 'USGS', 'location_id': '411958079540202', 'common_name': 'Venango County, Pennsylvania', 'notes': ''},
+            {'agency_cd': 'ADWR', 'location_id': '334306112433801', 'common_name': 'Maricopa County, Arizona', 'notes': ''},
+            {'agency_cd': 'DGS', 'location_id': 'Eb53-33', 'common_name': 'New Castle County, Delaware', 'notes': ''},
+            {'agency_cd': 'KSGS', 'location_id': '381107098532401', 'common_name': 'Stafford County, Kansas', 'notes': ''},
+            {'agency_cd': 'MEGS', 'location_id': '39412', 'common_name': 'Franklin County, Maine', 'notes': ''},
+            {'agency_cd': 'MBMG', 'location_id': '235474', 'common_name': 'Gallatin County, Montana', 'notes': ''},
+            {'agency_cd': 'TWRB', 'location_id': '2763901', 'common_name': 'not found example', 'notes': ''},
+            {'agency_cd': 'USGS', 'location_id': '375749091475001', 'common_name': 'Phelps County, Missouri', 'notes': 'has SIFTA logos'}
         ]
     )
 
