@@ -309,22 +309,24 @@
             {% endif %}
         {% endfor %}
     {% endif %}
-    <figure class="provider-logo">
-        <a href="{{ url_for('provider', agency_cd='USGS') }}"
-           target="_blank"
-           rel="noopener" >
-            <img src="{{ 'img/provider_logos/usgs_logo.png' | asset_url }}"
-                 alt="logo for USGS"
-                 height="50">
-            <figcaption>
-                <a class="usa-link"
-                    href="{{ url_for('provider', agency_cd='USGS') }}"
-                   target="_blank"
-                   rel="noopener">
-                    US Geological Survey
-                </a>
-            </figcaption>
-        </a>
-    </figure>
+    {% if feature.AGENCY_CD == 'USGS' %}
+        <figure class="provider-logo">
+            <a href="{{ url_for('provider', agency_cd='USGS') }}"
+               target="_blank"
+               rel="noopener" >
+                <img src="{{ 'img/provider_logos/usgs_logo.png' | asset_url }}"
+                     alt="logo for USGS"
+                     height="50">
+                <figcaption>
+                    <a class="usa-link"
+                        href="{{ url_for('provider', agency_cd='USGS') }}"
+                       target="_blank"
+                       rel="noopener">
+                        US Geological Survey
+                    </a>
+                </figcaption>
+            </a>
+        </figure>
+    {% endif %}
     </div>
 {% endblock %}
