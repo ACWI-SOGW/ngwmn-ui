@@ -9,7 +9,7 @@
     "test:watch": "karma start --debug --no-single-run --auto-watch --browsers Chrome",
     "clean": "rm -rf dist && mkdir dist",
     "build": "npm run clean && run-p build:* && npm run hash-assets",
-    "build:autotrack": "uglifyjs --output dist/autotrack.js node_modules/autotrack/autotrack.js",
+    "build:autotrack": "terser --output dist/autotrack.js node_modules/autotrack/autotrack.js",
     "build:css": "sass --load-path node_modules/uswds/src/stylesheets src/styles/main.scss dist/main.css && postcss dist/main.css -map -o dist/main.css",
     "build:fonts": "mkdir -p dist/fonts && cp -r node_modules/uswds/dist/fonts/* dist/fonts && cp node_modules/@fortawesome/fontawesome-free/webfonts/* dist/fonts",
     "build:images": "mkdir -p dist/img && mkdir -p dist/img && cp -r src/images/* dist/img && cp -r node_modules/uswds/dist/img/* dist/img",
@@ -74,7 +74,8 @@
     "sass": "^1.29.0",
     "stylelint": "^13.8.0",
     "stylelint-scss": "^3.18.0",
-    "svgo": "^1.3.2"
+    "svgo": "^1.3.2",
+    "terser": "^5.5.1"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "5.15.1",
