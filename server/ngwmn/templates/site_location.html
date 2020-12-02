@@ -281,7 +281,11 @@
                      height="50">
             </a>
             <figcaption>
+                <a href="{{ url_for('provider', agency_cd=feature.AGENCY_CD) }}"
+                   target="_blank"
+                   rel="noopener">
                 {{ feature.AGENCY_NM }}
+                </a>
             </figcaption>
         </figure>
     {% endif %}
@@ -319,7 +323,7 @@
                      height="50">
                 <figcaption>
                     <a class="usa-link"
-                        href="{{ url_for('provider', agency_cd='USGS') }}"
+                       href="{{ url_for('provider', agency_cd='USGS') }}"
                        target="_blank"
                        rel="noopener">
                         US Geological Survey
