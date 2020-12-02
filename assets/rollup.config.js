@@ -10,7 +10,7 @@ const commonjs = require('@rollup/plugin-commonjs');
 const json = require('@rollup/plugin-json');
 const resolve = require('@rollup/plugin-node-resolve');
 const replace = require('@rollup/plugin-replace');
-const { uglify } = require('rollup-plugin-uglify');
+const {terser} = require('rollup-plugin-terser');
 
 
 const ENV = process.env.NODE_ENV || 'development';
@@ -41,9 +41,8 @@ module.exports = {
         replace({
           'process.env.NODE_ENV': JSON.stringify(ENV)
         }),
-        ENV === 'production' && uglify({
+        ENV === 'production' && terser({
             compress: {
-                dead_code: true,
                 drop_console: true
             }
         })
