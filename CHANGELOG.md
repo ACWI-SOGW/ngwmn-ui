@@ -4,7 +4,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased](https://github.com/ACWI-SOGW/ngwmn-ui/compare/ngwmn-ui-0.14.0...master)
+## [Unreleased](https://github.com/ACWI-SOGW/ngwmn-ui/compare/ngwmn-ui-0.15.0...master)
+
+## [0.15.0](https://github.com/ACWI-SOGW/ngwmn-ui/compare/ngwmn-ui-0.14.0...ngwmn-ui-0.15.0) - 2020-12-03
 ### Changed
 - Provider logos changed to show only the default USGS logo and any other applicable providers
 
