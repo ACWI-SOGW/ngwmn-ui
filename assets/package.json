@@ -85,7 +85,7 @@
     "fast-memoize": "2.5.2",
     "list.js": "2.3.0",
     "lodash": "4.17.20",
-    "raf-throttle": "2.0.5",
+    "raf-throttle": "^2.0.5",
     "redux": "4.0.5",
     "redux-thunk": "2.3.0",
     "reselect": "4.0.0",
