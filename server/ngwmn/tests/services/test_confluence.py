@@ -11,7 +11,9 @@ from ngwmn.services.confluence import pull_feed, confluence_url
 
 class TestPullFeed(TestCase):
 
-    def test_bad_url(self):
+    @mock.patch('ngwmn.services.confluence.feedparser.parse')
+    def test_bad_url(self,  m_parse):
+        m_parse.return_value = BLANK_FEED
         self.assertEqual(pull_feed('http:fakeserver.com'), '')
 
     @mock.patch('ngwmn.services.confluence.feedparser.parse')
@@ -27,6 +29,10 @@ class TestConfluenceUrl(TestCase):
     def test_for_label_string(self):
         self.assertIn('labelString=ngwmn_provider_ABCDE_mycontent', confluence_url('ABCDE', 'mycontent'))
 
+
+BLANK_FEED = feedparser.parse('''
+<html><head></head><body>invalid-provider is not a valid agency code</body></html>
+''')
 
 MOCK_FEED = feedparser.parse('''<?xml version="1.0" encoding="UTF-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/">
