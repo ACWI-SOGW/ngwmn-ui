@@ -81,7 +81,7 @@
     "@fortawesome/fontawesome-free": "5.15.1",
     "@juggle/resize-observer": "3.2.0",
     "autotrack": "2.4.1",
-    "d3": "5.16.0",
+    "d3": "6.3.1",
     "fast-memoize": "2.5.2",
     "list.js": "2.3.0",
     "lodash": "4.17.20",
