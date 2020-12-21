@@ -4,5 +4,5 @@ feedparser==6.0.2
 Flask==1.1.2
 fuzzywuzzy[speedup]==0.18.0
 lxml==4.6.2
-requests==2.25.0
+requests==2.25.1
 webcolors==1.11.1
