@@ -47,7 +47,7 @@
     "@rollup/plugin-node-resolve": "^11.0.0",
     "@rollup/plugin-replace": "^2.3.4",
     "autoprefixer": "^10.1.0",
-    "eslint": "^7.15.0",
+    "eslint": "^7.20.0",
     "eslint-plugin-jasmine": "^4.1.1",
     "gulp": "^4.0.2",
     "gulp-rev-all": "^2.0.3",
