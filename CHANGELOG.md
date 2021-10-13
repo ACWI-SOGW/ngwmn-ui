@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased](https://github.com/ACWI-SOGW/ngwmn-ui/compare/ngwmn-ui-0.16.0...master)
 
-## [0.16.0](https://github.com/ACWI-SOGW/ngwmn-ui/compare/ngwmn-ui-0.15.0...ngwmn-ui-0.16.0)
+## [0.16.0](https://github.com/ACWI-SOGW/ngwmn-ui/compare/ngwmn-ui-0.15.0...ngwmn-ui-0.16.0) - 2021-10-13
 - Added logo for OCMI in image folder
 - Added logo for IMW in image folder
 
