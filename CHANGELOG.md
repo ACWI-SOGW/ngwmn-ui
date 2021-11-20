@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased](https://github.com/ACWI-SOGW/ngwmn-ui/compare/ngwmn-ui-0.15.0...master)
 -Added logo for OCMI in image folder
 -Added logo for IMW in image folder
+-Changed the conflucence content processor to point to new content provider service
 
 ## [0.15.0](https://github.com/ACWI-SOGW/ngwmn-ui/compare/ngwmn-ui-0.14.0...ngwmn-ui-0.15.0) - 2020-12-03
 ### Changed
