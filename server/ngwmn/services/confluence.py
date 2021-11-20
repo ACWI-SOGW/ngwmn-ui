@@ -14,11 +14,15 @@ def pull_feed(url):
     :return: the html of the page itself
     """
     app.logger.debug('Parsing content from %s.', url)
-    response = requests.get(url)
+    try:
+        response = requests.get(url)
+        text = response.text
+    except:
+        text = ''
 
-    # TODO error handling
+    # TODO individual error handling and logging
 
-    return response.text
+    return text
 
 
 MAIN_CONTENT = 'main'
