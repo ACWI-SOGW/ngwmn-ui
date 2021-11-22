@@ -2,44 +2,27 @@
 Functions for accessing information from a confluence RSS feed
 """
 
-from bs4 import BeautifulSoup
-import feedparser
+import requests
 
 from ngwmn import app
 
-def pull_feed(feed_url):
+
+def pull_feed(url):
     """
-    pull page data from a my.usgs.gov confluence wiki feed
-    :param feed_url: the url of the feed, created in confluence feed builder
-    :return: the html of the page itself, stripped of header and footer
+    pull page data from a my.usgs.gov MD dynamic content pages
+    :param url: the url of the dynamic content
+    :return: the html of the page itself
     """
-    app.logger.debug('Parsing content from %s.', feed_url)
-    feed = feedparser.parse(feed_url)
+    app.logger.debug('Parsing content from %s.', url)
+    try:
+        response = requests.get(url)
+        text = response.text
+    except:
+        text = ''
 
-    # Process html to remove unwanted mark-up and fix links
-    post = ''
-    if feed['entries']:
-        soup = BeautifulSoup(feed['entries'][0].summary, 'html.parser')
+    # TODO individual error handling and logging
 
-        # Remove edited by paragraph
-        soup.p.extract()
-
-        # Remove final div in the feed
-        feed_div = soup.find('div', class_='feed')
-        children_divs = feed_div.findAll('div')
-        children_divs[len(children_divs) - 1].extract()
-
-        # Translate any in page links to use relative URL
-        base = feed['entries'][0].summary_detail.base
-        links = feed_div.select('a[href^="' + base + '"]')
-        for link in links:
-            link['href'] = link['href'].replace(base, '')
-        post = str(soup)
-
-    elif feed.get('bozo_exception'):
-        app.logger.error('Error retrieving feed for % with error %'.format(feed_url,
-                                                                           str(feed.get('bozo_exception'))))
-    return post
+    return text
 
 
 MAIN_CONTENT = 'main'
@@ -56,7 +39,7 @@ def confluence_url(agency_cd, content_type):
     :param str content_type:
     :rtype str
     """
-    return '{0}createrssfeed.action?types=page&spaces=GWDataPortal&title=X&labelString=ngwmn_provider_{1}_{2}&amp;excludedSpaceKeys%3D&sort=modified&maxResults=10&timeSpan=3600&showContent=true&confirm=Create+RSS+Feed'.format(
+    return '{0}/{1}/{2}'.format(
         app.config['CONFLUENCE_URL'],
         agency_cd,
         content_type
